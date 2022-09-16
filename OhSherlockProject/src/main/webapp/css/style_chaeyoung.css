@@ -1,1 +1,37 @@
 @charset "UTF-8";
+
+h2 {
+	
+	border: solid 1px red;  
+}
+
+.nav-link {
+    padding: 0 0 3px 0;
+    font-size: 13px;       
+    color: #404040; 
+}
+  
+#nav02{
+	padding: 10px 0 0 0;
+} 
+
+.title{
+	padding-top: 5%;   
+	font-size: 18px;       
+    color: #404040; 
+} 
+
+.myIndex{
+	
+	border: solid 1px red;  
+	position: fixed;
+	left: 30px;
+
+  right: 50%; 
+  top: 180px; 
+  margin-right: -720px;
+  width: 120px;
+	
+/* 	top:20px; */  
+	
+}
