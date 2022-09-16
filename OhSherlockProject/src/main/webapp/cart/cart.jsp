@@ -7,7 +7,7 @@
 	<div class="mb-4">
 		<h2 style="font-weight: bold">장바구니</h2>
 	</div>
-	<div>
+	<div class="cartList">
 		<table class="table mt-4">
 			<thead class="thead-light">
 				<tr>
@@ -50,6 +50,25 @@
 				</tr>
 			</tbody>
 		</table>
+	</div>
+	
+	<div class="cartTotal" style="border: solid 1px gray">
+		<table class="table table-borderless">
+		    <tbody>
+		      <tr>
+		        <td>상품금액</td>
+		        <td>18,000</td>
+		      </tr>
+		      <tr>
+		        <td>배송비</td>
+		        <td>2,500</td>
+		      </tr>
+		      <tr>
+		        <td>총금액</td>
+		        <td>20,500</td>
+		      </tr>
+		    </tbody>
+		  </table>
 	</div>
 </div>
 <%@ include file="../footer.jsp"%>
