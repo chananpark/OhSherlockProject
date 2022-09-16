@@ -15,8 +15,8 @@
 		  		<div class ="col col-md-4" id="storeInfo">
 				  <p><a href="#" class="lead">매장안내</a></p>
 				  <p><a href="#">서울 서교동 쌍용점</a></p>
+				  <p><a href="#">제주도 한라산 오름점</a></p>
 				  <p><a href="#">프랑스 파리 에펠탑점</a></p>
-				  <p><a href="#">미국 뉴욕 센트럴파크점</a></p>
 				  <p><a href="#">미국 뉴욕 센트럴파크점</a></p>
 			  	</div>
 		  	</div>

@@ -10,8 +10,7 @@
 <title>OH!Sherlock</title>
 <!-- Required meta tags -->
 <meta charset="utf-8">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" type="text/css" href="<%=ctxPath%>/bootstrap-4.6.0-dist/css/bootstrap.min.css">
@@ -30,6 +29,10 @@
 <!-- Optional JavaScript -->
 <script type="text/javascript" src="<%=ctxPath%>/js/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="<%=ctxPath%>/bootstrap-4.6.0-dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- jQueryUI CSS 및 JS -->
+<link rel="stylesheet" type="text/css" href="<%= ctxPath%>/jquery-ui-1.13.1.custom/jquery-ui.min.css" />
+<script type="text/javascript" src="<%= ctxPath%>/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
 
 <script>
 	$(function(){
@@ -108,7 +111,7 @@ nav {
 	height: 90px;
 }
 
-#bannerTitle {
+.bannerTitle {
 	text-align: left;
 	font-weight: bold;
 	color: #140d06;
