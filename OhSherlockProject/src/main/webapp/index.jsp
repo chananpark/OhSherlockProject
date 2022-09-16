@@ -22,7 +22,7 @@
 					<!-- d-block 은 display: block; 이고  w-100 은 width 의 크기는 <div class="carousel-item active">의 width 100% 로 잡으라는 것이다. -->
 					<div class="carousel-caption d-none d-md-block">
 						<!-- d-none 은 display : none; 이므로 화면에 보이지 않다가, d-md-block 이므로 d-md-block 은 width 가 768px이상인 것에서만 display: block; 으로 보여라는 말이다.  -->
-						<h4 id="bannerTitle">
+						<h4 class="bannerTitle">
 							데일리 식습관 메이트<br>콤부차 리치피치 출시!
 						</h4>
 						<p>
@@ -35,7 +35,7 @@
 					<img src="<%=ctxPath%>/images/오설록배너2.png" class="d-block w-100"
 						alt="...">
 					<div class="carousel-caption d-none d-md-block">
-						<h4>
+						<h4 class="bannerTitle">
 							데일리 식습관 메이트<br>콤부차 리치피치 출시!
 						</h4>
 						<p>
@@ -48,7 +48,7 @@
 					<img src="<%=ctxPath%>/images/오설록배너3.png" class="d-block w-100"
 						alt="...">
 					<div class="carousel-caption d-none d-md-block">
-						<h4>
+						<h4 class="bannerTitle">
 							데일리 식습관 메이트<br>콤부차 리치피치 출시!
 						</h4>
 						<p>
@@ -61,7 +61,7 @@
 					<img src="<%=ctxPath%>/images/오설록배너4.png" class="d-block w-100"
 						alt="...">
 					<div class="carousel-caption d-none d-md-block">
-						<h4>
+						<h4 class="bannerTitle">
 							데일리 식습관 메이트<br>콤부차 리치피치 출시!
 						</h4>
 						<p>

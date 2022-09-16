@@ -4,10 +4,10 @@
 
 <div class="container">
 
-	<h2>오셜록 브랜드스토리</h2>
+	<h2 style="font-weight: bold">오셜록 브랜드스토리</h2>
 	<hr>
 	<div class="my-4 text-center">
-		<img src="../images/o_logo.png" width=300>
+		<img src="../images/o_logo_big.png" width=300>
 		<h6>
 			오셜록의 역사는 2022년 5월, 21B Worldcup Street에서 시작되었습니다.<br> 오셜록은 최고의
 			인재들을 영입하여 부단한 노력과 연구를 통하여 지속적으로 발전하고 있습니다.

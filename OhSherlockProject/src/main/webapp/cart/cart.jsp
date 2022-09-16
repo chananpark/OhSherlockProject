@@ -2,9 +2,10 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="../header.jsp"%>
 
+
 <div class="container" id="cartContainer">
 	<div class="mb-4">
-		<h2>장바구니</h2>
+		<h2 style="font-weight: bold">장바구니</h2>
 	</div>
 	<div>
 		<table class="table mt-4">
