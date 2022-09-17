@@ -125,18 +125,51 @@
 		</div>
 	</div>
 
-	<div class="card"
-		style="width: 250px; margin: 20px 20px 0 0;">
-		<img class="card-img-top" src="images/시그니처기프트세트.png" alt="Card image"
-			style="width: 100%">
+	<div class="card" style="width: 250px; margin: 20px 20px 0 0;">
+		<img class="card-img-top" src="images/시그니처기프트세트.png" alt="Card image" style="width: 100%">
 		<div class="card-body">
 			<h4 class="card-title">기프트 세트</h4>
 			<p class="card-text">22,500원</p>
-			<a href="#" class="btn btn-primary"
-				style="float: right; background-color: #1E7F15; border: none;">DETAIL</a>
+			<a href="#" class="btn btn-primary" style="float: right; background-color: #1E7F15; border: none;">DETAIL</a>
 		</div>
 	</div>
-
-
 </div>
+
+
+<!-- 이벤트 컨테이너 시작 -->
+<div class="container eventContainer">
+	<div class="eventText">오늘만 이 가격!</div>
+      <section id="index_sectionBox" class="row">
+        <div id="indexEvent" class="col-md-6">
+          <img
+            src="<%=ctxPath%>/images/벚꽃향가득한올레20입.jpg"
+            style="max-width: 100%; height: auto; vertical-align: top"
+          />
+          <div id="indexEventText">
+            <p style="margin-left:10px">벚꽃향 가득한 올레 20입</p>
+            <div id="priceInfo">
+					<div class="salePercent" style="margin-left:10px; padding: 2px 5px; border-radius: 50%; background-color: #fd5c5c; text-align: center; font-weight: 500; color: #fff;">
+						30%</div>
+					<div style="text-decoration: line-through; font-size:18px; margin-left: 30px;">23,000</div>
+              <div style="font-size: 30px;margin-left: 12px;">16,100원</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="indexStoreStory" class="col-md-6">
+          <div id="store" style="font-size:">매장안내</div>
+          <div id="brandStory">
+            <img
+              src="<%=ctxPath%>/images/brand_story_img.jpg"
+              style="max-width: 100%; height: auto; vertical-align: top"
+            />
+            <div id="brandStoryText">
+              <div style="font-size:20px; font-weight: bold">OH!SHERLOCK</div>
+              <div>오!셜록 스토리</div>
+            </div>
+          </div>
+        </div>
+      </section>
+</div>
+<!-- 이벤트 컨테이너 끝 -->
 <%@ include file="footer.jsp"%>

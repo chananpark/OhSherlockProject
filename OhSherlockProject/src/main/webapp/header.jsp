@@ -80,19 +80,19 @@
 
 /* 체크박스 시그니처 컬러로 바꾸기 */
 input[type=checkbox] {
-  accent-color: #1E7F15;
+	accent-color: #1E7F15;
 }
 
 #topBtn {
-	background-color:#1E7F15;
-	border-radius:50%; 
-	opacity:50%;
+	background-color: #1E7F15;
+	border-radius: 50%;
+	opacity: 50%;
 	position: fixed;
 	bottom: 5%;
-    right: 5%;
+	right: 5%;
 }
 
-.header > nav {
+.header>nav {
 	/* font-family: 'Gowun Dodum', sans-serif; */
 	/* font-family: 'Nanum Gothic', sans-serif; */
 	font-weight: 800;
@@ -117,12 +117,12 @@ input[type=checkbox] {
 
 #nav_header {
 	position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 100;
-    background: transparent;
-    height: 90px;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 100;
+	background: transparent;
+	height: 90px;
 }
 
 #header_menu {
@@ -143,28 +143,90 @@ input[type=checkbox] {
 	color: #140d06;
 }
 
-#todaytea > .card {
+#todaytea>.card {
 	float: left;
 }
 
-.whiteBg{
-  background: white;
-  transition-duration: 0.5s;
-  transition-timing-function: ease;
-  
-  -webkit-transition-duration:0.4s;
-  -webkit-transition-timing-function:ease;
+.whiteBg {
+	background: white;
+	transition-duration: 0.5s;
+	transition-timing-function: ease;
+	-webkit-transition-duration: 0.4s;
+	-webkit-transition-timing-function: ease;
 }
 
-.transparentBg{
-  
-  background: transparent;
-  transition-duration: 0.5s;
-  transition-timing-function: ease;
-  
-  -webkit-transition-duration:0.4s;
-  -webkit-transition-timing-function:ease;
+.transparentBg {
+	background: transparent;
+	transition-duration: 0.5s;
+	transition-timing-function: ease;
+	-webkit-transition-duration: 0.4s;
+	-webkit-transition-timing-function: ease;
 }
+
+/* --- 이벤트 컨테이너 css --- */
+
+div.eventContainer {
+	clear:both;
+}
+section#index_sectionBox {
+	position: relative;
+}
+
+div#indexEvent {
+	position: relative;
+}
+div#indexEventText {
+	position: absolute;
+	bottom: 50px;
+	left: 40px color: #fff;
+	min-width: 400px;
+}
+
+
+div#indexEventText>p {
+	font-size: 26px;
+}
+
+div#priceInfo {
+	display: flex;
+	width: 64px;
+	height: 64px;
+	font-size: 24px;
+	line-height: 64px;
+	width: auto;
+}
+
+div#indexStoreStory {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+ 
+/* 매장안내 */
+div#store {
+	background-color: #ffd9b3;
+	font-weight: 500;
+	max-width: 100%;
+	height: 200px;
+	text-align: center;
+	font-size: 50px;
+	padding-top: 55px;
+}
+
+div#brandStory {
+	position: relative;
+}
+
+div#brandStoryText {
+	position: absolute;
+	top: 90px;
+	left: 36px;
+	color: white;
+	font-size: 30px;
+}
+
+/* --- 이벤트 컨테이너 css 끝 --- */
 </style>
 
 </head>
