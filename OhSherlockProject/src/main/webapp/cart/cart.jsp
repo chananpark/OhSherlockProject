@@ -78,16 +78,20 @@
 		<table class="table table-active table-borderless">
 		    <tbody class="text-right">
 		      <tr>
-		        <td class="col col-9">상품금액</td>
-		        <td class="col col-3">18,000</td>
+		        <td class="col col-9 text-left">상품금액</td>
+		        <td class="col col-3 text-right">18,000</td>
 		      </tr>
 		      <tr>
-		        <td class="col col-9">배송비</td>
-		        <td class="col col-3">2,500</td>
+		        <td class="col col-9 text-left">할인금액</td>
+		        <td class="col col-3 text-right text-danger">1,000</td>
 		      </tr>
 		      <tr>
-		        <td class="col col-9" style="color:#1E7F15; font-weight:bolder;"><h4>결제예정금액</h4></td>
-		        <td class="col col-3" style="color:#1E7F15; font-weight:bolder;"><h4>20,500</h4></td>
+		        <td class="col col-9 text-left">배송비</td>
+		        <td class="col col-3 text-right">2,500</td>
+		      </tr>
+		      <tr>
+		        <td class="col col-9 text-left" style="color:#1E7F15; font-weight:bolder;"><h4>결제예정금액</h4></td>
+		        <td class="col col-3 text-right" style="color:#1E7F15; font-weight:bolder"><h4>19,500</h4></td>
 		      </tr>
 		    </tbody>
 		  </table>
