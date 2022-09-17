@@ -47,6 +47,9 @@
 	        }
 	    })
 
+		$("#topBtn").click(function() {
+			$('html, body').animate({scrollTop:0}, '300');
+		});
 	}); 
 </script>
 
@@ -64,29 +67,7 @@
 .footer {
 	font-family: 'Gowun Dodum', sans-serif;
 	clear: both;
-}
-
-nav {
-	/* font-family: 'Gowun Dodum', sans-serif; */
-	/* font-family: 'Nanum Gothic', sans-serif; */
-	font-weight: 800;
-	font-size: 15pt;
-}
-
-/* 메뉴바에 마우스 올리면 메뉴 dropdown */
-.dropdown:hover .dropdown-menu {
-	display: block;
-	margin-top: 0;
-}
-/* 드롭다운 화살표 삭제 */
-.dropdown-toggle::after {
-	display: none;
-}
-
-/* 드롭다운 border 삭제 */
-.no-border {
-	border: 0 !important;
-	box-shadow: none;
+	margin-bottom: 0;
 }
 
 .footer a {
@@ -95,6 +76,43 @@ nav {
 
 .footer a:link, .footer a:visited {
 	color: black;
+}
+
+/* 체크박스 시그니처 컬러로 바꾸기 */
+input[type=checkbox] {
+  accent-color: #1E7F15;
+}
+
+#topBtn {
+	background-color:#1E7F15;
+	border-radius:50%; 
+	opacity:50%;
+	position: fixed;
+	bottom: 5%;
+    right: 5%;
+}
+
+.header > nav {
+	/* font-family: 'Gowun Dodum', sans-serif; */
+	/* font-family: 'Nanum Gothic', sans-serif; */
+	font-weight: 800;
+	font-size: 15pt;
+}
+
+/* 메뉴바에 마우스 올리면 메뉴 dropdown */
+.header .dropdown:hover .dropdown-menu {
+	display: block;
+	margin-top: 0;
+}
+/* 드롭다운 화살표 삭제 */
+.header .dropdown-toggle::after {
+	display: none;
+}
+
+/* 드롭다운 border 삭제 */
+.header .no-border {
+	border: 0 !important;
+	box-shadow: none;
 }
 
 #nav_header {
@@ -147,12 +165,6 @@ nav {
   -webkit-transition-duration:0.4s;
   -webkit-transition-timing-function:ease;
 }
-
-/* 체크박스 시그니처 컬러로 바꾸기 */
-input[type=checkbox] {
-  accent-color: #1E7F15;
-}
-
 </style>
 
 </head>
@@ -161,14 +173,14 @@ input[type=checkbox] {
 	<div class="header " id="nav_header">
 		<!-- d-flex flex-column min-vh-100 -->
 		<nav class="navbar navbar-expand-xl navbar-light fixed-top px-5 pt-2" id="header_menu">
-			<a class="navbar-brand" href="#"><img class="mr-3" src="<%=ctxPath%>/images/o_logo.png" width=80px /></a>
+			<a class="navbar-brand" href="<%=ctxPath%>/index.jsp"><img class="mr-3" src="<%=ctxPath%>/images/o_logo.png" width=80px /></a>
 
 			<%-- 고정 부분 --%>
 			<div class="d-flex order-xl-1 ml-auto pr-2">
 				<ul class="navbar-nav flex-row">
 					<li class="nav-item active mr-2"><span class="nav-link menufont_size text-dark">
 					<i class="fas fa-grip-lines-vertical fa-lg"></i></span></li>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="#">
+					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/cart/cart.jsp">
 					<i class="fas fa-shopping-basket fa-lg"></i></a></li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="#">
 					<i class="fas fa-heart fa-lg"></i></a></li>
@@ -197,20 +209,19 @@ input[type=checkbox] {
 						</div></li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="#">기프트세트</a></li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="#">이벤트상품</a></li>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="#">매장안내</a></li>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="#">브랜드스토리</a></li>
+					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/storeInfo/storeList.jsp">매장안내</a></li>
+					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/brandStory/brandStory.jsp">브랜드스토리</a></li>
 				</ul>
 				<ul class="navbar-nav text-right mx-auto">
 					<li class="nav-item dropdown mr-2"><a
 						class="nav-link dropdown-toggle menufont_size text-secondary"
-						href="#" id="navbarDropdown" data-toggle="dropdown">로그인</a> <%-- 로그인을 누르면 기본은 로그인 창으로 연결 --%>
-						<div class="dropdown-menu no-border"
-							aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="#">로그인</a> <a
-								class="dropdown-item" href="#">회원가입</a>
+						href="<%=ctxPath%>/login/login.jsp" id="navbarDropdown" data-toggle="dropdown">로그인</a> <%-- 로그인을 누르면 기본은 로그인 창으로 연결 --%>
+						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="<%=ctxPath%>/login/login.jsp">로그인</a> 
+							<a class="dropdown-item" href="#">회원가입</a>
 						</div></li>
 					<li class="nav-item active mr-2"><a
-						class="nav-link menufont_size text-secondary" href="#">마이페이지</a></li>
+						class="nav-link menufont_size text-secondary" href="<%=ctxPath%>/mypage/mypage.jsp">마이페이지</a></li>
 					<li class="nav-item dropdown mr-2"><span
 						class="nav-link dropdown-toggle menufont_size text-secondary"
 						id="navbarDropdown" data-toggle="dropdown">고객센터</span>
@@ -224,3 +235,5 @@ input[type=checkbox] {
 			</div>
 		</nav>
 	</div>
+	
+	<button id="topBtn" class="btn"><i class="far fa-hand-point-up" style="color:white"></i></button>
