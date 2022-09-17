@@ -199,10 +199,10 @@ input[type=checkbox] {
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
 				<ul class="navbar-nav text-right">
 					<li class="nav-item dropdown mr-2">
-					<a class="nav-link dropdown-toggle menufont_size text-dark" href="#" 
+					<a class="nav-link dropdown-toggle menufont_size text-dark" href="<%=ctxPath%>/product/product_list.jsp" 
 					id="navbarDropdown" data-toggle="dropdown">티제품</a> <%-- 여기 클릭시 전체 상품으로 연결 --%>
 						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown" id="teaProducts">
-							<a class="dropdown-item" href="#">전체상품</a> <a
+							<a class="dropdown-item" href="<%=ctxPath%>/product/product_list.jsp">전체상품</a> <a
 								class="dropdown-item" href="#">베스트</a> <a class="dropdown-item"
 								href="#">녹차/말차</a> <a class="dropdown-item" href="#">홍차</a> <a
 								class="dropdown-item" href="#">허브차</a>

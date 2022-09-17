@@ -42,4 +42,6 @@
 	</div>
 </div>
 
+<%-- 소감 --%>
+
 <%@ include file="../footer.jsp"%>
