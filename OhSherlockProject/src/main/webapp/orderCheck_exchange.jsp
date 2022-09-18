@@ -234,7 +234,7 @@
 	    <label for="returnagree">&nbsp;교환사항 안내를 확인하였습니다.</label>
     </span>
     	
-    <div class="text-center" id="detail" style="display: block; margin-top: 30px;"> <!-- 주문상세 id -->
+    <div class="text-center" id="detail" style="display: block; margin-top: 40px;"> <!-- 주문상세 id -->
 	  <input type="button" class="btn-light" value="이전" />
 	  <input type="button" class="btn-secondary" value="교환신청" />
     </div>
