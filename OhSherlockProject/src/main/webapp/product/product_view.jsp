@@ -3,7 +3,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 
-<%@ include file="../header.jsp"%>
+<%@ include file="../header_add_searchModal.jsp"%><%-- 여기 수정 --%>
 
 <script type="text/javascript">
 

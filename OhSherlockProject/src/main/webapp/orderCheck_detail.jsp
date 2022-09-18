@@ -8,15 +8,13 @@
 <link rel="stylesheet" type="text/css" href="./css/style_yeeun.css" />    <!-- /MyMVC/src/main/webapp/css/style.css 파일 경로 -->
     
 <style type="text/css">
-	/*
-	#addressBtn {
-      background-color: #1E7F15;
-      color: white;
-      height: 30px;
-      border-style: none;
-      border-radius: 5%;
-    }
-	*/
+	
+	.btn-secondary {
+		width: 85px; 
+		margin-top: 30px;
+		border-style: none; 
+		height: 33px;
+	}
 	
 	.btn-secondary:hover {
 		border: 2px solid #1E7F15;
@@ -149,8 +147,8 @@
 	        </table>
     	</div>
     	
-    <div class="text-center">
-	  <input type="button" class="btn-secondary" value="목록보기" style="width: 80px; margin-top: 30px;"/>
+    <div class="text-center" style="margin-top: 30px;">
+	  <input type="button" class="btn-secondary" value="목록보기" />
     </div>
     
     

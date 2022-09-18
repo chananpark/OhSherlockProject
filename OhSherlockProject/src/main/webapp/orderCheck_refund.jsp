@@ -203,10 +203,10 @@
           </thead>
           <tbody>
             <tr>
-              <td style="padding: 10px 15px 5px; 15px; font-size: 16px;">모든 환불은 예치금 적립으로 처리되오니 유의하여 주시기 바랍니다.</td>
+              <td style="padding: 3px 12px 5px 12px;">·&nbsp;모든 환불은 예치금 적립으로 처리되오니 유의하여 주시기 바랍니다.</td>
             </tr>
             <tr>
-              <td style="padding: 10px 15px 10px; 15px; font-size: 16px;">아래의 경우 반품이 처리되지 않을 수 있습니다.</td>
+              <td style="padding: 15px 15px 10px; 15px; font-size: 16px;">아래의 경우 반품이 처리되지 않을 수 있습니다.</td>
             </tr>
             <tr>
               <td style="padding: 3px 12px 5px 12px;">·&nbsp;고객단순변심, 상품불만족 등 고객 귀책 사유로 반품 신청시 반품 택배비가 입금 또는 동봉이 되지 않거나 확인이 어려운 경우</td>
@@ -227,7 +227,7 @@
     </span>
     	
     	
-    <div class="text-center" id="detail" style="display: block; margin-top: 30px;"> <!-- 주문상세 id -->
+    <div class="text-center" id="detail" style="display: block; margin-top: 40px;"> <!-- 주문상세 id -->
 	  <input type="button" class="btn-light" value="이전" />
 	  <input type="button" class="btn-secondary" value="반품신청" />
     </div>
