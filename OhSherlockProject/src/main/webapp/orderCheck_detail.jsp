@@ -135,7 +135,7 @@
 	            </tr>
 	            <tr style="border-top: 1px solid #d9d9d9;">
 	              <td class="col col-9" style="color:#1E7F15; font-weight:bolder; padding-bottom: 0.7px;"><h4>총 결제금액</h4></td>
-	              <td class="col col-3 text-right" style="color:#1E7F15; font-weight:bolder; padding-bottom: 0.7px;"><h4>20,500</h4></td>
+	              <td class="col col-3 text-right" style="color:#1E7F15; font-weight:bolder; padding-bottom: 0.7px;"><h4>14,500</h4></td>
 	            </tr>
 	            <tr>
 	              <td class="col col-9 text-left" style="padding-top: 0; padding-bottom: 0;">결제수단</td>
