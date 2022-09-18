@@ -1,12 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-<style>
+<style type="text/css">
 	
-	.loginContainer form {
+	form#login_frm {
   	padding: 48px 0;
     margin: 0 auto;
     margin-top: 40px;
@@ -17,11 +14,6 @@
 	/* 로그인폼 내용 전체 */
 	div#login_box{
 		width:380px;
-	}
-	
-	/* 아이디, 비밀번호 박스 */
-	div#input_login > input {
-		border-radius: 4px;
 	}
 	
 	/* 아이디, 비밀번호 박스랑 로그인, 회원가입 버튼 */
@@ -41,9 +33,13 @@
 	  opacity: 1;
 	}
 	
+	/* 아이디, 비밀번호 박스 */
+	div#input_login > input {
+		border-radius: 4px;
+	}
+
 	/* 버튼로그인 */
-	.loginContainer input[type='submit']{
-		width:80px;
+	div#btn_loginbox > input[type='submit']{
 		height:45px;
 		border-radius: 90px;
 	  background-color: #003300;
@@ -52,8 +48,7 @@
 	}
 	
 	/* 버튼회원가입 */
-	.loginContainer input[type='button']{
-		width:80px;
+	div#btn_loginbox > input[type='button']{
 		height:45px;
 		border-radius: 90px;
 	  background-color: #c6c6c6;
@@ -66,16 +61,16 @@
 
 <%@ include file="../header.jsp"%>
 
-<div class="container loginContainer">
+<div class="container">
 
-	  <form>
+	  <form id="login_frm">
 	  	<div id="login_box" class="d-flex flex-column m-auto">
-				<div id="Login_title">
-		   		<h2 style="text-align:center; font-size: 30px; line-height: 40px;">Login</h2>
+				<div id="login_title">
+		   		<h2 style="text-align:center; font-size: 30px; line-height: 40px; font-weight:bold">LOGIN</h2>
 				</div>
 		      
 				<div id="input_login" class="d-flex flex-column">
-		      <input type="text" name="username" placeholder="아이디" required>
+		      <input type="text" name="userid" placeholder="아이디" required>
 		      <input type="password" name="password" placeholder="비밀번호" required>
 				</div>
 				
@@ -87,15 +82,15 @@
 		     	</div>
 		     	
 		      <div id="idFind">
-		       	<a class="" href="/">아이디 찾기</a>
-		       	<a href="/">비밀번호 찾기</a>
+		       	<a class="" href="">아이디 찾기 |</a>
+		       	<a href="">비밀번호 찾기</a>
 		      </div>
 		      
 		     </div>
 		     
-		     <div id="btn_loginbox"  class="d-flex flex-column">
-		      <input type="submit" class="btn btn-dark" value="로그인">
-		      <input type="button" class="btn btn-dark" value="회원가입">
+		     <div id="btn_loginbox" class="d-flex flex-column">
+		      <input type="submit" value="로그인">
+		      <input type="button" value="회원가입">
 		     </div>
 	  	</div>
 	  </form>
