@@ -48,26 +48,33 @@
 			$(e.target).toggleClass("btnColor");
 		});
 		
-		$(".faqContainer .btn-group button#btnAll").click();
+		$(".faqContainer .btn-group button#all").click();
 	});
-
 </script>
     
     
 <div class="container faqContainer">
-
-	<h2 style="font-weight:bold">자주묻는질문</h2><br>
-		<hr style="background-color: black; height: 1.2px;"><br>
-
+	
+	<div class="titleZone row">
+		<h2 class="col text-left" style="font-weight:bold">자주묻는질문</h2><br>
+		<div class="col text-right coment">
+			<span style="font-weight: bold; font-size: 20px;">02-336-8546</span><br>
+	    평일 09:30 ~ 18:00 (점심시간 12:30 ~ 13:30)<br>주말 및 공휴일 휴무
+	    </div>
+	</div>
+	<hr style="background-color: black; height: 1.2px;"><br>
+<%-- 특정 버튼 클릭했을때 버튼 아이디를 request영역에 담아서 요청을 보내고
+거기에 해당하는 글들을 db에서 가져온 뒤 faqContent.jsp에 보여준다. --%>
+ 
 	<div class="row">
 		<div class="btn-group col-12 text-center mb-4">
-			<button type="button" class="btn" id="btnAll">전체</button>
-			<button type="button" class="btn" id="btnOp">운영</button>
-			<button type="button" class="btn" id="btnProd">상품</button>
-			<button type="button" class="btn" id="btnOrder">주문</button>
-			<button type="button" class="btn" id="btnDlv">배송</button>
-			<button type="button" class="btn" id="btnMbr">회원</button>
-			<button type="button" class="btn" id="btnElse">기타</button>
+			<button type="button" class="btn" id="all">전체</button>
+			<button type="button" class="btn" id="operation">운영</button>
+			<button type="button" class="btn" id="product">상품</button>
+			<button type="button" class="btn" id="order">주문</button>
+			<button type="button" class="btn" id="delivery">배송</button>
+			<button type="button" class="btn" id="member">회원</button>
+			<button type="button" class="btn" id="else">기타</button>
 		</div>
 	</div>
 
