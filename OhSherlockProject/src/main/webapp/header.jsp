@@ -166,7 +166,14 @@ input[type=checkbox] {
 /* --- 이벤트 컨테이너 css --- */
 
 div.eventContainer {
-	clear:both;
+   clear: both;
+/*    width: 72%;
+   margin-right: 235px; */
+}
+
+h4.eventText{
+	font-weight: bold;
+	padding: 60px 0px 10px 0px;
 }
 section#index_sectionBox {
 	position: relative;
@@ -175,24 +182,27 @@ section#index_sectionBox {
 div#indexEvent {
 	position: relative;
 }
+
 div#indexEventText {
 	position: absolute;
-	bottom: 50px;
-	left: 40px color: #fff;
+	bottom: 27px;
+	left: 30px; 
+	color: #fff;
 	min-width: 400px;
 }
 
 
-div#indexEventText>p {
+div#indexEventText > p {
 	font-size: 26px;
+	margin: 0px;
+  margin-bottom: 3px;
 }
 
 div#priceInfo {
 	display: flex;
-	width: 64px;
-	height: 64px;
+	height: 53px;
 	font-size: 24px;
-	line-height: 64px;
+	line-height: 54px;
 	width: auto;
 }
 
@@ -204,15 +214,23 @@ div#indexStoreStory {
 
  
 /* 매장안내 */
-div#store {
+a#store {
 	background-color: #ffd9b3;
-	font-weight: 500;
-	max-width: 100%;
-	height: 200px;
-	text-align: center;
 	font-size: 50px;
+	font-weight: 500;
+	text-align: center;
+	text-decoration: none;
+	max-width: 91%;
+	height: 200px;
 	padding-top: 55px;
+	border-radius: 0.25rem;
 }
+
+
+a#store:visited {
+	color: black;
+}
+
 
 div#brandStory {
 	position: relative;
@@ -220,7 +238,7 @@ div#brandStory {
 
 div#brandStoryText {
 	position: absolute;
-	top: 90px;
+	top: 103px;
 	left: 36px;
 	color: white;
 	font-size: 30px;
