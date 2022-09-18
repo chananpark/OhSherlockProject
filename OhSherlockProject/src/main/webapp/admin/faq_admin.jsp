@@ -39,6 +39,13 @@
    outline: none !important;
    box-shadow: none;
 }
+
+#faqRegister{
+	border-style: none;
+	background-color: #1E7F15;
+	color: white;
+	height: 40px;
+}
 </style>       
     
 <script>
@@ -84,7 +91,9 @@
 	</div>
 
 	<iframe id="iframe_idFind" style="border: none; width: 100%; height: 350px;" 
-	src="<%=ctxPath %>/cs/faqContent.jsp"></iframe>
+	src="<%=ctxPath %>/admin/faqContent_admin.jsp"></iframe>
+	
+	<div class="text-right"><input type="button" id="faqRegister" value="질문 추가 등록"/></div>
 </div>
 
 <%@ include file="../footer.jsp"%>
