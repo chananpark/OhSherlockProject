@@ -167,8 +167,7 @@ input[type=checkbox] {
 
 div.eventContainer {
    clear: both;
-/*    width: 72%;
-   margin-right: 235px; */
+	 margin-bottom: 37px;
 }
 
 h4.eventText{
@@ -298,7 +297,7 @@ div#brandStoryText {
 						href="<%=ctxPath%>/login/login.jsp" id="navbarDropdown" data-toggle="dropdown">로그인</a> <%-- 로그인을 누르면 기본은 로그인 창으로 연결 --%>
 						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="<%=ctxPath%>/login/login.jsp">로그인</a> 
-							<a class="dropdown-item" href="#">회원가입</a>
+							<a class="dropdown-item" href="<%=ctxPath%>/member/memberRegister.jsp">회원가입</a>
 						</div></li>
 					<li class="nav-item active mr-2"><a
 						class="nav-link menufont_size text-secondary" href="<%=ctxPath%>/mypage/mypage.jsp">마이페이지</a></li>
