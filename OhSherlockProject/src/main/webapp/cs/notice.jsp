@@ -23,53 +23,71 @@
 	  border-color: #1E7F15;
 	}
 
+	.badge {
+		background-color: #1E7F15; 
+		color: white; 
+		font-weight: bold;
+	}
+	
+	.btn-secondary {
+		width: 80px; 
+		margin: 15px; 
+		border-style: none; 
+		height: 30px;
+		font-size: 14px;
+	}
+	
+	.btn-secondary:hover {
+		border: 2px none #1E7F15;
+		background-color: #1E7F15;
+	    color: white;
+	}
+	
 </style>       
     
 <div class="container">
 
-	<h2 style="font-weight:bold">공지사항</h2><br>
-		<hr style="background-color: black; height: 1.2px;"><br>
-		<table class="table mt-4">
+	<div class="titleZone row">
+      <h2 class="col text-left" style="font-weight:bold">공지사항</h2><br>
+      <div class="col text-right">
+         <span style="font-weight: bold; font-size: 20px;">02-336-8546</span><br>
+         <span style="font-weight: normal; font-size: 15.5px;">평일 09:30 ~ 18:00 (점심시간 12:30 ~ 13:30)<br>주말 및 공휴일 휴무</span>
+       </div>
+   </div>
+   <hr style="background-color: black; height: 1.2px;"><br>
+   
+		<table class="table mt-4 text-center">
 			<thead class="thead-light">
 				<tr>
-					<th>매장유형</th>
-					<th>지점이름</th>
-					<th>상세주소</th>
-					<th>전화번호</th>
+					<th>번호</th>
+					<th>제목</th>
+					<th>등록일</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td style="display:none" class="storeNo">1</td>
-					<td>티하우스</td>
-					<td>서울 서교동 쌍용점</td>
-					<td>서울특별시 마포구 서교동 447-5</td>
-					<td>02-336-8546</td>
+					<td style="class=storeNo">4</td>
+					<td><span class="badge badge-pill">new</span>&nbsp;&nbsp;교환/반품 전 필독 사항</td>
+					<td>2022.09.02</td>
 				</tr>
 				<tr>
-					<td style="display:none" class="storeNo">2</td>
-					<td>티뮤지엄</td>
-					<td>제주도 한라산 오름점</td>
-					<td>제주특별자치도 서귀포시 안덕면 창천리 564 제주특별자치도</td>
-					<td>064-794-5312</td>
+					<td style="class=storeNo">3</td>
+					<td>4월 다다일상 베이직/홈카페 배송 지연 안내</td>
+					<td>2022.04.12</td>
 				</tr>
 				<tr>
-					<td style="display:none" class="storeNo">3</td>
-					<td>면세점</td>
-					<td>프랑스 파리 에펠탑점</td>
-					<td>Champ de Mars, 5 Av. Anatole France, 75007 Paris</td>
-					<td>+ 33 7 66 89 27 49</td>
+					<td style="class=storeNo">2</td>
+					<td>오!셜록 개인정보 처리방침 변경 고지</td>
+					<td>2022.03.17</td>
 				</tr>
 				<tr>
-					<td style="display:none" class="storeNo">4</td>
-					<td>백화점</td>
-					<td>미국 뉴욕 센트럴파크점</td>
-					<td>Manhattan, New York City, United States</td>
-					<td>+1 212-310-6600</td>
+					<td style="class=storeNo">1</td>
+					<td>CJ대한통운 파업 종료 및 배송지연, 정상화 안내</td>
+					<td>2022.03.10</td>
 				</tr>
-				
 			</tbody>
 		</table>
+			
 
 	<nav aria-label="Page navigation example" style="margin-top: 60px;">
 		<ul class="pagination justify-content-center">
@@ -84,6 +102,12 @@
 			</a></li>
 		</ul>
 	</nav>
+	
+	<div class="text-right" id="detail" style="display: block; margin-top: 15px;"> <%-- 글쓰기 버튼은 관리자 계정에서만 보임 --%>
+	  <input type="button" class="btn-secondary" value="글쓰기" />
+    </div>
+	
+	
 </div>
 
 <%@ include file="../footer.jsp"%>
