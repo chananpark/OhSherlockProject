@@ -70,7 +70,7 @@
       <table class="table table-active table-borderless">
           <tbody class="text-center" style="font-weight: bold;">
             <tr>
-            <td>12,000원&nbsp;+&nbsp;2,500원(배송비)&nbsp;=&nbsp;14,500원</td>
+              <td>12,000원&nbsp;+&nbsp;2,500원(배송비)&nbsp;=&nbsp;14,500원</td>
             </tr>
           </tbody>
         </table>
@@ -100,7 +100,7 @@
                <th>연락처</th><td>010-1111-2222</td>
             </tr>
             <tr>
-               <th>주소</th><td>[01234] 서울 마포구 동교로 332 (동교동, 거북아파트)</td>
+               <th>주소</th><td>01234 서울 마포구 동교로 332 (동교동, 거북아파트) 101동 1107호</td>
             </tr>
             <tr>
                <th>배송메모</th><td>부재시 경비실에 맡겨주세요</td>

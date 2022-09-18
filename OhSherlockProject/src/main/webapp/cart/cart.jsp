@@ -28,7 +28,8 @@
 
 <div class="container" id="cartContainer">
 	<div class="mb-4">
-		<h2 style="font-weight: bold">장바구니</h2>
+		<h2 style="font-weight: bold">장바구니</h2><br>
+		<hr style="background-color: black; height: 1.2px;"><br>
 	</div>
 	<div class="cartList">
 		<table class="table mt-4">
@@ -47,7 +48,7 @@
 					<td><input type="checkbox" id="cartSelectOne" name="cartSelectOne" value="cartSelectOne"/></td>
 					<td><img src="https://www.osulloc.com/upload/kr/ko/adminImage/GL/SU/304_20211015203853590OP.png?quality=80" width="100"/></td>
 					<td>스윗 베리 루이보스티</td>
-					<td><input style="width:100px" type="number" value="1" min="1" required/></td>
+					<td><input style="width:100px" type="number" value="1" min="1" max="50" required/></td>
 					<td>9,500원</td>
 					<td><p><input class="paymentBtn" type="button" value="바로구매"/></p>
 					<p><input type="button" value="상품삭제"/></p></td>
@@ -56,7 +57,7 @@
 					<td><input type="checkbox" id="cartSelectOne" name="cartSelectOne" value="cartSelectOne"/></td>
 					<td ><img src="https://www.osulloc.com/upload/kr/ko/adminImage/HB/XA/304_20211026141423508CU.png?quality=80" width="100"/></td>
 					<td>러블리 티 박스</td>
-					<td><input style="width:100px" type="number" value="1" min="1" required/></td>
+					<td><input style="width:100px" type="number" value="1" min="1" max="50" required/></td>
 					<td>20,000원</td>
 					<td><p><input class="paymentBtn" type="button" value="바로구매"/></p>
 					<p><input type="button" value="상품삭제"/></p></td>
@@ -65,7 +66,7 @@
 					<td><input type="checkbox" id="cartSelectOne" name="cartSelectOne" value="cartSelectOne"/></td>
 					<td><img src="https://www.osulloc.com/upload/kr/ko/adminImage/KR/TP/304_20191213162107079MN.png?quality=80" width="100"/></td>
 					<td>웨딩 그린티 20입</td>
-					<td><input style="width:100px" type="number" value="1" min="1" required/></td>
+					<td><input style="width:100px" type="number" value="1" min="1" max="50" required/></td>
 					<td>18,400원</td>
 					<td><p><input class="paymentBtn" type="button" value="바로구매"/></p>
 					<p><input type="button" value="상품삭제"/></p></td>
