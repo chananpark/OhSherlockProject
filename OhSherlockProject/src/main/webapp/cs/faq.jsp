@@ -45,7 +45,8 @@
 	
 	$(document).ready(()=>{
 		$(".faqContainer .btn-group button").click(function(e){
-			$(e.target).toggleClass("btnColor");
+			$(".faqContainer .btn-group button").removeClass("btnColor");
+			$(e.target).addClass("btnColor");
 		});
 		
 		$(".faqContainer .btn-group button#all").click();
