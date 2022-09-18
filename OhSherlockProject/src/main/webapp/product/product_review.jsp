@@ -109,10 +109,10 @@
 	</table>
 	
 	<div class="row justify-content-end" style="margin-top:50px;">
-		<span><input class="btnEditDel mr-4" type="button" value="상품후기작성"/></span>
-		<span><input class="btnEditDel mr-4" type="button" value="전체상품 후기조회" /></span>
+		<span><input class="btnEditDel mr-4" type="button" value="상품후기작성" data-toggle="modal" data-target="#btnReview" data-dismiss="modal" data-backdrop="static"/></span>
+		<span><input class="btnEditDel mr-4" type="button" value="전체상품 후기조회" id="btnAllReview"/></span>
 	</div>
-	
+
 	<%-- 하단 페이징처리 --%>
 	<nav aria-label="Page navigation example" style="margin-top: 60px;">
 	  <ul class="pagination justify-content-center">
@@ -134,3 +134,36 @@
 	
 </div>
 
+
+
+
+<%-- *** 리뷰작성 모달창 *** --%>
+<div class="modal fade" id="btnReview">
+	<div class="modal-dialog ">
+    	<div class="modal-content">
+    
+	      	<!-- Modal header -->
+	      	<div class="modal-header">
+	        	<h4 class="modal-title">상품 후기 작성</h4>
+	        	<button type="button" class="close idFindClose" data-dismiss="modal">&times;</button>
+	      	</div>
+	      
+	      	<!-- Modal body -->
+	      	<div class="modal-body">
+	        	<div id="reviewWrite">
+	        	<%-- jsp 파일 연결을 위해서 iframe 을 사용하지 않고, 우선 include로 연결해 두었다. --%>
+	        	<%--	<iframe id="iframe_reviewWrite" style="border: none; width: 100%; height: 350px;" src="<%= request.getContextPath()%>/login/idFind.up"> </iframe>---%>
+             		<%@ include file="modal_review_write.jsp"%>
+	        	</div>
+	      	</div>
+	      
+	      	<!-- Modal footer -->
+	      	<div class="modal-footer">
+	        	<button type="button" class="btn btn-light idFindClose" data-dismiss="modal">Close</button>
+	        	<%-- close나 엑스 버튼을 누르면 아이디 찾기에 입력해 놓은 값을 날려주기 
+	        		 close와 엑스버튼을 한번에 잡으려고 클래스를 idFindClose 로 동일하게 부여--%>
+	      	</div>
+	      	
+		</div>
+	</div>
+</div>
