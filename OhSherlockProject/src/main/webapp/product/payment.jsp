@@ -30,6 +30,11 @@
 	height: 35px;
 }
 
+.mustIn {
+	color: red;
+	font-weight: bold;
+}
+
 </style>
 
 <script>
@@ -50,8 +55,8 @@ $(document).ready(()=>{
 
 <div class="container orderPayment">
 
-	<h2 style="font-weight: bold">주문하기</h2>
-	<hr>
+	<h2 style="font-weight: bold">주문하기</h2><br>
+	<hr style="background-color: black; height: 1.2px;"><br>
 
 	<div id="accordion">
 
@@ -73,6 +78,7 @@ $(document).ready(()=>{
 		</div>
 		<hr>
 
+		<%-- 배송지 정보 input태그 value에는 기본적으로 구매자 정보가 입력되어 있도록 한다. --%>
 		<h5>
 			<a class="collapsed card-link" data-toggle="collapse" href="#deliveryAddr">배송지정보</a>
 		</h5>
@@ -81,15 +87,15 @@ $(document).ready(()=>{
 			<table class="table table-bordered mt-2 orderInfo">
 				<thead class="thead-light">
 					<tr>
-						<th>받는 분</th>
-						<td>이순신</td>
+						<th>받는 분<span class="mustIn">*</span></th>
+               			<td><input type="text" required/></td>
 					</tr>
 					<tr>
-						<th>연락처</th>
-						<td>010-1111-2222</td>
+						<th>연락처<span class="mustIn">*</span></th>
+               			<td><input type="number" placeholder="-를 제외한 숫자만 입력하세요." required/></td>
 					</tr>
 					<tr>
-						<th style="vertical-align: middle">주소</th>
+						<th style="vertical-align: middle">주소<span class="mustIn">*</span></th>
 
 						<td class="border-0"><input class="addressInput mt-2"
 							type="text" id="address" name="address" size="20"
