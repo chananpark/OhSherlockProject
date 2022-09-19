@@ -40,11 +40,11 @@
 
 	/* 버튼로그인 */
 	div#btn_loginbox > input[type='submit']{
-		height:45px;
-		border-radius: 90px;
-	  background-color: #003300;
-	  color: white;
-	  cursor: pointer;
+    height: 45px;
+    border-radius: 90px;
+    background-color: #1E7F15;
+    color: white;
+    cursor: pointer;
 	}
 	
 	/* 버튼회원가입 */
@@ -52,6 +52,7 @@
 		height:45px;
 		border-radius: 90px;
 	  background-color: #c6c6c6;
+	  border:none;
 	  color: white;
 	  cursor: pointer;
 	}
