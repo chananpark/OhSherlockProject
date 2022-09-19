@@ -17,7 +17,7 @@
 
 <!-- Font Awesome 5 Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+<script src="https://kit.fontawesome.com/48a76cd849.js" crossorigin="anonymous"></script>
 <!-- 폰트 목록 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -213,23 +213,14 @@ div#indexStoreStory {
 
  
 /* 매장안내 */
-a#store {
-	background-color: #ffd9b3;
-	font-size: 50px;
-	font-weight: 500;
-	text-align: center;
-	text-decoration: none;
-	max-width: 91%;
-	height: 200px;
-	padding-top: 55px;
-	border-radius: 0.25rem;
+
+#storebox {
+	position:relative;
+  width: 91%;
+  padding:5px;
+  border-radius: 0.25rem;
+  background-color: #ffd9b3;
 }
-
-
-a#store:visited {
-	color: black;
-}
-
 
 div#brandStory {
 	position: relative;

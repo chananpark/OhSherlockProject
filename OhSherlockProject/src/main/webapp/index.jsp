@@ -157,16 +157,22 @@
         </div>
 
         <div id="indexStoreStory" class="col-md-6">
-          <a id="store" href="<%=ctxPath%>/storeInfo/storeList.jsp">매장안내</a>
+          
+          <div id="storebox">
+		          <a id="store" href="<%=ctxPath%>/storeInfo/storeList.jsp">
+		          <img src="<%=ctxPath%>/images/o_logo.png" style="width: 42%; float:left; margin: 10px;"/>
+		          </a>
+           	<div style=" font-size: 49px; margin: 63px 0px 0px 206px"><i class="fa-solid fa-location-dot"></i> 매장안내</div>
+          </div>
           
           <div id="brandStory">
             <a href="<%=ctxPath%>/brandStory/brandStory.jsp"><img
               src="<%=ctxPath%>/images/brand_story_img.jpg"
-              style="max-width: 91%; height: 268px; vertical-align: top; border-radius: 0.25rem;" 
+              style="max-width: 91%; height: 268px; vertical-align: top; border-radius: 0.25rem; " 
             /></a>
             <div id="brandStoryText">
-              <div style="font-size:20px; font-weight: bold">OH!SHERLOCK</div>
-              <div>오!셜록 스토리</div>
+              <div style="font-size:20px; font-weight: bold">OH! SHERLOCK</div>
+              <div>오! 셜록 스토리</div>
             </div>
           </div>
         </div>
