@@ -7,6 +7,10 @@
 		border-style: none;
 	}
 	
+	input[type=button] {
+		border-style: none;
+	}
+	
 	.page-link {
 	  color: #666666; 
 	  background-color: #fff;
@@ -25,6 +29,7 @@
 	  background-color: #fafafa; 
 	  border-color: #1E7F15;
 	}
+	
 </style>
 
 <div class="container">
@@ -32,10 +37,11 @@
    <h2 class="col text-left" style="font-weight:bold">상품관리</h2><br>
    <hr style="background-color: black; height: 1.2px;"><br>
   
-  	<input type="text" value="상품코드를 입력하세요"/>&nbsp;
-  	<button type="button">검색</button>
-  	
-  	<table class="table mt-4">
+  	<div class="text-right">
+	  	<input type="text" value="상품코드를 입력하세요"/>&nbsp;
+	  	<button type="button"><i class="fas fa-search"></i></button>
+  	</div>
+  	<table class="table mt-4 prodList text-center">
 			<thead class="thead-light">
 				<tr>
 					<th>상품코드</th>
@@ -61,7 +67,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td class="prodNo">1234</td>
+					<td class="prodNo">2345</td>
 					<td>제주 순수녹차</td>
 					<td>9,500</td>
 					<td>-</td>
