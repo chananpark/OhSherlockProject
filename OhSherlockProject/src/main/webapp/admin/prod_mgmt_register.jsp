@@ -1,8 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="../header.jsp"%>
+
 <style>
-#ntWrite input[type=text], #ntWrite select, #ntWrite textarea {
+
+#pdReg input[type="text"], #pdReg input[type="number"], #pdReg select, #pdReg textarea {
 	width: 100%;
 	padding: 12px;
 	border: 1px solid #ccc;
@@ -26,8 +28,10 @@
 	background-color: #1E7F15;
 	color: white;
 }
+
+}
 </style>
-<div class="container">
+<div class="container prodRegisterContainer">
 
 	<h2 class="col text-left" style="font-weight: bold">상품관리</h2>
 	<br>
@@ -38,27 +42,34 @@
 	<hr>
 
 
-	<form action="" name="ntWrite" id="ntWrite">
-		<label for="qnatype">질문유형<span class="text-danger">*</span></label> <select
+	<form action="" name="pdReg" id="pdReg">
+		<label for="qnatype">카테고리<span class="text-danger">*</span></label> <select
 			id="qnatype" name="qnatype">
-			<option value="operation">운영</option>
-			<option value="product">상품</option>
-			<option value="order">주문</option>
-			<option value="delivery">배송</option>
-			<option value="member">회원</option>
-			<option value="else">기타</option>
+			<option value="operation">녹차/말차</option>
+			<option value="product">홍차</option>
+			<option value="order">허브차</option>
+			<option value="delivery">기프트세트</option>
 		</select> 
 			
-		<label for="title">제목<span class="text-danger">*</span></label> <input
-			type="text" id="title" name="title" placeholder="제목을 입력하세요.">
+		<label for="title">상품명<span class="text-danger">*</span></label> 
+		<input type="text" id="title" name="title" placeholder="상품명을 입력하세요.">
+
+		<label for="price">가격<span class="text-danger">*</span></label>
+		<input type="number" id="price" name="price" placeholder="숫자만 입력하세요."/>
+
+		<label for="stock">재고<span class="text-danger">*</span></label>
+		<input type="number" id="stock" name="stock" placeholder="숫자만 입력하세요."/>
+
+		<label for="salePrice">할인금액</label>
+		<input type="number" id="salePrice" name="salePrice" placeholder="숫자만 입력하세요."/>
+
+		<label for="thumbnail" style="margin: 6px 20px 16px 0;">대표이미지<span class="text-danger">*</span></label>
+		<input type="file" id="thumbnail" name="thumbnail"> <br>
 
 		<label for="content">내용<span class="text-danger">*</span></label>
-		<textarea id="content" name="content" placeholder="문의 내용을 입력하세요."
-			style="height: 200px"></textarea>
-
-		<label for="photo" style="margin: 6px 20px 16px 0;">사진 첨부</label><input
-			type="file" id="photo" name="photo"> <br>
-
+		<span>파일첨부</span>&nbsp;<input type="file" id="thumbnail" name="thumbnail"> <br>
+		<textarea id="content" name="content" placeholder="문의 내용을 입력하세요." style="height:200px"></textarea>
+		
 		<hr>
 
 		<div class="text-right" style="margin-top: 30px;">
