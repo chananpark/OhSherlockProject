@@ -109,30 +109,32 @@
 				</tr>
 				
 				<tr>
-						<th style="vertical-align: middle">주소<span class="mustIn">*</span></th>
-						<td class="border-0">
-							<input class="addressInput mt-2"
-							type="text" id="postcode" name="postcode" size="20"
-							placeholder="우편번호" />
-							<button type="button" id="addressBtn">우편번호찾기</button>
-							<span class="error" style="color: red">우편번호 형식이 아닙니다.</span> <br> 
-							<input
-							class="addressInput mt-2" type="text" id="extraAddress"
-							name="extraAddress" size="50" /> <br> 
-							<input
-							class="addressInput mt-2" type="text" id="detailAddress"
-							name="detailAddress" size="50" placeholder="상세주소" /> 
-							<span class="error" style="color: red">주소를 입력하세요</span></td>
+					<th style="vertical-align: middle">주소<span class="mustIn">*</span></th>
+					<td class="border-0">
+						<input class="addressInput mt-2"
+						type="text" id="postcode" name="postcode" size="20"
+						placeholder="우편번호" />
+						<button type="button" id="addressBtn">우편번호찾기</button>
+						<span class="error" style="color: red">우편번호 형식이 아닙니다.</span> <br> 
+						<input
+						class="addressInput mt-2" type="text" id="extraAddress"
+						name="extraAddress" size="50" /> <br> 
+						<input
+						class="addressInput mt-2" type="text" id="detailAddress"
+						name="detailAddress" size="50" placeholder="상세주소" /> 
+						<span class="error" style="color: red">주소를 입력하세요</span></td>
 					</tr>
+					
 				<tr>
 					<th>휴대전화</th>
 					<td>
-			    <input type="text" id="hp1" name="hp1" size="6" maxlength="3" value="010" readonly />&nbsp;-&nbsp;
-			    <input type="text" id="hp2" name="hp2" size="6" maxlength="4" />&nbsp;-&nbsp;
-			    <input type="text" id="hp3" name="hp3" size="6" maxlength="4" />
-						</td>
-						
+				    <input type="text" id="hp1" name="hp1" size="6" maxlength="3" value="010" readonly />&nbsp;-&nbsp;
+				    <input type="text" id="hp2" name="hp2" size="6" maxlength="4" />&nbsp;-&nbsp;
+				    <input type="text" id="hp3" name="hp3" size="6" maxlength="4" />
+				    <button type="button" id="phoneCheck">인증번호받기</button>
+					</td>
 				</tr>
+				
 				<tr>
 					<th>이메일<span class="mustIn">*</span></th>
 					<td>
@@ -168,11 +170,11 @@
 		<tr>
 			<th style="background-color: white;">생년월일</th>
 			<td >
-			   <input type="number" id="birthyyyy" name="birthyyyy" min="1950" max="2050" step="1" value="1995" style="width: 80px; padding: 5px;" required />
+			   <input type="number" id="birthyyyy" name="birthyyyy" min="1950" max="2050" step="1" value="1995" style="width: 80px; padding: 5px;" required />년
 			   <select id="birthmm" name="birthmm" style="margin-left: 2%; width: 60px; padding: 5px;">
-				</select> 
+				</select> 월
 			   <select id="birthdd" name="birthdd" style="margin-left: 2%; width: 60px; padding: 5px;">
-				</select> 
+				</select> 일
 			</td>
 		</tr>
 
