@@ -39,17 +39,37 @@
    outline: none !important;
    box-shadow: none;
 }
+
+#faqRegister > input[type=button]{
+	border-style: none;
+	background-color: #1E7F15;
+	color: white;
+	height: 40px;
+}
 </style>       
     
 <script>
 	
 	$(document).ready(()=>{
+		
+		<%-- 클릭이벤트 바인딩 --%>
 		$(".faqContainer .btn-group button").click(function(e){
 			$(".faqContainer .btn-group button").removeClass("btnColor");
 			$(e.target).addClass("btnColor");
 		});
 		
 		$(".faqContainer .btn-group button#all").click();
+		
+		$("#faqRegister").click(()=>{
+			 location.href = "../admin/faqRegister_admin.jsp";
+		});
+
+		<%-- 세션에 저장된 userid가 admin(관리자)일 때만 질문 추가 등록 버튼을 노출시킨다.--%>
+		$("#faqRegister").hide();
+		
+		if ("${sessionScope.userid}" == 'admin') {
+			$("#faqRegister").show();
+		}
 	});
 </script>
     
@@ -85,6 +105,12 @@
 
 	<iframe id="iframe_idFind" style="border: none; width: 100%; height: 350px;" 
 	src="<%=ctxPath %>/cs/faqContent.jsp"></iframe>
+	
+	<%-- 로그인 된 사용자가 관리자일 경우에만 나타나도록 함 --%>
+	<div class="text-right" id="faqRegister">
+		<input type="button" value="질문 추가 등록"/>
+	</div>
+	
 </div>
 
 <%@ include file="../footer.jsp"%>

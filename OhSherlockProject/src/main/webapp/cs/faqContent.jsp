@@ -44,6 +44,20 @@
    box-shadow: none;
 }
 </style> 
+
+<script>
+	
+	$(function() {
+		
+		<%-- 세션에 저장된 userid가 admin(관리자)일 때만 수정/삭제 버튼을 노출시킨다.--%>
+		$(".adminOnlyBtns").hide();
+		
+		if ("${sessionScope.userid}" == 'admin') {
+			$(".adminOnlyBtns").show();
+		}
+		
+	});
+</script>
     
 <div class="accordion" id="faqAccordion">
 	<div class="card">
@@ -62,6 +76,10 @@
 				상담 가능한 시간은 AM 09:30-PM 6:00 이며 점심시간은 PM 12:30-PM 1:30 입니다. (주말 및 공휴일
 				휴무)<br> 상담 시간 외의 문의는 게시판이나 메일, 채팅 문의 주시면 가능한 빠른 시간에 답변을 드릴 수
 				있도록 하겠습니다.
+				<div class="text-right adminOnlyBtns mb-1">
+					<input type="button" value="수정"/>
+					<input class="btn-dark" type="button" value="삭제"/>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -80,6 +98,10 @@
 			<div class="card-body">
 				결제수단에 관계 없이 환불 금액은 예치금으로 반환됩니다.<br> 결제 시 사용된 포인트가 있다면 반환되며, 구매로
 				인해 적립되었던 포인트는 차감됩니다.
+				<div class="text-right adminOnlyBtns mb-1">
+					<input type="button" value="수정" /> <input class="btn-dark"
+						type="button" value="삭제" />
+				</div>
 			</div>
 		</div>
 	</div>
@@ -98,6 +120,10 @@
 			<div class="card-body">
 				고객님의 실제 결제 금액(쿠폰 사용 등 할인 후 최종 결제 금액, 배송비 제외)이 3만원 이상일 경우에 무료로 배송해
 				드립니다.<br> 그러나 총 결제금액이 3만원 미만이라면 고객님께서 배송비 2,500원을 부담해주셔야 합니다.
+				<div class="text-right adminOnlyBtns mb-1">
+					<input type="button" value="수정" /> <input class="btn-dark"
+						type="button" value="삭제" />
+				</div>
 			</div>
 		</div>
 	</div>
