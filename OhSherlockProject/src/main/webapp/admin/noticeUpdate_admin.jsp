@@ -3,9 +3,9 @@
 <%@ include file="../header.jsp"%>    
     
 <style>
-	
+
 	/* 공지사항 입력 css 외부에서 받아온 것 */ 
-	#ntWrite input[type=text], #ntWrite select, #ntWrite textarea {
+	#ntUpdate input[type=text], #ntUpdate select, #ntUpdate textarea {
 		width: 100%;
 		padding: 12px;
 		border: 1px solid #ccc;
@@ -15,8 +15,8 @@
 		margin-bottom: 16px;
 		resize: vertical;
 	}
-	
-	.writeBtns  {
+
+	.updateBtns  {
 		width: 80px; 
 		margin: 15px; 
 		border-style: none; 
@@ -43,11 +43,11 @@
     </div>
     <hr style="background-color: black; height: 1.2px;"><br>
    
-    <h5 style="font-weight: bold;">게시글 작성하기</h5>
+    <h5 style="font-weight: bold;">게시글 수정하기</h5>
     <hr>
    
    
-    <form action="" name="ntWrite" id="ntWrite">
+    <form action="" name="ntUpdate" id="ntUpdate">
 		<label for="title">제목<span class="text-danger">*</span></label>
 		<input type="text" id="title" name="title" placeholder="제목을 입력하세요.">
 		
@@ -60,11 +60,10 @@
 		<hr>
 		
 		<div class="text-right" style="margin-top: 30px;">
-		   <input type="button" class="writeBtns" value="취소" style="margin-right: 0" />&nbsp;
-		   <input type="button" class="btn-secondary writeBtns" value="등록" style="margin-left: 5px;" />
+		   <input type="button" class="updateBtns" value="수정" style="margin-right: 0" />&nbsp;
+		   <input type="button" class="btn-secondary updateBtns" value="삭제" style="margin-left: 5px;" />
 		</div>
 	</form>
-	
 	
 </div>
 
