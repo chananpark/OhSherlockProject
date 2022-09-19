@@ -166,7 +166,13 @@ input[type=checkbox] {
 /* --- 이벤트 컨테이너 css --- */
 
 div.eventContainer {
-	clear:both;
+   clear: both;
+	 margin-bottom: 37px;
+}
+
+h4.eventText{
+	font-weight: bold;
+	padding: 60px 0px 10px 0px;
 }
 section#index_sectionBox {
 	position: relative;
@@ -175,24 +181,27 @@ section#index_sectionBox {
 div#indexEvent {
 	position: relative;
 }
+
 div#indexEventText {
 	position: absolute;
-	bottom: 50px;
-	left: 40px color: #fff;
+	bottom: 27px;
+	left: 30px; 
+	color: #fff;
 	min-width: 400px;
 }
 
 
-div#indexEventText>p {
+div#indexEventText > p {
 	font-size: 26px;
+	margin: 0px;
+  margin-bottom: 3px;
 }
 
 div#priceInfo {
 	display: flex;
-	width: 64px;
-	height: 64px;
+	height: 53px;
 	font-size: 24px;
-	line-height: 64px;
+	line-height: 54px;
 	width: auto;
 }
 
@@ -204,15 +213,23 @@ div#indexStoreStory {
 
  
 /* 매장안내 */
-div#store {
+a#store {
 	background-color: #ffd9b3;
-	font-weight: 500;
-	max-width: 100%;
-	height: 200px;
-	text-align: center;
 	font-size: 50px;
+	font-weight: 500;
+	text-align: center;
+	text-decoration: none;
+	max-width: 91%;
+	height: 200px;
 	padding-top: 55px;
+	border-radius: 0.25rem;
 }
+
+
+a#store:visited {
+	color: black;
+}
+
 
 div#brandStory {
 	position: relative;
@@ -220,7 +237,7 @@ div#brandStory {
 
 div#brandStoryText {
 	position: absolute;
-	top: 90px;
+	top: 103px;
 	left: 36px;
 	color: white;
 	font-size: 30px;
@@ -246,7 +263,7 @@ div#brandStoryText {
 					<i class="fas fa-shopping-basket fa-lg"></i></a></li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="#">
 					<i class="fas fa-heart fa-lg"></i></a></li>
-					<li class="nav-item active"><a class="nav-link menufont_size text-dark" href="#">
+					<li class="nav-item active"><a class="nav-link menufont_size text-dark" data-toggle="modal" data-target="#btnSearch" data-dismiss="modal" data-backdrop="static">
 					<i class="fas fa-search fa-lg"></i></a></li>
 				</ul>
 			</div>
@@ -280,7 +297,7 @@ div#brandStoryText {
 						href="<%=ctxPath%>/login/login.jsp" id="navbarDropdown" data-toggle="dropdown">로그인</a> <%-- 로그인을 누르면 기본은 로그인 창으로 연결 --%>
 						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="<%=ctxPath%>/login/login.jsp">로그인</a> 
-							<a class="dropdown-item" href="#">회원가입</a>
+							<a class="dropdown-item" href="<%=ctxPath%>/member/memberRegister.jsp">회원가입</a>
 						</div></li>
 					<li class="nav-item active mr-2"><a
 						class="nav-link menufont_size text-secondary" href="<%=ctxPath%>/mypage/mypage.jsp">마이페이지</a></li>
@@ -299,3 +316,38 @@ div#brandStoryText {
 	</div>
 	
 	<button id="topBtn" class="btn"><i class="far fa-hand-point-up" style="color:white"></i></button>
+
+	
+	
+<%-- *** 검색 모달창 *** --%>
+<div class="modal fade" id="btnSearch" style="font-family: 'Gowun Dodum', sans-serif;">
+	<div class="modal-dialog modal-lg">
+    	<div class="modal-content">
+    
+	      	<!-- Modal header -->
+	      	<div class="modal-header">
+	        	<h4 class="modal-title" style="font-weight:bold;">검색</h4>
+	        	<button type="button" class="close idFindClose" data-dismiss="modal">&times;</button>
+	      	</div>
+	      
+	      	<!-- Modal body -->
+	      	<div class="modal-body">
+	        	<div id="search">
+	        	<%-- jsp 파일 연결을 위해서 iframe 을 사용하지 않고, 우선 include로 연결해 두었다. --%>
+	        	<%--	<iframe id="iframe_reviewWrite" style="border: none; width: 100%; height: 350px;" src="<%= request.getContextPath()%>/login/idFind.up"> </iframe>---%>
+             		<%@ include file="modal_search.jsp"%>
+	        	</div>
+	      	</div>
+	      
+	      	<!-- Modal footer -->
+	      	<div class="modal-footer">
+	        	<button type="button" class="btn btn-light idFindClose" data-dismiss="modal">Close</button>
+	        	<%-- close나 엑스 버튼을 누르면 아이디 찾기에 입력해 놓은 값을 날려주기 
+	        		 close와 엑스버튼을 한번에 잡으려고 클래스를 idFindClose 로 동일하게 부여--%>
+	      	</div>
+	      	
+		</div>
+	</div>
+</div>	
+	
+	

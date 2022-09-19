@@ -3,7 +3,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 
-<%@ include file="../header_add_searchModal.jsp"%><%-- 여기 수정 --%>
+<%@ include file="../header.jsp"%>
 
 <script type="text/javascript">
 
@@ -137,9 +137,9 @@
 	       </table>
 	       
 	       <div class="row">
-			   <span class="col-4"><input class="productbtn" type="button" value="찜하기" /></span>
-			   <span class="col-4"><input class="productbtn" type="button" value="장바구니" /></span>
-			   <span class="col-4"><input class="productbtn" type="button" value="바로구매" style="background-color: #1E7F15; color:white;"/></span>
+			   <a class="col-4"><input class="productbtn" type="button" value="찜하기" /></a>
+			   <a class="col-4" href="<%=ctxPath%>/cart/cart.jsp"><input class="productbtn" type="button" value="장바구니" /></a>
+			   <a class="col-4" href="<%=ctxPath%>/product/payment.jsp"><input class="productbtn" type="button" value="바로구매" style="background-color: #1E7F15; color:white;"/></a>
 		   </div>
 		   
 		</div>

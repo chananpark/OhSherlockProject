@@ -4,86 +4,107 @@
     
 <style>
 
-	.page-link {
-	  color: #666666; 
-	  background-color: #fff;
-	  border: 1px solid #ccc; 
+	* {box-sizing: border-box;}
+	
+	/* 문의 입력 css 외부에서 받아온 것 */ 
+	#inquiry input[type=text], #inquiry select, #inquiry textarea {
+	  width: 100%;
+	  padding: 12px;
+	  border: 1px solid #ccc;
+	  border-radius: 4px;
+	  box-sizing: border-box;
+	  margin-top: 6px;
+	  margin-bottom: 16px;
+	  resize: vertical;
 	}
 	
-	.page-item.active .page-link {
-	 z-index: 1;
-	 color: #1E7F15;
-	 border-color: #1E7F15;
-	 
+	.writeBtns  {
+      width: 80px; 
+      margin: 15px; 
+      border-style: none; 
+      height: 30px;
+      font-size: 14px;
+   }
+   
+   .btn-secondary:hover {
+      border: 2px none #1E7F15;
+      background-color: #1E7F15;
+       color: white;
+   }
+	
+	#inquiry input[type=submit]:hover {
+	  background-color: #45a049;
 	}
 	
-	.page-link:focus, .page-link:hover {
-	  color: #1E7F15;
-	  background-color: #fafafa; 
-	  border-color: #1E7F15;
+	#inquiry .container {
+	  border-radius: 5px;
+	  padding: 20px;
+	}
+
+	#inquiry #qnaFrm {
+		padding: 3%;
 	}
 
 </style>       
     
-<div class="container">
+<div class="container" id="inquiry">
 
-	<h2 style="font-weight:bold">1:1 문의</h2><br>
-		<hr style="background-color: black; height: 1.2px;"><br>
-		<table class="table mt-4">
-			<thead class="thead-light">
-				<tr>
-					<th>매장유형</th>
-					<th>지점이름</th>
-					<th>상세주소</th>
-					<th>전화번호</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td style="display:none" class="storeNo">1</td>
-					<td>티하우스</td>
-					<td>서울 서교동 쌍용점</td>
-					<td>서울특별시 마포구 서교동 447-5</td>
-					<td>02-336-8546</td>
-				</tr>
-				<tr>
-					<td style="display:none" class="storeNo">2</td>
-					<td>티뮤지엄</td>
-					<td>제주도 한라산 오름점</td>
-					<td>제주특별자치도 서귀포시 안덕면 창천리 564 제주특별자치도</td>
-					<td>064-794-5312</td>
-				</tr>
-				<tr>
-					<td style="display:none" class="storeNo">3</td>
-					<td>면세점</td>
-					<td>프랑스 파리 에펠탑점</td>
-					<td>Champ de Mars, 5 Av. Anatole France, 75007 Paris</td>
-					<td>+ 33 7 66 89 27 49</td>
-				</tr>
-				<tr>
-					<td style="display:none" class="storeNo">4</td>
-					<td>백화점</td>
-					<td>미국 뉴욕 센트럴파크점</td>
-					<td>Manhattan, New York City, United States</td>
-					<td>+1 212-310-6600</td>
-				</tr>
-				
-			</tbody>
-		</table>
+	<div class="titleZone row">
+		<h2 class="col text-left" style="font-weight: bold">1:1문의</h2>
+		<br>
+		<div class="col text-right">
+			<span style="font-weight: bold; font-size: 20px;">02-336-8546</span><br>
+			<span style="font-weight: normal; font-size: 15.5px;">평일 09:30
+				~ 18:00 (점심시간 12:30 ~ 13:30)<br>주말 및 공휴일 휴무
+			</span>
+		</div>
+	</div>
+	<hr style="background-color: black; height: 1.2px;">
+	<br>
+	
+	<div class="bg-light" style="padding: 3%;">
+		문의사항을 남겨주시면 빠른 시간내에 답변을 드리도록 하겠습니다.
+		<br><br>
+		· 이메일, 핸드폰번호를 변경하려면 회원정보수정 페이지에서 변경해주세요.<br>
+		· 문의하시기 전 FAQ를 참고해주세요.<br>
+		· 한번 등록한 상담내용은 수정이 불가능합니다.<br>
+		· 수정을 원하시는 경우 삭제 후 재등록하셔야 합니다.<br>
+		· 고객상담센터 답변가능시간 오전 9시~오후 6시(토/일/공휴일 제외)
+	</div>
+	
+	<form action="" name="qnaFrm" id="qnaFrm">
+		<label for="qnatype">문의유형<span class="text-danger">*</span></label>
+		<select id="qnatype" name="qnatype">
+			<option value="australia">회원/포인트</option>
+			<option value="canada">취소/환불/교환</option>
+			<option value="usa">기타</option>
+		</select>
+	
+		<label for="title">제목<span class="text-danger">*</span></label>
+		<input type="text" id="title" name="title" placeholder="제목을 입력하세요.">
+		
+		<label for="content">내용<span class="text-danger">*</span></label>
+		<textarea id="content" name="content" placeholder="문의 내용을 입력하세요." style="height:200px"></textarea>
+		
+		<label for="photo" style="margin: 6px 20px 16px 0;">사진 첨부</label><input type="file" id="photo" name="photo">
+		<br>
+		
+		<hr>
+		
+		<input type="checkbox" id="answer_email" name="answer_email" />
+		<label for="answer_email" style="margin-top: 16px;">답변 완료 시 이메일로 받으시겠습니까?<span>(이메일: hello@gmail.com)</span></label>
+		<br>
+		
+		<input type="checkbox" id="answer_sms" name="answer_sms" />
+		<label for="answer_sms" >답변 완료 시 SMS로 받으시겠습니까?<span>(연락처: 010-1234-1234)</span></label>
+		
+		<div class="text-right" style="margin-top: 30px;">
+	    	<input type="button" class="writeBtns" value="취소" style="margin-right: 0" />&nbsp;
+	      	<input type="button" class="btn-secondary writeBtns" value="등록" style="margin-left: 5px;" />
+   		</div>
+	</form>
+	
 
-	<nav aria-label="Page navigation example" style="margin-top: 60px;">
-		<ul class="pagination justify-content-center">
-			<li class="page-item"><a class="page-link" href="#"
-				aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-			</a></li>
-			<li class="page-item"><a class="page-link" href="#">1</a></li>
-			<li class="page-item"><a class="page-link" href="#">2</a></li>
-			<li class="page-item"><a class="page-link" href="#">3</a></li>
-			<li class="page-item"><a class="page-link" href="#"
-				aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-			</a></li>
-		</ul>
-	</nav>
 </div>
 
 <%@ include file="../footer.jsp"%>

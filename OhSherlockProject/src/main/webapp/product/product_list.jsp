@@ -141,7 +141,7 @@
 					<div> 
 						<div class="card-deck mb-4 mt-1">
 					  		<div class="card border-0">
-					    		<a href="#"><img src="../images/tea_set.png" class="card-img-top"/></a>
+					    		<a href="<%= ctxPath %>/product/product_view.jsp"><img src="../images/tea_set.png" class="card-img-top"/></a>
 				    			<div class="card-body">
 				    				<%-- 여기는 c:if문 사용하여 경우의 수에 따라 다르게 div 출력 --%>
 				    				<div class="rounded text-light text-center mb-2" style="width:70px; font-weight:bold; background-color: #1E7F15;">베스트</div>
