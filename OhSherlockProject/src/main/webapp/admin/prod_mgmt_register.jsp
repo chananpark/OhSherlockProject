@@ -63,12 +63,12 @@
 		<label for="salePrice">할인금액</label>
 		<input type="number" id="salePrice" name="salePrice" placeholder="숫자만 입력하세요."/>
 
-		<label for="thumbnail" style="margin: 6px 20px 16px 0;">대표이미지<span class="text-danger">*</span></label>
-		<input type="file" id="thumbnail" name="thumbnail"> <br>
+		<label for="thumbnail" style="margin: 6px 20px 16px 0;">대표이미지<span class="text-danger">*</span></label><br>
+		<input type="file" id="thumbnail" name="thumbnail"><br>
 
-		<label for="content">내용<span class="text-danger">*</span></label>
+		<label class="mt-4" for="content">내용<span class="text-danger">*</span></label><br>
+		<textarea id="content" name="content" placeholder="상품 설명을 입력하세요." style="height:200px"></textarea>
 		<span>파일첨부</span>&nbsp;<input type="file" id="thumbnail" name="thumbnail"> <br>
-		<textarea id="content" name="content" placeholder="문의 내용을 입력하세요." style="height:200px"></textarea>
 		
 		<hr>
 
