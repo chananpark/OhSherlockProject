@@ -87,9 +87,12 @@
 				</tr>
 			</tbody>
 		</table>
+		<div class="text-right" id="detail" style="display: block; margin-top: 50px;"> <%-- 글쓰기 버튼은 관리자 계정에서만 보임 --%>
+		  <input type="button" class="btn-secondary" value="글쓰기" />
+	    </div>
 			
 
-	<nav aria-label="Page navigation example" style="margin-top: 60px;">
+	<nav aria-label="Page navigation example" style="margin-top: 20px;">
 		<ul class="pagination justify-content-center">
 			<li class="page-item"><a class="page-link" href="#"
 				aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
@@ -102,10 +105,6 @@
 			</a></li>
 		</ul>
 	</nav>
-	
-	<div class="text-right" id="detail" style="display: block; margin-top: 15px;"> <%-- 글쓰기 버튼은 관리자 계정에서만 보임 --%>
-	  <input type="button" class="btn-secondary" value="글쓰기" />
-    </div>
 	
 	
 </div>
