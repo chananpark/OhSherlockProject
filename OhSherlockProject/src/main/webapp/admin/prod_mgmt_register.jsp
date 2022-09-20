@@ -53,6 +53,9 @@
 			
 		<label for="title">상품명<span class="text-danger">*</span></label> 
 		<input type="text" id="title" name="title" placeholder="상품명을 입력하세요.">
+			
+		<label for="title">상품한줄소개<span class="text-danger">*</span></label> 
+		<input type="text" id="title" name="title" placeholder="상품한줄소개를 입력하세요.">
 
 		<label for="price">가격<span class="text-danger">*</span></label>
 		<input type="number" id="price" name="price" placeholder="숫자만 입력하세요."/>
