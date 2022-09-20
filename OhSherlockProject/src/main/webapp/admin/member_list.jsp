@@ -30,6 +30,7 @@
 	  border-color: #1E7F15;
 	}
 	
+	/*
 	table {
 	  border-collapse: collapse;
 	  border-spacing: 0;
@@ -46,6 +47,7 @@
 		text-align: left;
 		padding: 8px;
 	}
+	*/
 	
 	table > tbody > tr:hover {
 		background-color: #f1f1f1;
