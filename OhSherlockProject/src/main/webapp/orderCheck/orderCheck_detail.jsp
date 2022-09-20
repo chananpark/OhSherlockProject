@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 
 
-<%@ include file="header.jsp"%>
+<%@ include file="../header.jsp"%>   
 
 <!-- 직접 만든 CSS -->
 <link rel="stylesheet" type="text/css" href="./css/style_yeeun.css" />    <!-- /MyMVC/src/main/webapp/css/style.css 파일 경로 -->
@@ -155,4 +155,4 @@
   </div>
 </div>
 
-<%@ include file="footer.jsp"%>
+<%@ include file="../footer.jsp"%>
