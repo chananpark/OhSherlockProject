@@ -248,12 +248,6 @@ div#brandStoryText {
 			<%-- 고정 부분 --%>
 			<div class="d-flex order-xl-1 ml-auto pr-2">
 				<ul class="navbar-nav flex-row">
-					<li class="nav-item active mr-2"><span class="nav-link menufont_size text-dark">
-					<i class="fas fa-grip-lines-vertical fa-lg"></i></span></li>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/cart/cart.jsp">
-					<i class="fas fa-shopping-basket fa-lg"></i></a></li>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="#">
-					<i class="fas fa-heart fa-lg"></i></a></li>
 					<li class="nav-item active"><a class="nav-link menufont_size text-dark" data-toggle="modal" data-target="#btnSearch" data-dismiss="modal" data-backdrop="static">
 					<i class="fas fa-search fa-lg"></i></a></li>
 				</ul>
@@ -282,16 +276,19 @@ div#brandStoryText {
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/storeInfo/storeList.jsp">매장안내</a></li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/brandStory/brandStory.jsp">브랜드스토리</a></li>
 				</ul>
+				
 				<ul class="navbar-nav text-right mx-auto">
+				
+				<li class="nav-item active mr-2"><a
+						class="nav-link menufont_size text-secondary" href="#">로그아웃</a></li>
 					<li class="nav-item dropdown mr-2"><a
 						class="nav-link dropdown-toggle menufont_size text-secondary"
-						href="<%=ctxPath%>/login/login.jsp" id="navbarDropdown" data-toggle="dropdown">로그인</a> <%-- 로그인을 누르면 기본은 로그인 창으로 연결 --%>
+						href="" id="navbarDropdown" data-toggle="dropdown">관리자메뉴</a>
 						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="<%=ctxPath%>/login/login.jsp">로그인</a> 
-							<a class="dropdown-item" href="<%=ctxPath%>/member/memberRegister.jsp">회원가입</a>
+							<a class="dropdown-item" href="">회원조회</a> 
+							<a class="dropdown-item" href="<%=ctxPath%>/admin/prod_mgmt_list.jsp">상품관리</a>
 						</div></li>
-					<li class="nav-item active mr-2"><a
-						class="nav-link menufont_size text-secondary" href="<%=ctxPath%>/mypage/mypage.jsp">마이페이지</a></li>
+					
 					<li class="nav-item dropdown mr-2"><span
 						class="nav-link dropdown-toggle menufont_size text-secondary"
 						id="navbarDropdown" data-toggle="dropdown">고객센터</span>
