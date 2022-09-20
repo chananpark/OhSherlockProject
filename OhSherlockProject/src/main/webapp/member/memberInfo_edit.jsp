@@ -33,22 +33,22 @@
 
 	.btn-light {
 		width: 85px; 
+		color: #1a1a1a; 
+		border-style: none; 
+		height: 33px;
+	}
+	
+	.btn-secondary {
+		width: 85px; 
 		margin: 15px; 
 		border-style: none; 
 		height: 33px;
 	}
 	
-	.btn-light:hover {
+	.btn-secondary:hover {
 		border: 2px none #1E7F15;
 		background-color: #1E7F15;
-    color: white;
-	}
-	
-	.btn-secondary {
-		width: 85px; 
-		color: #1a1a1a; 
-		border-style: none; 
-		height: 33px;
+	    color: white;
 	}
 	
 	.mustIn {
@@ -171,8 +171,8 @@
     
      	
     <div class="text-center" id="detail" style="display: block; margin-top: 40px;">
-	  <input type="button" class="btn-light" value="수정" />
-	  <input type="button" class="btn-secondary" value="취소" />
+	  <input type="button" class="btn-light" value="취소" />
+	  <input type="button" class="btn-secondary" value="수정" />
     </div>
     
   </div>

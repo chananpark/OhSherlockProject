@@ -39,11 +39,20 @@
 	background-color: #999999;
 	color: white
 }
+
+.btn-secondary {
+	border-style: none;
+}
+
+.btn-secondary:hover {
+	background-color: #1E7F15;
+	color: white;
+}
 </style>
 
 <div class="container">
 
-	<%-- 사용자가 자신의 문의 내용과 그에 달린 댓글을 확인하는 페이지입니다.--%>
+	<%-- 관리자가 사용자의 1:1문의에 댓글을 달아주는 페이지입니다.--%>
 
 	<div class="titleZone row">
 		<h2 class="col text-left" style="font-weight: bold">1:1 문의</h2>
@@ -65,28 +74,17 @@
 			style="font-weight: normal; font-size: 15.5px; margin-bottom: 10px;">2022.09.20</div>
 	</div>
 
-
-	<div class="col text-left inquiryContent jumbotron mt-4 pt-auto">
+	<div class="col text-left inquiryContent jumbotron mt-4">
 		<br>안녕하세요 저는 서울 마포구에 사는 김쌍용입니다.<br> 다름이 아니오라 예치금 충전하는 방법을
 		알고싶습니다.<br> 친절한 답변 부탁드립니다.
 	</div>
 
-	<div class="col text-left jumbotron px-0 pt-0 mt-4">
-		<table id="replyTitle">
-			<tr>
-				<td class="text-left">re: 예치금 충전 문의</td>
-				<td class="text-right" style="border-left: solid 1px white">2022.09.21</td>
-			</tr>
-		</table>
-		<div class="replyzone mx-5 mt-5">
-			<span class="badge text-left" id="replyText">답변</span> <span><br>안녕하세요
-				고객님, 오!셜록입니다.<br> 예치금 충전은 마이페이지의 예치금 충전 버튼을 클릭하세요.<br> 향긋한
-				하루 되세요.<br> </span>
-		</div>
-	</div>
+	<label class="mt-4" for="content">답변<span class="text-danger">*</span></label><br>
+	<textarea id="content" name="content" placeholder="답변 내용을 입력하세요." style="height:200px; width:100%;"></textarea>
+		
 
 	<div class="text-right" style="display: block; margin-top: 30px;">
-		<input type="button" class="btn-secondary listView" value="목록보기" />
+		<input type="button" class="btn-secondary writeReply py-2 px-3" value="댓글작성" />
 	</div>
 
 
