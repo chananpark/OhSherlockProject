@@ -78,32 +78,23 @@
 		</div>
 	</div>
 	
-	<hr style="background-color: black; height: 1.2px;">
-	<h5 style="font-weight: bold;">내 상담 내역</h5>
+	<hr style="background-color: black; height: 1.2px; margin-bottom: 55px;">
+	
 	
 	
 	<%-- 탭 버튼 --%>
-	 <div class="row bg-light" style="height: 80px; margin-top: 55px; width: 99.8%; margin-left: 0;">
-	    <div class="btn-group" role="group" aria-label="Basic example" style="float: left;">
-		  <button type="button" class="btn btn-light" style="padding-left: 130px;">1개월</button>
+	 <div class="row bg-light" style="height: 67px; width: 27%; margin: auto; justify-content: center;">
+    <div class="btn-group" role="group" aria-label="Basic example" style="justify-content: center;">
+		  <button type="button" class="btn btn-light" >미답변</button>
 		  <span class="btn btn-light" style="color: gray; margin-top: 20px;">|</span>
-		  <button type="button" class="btn btn-light">3개월</button>
-		  <span class="btn btn-light" style="color: gray; margin-top: 20px;">|</span>
-		  <button type="button" class="btn btn-light">6개월</button>
-		  <span class="btn btn-light" style="color: gray; margin-top: 20px;">|</span>
-		  <button type="button" class="btn btn-light" style="padding-right: 50px;">12개월</button>
+		  <button type="button" class="btn btn-light">답변완료</button>
 		</div>
-	    
-	    <div class="date" style="float: left; margin-top: 25px;">
-			<input class="fText hasDatepicker" readonly="readonly" size="15" value="2022-08-17" type="text" style="margin-left: 30px; text-align: center;"><button type="button" class="ui-datepicker-trigger" ><img src="//img.echosting.cafe24.com/skin/admin_ko_KR/myshop/ico_cal.gif" alt="..." title="..."></button>
-			<span class="bar">~</span>
-			<input class="fText hasDatepicker" readonly="readonly" size="15" value="2022-09-16" type="text" style="text-align: center;"><button type="button" class="ui-datepicker-trigger" ><img src="//img.echosting.cafe24.com/skin/admin_ko_KR/myshop/ico_cal.gif" alt="..." title="..."></button>				
-			<input type="button" value="조회" style="margin-left: 10px; width: 80px;"/>
-		</div>
+   
+		
 	</div>
 	
 	<br>
-	<div style="margin-top: 10px;">총 4건의 상담 내역이 있습니다.</div>
+	<div style="margin-top: 10px;">총 2건의 미답변 상담 내역이 있습니다.</div>
 <table class="table mt-2 text-center">
 			<thead class="thead-light">
 				<tr>
@@ -123,16 +114,7 @@
 					<td>배송 기간 문의</td>
 					<td>2022.04.12</td>
 				</tr>
-				<tr>
-					<td style="class=storeNo">2</td>
-					<td>주소지 변경 문의&nbsp;&nbsp;<span class="badge badge-pill">답변완료</span></td>
-					<td>2022.03.17</td>
-				</tr>
-				<tr>
-					<td style="class=storeNo">1</td>
-					<td>나문희&nbsp;&nbsp;<span class="badge badge-pill">답변완료</span></td>
-					<td>2022.03.10</td>
-				</tr>
+				
 			</tbody>
 		</table>
 			
@@ -151,10 +133,7 @@
 		</ul>
 	</nav>
 	
-	<div class="text-right" id="detail" style="display: block; margin-top: 15px;">
-	  <input type="button" class="btn-secondary" value="문의남기기" />
-    </div>
-	
+
 	
 
 </div>
