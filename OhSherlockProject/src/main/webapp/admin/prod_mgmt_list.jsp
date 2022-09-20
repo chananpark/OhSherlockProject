@@ -38,9 +38,11 @@
    <hr style="background-color: black; height: 1.2px;"><br>
   
   	<div class="text-right">
-	  	<input type="text" value="상품코드를 입력하세요"/>&nbsp;
+	  	<input type="text" placeholder="상품코드를 입력하세요"/>&nbsp;
 	  	<button type="button"><i class="fas fa-search"></i></button>
   	</div>
+  	
+  	
   	<table class="table mt-4 prodList text-center">
 			<thead class="thead-light">
 				<tr>
@@ -82,6 +84,11 @@
 				
 			</tbody>
 		</table>
+		
+		 <div class="text-right" style="margin-top: 50px;">
+	      	<input type="button" class="writeBtns" value="신규 상품 등록" style="margin-left: 5px; background-color: #1E7F15; color:white;" />
+		</div>
+  
 		
 		<nav aria-label="Page navigation example" style="margin-top: 60px;">
 		<ul class="pagination justify-content-center">

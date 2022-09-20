@@ -18,7 +18,7 @@
 	  resize: vertical;
 	}
 	
-	.writeBtns  {
+	#inquiry .writeBtns  {
       width: 80px; 
       margin: 15px; 
       border-style: none; 
@@ -26,7 +26,7 @@
       font-size: 14px;
    }
    
-   .btn-secondary:hover {
+   #inquiry .btn-secondary:hover {
       border: 2px none #1E7F15;
       background-color: #1E7F15;
        color: white;
