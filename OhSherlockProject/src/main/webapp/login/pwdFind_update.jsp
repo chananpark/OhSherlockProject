@@ -5,13 +5,13 @@
  <style type="text/css">
       
       /* 아이디찾기 내용 전체 */
-      div#idFind_box {
+      div#pwd_box {
         width: 380px;
       }
 
       /* 이름, 이메일 박스랑 확인 버튼 */
-      div#input_idFind > input,
-      div#btn_idFind > input {
+      div#input_pwd > input,
+      div#btn_update > input {
         width: 100%;
         padding: 12px;
         border: 1px solid gray;
@@ -21,18 +21,18 @@
         line-height: 20px;
       }
 
-      div#input_idFind > input:hover,
-      div#btn_idFind > input:hover {
+      div#input_pwd > input:hover,
+      div#btn_update > input:hover {
         opacity: 1;
       }
 
       /* 이름, 이메일 박스 */
-      div#input_idFind > input {
+      div#input_pwd > input {
         border-radius: 4px;
       }
 
       /* 확인 버튼 */
-      div#btn_idFind > input[type='button'] {
+      div#btn_update > input[type='button'] {
         height: 45px;
         border-radius: 90px;
         background-color: #1E7F15;
@@ -43,7 +43,7 @@
 
      <div class="container">
       <form>
-        <div id="idFind_box" class="d-flex flex-column m-auto">
+        <div id="pwd_box" class="d-flex flex-column m-auto">
           <div id="idFind_title">
             <h2
               style="
@@ -53,17 +53,16 @@
                 font-weight: bold;
               "
             >
-              FIND P/W
+              비밀번호 변경
             </h2>
           </div>
 
-          <div id="input_idFind" class="d-flex flex-column">
-            <input type="text" name="userId" placeholder="아이디" required />
-            <input type="text" name="username" placeholder="이름" required />
-            <input type="text" name="email" placeholder="이메일" required />
+          <div id="input_pwd" class="d-flex flex-column">
+            <input type="password" name="password" placeholder="새비밀번호" required />
+            <input type="password" name="password2" placeholder="비밀번호 확인" required />
           </div>
 
-          <div id="btn_idFind" class="d-flex flex-column">
+          <div id="btn_update" class="d-flex flex-column">
             <input type="button" class="btn btn-dark" value="확인" />
           </div>
         </div>
