@@ -63,7 +63,7 @@
 		<label for="stock">재고<span class="text-danger">*</span></label>
 		<input type="number" id="stock" name="stock" placeholder="숫자만 입력하세요."/>
 
-		<label for="salePrice">할인금액</label>
+		<label for="salePrice">할인율</label>
 		<input type="number" id="salePrice" name="salePrice" placeholder="숫자만 입력하세요."/>
 
 		<label for="thumbnail" style="margin: 6px 20px 16px 0;">대표이미지<span class="text-danger">*</span></label><br>
