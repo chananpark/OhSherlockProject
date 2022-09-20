@@ -17,7 +17,7 @@
 	}
 	
 	/* 아이디, 비밀번호 박스랑 로그인, 회원가입 버튼 */
-	div#input_login > input,
+ 	div#input_login > input,
 	div#btn_loginbox > input {
 		width: 100%;
 	  padding: 12px;
@@ -26,7 +26,7 @@
 	  opacity: 0.85;
 	  font-size: 17px;
 	  line-height: 20px;
-	}
+	} 
 	
 	div#input_login > input:hover,
 	div#btn_loginbox > input:hover {
@@ -48,7 +48,7 @@
 	}
 	
 	/* 버튼회원가입 */
-	div#btn_loginbox > input[type='button']{
+	#btn_register {
 		height:45px;
 		border-radius: 90px;
 	  background-color: #c6c6c6;
@@ -91,7 +91,7 @@
 		     
 		     <div id="btn_loginbox" class="d-flex flex-column">
 		      <input type="submit" value="로그인">
-		      <input type="button" value="회원가입">
+		      <input type="button" id="btn_register" value="회원가입">
 		     </div>
 	  	</div>
 	  </form>
