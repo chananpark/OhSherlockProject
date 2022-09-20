@@ -34,6 +34,7 @@
 </style>
 
 <div class="container" id="cartContainer">
+<i class="fas fa-coins" style="font-size: 40px; float: left; padding-right: 10px;"></i>  
 	<h2 style="font-weight: bold">찜목록</h2><br>
       <hr style="background-color: black; height: 1.2px;"> 
 	
