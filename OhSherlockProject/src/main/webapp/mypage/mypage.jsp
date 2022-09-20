@@ -56,6 +56,20 @@
 .infoUpdate {
 	width: 20%;
 	margin-left: 15px;
+	border: 2px solid #666666;
+	background-color: #666666;
+	color: white;
+}
+
+.infoUpdate:hover {
+	border: 2px solid #1E7F15;
+	background-color: #1E7F15;
+    color: white;
+}
+
+.charge {
+	width: 120px;
+	margin-left: 45px;
 	background-color: #1E7F15;
 	color: white;
 }
@@ -71,8 +85,6 @@
 	vertical-align: middle;
 }
 
-
-
 </style>
 
 <div class="container mypage">
@@ -81,11 +93,18 @@
 	<div class="card border-0">  
 	   <div class="card-body" style="background-color: #cccccc;">  
 	      <i style='font-size:48px; float: left; padding: 0 2%;' class='fas'>&#xf508;</i>     
-	      <h5 class="card-title mpComment">&nbsp;&nbsp;&nbsp;&nbsp;홍길동님,  안녕하세요.</h5>   
-	      <button type="button" class="btn infoUpdate">회원정보 수정</button>  
+	      <h5 class="card-title mpComment">&nbsp;&nbsp;&nbsp;&nbsp;홍길동님,  안녕하세요.</h5>  
+	      <div>
+		      <button type="button" class="btn infoUpdate">회원정보 수정</button>  
+		      <i class="fas fa-coins" style="margin-left: 230px; font-size: 25px; vertical-align: middle;"></i>
+		      <span style="margin-left: 10px; font-weight: bold;">적립금  540p</span>
+		      <i class="far fa-credit-card" style="margin-left: 50px; font-size: 25px; vertical-align: middle;"></i>
+		      <span style="margin-left: 10px; font-weight: bold;">예치금  0원</span>
+		      <input type="button" class="btn charge" value="예치금충전" />
+	      </div> 
 	   </div>
     </div>
-
+    
     <br><br><br>
 	<div>
 	   <span style="font-weight: bold; font-size: 15pt;">최근 주문정보</span>
