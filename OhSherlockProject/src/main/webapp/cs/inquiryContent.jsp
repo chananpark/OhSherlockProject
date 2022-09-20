@@ -44,6 +44,14 @@
 	  </div>
     </div>
 	
+	<hr style="border-top: solid 1.2px black">
+	    <div class="col text-left">
+      <div style="font-size: 20px;">
+	      <br>안녕하세요 고객님, 오!셜록입니다.<br>
+	      예치금 충전은 마이페이지의
+	  </div>
+    </div>
+	
   	<div class="text-right" style="display: block; margin-top: 30px;"> <%-- 글쓰기 버튼은 관리자 계정에서만 보임 --%>
 	  <input type="button" class="btn-secondary listView" value="목록보기" />
     </div>
