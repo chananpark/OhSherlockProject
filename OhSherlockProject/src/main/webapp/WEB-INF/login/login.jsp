@@ -73,30 +73,45 @@
 				goLogin(); // 로그인 함수 호출
 			}
 		});
+		
+
+		$("button.idFindClose").click(function() {
+
+			const iframe_idFind = document.getElementById("iframe_idFind"); // 대상 아이프레임 선택
+			const iframe_window = iframe_idFind.contentWindow;
+
+			iframe_window.func_form_reset_empty();
+
+		});
+
+		$("button.passwdFindClose").click(function() {
+			javascript: history.go(0);
+		});
+		
 	});
-	
+
 	// 로그인 처리 함수
-	function goLogin(){
-			
+	function goLogin() {
+
 		const loginUserid = $("input#loginUserid").val().trim();
-	    const loginPwd = $("input#loginPwd").val().trim();
-	    
-	    if(loginUserid == "") {
-	    	alert("아이디를 입력하세요!");
-	    	$("input#loginUserid").val("");
-	    	$("input#loginUserid").focus();
-	    	return; // 함수 종료
-	    }
-	    
-	    if(loginPwd == "") {
-	    	alert("암호를 입력하세요!");
-	    	$("input#loginPwd").val("");
-	    	$("input#loginPwd").focus();
-	    	return; // 함수 종료
-	    }
-	    
-	    const frm = document.loginFrm; 
-	    frm.action = "<%= request.getContextPath()%>/login/login.up";
+		const loginPwd = $("input#loginPwd").val().trim();
+
+		if (loginUserid == "") {
+			alert("아이디를 입력하세요!");
+			$("input#loginUserid").val("");
+			$("input#loginUserid").focus();
+			return; // 함수 종료
+		}
+
+		if (loginPwd == "") {
+			alert("비밀번호를 입력하세요!");
+			$("input#loginPwd").val("");
+			$("input#loginPwd").focus();
+			return; // 함수 종료
+		}
+
+		const frm = document.login_frm;
+		frm.action = "<%=ctxPath%>/login/login.tea";
 	    frm.method = "post";
 	    frm.submit();
 		
@@ -110,7 +125,7 @@
 <div class="container">
 
 	<%-- **** 로그인 폼 **** --%>
-	<form id="login_frm">
+	<form id="login_frm" name="login_frm">
 		<div id="login_box" class="d-flex flex-column m-auto">
 			<div id="login_title">
 				<h2
@@ -119,7 +134,7 @@
 
 			<div id="input_login" class="d-flex flex-column">
 				<input type="text" name="userid" id="loginUserid" placeholder="아이디"
-					required> <input type="password" name="password"
+					required> <input type="password" name="passwd"
 					id="loginPwd" placeholder="비밀번호" required>
 			</div>
 
@@ -131,7 +146,8 @@
 				</div>
 
 				<div id="idFind">
-					<a class="" href="">아이디 찾기 |</a> <a href="">비밀번호 찾기</a>
+					<a style="cursor: pointer;" data-toggle="modal" data-target="#userIdfind" data-dismiss="modal" data-backdrop="static">아이디 찾기 |</a>
+					<a style="cursor: pointer;" data-toggle="modal" data-target="#passwdFind" data-dismiss="modal" data-backdrop="static">비밀번호찾기</a>
 				</div>
 
 			</div>
