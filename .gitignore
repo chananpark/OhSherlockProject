@@ -96,7 +96,7 @@ replay_pid*
 # End of https://www.toptal.com/developers/gitignore/api/java,eclipse
 
 ##### commit 제외파일 #####
-#FrontController.java
+FrontController.java
 /OhSherlockProject/src/main/webapp/WEB-INF/web.xml
 /OhSherlockProject/src/main/webapp/WEB-INF/Command.properties
 .classpath
