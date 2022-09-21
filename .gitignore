@@ -101,5 +101,3 @@ FrontController.java
 /OhSherlockProject/src/main/webapp/WEB-INF/Command.properties
 .classpath
 .gitignore
-
-/build/
