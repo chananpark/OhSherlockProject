@@ -9,8 +9,9 @@ public class Login extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		// TODO Auto-generated method stub
-
+		
+		super.setViewPage("/WEB-INF/login/login.jsp"); // 로그인페이지로 이동
+		
 	}
 
 }
