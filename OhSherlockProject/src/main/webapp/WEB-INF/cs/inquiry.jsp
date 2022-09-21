@@ -18,7 +18,7 @@
 	  resize: vertical;
 	}
 	
-	.writeBtns  {
+	#inquiry .writeBtns  {
       width: 80px; 
       margin: 15px; 
       border-style: none; 
@@ -26,7 +26,7 @@
       font-size: 14px;
    }
    
-   .btn-secondary:hover {
+   #inquiry .btn-secondary:hover {
       border: 2px none #1E7F15;
       background-color: #1E7F15;
        color: white;
@@ -75,9 +75,13 @@
 	<form action="" name="qnaFrm" id="qnaFrm">
 		<label for="qnatype">문의유형<span class="text-danger">*</span></label>
 		<select id="qnatype" name="qnatype">
-			<option value="australia">회원/포인트</option>
-			<option value="canada">취소/환불/교환</option>
-			<option value="usa">기타</option>
+			<option value="">문의유형을 선택해주세요</option>
+			<option value="상품문의">상품문의</option>
+			<option value="배송문의">배송문의</option>
+			<option value="예치금">예치금/적립금</option>
+			<option value="취소">취소/환불/교환</option>
+			<option value="회원">회원</option>
+			<option value="기타">기타</option>
 		</select>
 	
 		<label for="title">제목<span class="text-danger">*</span></label>
