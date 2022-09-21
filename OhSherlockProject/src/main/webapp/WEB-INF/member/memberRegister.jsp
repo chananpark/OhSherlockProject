@@ -1,11 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-
 <%@ include file="../header.jsp"%>
 
 <!-- 직접 만든 CSS -->
-<link rel="stylesheet" type="text/css" href="../css/style_yeeun.css" />    <!-- /MyMVC/src/main/webapp/css/style.css 파일 경로 -->
+<link rel="stylesheet" type="text/css" href="../css/style_yeeun.css" />
     
 <style type="text/css">
 
@@ -50,6 +49,34 @@
 	font-weight: bold;
 }
 </style>    
+    
+<script type="text/javascript" src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script> 
+<script type="text/javascript">
+
+
+	$(document).ready(function(){
+		
+		$("span.error").hide();
+		$("input#name").focus();
+		
+		
+		
+	}); // end of $(document).ready(function(){})---------------
+	
+	
+	//"가입하기" 버튼 클릭시 호출되는 함수  
+	function goRegister() {
+		
+		
+		// 최종적으로 폼을 보내어 준다.
+		const frm = document.registerFrm;
+    frm.action = "memberRegister.up";
+    frm.method = "post";
+    frm.submit();
+		
+	}
+
+</script>
     
     
 <div class="container">
@@ -215,7 +242,7 @@
     <br><br>
     
     <div class="text-center" id="register" style="display: block;"> 
-	  <input type="button" id="btnRegister" value="가입하기" />
+	  <input type="button" id="btnRegister" onclick="goRegister()" value="가입하기" />
     </div>
     
   </div>
