@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../header.jsp"%>
 
 <style type="text/css">
 	
@@ -19,7 +20,7 @@
 	/* 아이디, 비밀번호 박스랑 로그인, 회원가입 버튼 */
  	div#input_login > input,
 	div#btn_loginbox > input {
-		width: 100%;
+	  width: 100%;
 	  padding: 12px;
 	  border: 1px solid gray;
 	  margin: 5px 0;
@@ -39,9 +40,10 @@
 	}
 
 	/* 버튼로그인 */
-	div#btn_loginbox > input[type='submit']{
+	#btn_submit{
     height: 45px;
     border-radius: 90px;
+    border-style: none;
     background-color: #1E7F15;
     color: white;
     cursor: pointer;
@@ -49,8 +51,9 @@
 	
 	/* 버튼회원가입 */
 	#btn_register {
-		height:45px;
-		border-radius: 90px;
+	  height:45px;
+	  border-radius: 90px;
+	  border-style: none;
 	  background-color: #c6c6c6;
 	  border:none;
 	  color: white;
@@ -58,43 +61,148 @@
 	}
 
 </style>
+
+<script>
+	$(document).ready(function(){
+		$("input#btn_submit").click(function(){
+			goLogin(); // 로그인 함수 호출
+		});
+		
+		$("input#loginPwd").bind("keydown", function(event){
+			if(event.keyCode == 13) { // 암호입력란에 엔터를 했을 경우 
+				goLogin(); // 로그인 함수 호출
+			}
+		});
+	});
+	
+	// 로그인 처리 함수
+	function goLogin(){
+			
+		const loginUserid = $("input#loginUserid").val().trim();
+	    const loginPwd = $("input#loginPwd").val().trim();
+	    
+	    if(loginUserid == "") {
+	    	alert("아이디를 입력하세요!");
+	    	$("input#loginUserid").val("");
+	    	$("input#loginUserid").focus();
+	    	return; // 함수 종료
+	    }
+	    
+	    if(loginPwd == "") {
+	    	alert("암호를 입력하세요!");
+	    	$("input#loginPwd").val("");
+	    	$("input#loginPwd").focus();
+	    	return; // 함수 종료
+	    }
+	    
+	    const frm = document.loginFrm; 
+	    frm.action = "<%= request.getContextPath()%>/login/login.up";
+	    frm.method = "post";
+	    frm.submit();
+		
+	}
+	
+</script>
+
 </head>
 
-<%@ include file="../header.jsp"%>
 
 <div class="container">
 
-	  <form id="login_frm">
-	  	<div id="login_box" class="d-flex flex-column m-auto">
-				<div id="login_title">
-		   		<h2 style="text-align:center; font-size: 30px; line-height: 40px; font-weight:bold">LOGIN</h2>
+	<%-- **** 로그인 폼 **** --%>
+	<form id="login_frm">
+		<div id="login_box" class="d-flex flex-column m-auto">
+			<div id="login_title">
+				<h2
+					style="text-align: center; font-size: 30px; line-height: 40px; font-weight: bold">LOGIN</h2>
+			</div>
+
+			<div id="input_login" class="d-flex flex-column">
+				<input type="text" name="userid" id="loginUserid" placeholder="아이디"
+					required> <input type="password" name="password"
+					id="loginPwd" placeholder="비밀번호" required>
+			</div>
+
+			<div id="id_save_find" class="w-98 d-flex justify-content-between">
+
+				<div id="idPwdSave">
+					<input type="checkbox" id="chk" title="아이디 저장 선택" checked="checked" />
+					<label for="chk">아이디 저장</label>
 				</div>
-		      
-				<div id="input_login" class="d-flex flex-column">
-		      <input type="text" name="userid" placeholder="아이디" required>
-		      <input type="password" name="password" placeholder="비밀번호" required>
+
+				<div id="idFind">
+					<a class="" href="">아이디 찾기 |</a> <a href="">비밀번호 찾기</a>
 				</div>
-				
-		     <div id="id_save_find" class="w-98 d-flex justify-content-between">
-		     
-		      <div id="idPwdSave">
-		       	<input type="checkbox" id="chk" title="아이디 저장 선택" checked="checked" />
-		       	<label for="chk">아이디 저장</label>
-		     	</div>
-		     	
-		      <div id="idFind">
-		       	<a class="" href="">아이디 찾기 |</a>
-		       	<a href="">비밀번호 찾기</a>
-		      </div>
-		      
-		     </div>
-		     
-		     <div id="btn_loginbox" class="d-flex flex-column">
-		      <input type="submit" value="로그인">
-		      <input type="button" id="btn_register" value="회원가입">
-		     </div>
-	  	</div>
-	  </form>
+
+			</div>
+
+			<div id="btn_loginbox" class="d-flex flex-column">
+				<input type="button" id="btn_submit" value="로그인"> <input
+					type="button" id="btn_register" value="회원가입">
+			</div>
+		</div>
+	</form>
+
+	<%-- **** 아이디 찾기 Modal **** --%>
+	<div class="modal fade" id="userIdfind">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<!-- Modal header -->
+				<div class="modal-header">
+					<h4 class="modal-title">아이디 찾기</h4>
+					<button type="button" class="close idFindClose"
+						data-dismiss="modal">&times;</button>
+				</div>
+
+				<!-- Modal body -->
+				<div class="modal-body">
+					<div id="idFind">
+						<iframe id="iframe_idFind"
+							style="border: none; width: 100%; height: 350px;"
+							src="<%=ctxPath%>/login/idFind.tea"> </iframe>
+					</div>
+				</div>
+
+				<!-- Modal footer -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger idFindClose"
+						data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<%-- **** 비밀번호 찾기 Modal **** --%>
+	<div class="modal fade" id="passwdFind">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<!-- Modal header -->
+				<div class="modal-header">
+					<h4 class="modal-title">비밀번호 찾기</h4>
+					<button type="button" class="close passwdFindClose"
+						data-dismiss="modal">&times;</button>
+				</div>
+
+				<!-- Modal body -->
+				<div class="modal-body">
+					<div id="pwFind">
+						<iframe style="border: none; width: 100%; height: 350px;"
+							src="<%=ctxPath%>/login/passwdFind.tea"> </iframe>
+					</div>
+				</div>
+
+				<!-- Modal footer -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger passwdFindClose"
+						data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
 
 </div>
 
