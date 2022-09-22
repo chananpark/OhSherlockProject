@@ -20,8 +20,9 @@ public class MemberRegister extends AbstractController {
 		
 		if("GET".equalsIgnoreCase(method)) {
 		// GET 방식이라면    
-		//	super.setRedirect(false);
+			super.setRedirect(false);
 			super.setViewPage("/WEB-INF/member/memberRegister.jsp");
+			
 		}
 		
 		else {
@@ -53,7 +54,6 @@ public class MemberRegister extends AbstractController {
 				int n = mdao.registerMember(member);
 				
 				if(n==1) {
-				
 					request.setAttribute("userid", userid);
 					request.setAttribute("name", name);
 					request.setAttribute("email", email);
@@ -68,10 +68,7 @@ public class MemberRegister extends AbstractController {
 			    super.setViewPage(request.getContextPath()+"/error.tea");
 			}
 			
-			
 		}
-		
-		
 		
 	}
 

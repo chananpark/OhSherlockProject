@@ -2,110 +2,75 @@
     pageEncoding="UTF-8"%>
 <%@ include file="../header.jsp"%>
 
+
+
 <style type="text/css">
-	
-	form#login_frm {
-  	padding: 48px 0;
-    margin: 0 auto;
-    margin-top: 40px;
-    margin-bottom: 40px;
-    border-top: 0;
-	}
-	
-	/* 로그인폼 내용 전체 */
-	div#login_box{
-		width:380px;
-	}
-	
-	/* 아이디, 비밀번호 박스랑 로그인, 회원가입 버튼 */
- 	div#input_login > input,
-	div#btn_loginbox > input {
-	  width: 100%;
-	  padding: 12px;
-	  border: 1px solid gray;
-	  margin: 5px 0;
-	  opacity: 0.85;
-	  font-size: 17px;
-	  line-height: 20px;
-	} 
-	
-	div#input_login > input:hover,
-	div#btn_loginbox > input:hover {
-	  opacity: 1;
-	}
-	
-	/* 아이디, 비밀번호 박스 */
-	div#input_login > input {
-		border-radius: 4px;
+
+	#img {
+		text-align: center;
+		padding-bottom: 20px;
 	}
 
-	/* 버튼로그인 */
-	#btn_submit{
-    height: 45px;
-    border-radius: 90px;
-    border-style: none;
-    background-color: #1E7F15;
-    color: white;
-    cursor: pointer;
+
+	table {
+		margin: 30px 406px;
+		border: 1px solid #e9ecef;
+    width: 301px;
+    height: 156px;
 	}
 	
-	/* 버튼회원가입 */
-	#btn_register {
-	  height:45px;
-	  border-radius: 90px;
-	  border-style: none;
-	  background-color: #c6c6c6;
-	  border:none;
-	  color: white;
-	  cursor: pointer;
+	td {
+    padding: 5px 20px 5px 5px;
+    font-weight: bold;
+    font-size: 18px; 
+    
 	}
-
+	
 </style>
-
-<script>
-	$(document).ready(function(){
-	
-	}
-	
-</script>
 
 </head>
 
-
  <div class="container">
-      회원가입 성공
-      
+     
+    <div class="col-md-15">
+      <h2 style="font-weight: bold;">회원가입</h2>
+      <br>
+      <hr style="background-color: black; height: 1.2px;"><br>
+    </div>  
+    
+    <div id="img"><img src="../images/correct.png" width="130" style ="margin: auto"/></div>
+      <h2 style="text-align: center; font-size: 30px; line-height: 40px; font-weight: bold">회원가입이 완료되었습니다.</h2>
+      <h5 style="text-align: center; font-size: 18px; ">오!셜록을 찾아주셔서 감사합니다.</h5>
       <table>
         <tbody>
 	        <tr>
-	          <td colspan="2">
-	          오!셜록을 찾아주셔서 감사합니다.
-	          </td>
-	        </tr>
+	        	<td colspan="2" style="background-color: #e9ecef">
+	        		가입된 정보
+        		</td>
+       		</tr>
           <tr>
             <td>아이디</td>
-            <td>userid</td>
+            <td>${requestScope.userid}</td>
           </tr>
 
           <tr>
             <td>이름</td>
-            <td>name</td>
+            <td>${requestScope.name}</td>
           </tr>
 
           <tr>
             <td>이메일</td>
-            <td>email</td>
+            <td>${requestScope.email}</td>
           </tr>
         </tbody>
       </table>
 
       <div class="my-3">
         <p class="text-center">
-          <button type="button" class="btn btn-success" id="btnFind">
-            확인
-          </button>
+          <a href="<%=ctxPath%>/login/login.tea"><button type="button" class="btn btn-success" id="btnLoginPage">
+            로그인 페이지로 이동
+          </button></a>
         </p>
       </div>
     </div>
-
 <%@ include file="../footer.jsp"%>
