@@ -87,6 +87,70 @@
 
 </style>
 
+<script type="text/javascript">
+
+
+	$(document).ready(function(){
+	
+	    $("button#btnSubmit").click(function(){ // 로그인 버튼을 클릭하면
+	          goLogin(); 
+	    });
+	       
+	    
+	    
+	    
+	 });// end of $(document).ready(function(){})-----------------------------
+	
+	 //=== 나의정보 수정하기 === //
+	 function goEditPersonal(userid) {  // 어떤 회원 userid를 수정할 것인지 파라미터로 받아옴.
+	 
+	    // 나의정보 수정하기 팝업창 띄우기 (GET 방식으로)
+	     const url = "<%= request.getContextPath() %>/member/memberEdit.up?userid="+userid; 
+	     // 어떤 회원 userid를 수정할 것인지 MemberEdit.java 클래스에 넘겨준다.(get방식)
+	       
+	       
+	     window.open(url, "memberEdit", 
+	                "left="+pop_left+", top="+pop_top+", width="+pop_width+", height="+pop_height); // 팝업창 띄우기(url, 팝업창이름, "팝업창 크기지정")   *url 은 보여줄 페이지(CoinPurchaseTypeChoice.java) 이다.  *팝업창이름은 생략해도 상관없음. 별지장 없음.
+	          
+	   
+	 }// end of function goEditPersonal()----------------------
+
+
+	// 코인충전 결제금액 선택하기(실제로 카드결제) //
+	function goCoinPurchaseTypeChoice(userid){
+		
+		// 코인구매 금액 선택 팝업창 띄우기
+		const url = "<%= request.getContextPath()%>/member/coinPurchaseTypeChoice.up?userid="+userid;
+		
+		window.open(url, "coinPurchaseTypeChoice",
+				    "left=450px, top=100px, width=650px, height=570px");
+		
+
+		// === 아임포트 결제를 해주는 함수 === //
+		function goCoinPurchaseEnd(coinmoney) {
+		//	alert("확인용 부모창의 함수 호출함. 결제금액 : " + coinmoney + "원");
+		
+			const userid = "${sessionScope.loginuser.userid}"; 
+		//	alert("확인용 결제할 사용자 아이디 : " + userid);
+			
+		//  아임포트 결제 팝업창 띄우기 
+	        const url = "<%= request.getContextPath()%>/member/coinPurchaseEnd.up?userid="+userid+"&coinmoney="+coinmoney;
+			
+			window.open(url, "coinPurchaseEnd",
+					    "left=350px, top=100px, width=1000px, height=600px");
+		
+		}
+	  
+		
+		
+	
+	}// end of function goCoinPurchaseTypeChoice(userid){}-------------------
+ 
+	
+	
+
+</script>
+
 <div class="container mypage">
 	<h2 style="font-weight: bold; margin-bottom: 20px;">마이페이지</h2>
 	
@@ -100,7 +164,9 @@
 		      <span style="margin-left: 10px; font-weight: bold;">적립금  540p</span>
 		      <i class="far fa-credit-card" style="margin-left: 50px; font-size: 25px; vertical-align: middle;"></i>
 		      <span style="margin-left: 10px; font-weight: bold;">예치금  0원</span>
-		      <input type="button" class="btn charge" value="예치금충전" />
+<!-- 		  <input type="button" class="btn charge" id="balanceCharge" value="예치금충전" /> -->
+		      <a href="javascript:goCoinPurchaseTypeChoice('${(sessionScope.loginuser).userid}');" type="button" class="btn charge">예치금충전</a>
+		      
 	      </div> 
 	   </div>
     </div>
