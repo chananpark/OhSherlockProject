@@ -2,7 +2,6 @@ package syj.member.model;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,15 +28,15 @@ public class MemberDAO implements InterMemberDAO {
 	private AES256 aes;
 	
 	// 생성자
-	public MemberDAO() {
+	public MemberDAO() {	
 		try {
-			Context initContext = new InitialContext(); // import javax.naming.Context; 으로 import
-			Context envContext  = (Context)initContext.lookup("java:/comp/env");
-			ds = (DataSource)envContext.lookup("jdbc/myoracle"); // jdbc/myoracle 이 이름은 배치서술자와 톰캣서버의 context.xml에 있다.
-			
-			aes = new AES256(SecretMyKey.KEY);
-			// SecretMyKey.KEY 은 우리가 만든 비밀키 이다.
-		
+			Context initContext = new InitialContext();
+		    Context envContext  = (Context)initContext.lookup("java:/comp/env");
+		    ds = (DataSource)envContext.lookup("jdbc/myprjoracle");
+
+		    aes = new AES256(SecretMyKey.KEY);
+		    // SecretMyKey.KEY: 우리가 만든 비밀키
+
 		} catch(NamingException e) {
 			e.printStackTrace();
 		} catch(UnsupportedEncodingException e) {
@@ -55,10 +54,9 @@ public class MemberDAO implements InterMemberDAO {
 			e.printStackTrace();
 		}
 	}
-	
 
 	
-	// 비밀번호 찾기(아이디, 이메일을 입력받아서 해당 사용자의 비밀번호를 알려준다.)
+	// 비밀번호 찾기(아이디, 이메일, 이름을 입력받아서 해당 사용자의 비밀번호를 알려준다.)
 	@Override
 	public boolean isUserExist(Map<String, String> paraMap) throws SQLException {
 
@@ -67,17 +65,21 @@ public class MemberDAO implements InterMemberDAO {
 		try {
 			conn = ds.getConnection();
 			
+			System.out.println(paraMap.get("userid"));
+			
 			String sql = " select userid " +
 						 " from tbl_member " +
-						 " where status = 1 and userid = ? and email = ? ";
+						 " where status = 1 and userid = ? and email = ? and name = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, paraMap.get("userid") ); // key 값으로 넣어준 name 을 넣어준다.
 			pstmt.setString(2, aes.encrypt(paraMap.get("email")) ); // 양방향 암호화 이기 때문에 다시 암호화를 풀어주어야 한다. 
+			pstmt.setString(3, paraMap.get("name") );
 			
 			rs = pstmt.executeQuery();
 			
 			isUserExist = rs.next();
+			System.out.println(isUserExist);
 			
 		} catch(GeneralSecurityException | UnsupportedEncodingException e) { // 
 			e.printStackTrace();
@@ -91,17 +93,17 @@ public class MemberDAO implements InterMemberDAO {
 
 	//비밀번호 변경하기
 	@Override
-	public int pwdUpdate(Map<String, String> paraMap) throws SQLException {
+	public int passwdUpdate(Map<String, String> paraMap) throws SQLException {
 		int result = 0;
       
 		try {
 			conn = ds.getConnection();
          
-			String sql = " update tbl_member set pwd = ?, lastpwdchangedate = sysdate "
+			String sql = " update tbl_member set passwd = ?, last_passwd_date = sysdate "
 					   + " where userid = ? ";
 			pstmt = conn.prepareStatement(sql);
          
-			pstmt.setString(1, Sha256.encrypt(paraMap.get("pwd")) ); // 암호화해서 데이터베이스에 들어가야한다. 단방향 암호화 
+			pstmt.setString(1, Sha256.encrypt(paraMap.get("passwd")) ); // 암호화해서 데이터베이스에 들어가야한다. 단방향 암호화 
 			pstmt.setString(2, paraMap.get("userid"));
          
 			result = pstmt.executeUpdate(); // 0 아니면 1이 나와서 result 에 넣어준다.
@@ -112,7 +114,11 @@ public class MemberDAO implements InterMemberDAO {
       
 		return result;
 	
-	}//end of pwdUpdate
+	}//end of public int passwdUpdate(Map<String, String> paraMap) throws SQLException
 
+	
+	
+	
+	
 	
 } // end of MemberDAO

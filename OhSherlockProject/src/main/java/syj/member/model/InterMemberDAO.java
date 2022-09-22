@@ -9,7 +9,7 @@ public interface InterMemberDAO {
 	boolean isUserExist(Map<String, String> paraMap) throws SQLException;
 
 	// 비밀번호 변경하기
-	int pwdUpdate(Map<String, String> paraMap) throws SQLException;
+	int passwdUpdate(Map<String, String> paraMap) throws SQLException;
 
 	
 	
