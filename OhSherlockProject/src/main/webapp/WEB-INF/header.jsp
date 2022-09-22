@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <% String ctxPath = request.getContextPath(); %>
 
 <!DOCTYPE html>
@@ -50,6 +53,14 @@
 		$("#topBtn").click(function() {
 			$('html, body').animate({scrollTop:0}, '300');
 		});
+	    
+	    $("#nav_header").hover((e)=>{
+	    	$("#header_menu").removeClass("transparentBg");
+            $("#header_menu").addClass("whiteBg");
+	    }, (e) =>{
+	    	$("#header_menu").removeClass("whiteBg");
+            $("#header_menu").addClass("transparentBg");
+	    });
 	}); 
 </script>
 
@@ -243,7 +254,7 @@ div#brandStoryText {
 	<div class="header " id="nav_header">
 		<!-- d-flex flex-column min-vh-100 -->
 		<nav class="navbar navbar-expand-xl navbar-light fixed-top px-5 pt-2" id="header_menu">
-			<a class="navbar-brand" href="<%=ctxPath%>/index.jsp"><img class="mr-3" src="<%=ctxPath%>/images/o_logo.png" width=80px /></a>
+			<a class="navbar-brand" href="<%=ctxPath%>/index.tea"><img class="mr-3" src="<%=ctxPath%>/images/o_logo.png" width=80px /></a>
 
 			<%-- 고정 부분 --%>
 			<div class="d-flex order-xl-1 ml-auto pr-2">
@@ -269,10 +280,10 @@ div#brandStoryText {
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
 				<ul class="navbar-nav text-right">
 					<li class="nav-item dropdown mr-2">
-					<a class="nav-link dropdown-toggle menufont_size text-dark" href="<%=ctxPath%>/product/product_list.jsp" 
+					<a class="nav-link dropdown-toggle menufont_size text-dark" href="" 
 					id="navbarDropdown" data-toggle="dropdown">티제품</a> <%-- 여기 클릭시 전체 상품으로 연결 --%>
 						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown" id="teaProducts">
-							<a class="dropdown-item" href="<%=ctxPath%>/product/product_list.jsp">전체상품</a> <a
+							<a class="dropdown-item" href="">전체상품</a> <a
 								class="dropdown-item" href="#">베스트</a> <a class="dropdown-item"
 								href="#">녹차/말차</a> <a class="dropdown-item" href="#">홍차</a> <a
 								class="dropdown-item" href="#">허브차</a>
@@ -283,15 +294,42 @@ div#brandStoryText {
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/brandStory/brandStory.jsp">브랜드스토리</a></li>
 				</ul>
 				<ul class="navbar-nav text-right mx-auto">
+				
+				
+				<%-- 로그인 전 상태일 때 --%>
+				<c:if test="${empty sessionScope.loginuser}"> 
 					<li class="nav-item dropdown mr-2"><a
 						class="nav-link dropdown-toggle menufont_size text-secondary"
-						href="<%=ctxPath%>/login/login.jsp" id="navbarDropdown" data-toggle="dropdown">로그인</a> <%-- 로그인을 누르면 기본은 로그인 창으로 연결 --%>
+						href="<%=ctxPath%>/login/login.tea" id="navbarDropdown" data-toggle="dropdown">로그인</a> <%-- 로그인을 누르면 기본은 로그인 창으로 연결 --%>
 						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="<%=ctxPath%>/login/login.jsp">로그인</a> 
+							<a class="dropdown-item" href="<%=ctxPath%>/login/login.tea">로그인</a> 
 							<a class="dropdown-item" href="<%=ctxPath%>/member/memberRegister.jsp">회원가입</a>
 						</div></li>
 					<li class="nav-item active mr-2"><a
-						class="nav-link menufont_size text-secondary" href="<%=ctxPath%>/mypage/mypage.jsp">마이페이지</a></li>
+						class="nav-link menufont_size text-secondary" href="<%=ctxPath%>/mypage/mypage.tea">마이페이지</a></li>
+				</c:if>
+				
+				<%-- 로그인 후 로그인->로그아웃으로 바뀐 --%>
+				<c:if test="${not empty sessionScope.loginuser}">
+					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-secondary" href="<%=ctxPath%>/login/logout.tea">로그아웃</a></li>
+					
+					<%-- 관리자 로그인 시 마이페이지 -> 관리자전용 --%>
+					<c:if test="${sessionScope.loginuser.userid eq 'admin'}">
+					<li class="nav-item dropdown mr-2"><a
+						class="nav-link dropdown-toggle menufont_size text-secondary"
+						href="" id="navbarDropdown" data-toggle="dropdown">관리자전용</a>
+						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="">회원조회</a> 
+							<a class="dropdown-item" href="<%=ctxPath%>/admin/prod_mgmt_list.jsp">상품관리</a>
+						</div></li>
+					</c:if>
+									
+					<c:if test="${sessionScope.loginuser.userid ne 'admin'}">		
+					<li class="nav-item active mr-2"><a
+						class="nav-link menufont_size text-secondary" href="<%=ctxPath%>/mypage/mypage.tea">마이페이지</a></li>
+					</c:if>
+				</c:if>
+
 					<li class="nav-item dropdown mr-2"><span
 						class="nav-link dropdown-toggle menufont_size text-secondary"
 						id="navbarDropdown" data-toggle="dropdown">고객센터</span>
