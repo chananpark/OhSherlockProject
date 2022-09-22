@@ -20,7 +20,7 @@ public class MemberDAO implements InterMemberDAO {
 	private ResultSet rs;
 	
 	private AES256 aes;
-	
+	 
 	// 생성자
 	public MemberDAO() {
 		

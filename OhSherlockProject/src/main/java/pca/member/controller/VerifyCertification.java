@@ -12,7 +12,7 @@ public class VerifyCertification extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+ 
 		String userCertificationCode = request.getParameter("userCertificationCode");
 		String userid = request.getParameter("userid");
 		String clientip = request.getRemoteAddr();

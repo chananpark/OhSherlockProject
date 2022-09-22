@@ -18,7 +18,7 @@ public class Login extends AbstractController {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		String method = request.getMethod();
-
+ 
 		// get 방식이라면
 		if ("GET".equalsIgnoreCase(method)) {
 			

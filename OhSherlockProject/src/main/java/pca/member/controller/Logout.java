@@ -11,7 +11,7 @@ public class Logout extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// 로그아웃 처리하기
-
+ 
 		HttpSession session = request.getSession();
 		session.invalidate();
 

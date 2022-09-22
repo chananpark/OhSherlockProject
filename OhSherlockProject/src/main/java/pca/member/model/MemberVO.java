@@ -20,7 +20,7 @@ public class MemberVO {
 	private int status;                // 회원탈퇴유무   1: 가입중 / 0:탈퇴
 	private int idle;                  // 휴면유무      0: 활동중 / 1: 휴면
 	                                   // 마지막으로 로그인 한 날짜시간이 현재시각으로 부터 1년이 지났으면 휴면으로 지정 
-	
+	 
 	/////////////////////////////////////////////////////////////////////////////
 	
 	private boolean passwdChangeRequired = false;

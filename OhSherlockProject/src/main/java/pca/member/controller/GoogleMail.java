@@ -16,7 +16,7 @@ public class GoogleMail {
         
         // 1. 정보를 담기 위한 객체
         Properties prop = new Properties(); 
-        
+         
         // 2. SMTP(Simple Mail Transfer Protocoal) 서버의 계정 설정
         prop.put("mail.smtp.user", "ssherlock.oh@gmail.com");
         

@@ -8,7 +8,7 @@ public class MySMTPAuthenticator extends Authenticator {
 
 	@Override
 	public PasswordAuthentication getPasswordAuthentication() {
-		
+		 
 		return new PasswordAuthentication("ssherlock.oh","znoiflzzvwtehkxf");
 		
 	}

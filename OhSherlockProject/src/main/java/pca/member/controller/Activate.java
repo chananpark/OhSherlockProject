@@ -62,7 +62,7 @@ public class Activate extends AbstractController {
 				e.printStackTrace();
 				sendMailSuccess = false; // 메일 전송 실패 표시
 			}
-
+ 
 			request.setAttribute("userid", userid);
 			request.setAttribute("email", email);
 			request.setAttribute("name", name);
