@@ -1,4 +1,7 @@
 show user;
+-- USER이(가) "SEMI_ORAUSER2"입니다.
+
+
 
 -- 제약조건 조회하기 -- 
 select A.constraint_name, A.constraint_type, A.search_condition, A.R_constraint_name
