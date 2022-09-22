@@ -37,7 +37,7 @@
 		cursor: pointer;
 		color: red;
 	}         
-	    
+	      
    .depositbtn {
 		width: 20%;
 		margin-top: 50px;
