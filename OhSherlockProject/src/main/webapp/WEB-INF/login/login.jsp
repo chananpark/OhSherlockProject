@@ -18,8 +18,7 @@
 	}
 	
 	/* 아이디, 비밀번호 박스랑 로그인, 회원가입 버튼 */
- 	div#input_login > input,
-	div#btn_loginbox > input {
+ 	div#input_login > input {
 	  width: 100%;
 	  padding: 12px;
 	  border: 1px solid gray;
@@ -28,6 +27,16 @@
 	  font-size: 17px;
 	  line-height: 20px;
 	} 
+	
+	div#btn_loginbox > input {
+	  width: 100%;
+	  padding: 12px;
+	  border-style: none;
+	  margin: 5px 0;
+	  opacity: 0.85;
+	  font-size: 17px;
+	  line-height: 20px;
+	}
 	
 	div#input_login > input:hover,
 	div#btn_loginbox > input:hover {
@@ -64,17 +73,30 @@
 
 <script>
 	$(document).ready(function(){
+		// 로그인을 안 한 상태일 때
+		if(${empty sessionScope.loginuser}){ 
+			// 로컬스토리지에 저장된 saveId를 불러와서 아이디 input태그에 넣어준다.
+			const loginUserid = localStorage.getItem("saveId");
+		
+			if(loginUserid != null) {
+				$("input#loginUserid").val(loginUserid);
+				$("input:checkbox[id='saveId']").prop('checked', true);
+			}
+		}
+		
+		// 로그인 버튼 클릭 시
 		$("input#btn_submit").click(function(){
 			goLogin(); // 로그인 함수 호출
 		});
 		
+		// 비밀번호 입력란에 엔터 시
 		$("input#loginPwd").bind("keydown", function(event){
-			if(event.keyCode == 13) { // 암호입력란에 엔터를 했을 경우 
+			if(event.keyCode == 13) { 
 				goLogin(); // 로그인 함수 호출
 			}
 		});
 		
-
+		// 아이디 찾기 창 닫기 버튼 클릭 시
 		$("button.idFindClose").click(function() {
 
 			const iframe_idFind = document.getElementById("iframe_idFind"); // 대상 아이프레임 선택
@@ -84,6 +106,7 @@
 
 		});
 
+		// 비밀번호 찾기 창 닫기 버튼 클릭 시
 		$("button.passwdFindClose").click(function() {
 			javascript: history.go(0);
 		});
@@ -109,7 +132,16 @@
 			$("input#loginPwd").focus();
 			return; // 함수 종료
 		}
-
+		
+		// 아이디 저장을 체크했을 경우
+		if ($("#saveId").prop("checked")) {
+			localStorage.setItem("saveId", loginUserid);
+		}
+		// 아이디 저장 체크 해제했을 경우
+		else{
+			localStorage.removeItem("saveId");
+		}
+		
 		const frm = document.login_frm;
 		frm.action = "<%=ctxPath%>/login/login.tea";
 	    frm.method = "post";
@@ -141,8 +173,8 @@
 			<div id="id_save_find" class="w-98 d-flex justify-content-between">
 
 				<div id="idPwdSave">
-					<input type="checkbox" id="chk" title="아이디 저장 선택" checked="checked" />
-					<label for="chk">아이디 저장</label>
+					<input type="checkbox" id="saveId" title="아이디 저장 선택" />
+					<label for="saveId">아이디 저장</label>
 				</div>
 
 				<div id="idFind">
@@ -153,8 +185,7 @@
 			</div>
 
 			<div id="btn_loginbox" class="d-flex flex-column">
-				<input type="button" id="btn_submit" value="로그인"> <input
-					type="button" id="btn_register" value="회원가입">
+				<input type="button" id="btn_submit" value="로그인"> <input type="button" id="btn_register" value="회원가입">
 			</div>
 		</div>
 	</form>

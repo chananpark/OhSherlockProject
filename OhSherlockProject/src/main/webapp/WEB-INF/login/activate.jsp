@@ -43,7 +43,35 @@ div#btnSubmit>input[type='button'] {
 
 <script>
 
+
 $(document).ready(function(){
+	$("span.error").hide();
+	
+	$("input#email").blur( (e)=>{
+		
+		const $target = $(e.target);
+		
+        // 이메일 정규표현식 
+		const regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;  
+        
+        const bool = regExp.test($target.val());
+		
+		if(!bool) {
+			// 이메일이 정규표현식에 위배된 경우  
+			$("table#tblMemberRegister :input").prop("disabled", true);
+			$target.prop("disabled", false);
+			
+		    $target.parent().find("span.error").show();
+			$target.focus();
+		}
+		else {
+			// 이메일이 정규표현식에 맞는 경우 
+			$("table#tblMemberRegister :input").prop("disabled", false);
+			
+		    $target.parent().find("span.error").hide();
+		}
+		
+	});
    
    $("input#btnActivate").click(function(){
       
@@ -79,7 +107,11 @@ $(document).ready(function(){
 	   
 	   // 메일 발송 성공시
 	   if(${requestScope.sendMailSuccess == true}) {
-	      $("div#div_btnFind").hide();
+		   
+		   // 5분 타이머 시작
+		   var fiveMinutes = 60 * 5,
+	       display = document.querySelector('#timer');
+	       startTimer(fiveMinutes, display);
 	   } 
 	 }
 	 // get방식으로 접근한 경우 인증결과창 숨기기
@@ -105,6 +137,26 @@ $(document).ready(function(){
    
 });
 
+// 5분 타이머 함수
+function startTimer(duration, display) {
+    var timer = duration, minutes, seconds;
+    setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds;
+
+        if (--timer == 0) {
+        	//timer = duration;
+            alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
+            $("div#div_activateResult").hide();
+            return;
+        }
+    }, 1000);
+}
 </script>
 
 <div class="container">
@@ -119,6 +171,7 @@ $(document).ready(function(){
 				<input type="text" id="userid" name="userid" placeholder="아이디" autocomplete="off" required /> 
 				<input type="text" id="name" name="name" placeholder="이름" autocomplete="off" required /> 
 				<input type="text" id="email" name="email" placeholder="이메일" autocomplete="off" required />
+				<span class="error text-danger">이메일 형식에 맞지 않습니다.</span>
 			</div>
 
 			<div id="btnSubmit" class="d-flex flex-column">
@@ -134,6 +187,9 @@ $(document).ready(function(){
 						발송되었습니다.</span>
 					<br>
 					<span style="font-size: 10pt;">인증코드를 입력해주세요.</span>
+					
+					<span id="timer" class="text-danger"></span>
+					
 					<br>
 					<input type="text" name="input_confirmCode" id="input_confirmCode" required />
 					<br>
@@ -150,7 +206,6 @@ $(document).ready(function(){
 		</div>
 	</form>
 </div>
-
 
 <%-- 인증하기 form  --%>
 <form name="verifyCertificationFrm">

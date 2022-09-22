@@ -53,6 +53,14 @@
 		$("#topBtn").click(function() {
 			$('html, body').animate({scrollTop:0}, '300');
 		});
+	    
+	    $("#nav_header").hover((e)=>{
+	    	$("#header_menu").removeClass("transparentBg");
+            $("#header_menu").addClass("whiteBg");
+	    }, (e) =>{
+	    	$("#header_menu").removeClass("whiteBg");
+            $("#header_menu").addClass("transparentBg");
+	    });
 	}); 
 </script>
 
@@ -240,9 +248,6 @@ div#brandStoryText {
 /* --- 이벤트 컨테이너 css 끝 --- */
 </style>
 
-<!-- js 파일 include -->
-<script type="text/javascript" src="../js/header_chanan.js" ></script> 
-
 </head>
 
 <body>
@@ -290,6 +295,7 @@ div#brandStoryText {
 				</ul>
 				<ul class="navbar-nav text-right mx-auto">
 				
+				
 				<%-- 로그인 전 상태일 때 --%>
 				<c:if test="${empty sessionScope.loginuser}"> 
 					<li class="nav-item dropdown mr-2"><a
@@ -299,16 +305,31 @@ div#brandStoryText {
 							<a class="dropdown-item" href="<%=ctxPath%>/login/login.tea">로그인</a> 
 							<a class="dropdown-item" href="<%=ctxPath%>/member/memberRegister.jsp">회원가입</a>
 						</div></li>
+					<li class="nav-item active mr-2"><a
+						class="nav-link menufont_size text-secondary" href="<%=ctxPath%>/mypage/mypage.tea">마이페이지</a></li>
 				</c:if>
 				
-				<%-- 로그인 후 상태일 때 --%>
+				<%-- 로그인 후 로그인->로그아웃으로 바뀐 --%>
 				<c:if test="${not empty sessionScope.loginuser}">
-				<li class="nav-item active mr-2"><a
-						class="nav-link menufont_size text-secondary" href="<%=ctxPath%>/login/logout.tea">로그아웃</a></li>
-				</c:if>
-						
+					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-secondary" href="<%=ctxPath%>/login/logout.tea">로그아웃</a></li>
+					
+					<%-- 관리자 로그인 시 마이페이지 -> 관리자전용 --%>
+					<c:if test="${sessionScope.loginuser.userid eq 'admin'}">
+					<li class="nav-item dropdown mr-2"><a
+						class="nav-link dropdown-toggle menufont_size text-secondary"
+						href="" id="navbarDropdown" data-toggle="dropdown">관리자전용</a>
+						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="">회원조회</a> 
+							<a class="dropdown-item" href="<%=ctxPath%>/admin/prod_mgmt_list.jsp">상품관리</a>
+						</div></li>
+					</c:if>
+									
+					<c:if test="${sessionScope.loginuser.userid ne 'admin'}">		
 					<li class="nav-item active mr-2"><a
-						class="nav-link menufont_size text-secondary" href="<%=ctxPath%>/mypage/mypage.jsp">마이페이지</a></li>
+						class="nav-link menufont_size text-secondary" href="<%=ctxPath%>/mypage/mypage.tea">마이페이지</a></li>
+					</c:if>
+				</c:if>
+
 					<li class="nav-item dropdown mr-2"><span
 						class="nav-link dropdown-toggle menufont_size text-secondary"
 						id="navbarDropdown" data-toggle="dropdown">고객센터</span>

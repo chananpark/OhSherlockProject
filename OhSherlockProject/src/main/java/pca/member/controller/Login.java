@@ -72,8 +72,7 @@ public class Login extends AbstractController {
 				if (loginuser.isPasswdChangeRequired() == true) {
 					
 					String message = "비밀번호 변경 후 3개월 경과로 비밀번호 재설정이 필요합니다.";
-					String loc = request.getContextPath() + "";
-					// 비밀번호 변경 페이지
+					String loc = ""; // 비번 수정 페이지로
 
 					request.setAttribute("message", message);
 					request.setAttribute("loc", loc);
