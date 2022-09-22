@@ -487,7 +487,7 @@
 	
 	  // 최종적으로 폼을 보내어 준다.
 	  const frm = document.registerFrm;
-	  frm.action = 'memberRegister.tea';
+	  frm.action = '<%=ctxPath%>/member/memberRegister.tea';
 	  frm.method = 'post';
 	  frm.submit();
 	} // end of function goRegister(){}---------------

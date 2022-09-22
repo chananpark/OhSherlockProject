@@ -58,8 +58,8 @@ public class MemberRegister extends AbstractController {
 					request.setAttribute("name", name);
 					request.setAttribute("email", email);
 					
-					super.setRedirect(true);
-					super.setViewPage(request.getContextPath()+"/member/memberRegister_success.jsp");
+					super.setRedirect(false);
+					super.setViewPage("/WEB-INF/member/memberRegister_success.jsp");
 				}
 				
 			} catch(SQLException e) {
