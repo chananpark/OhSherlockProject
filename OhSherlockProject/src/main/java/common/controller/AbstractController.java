@@ -3,7 +3,7 @@ package common.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import kcy.mypage.model.MemberVO;
+import common.model.MemberVO;
 
 
 public abstract class AbstractController implements InterCommand {

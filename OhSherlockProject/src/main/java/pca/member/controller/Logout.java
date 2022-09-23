@@ -15,8 +15,13 @@ public class Logout extends AbstractController {
 		HttpSession session = request.getSession();
 		session.invalidate();
 
-		super.setRedirect(true);
-		super.setViewPage(request.getContextPath() + "/index.tea");
+		String message = "로그아웃 되었습니다.";
+		String loc = request.getContextPath() + "/index.tea";
+		request.setAttribute("message", message);
+		request.setAttribute("loc", loc);
+
+		super.setRedirect(false);
+		super.setViewPage("/WEB-INF/msg.jsp");
 	}
 
 }
