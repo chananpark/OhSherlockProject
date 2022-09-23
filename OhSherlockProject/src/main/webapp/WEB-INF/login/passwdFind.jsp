@@ -261,7 +261,7 @@
 					<div id="div_certification">
 						<hr style="border: solid 1px gray; background-color: gray;">
 						<span >인증코드가 ${requestScope.email}로 발송되었습니다.</span><br>
-			            <span >인증코드를 입력해주세요.</span><span id="timer" class="text-danger"></span><%-- 타이머 출력 --%>
+			            <span >인증코드를 입력해주세요. </span><span id="timer" class="text-danger" style="font-weight:bold;"></span><%-- 타이머 출력 --%>
 			            <input type="text" name="input_confirmCode" id="input_confirmCode" autocomplete="off" placeholder="인증코드" required />
 			            <br><br>
 			            <button type="button" class="btn btn-secondary justify-content-end" id="btnConfirmCode">인증하기</button>

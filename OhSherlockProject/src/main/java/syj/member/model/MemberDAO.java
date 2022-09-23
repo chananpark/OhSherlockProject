@@ -1,11 +1,15 @@
 package syj.member.model;
 
+import common.model.*;
+
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.naming.Context;
@@ -117,8 +121,95 @@ public class MemberDAO implements InterMemberDAO {
 	}//end of public int passwdUpdate(Map<String, String> paraMap) throws SQLException
 
 	
-	
-	
+	// 회원조회에서 특정 조건의 회원 페이징처리해서 보여주기
+	// 페이징 처리를 한 모든 회원 또는 검색한 회원 목록 보여주기
+	@Override
+	public List<MemberVO> selectPagingMember(Map<String, String> paraMap) throws SQLException {
+		
+		List<MemberVO> memberList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = "select userid, name, mobile, idle\n"+
+						"from\n"+
+						"(\n"+
+						"    select rownum AS RNO, userid, name, mobile, idle\n"+
+						"    from\n"+
+						"    (\n"+
+						"        select userid, name, mobile, idle\n"+
+						"        from tbl_member\n"+
+						"        where userid != 'admin' -- 탈퇴한 회원도 색만 다르게 해서 볼 것이기 때문에 admin만 제외하고 보여준다.\n"+
+						"        order by registerday desc\n"+
+						"    )V\n"+
+						") T --RNO를 where 절에 사용할 수 없어서 다시 인라인뷰를 사용하여 T 라는 테이블로 간주한다.\n"+
+						"where RNO between ? and ? ";
+				
+//			=== 페이징처리의 공식 ===
+//			where RNO between (조회하고자 하는 페이지 번호 * 한페이지당 보여줄 행의 개수) - (한페이지당 보여줄 행의 개수 -1) 
+//			              and (조회하고자 하는 페이지 번호 * 한페이지당 보여줄 행의 개수);
+
+			int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));  // 조회하고자 하는 페이지 번호
+			int sizePerPage = Integer.parseInt(paraMap.get("sizePerPage")); // 한페이지당 보여줄 행의 개수
+			
+			pstmt = conn.prepareStatement(sql);
+		
+			// 페이징 처리 공식
+			pstmt.setInt(1, (currentShowPageNo*sizePerPage) - (sizePerPage-1) );
+			pstmt.setInt(2, (currentShowPageNo*sizePerPage) );
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				MemberVO mvo = new MemberVO();
+				mvo.setUserid(rs.getString(1)); // sql 문 첫번째가 userid
+				mvo.setName(rs.getString(2));
+				mvo.setMobile(aes.decrypt(rs.getString(3)) ); // 복호화
+				mvo.setIdle(rs.getInt(4)); 
+				
+				memberList.add(mvo); // 리스트에 담아준다.
+				
+			} // end of while
+			
+		} catch(GeneralSecurityException | UnsupportedEncodingException e) { // 
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return memberList;
+	} // end of public List<MemberVO> selectPagingMember(Map<String, String> paraMap) throws SQLException
+
+		
+		
+	// 페이징 처리를 위한 검색 유무에 따른 회원 수에 대한 페이지 출력하기
+	@Override
+	public int getTotalPage(Map<String, String> paraMap) throws SQLException {
+
+		int totalPage = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select ceil(count(*)/?) "
+						+ " from tbl_member "
+						+ " where userid != 'admin' ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, Integer.parseInt(paraMap.get("sizePerPage")));
+			rs = pstmt.executeQuery();
+			rs.next();
+			totalPage = rs.getInt(1);
+			
+		} finally {
+			close();
+		}
+		
+		return totalPage;
+			
+	} // end of public int getTotalPage(Map<String, String> paraMap) throws SQLException
+
 	
 	
 } // end of MemberDAO
