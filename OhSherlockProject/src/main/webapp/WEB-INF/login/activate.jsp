@@ -5,7 +5,6 @@
 
 <style>
 
-/* 아이디찾기 내용 전체 */
 div#activate_box {
 	width: 380px;
 }
@@ -25,7 +24,6 @@ div#input_activate>input:hover, div#btnSubmit>input:hover {
 	opacity: 1;
 }
 
-/* 이름, 이메일 박스 */
 div#input_activate>input {
 	border-radius: 4px;
 }
@@ -37,6 +35,10 @@ div#btnSubmit>input[type='button'] {
 	background-color: #1E7F15;
 	color: white;
 	cursor: pointer;
+}
+
+#div_activateResult {
+	text-align: center;
 }
 </style>
 
@@ -58,7 +60,7 @@ $(document).ready(function(){
 		
 		if(!bool) {
 			// 이메일이 정규표현식에 위배된 경우  
-			$("table#tblMemberRegister :input").prop("disabled", true);
+			$("input").prop("disabled", true);
 			$target.prop("disabled", false);
 			
 		    $target.parent().find("span.error").show();
@@ -66,8 +68,7 @@ $(document).ready(function(){
 		}
 		else {
 			// 이메일이 정규표현식에 맞는 경우 
-			$("table#tblMemberRegister :input").prop("disabled", false);
-			
+			$("input").prop("disabled", false);			
 		    $target.parent().find("span.error").hide();
 		}
 		
@@ -80,7 +81,6 @@ $(document).ready(function(){
       const nameVal = $("input[name='name']").val().trim();
 
       if(useridVal != "" && emailVal != ""){
-    	  	// console.log("메일보낸다");
 			const frm = document.activateFrm;
 			frm.action = "<%=ctxPath%>/login/activate.tea"; 
 			// 메일을 보내주는 컨트롤러
@@ -121,21 +121,32 @@ $(document).ready(function(){
 	
 	 // 인증하기 버튼 클릭시 인증코드 확인
 	 $("button#btnConfirmCode").click(function(){
-	
-	    const frm = document.verifyCertificationFrm;
-	 	// 입력한 userid 값을 히든폼에 넣어준다.
-	    frm.userid.value = $("input#userid").val(); 
-	 	// 입력한 인증코드를 히든폼에 넣어준다.
-	    frm.userCertificationCode.value = $("input#input_confirmCode").val(); 
-	    
-		// 히든폼의 데이터를 전송	 	
-	    frm.action = "<%=ctxPath%>/login/verifyCertification.tea"; 
-	    frm.method = "POST";
-	    frm.submit();
-
-	    });
+		 verifyCode();
+	 });
+	 
+	 // 이메일 입력 후 엔터 시 인증코드 확인
+	 $("input#email").bind("keydown", function(event){
+		 if(event.keyCode == 13) { 
+			 verifyCode();
+		 }
+	 });
    
 });
+
+function verifyCode(){
+	
+    const frm = document.authFrm;
+ 	// 입력한 userid 값을 히든폼에 넣어준다.
+    frm.userid.value = $("input#userid").val(); 
+ 	// 입력한 인증코드를 히든폼에 넣어준다.
+    frm.userAuthentiCode.value = $("input#input_confirmCode").val(); 
+    
+	// 히든폼의 데이터를 전송	 	
+    frm.action = "<%=ctxPath%>/login/verifyCode.tea"; 
+    frm.method = "POST";
+    frm.submit();
+
+    }
 
 // 5분 타이머 함수
 function startTimer(duration, display) {
@@ -171,7 +182,7 @@ function startTimer(duration, display) {
 				<input type="text" id="userid" name="userid" placeholder="아이디" autocomplete="off" required /> 
 				<input type="text" id="name" name="name" placeholder="이름" autocomplete="off" required /> 
 				<input type="text" id="email" name="email" placeholder="이메일" autocomplete="off" required />
-				<span class="error text-danger">이메일 형식에 맞지 않습니다.</span>
+				<span class="error text-danger text-center">이메일 형식에 맞지 않습니다.</span>
 			</div>
 
 			<div id="btnSubmit" class="d-flex flex-column">
@@ -199,7 +210,7 @@ function startTimer(duration, display) {
 
 				<%-- 메일 발송 실패 시 --%>
 				<c:if test="${requestScope.sendMailSuccess eq false}">
-					<span style="font-size: 10pt; color: red;">메일 발송이 실패하였습니다.</span>
+					<span class="text-danger text-center">메일 발송이 실패하였습니다.</span>
 					<br>
 				</c:if>
 			</p>
@@ -208,10 +219,10 @@ function startTimer(duration, display) {
 </div>
 
 <%-- 인증하기 form  --%>
-<form name="verifyCertificationFrm">
+<form name="authFrm">
 	<%-- 위의 form 은 get 방식이기 때문에 히든 폼을 post 방식으로 보내준다. --%>
 	<input type="hidden" name="userid" /> <input type="hidden"
-		name="userCertificationCode" />
+		name="userAuthentiCode" />
 	<%-- 사용자가 입력한 코드 받아오기, 받아서 인증하기 form을 넘겨줄 것이다. --%>
 </form>
 

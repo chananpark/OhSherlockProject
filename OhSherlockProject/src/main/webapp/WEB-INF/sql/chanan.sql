@@ -45,3 +45,14 @@ String sql = "update tbl_member set idle = 0 where userid = ?";
 
 update tbl_member set idle = 1 where userid = 'leess';
 commit;
+
+-- 공지사항 테이블 --
+create table tbl_notice (
+noticeNo number,
+noticeSubject Nvarchar2(100) not null,
+noticeContent clob not null,
+noticeHit number default 0,
+noticeDate date default sysdate,
+noticeFile varchar2(100),
+constraint PK_tbl_notice_noticeNo primary key(noticeNo)
+);
