@@ -19,7 +19,8 @@
 }
 
 	#idCheck, 
-	#emailCheck {
+	#emailCheck,
+	#emailVerifyCodeCheck {
 		color:#333333;
 		height: 30px;
 		border-style: none;
@@ -61,6 +62,10 @@
 	$(document).ready(function () {
 	  $('span.error').hide();
 	  $('input#userid').focus();
+	  
+	  // 이메일 인증확인란 숨기기
+	  $('div#emailVerify').hide();
+	 
 	
 	  // #userid 포커스를 잃어버렸을 경우
 	  $('input#userid').blur((e) => {
@@ -363,10 +368,10 @@
 			          .css('color', 'red');
 			        $('input#email').val('');
 			      } else {
-			        // 입력한 email 이 이미 DB 테이블에 존재하지 않는 경우라면
+			  /*      // 입력한 email 이 이미 DB 테이블에 존재하지 않는 경우라면
 			        $('span#emailCheckResult')
 			          .html($('input#email').val() + ' 은 사용가능 합니다.')
-			          .css('color', 'navy');
+			          .css('color', 'navy');*/
 			      }
 			    },
 			    error: function (request, status, error) {
@@ -417,7 +422,54 @@
 	  
 	}); // end of $(document).ready(function(){})---------------
 	
-	 
+	
+	// 5분 타이머 함수
+	function startTimer(duration, display) {
+	    var timer = duration, minutes, seconds;
+	    setInterval(function () {
+	        minutes = parseInt(timer / 60, 10);
+	        seconds = parseInt(timer % 60, 10);
+
+	        minutes = minutes < 10 ? "0" + minutes : minutes;
+	        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+	        display.textContent = minutes + ":" + seconds;
+
+	        if (--timer == 0) {
+	            alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
+	            $('div#emailVerify').hide();
+	            return;
+	        }
+	    }, 1000);
+	} // end of function startTimer(duration, display)
+
+
+	
+	// 이메일 인증코드 처리 함수
+	function emailVerifyCertification() {
+			
+    	// 인증코드 발송되었다는 문구 출력
+
+    	// 이메일 인증확인란 나타내기
+	 		$('div#emailVerify').hide();
+    	
+   		// 5분 타이머 시작
+	   		var fiveMinutes =  60 *5,
+      	display = document.querySelector('#timer');
+       	startTimer(fiveMinutes, display);
+       	
+      
+    $.ajax({
+    		url:'<%= ctxPath%>/member/emailVerifyCertification.tea',
+    		data:{ email: $('input#email').val() },
+    		type:'POST',
+    		success : function(){},
+    		error: function(){}
+		
+			});
+    
+	}// end of function emailVerifyCertification() {} ----------
+	
 	
 	//"가입하기" 버튼 클릭시 호출되는 함수
 	function goRegister() {
@@ -535,8 +587,8 @@
 				<tr>
 					<th>비밀번호<span class="mustIn">*</span></th>
 					<td><input id="passwd" type="password" class="required" name="passwd"
-						size="50" placeholder="(영문 대소문자/숫자/특수문자 반드시 포함, 10자~16자)" />
-					<span class="error" style="color: red">비밀번호는 대소문자/숫자/특수문자 포함 0자~16자로 입력하세요.</span>
+						size="50" placeholder="(영문 대소문자/숫자/특수문자 포함, 8~15자)" />
+					<span class="error" style="color: red">비밀번호는 대소문자/숫자/특수문자 포함 8자~15자로 입력하세요.</span>
 					</td>
 				</tr>
 				<tr>
@@ -581,12 +633,18 @@
 				</tr>
 				
 				<tr>
-					<th>이메일<span class="mustIn">*</span></th>
+					<th style="vertical-align: middle">이메일<span class="mustIn">*</span></th>
 					<td>
 						<input id="email" type="text" class="required" name="email" size="50" />
 						<button type="button" id="emailCheck">인증하기</button>
 						<span id="emailCheckResult"></span>
 						<span class="error" style="color: red">이메일 형식에 맞지 않습니다.</span>
+						<br>
+						<div id="emailVerify">
+							<input id="emailVerifyCode" type="text" name="emailVerifyCode" class="mt-2" size="20"/>
+							<button type="button" id="emailVerifyCodeCheck">인증확인</button>
+							<span id="timer" class="text-danger"></span>
+						</div>
 					</td>
 				</tr>
 			</thead>
