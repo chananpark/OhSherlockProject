@@ -34,29 +34,29 @@ public class Activate extends AbstractController {
 			Random rnd = new Random();
 
 			// 영문소문자 5글자 + 숫자 7글자
-			String certificationCode = "";
+			String authentiCode = "";
 
 			char randchar = ' ';
 			for (int i = 0; i < 5; i++) {
 				randchar = (char) (rnd.nextInt('z' - 'a' + 1) + 'a');
-				certificationCode += randchar;
+				authentiCode += randchar;
 			}
 
 			int randnum = 0;
 			for (int i = 0; i < 7; i++) {
 				randnum = rnd.nextInt(9 - 0 + 1) + 0;
-				certificationCode += randnum;
+				authentiCode += randnum;
 			} 
 			// 생성된 인증코드(certificationCode)를 사용자의 email로 전송한다.
 			GoogleMail mail = new GoogleMail();
 
 			try {
-				mail.sendmail(userid, email, certificationCode);
+				mail.sendmail(userid, email, authentiCode);
 				sendMailSuccess = true; // 메일 전송 성공 표시
 
 				HttpSession session = request.getSession();
 				// 발급한 인증코드를 세션에 저장
-				session.setAttribute("certificationCode", certificationCode);
+				session.setAttribute("authentiCode", authentiCode);
 
 			} catch (Exception e) { // 메일 전송이 실패한 경우
 				e.printStackTrace();

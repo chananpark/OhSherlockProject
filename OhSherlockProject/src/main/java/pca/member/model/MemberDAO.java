@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.naming.*;
 import javax.sql.DataSource;
 
+import common.model.MemberVO;
 import util.security.AES256;
 import util.security.SecretMyKey;
 import util.security.Sha256;
@@ -92,8 +93,8 @@ public class MemberDAO implements InterMemberDAO {
 				member.setMobile(aes.decrypt(rs.getString(4))); // 복호화
 				member.setPostcode(rs.getString(5));
 				member.setAddress(rs.getString(6));
-				member.setDetailaddress(rs.getString(7));
-				member.setExtraaddress(rs.getString(8));
+				member.setDetail_address(rs.getString(7));
+				member.setExtra_address(rs.getString(8));
 				member.setGender(rs.getString(9));
 				member.setBirthday(rs.getString(10) + rs.getString(11) + rs.getString(12));
 				member.setCoin(rs.getInt(13));

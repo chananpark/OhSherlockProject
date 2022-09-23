@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
+import common.model.MemberVO;
 import pca.member.model.InterMemberDAO;
 import pca.member.model.MemberDAO;
-import pca.member.model.MemberVO;
 
 public class Login extends AbstractController {
 
@@ -70,15 +70,11 @@ public class Login extends AbstractController {
 				
 				// 비밀번호 변경이 필요할 경우
 				if (loginuser.isPasswdChangeRequired() == true) {
-					
-					String message = "비밀번호 변경 후 3개월 경과로 비밀번호 재설정이 필요합니다.";
-					String loc = ""; // 비번 수정 페이지로
 
-					request.setAttribute("message", message);
-					request.setAttribute("loc", loc);
-
-					super.setViewPage("/WEB-INF/msg.jsp");
-					return; // 메소드 종료
+					request.setAttribute("userid", loginuser.getUserid());
+					// 비밀번호 변경 페이지로 이동
+					super.setRedirect(false);
+					super.setViewPage("/WEB-INF/login/passwdReset.jsp");
 				}
 				else {
 					// 비밀번호를 변경한지 3개월 미만인 경우

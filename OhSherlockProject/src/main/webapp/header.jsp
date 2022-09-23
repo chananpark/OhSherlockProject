@@ -322,7 +322,7 @@ div#brandStoryText {
 						class="nav-link dropdown-toggle menufont_size text-secondary"
 						href="" id="navbarDropdown" data-toggle="dropdown">관리자전용</a>
 						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="<%=ctxPath%>/member/member_list.tea">회원조회</a> 
+							<a class="dropdown-item" href="">회원조회</a> 
 							<a class="dropdown-item" href="<%=ctxPath%>/admin/prod_mgmt_list.jsp">상품관리</a>
 						</div></li>
 					</c:if>
@@ -338,7 +338,7 @@ div#brandStoryText {
 						id="navbarDropdown" data-toggle="dropdown">고객센터</span>
 						<div class="dropdown-menu no-border"
 							aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="<%=ctxPath%>/cs/notice.tea">공지사항</a> <a
+							<a class="dropdown-item" href="#">공지사항</a> <a
 								class="dropdown-item" href="#">자주 묻는 질문</a> <a
 								class="dropdown-item" href="#">1:1 상담</a>
 						</div></li>
@@ -367,7 +367,7 @@ div#brandStoryText {
 	        	<div id="search">
 	        	<%-- jsp 파일 연결을 위해서 iframe 을 사용하지 않고, 우선 include로 연결해 두었다. --%>
 	        	<%--	<iframe id="iframe_reviewWrite" style="border: none; width: 100%; height: 350px;" src="<%= request.getContextPath()%>/login/idFind.up"> </iframe>---%>
-             		<%@ include file="modal_search.jsp"%>
+             		
 	        	</div>
 	      	</div>
 	      
