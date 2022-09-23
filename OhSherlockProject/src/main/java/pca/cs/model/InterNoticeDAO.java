@@ -3,10 +3,12 @@ package pca.cs.model;
 import java.sql.SQLException;
 import java.util.List;
 
+import common.model.NoticeVO;
+
 public interface InterNoticeDAO {
 	
 	// tbl_notice에서 글 목록을 가져오는 메소드
-	List<NoticeVO> noticeList() throws SQLException;
+	List<NoticeVO> showNoticeList() throws SQLException;
 
 	/*
 	 * Board_noticeDTO noticeVeiwcount2(Map<String, String> paraMap); // 글조회 메소드

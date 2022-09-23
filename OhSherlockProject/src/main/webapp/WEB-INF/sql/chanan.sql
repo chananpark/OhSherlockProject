@@ -2,6 +2,7 @@ show user;
 -- USER이(가) "SEMI_ORAUSER2"입니다.
 
 
+desc tbl_member;
 
 select * from tbl_member;
 
@@ -46,6 +47,8 @@ String sql = "update tbl_member set idle = 0 where userid = ?";
 update tbl_member set idle = 1 where userid = 'leess';
 commit;
 
+desc tbl_notice;
+
 -- 공지사항 테이블 --
 create table tbl_notice (
 noticeNo number,
@@ -56,3 +59,21 @@ noticeDate date default sysdate,
 noticeFile varchar2(100),
 constraint PK_tbl_notice_noticeNo primary key(noticeNo)
 );
+
+-- 공지사항 글번호 시퀀스 --
+CREATE SEQUENCE seq_notice
+START WITH 1
+INCREMENT BY 1
+NOMAXVALUE
+NOMINVALUE
+NOCYCLE
+NOCACHE;
+
+-- 공지사항 글쓰기 sql --
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '오셜록고객님들께', '안녕하세요', null);
+
+commit;
+
+-- 공지사항 글목록 가져오기 sql --
+String sql = "select noticeNo, noticeSubject, noticeContent, noticeHit, noticeDate, noticeFile from tbl_notice";

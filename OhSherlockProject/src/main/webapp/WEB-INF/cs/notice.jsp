@@ -57,40 +57,37 @@
    <hr style="background-color: black; height: 1.2px;"><br>
    
 		<table class="table mt-4 text-center">
-			<thead class="thead-light">
+		<thead class="thead-light">
+			<tr>
+				<th>번호</th>
+				<th>제목</th>
+				<th>등록일</th>
+				<th>조회수</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach items="${noticeList}" var="notice">
 				<tr>
-					<th>번호</th>
-					<th>제목</th>
-					<th>등록일</th>
+					<td>${notice.noticeNo}</td>
+					<td>
+						<c:if test="${notice.fresh == true}">
+							<span class="badge badge-pill">new</span>&nbsp;&nbsp;
+						</c:if> 
+						${notice.noticeSubject}</td>
+					<td><fmt:formatDate pattern="yyyy.MM.dd" value="${notice.noticeDate}"/>
+					</td>
+					<td>${notice.noticeHit}</td>
 				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td style="class=storeNo">4</td>
-					<td><span class="badge badge-pill">new</span>&nbsp;&nbsp;교환/반품 전 필독 사항</td>
-					<td>2022.09.02</td>
-				</tr>
-				<tr>
-					<td style="class=storeNo">3</td>
-					<td>4월 다다일상 베이직/홈카페 배송 지연 안내</td>
-					<td>2022.04.12</td>
-				</tr>
-				<tr>
-					<td style="class=storeNo">2</td>
-					<td>오!셜록 개인정보 처리방침 변경 고지</td>
-					<td>2022.03.17</td>
-				</tr>
-				<tr>
-					<td style="class=storeNo">1</td>
-					<td>CJ대한통운 파업 종료 및 배송지연, 정상화 안내</td>
-					<td>2022.03.10</td>
-				</tr>
-			</tbody>
-		</table>
-		<div class="text-right" id="detail" style="display: block; margin-top: 50px;"> <%-- 글쓰기 버튼은 관리자 계정에서만 보임 --%>
+			</c:forEach>
+
+		</tbody>
+	</table>
+	<%-- 글쓰기 버튼은 관리자 계정에서만 보임 --%>
+	<c:if test="${sessionScope.loginuser ne null and loginuser.userid eq 'admin' }">
+		<div class="text-right" id="detail" style="display: block; margin-top: 50px;"> 
 		  <input type="button" class="btn-secondary" value="글쓰기" />
 	    </div>
-			
+	</c:if>		
 
 	<nav aria-label="Page navigation example" style="margin-top: 20px;">
 		<ul class="pagination justify-content-center">

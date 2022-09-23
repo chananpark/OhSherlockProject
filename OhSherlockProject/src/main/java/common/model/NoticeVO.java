@@ -1,16 +1,23 @@
-package pca.cs.model;
+package common.model;
+import java.util.Date;
 
 public class NoticeVO {
 	private int noticeNo;         
 	private String noticeSubject; 
 	private String noticeContent;          
 	private int noticeHit;        
-	private String noticeDate;           
+	private Date noticeDate;           
 	private String noticeFile;
+	
+	//////////////////////////////
+	
+	private boolean isFresh = false; // 최신 게시글 여부
+	
+	//////////////////////////////
 	
 	public NoticeVO() {}
 	
-	public NoticeVO(int noticeNo, String noticeSubject, String noticeContent, int noticeHit, String noticeDate,
+	public NoticeVO(int noticeNo, String noticeSubject, String noticeContent, int noticeHit, Date noticeDate,
 			String noticeFile) {
 		super();
 		this.noticeNo = noticeNo;
@@ -45,10 +52,10 @@ public class NoticeVO {
 	public void setNoticeHit(int noticeHit) {
 		this.noticeHit = noticeHit;
 	}
-	public String getNoticeDate() {
+	public Date getNoticeDate() {
 		return noticeDate;
 	}
-	public void setNoticeDate(String noticeDate) {
+	public void setNoticeDate(Date noticeDate) {
 		this.noticeDate = noticeDate;
 	}
 	public String getNoticeFile() {
@@ -57,5 +64,15 @@ public class NoticeVO {
 	public void setNoticeFile(String noticeFile) {
 		this.noticeFile = noticeFile;
 	}
+
+	public boolean isFresh() {
+		return isFresh;
+	}
+
+	public void setFresh(boolean isFresh) {
+		this.isFresh = isFresh;
+	}
+
+
 	
 }

@@ -62,11 +62,6 @@ public class Login extends AbstractController {
 
 					return; // 메소드 종료
 				}
-
-				HttpSession session = request.getSession();
-
-				// session에 로그인 사용자 정보 저장
-				session.setAttribute("loginuser", loginuser);
 				
 				// 비밀번호 변경이 필요할 경우
 				if (loginuser.isPasswdChangeRequired() == true) {
@@ -76,8 +71,13 @@ public class Login extends AbstractController {
 					super.setRedirect(false);
 					super.setViewPage("/WEB-INF/login/passwdReset.jsp");
 				}
+				// 비밀번호를 변경한지 3개월 미만인 경우
 				else {
-					// 비밀번호를 변경한지 3개월 미만인 경우
+
+					HttpSession session = request.getSession();
+					// session에 로그인 사용자 정보 저장
+					session.setAttribute("loginuser", loginuser);
+					
 					super.setRedirect(true);
 					super.setViewPage(request.getContextPath() + "/index.tea"); // 시작페이지로 이동
 				}
