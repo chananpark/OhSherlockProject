@@ -85,7 +85,7 @@ $(document).ready(function(){
 		$("td#error").hide();
 	});
 	
-	$("td#purchase").hover(function(e){
+	$("#purchase").hover(function(e){
 		                      $(e.target).addClass("purchase");
 	                       }, 
 	                       function(e){
@@ -93,7 +93,7 @@ $(document).ready(function(){
 	                       });
 	
 	
-	$("td#purchase").click(function(){
+	$("#purchase").click(function(){
 		
 		const checkedCnt = $("input:radio[name='coinmoney']:checked").length; 
 		
@@ -120,7 +120,7 @@ $(document).ready(function(){
 		//  또는
 		//  window.opener.goCoinPurchaseEnd(coinmoney);
 		//  또는
-		    $(opener.location).attr("href", "javascript:goCoinPurchaseEnd("+coinmoney+");");
+		    $(opener.location).attr("href", "javascript:goCoinPurchaseEnd("+coinmoney+");"); 
 		
 			self.close(); // 팝업창을 닫는 것이다. 
 		}
@@ -205,7 +205,7 @@ $(document).ready(function(){
              <tr>
 			   <td style="margin-bottom: 70px; text-align: center;">
                  <span>충전금액&nbsp;&nbsp;&nbsp;</span>
-                 <span>50,000원</span>
+                 <span>${coinmoney}</span>
                </td>
              </tr>
              <tr>  
@@ -218,7 +218,13 @@ $(document).ready(function(){
         </table>
     </div>
 	
-	
+	<div class="text-center"> 
+		<table>
+			<tr>
+	      	 	<td id="error" align="center" style="height: 10px; text-align:center; color: red;">결제종류에 따른 금액을 선택하세요!!</td>  
+	        </tr>
+        </table>
+	</div>
 	
     <div class="text-center">
        <input type="button" class="btn depositbtn" id="purchase" colspan="3" value="예치금충전하기" />
