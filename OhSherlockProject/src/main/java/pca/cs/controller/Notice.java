@@ -25,11 +25,6 @@ public class Notice extends AbstractController {
 			request.setAttribute("noticeList", noticeList);
 		}
 		
-		/*
-		 * Date now = new Date(); SimpleDateFormat df = new
-		 * SimpleDateFormat("yyyyMMdd"); String nowDate = df.format(now); // 현재날짜
-		 */		
-		
 		super.setViewPage("/WEB-INF/cs/notice.jsp");
 		
 	}

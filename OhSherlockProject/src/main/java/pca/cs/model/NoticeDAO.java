@@ -1,14 +1,20 @@
 package pca.cs.model;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.naming.*;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import common.model.MemberVO;
 import common.model.NoticeVO;
 
 public class NoticeDAO implements InterNoticeDAO {
@@ -51,7 +57,7 @@ public class NoticeDAO implements InterNoticeDAO {
 		try {
 			conn = ds.getConnection();
 
-			String sql = "select noticeNo, noticeSubject, noticeContent, noticeHit, noticeDate, noticeFile from tbl_notice "
+			String sql = "select noticeNo, noticeSubject, noticeContent, noticeHit, noticeDate from tbl_notice "
 					+ "order by 1 desc";
 
 			pstmt = conn.prepareStatement(sql);
@@ -64,7 +70,6 @@ public class NoticeDAO implements InterNoticeDAO {
 				notice.setNoticeContent(rs.getString(3));
 				notice.setNoticeHit(rs.getInt(4));
 				notice.setNoticeDate(rs.getDate(5));
-				notice.setNoticeFile(rs.getString(6));
 				
 				Date now = new Date();
 				SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
@@ -83,6 +88,94 @@ public class NoticeDAO implements InterNoticeDAO {
 		}		
 		
 		return noticeList;
+	}
+
+	@Override
+	public NoticeVO showNoticeDetail(String noticeNo, MemberVO loginuser) throws SQLException {
+		NoticeVO noticeDetail = new NoticeVO();
+		
+		try {
+			conn = ds.getConnection();
+
+			String sql = "select noticeSubject, noticeContent, noticeHit, noticeDate, noticeFile from tbl_notice where noticeNo = ?";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, noticeNo);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				noticeDetail = new NoticeVO();
+				noticeDetail.setNoticeSubject(rs.getString(1));
+				noticeDetail.setNoticeContent(rs.getString(2));
+				noticeDetail.setNoticeHit(rs.getInt(3));
+				noticeDetail.setNoticeDate(rs.getDate(4));
+				noticeDetail.setNoticeFile(rs.getString(5));
+				
+				// 조회수 증가시키기
+				// 로그인 안 한 상태이거나 일반유저로 로그인한 경우
+				if (loginuser == null || (loginuser != null && !loginuser.getUserid().equals("admin"))) {
+					sql = "update tbl_notice set noticeHit = noticeHit + 1 where noticeNo = ?";
+					
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, noticeNo);
+					int n = pstmt.executeUpdate();
+					
+					if (n != 1) {
+						throw new SQLException("조회수 증가 실패");
+					}
+				}
+			}
+
+		} finally {
+			close();
+		}	
+		
+		return noticeDetail;
+	}
+
+	@Override
+	public int getSeqNo() throws SQLException {
+
+		int seq = 0;
+
+		try {
+			conn = ds.getConnection();
+
+			String sql = "select seq_notice.nextval from dual";
+
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			rs.next();
+			seq = rs.getInt(1);
+
+		} finally {
+			close();
+		}
+		return seq;
+	}
+
+	@Override
+	public int registerNotice(int seq, String subject, String content, String file) throws SQLException {
+		int n = 0;
+
+		try {
+			conn = ds.getConnection();
+
+			String sql = "insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)\n"+
+					"values(?, ?, ?, ?)";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, seq);
+			pstmt.setString(2, subject);
+			pstmt.setString(3, content);
+			pstmt.setString(4, file);
+			n = pstmt.executeUpdate();
+
+		} finally {
+			close();
+		}	
+		
+		return n;
 	}
 
 }

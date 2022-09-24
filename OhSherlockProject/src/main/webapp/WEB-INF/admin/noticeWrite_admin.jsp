@@ -30,7 +30,30 @@
 	    color: white;
 	}
 	
-</style>       
+</style>   
+
+<script>
+	function goSubmit(){
+		
+		const subject = $("#subject").val().trim();
+		const content = $("#content").val().trim();
+		
+		if(subject == "") {
+			alert("제목을 입력하세요!");
+		    return;
+		}
+		
+		if(content == "") {
+			alert("내용을 입력하세요!");
+		    return;
+		}
+		
+		const frm = document.ntWrite;
+    	frm.action="<%=ctxPath%>/admin/noticeWriteEnd.tea";
+    	frm.method="POST";
+    	frm.submit();
+	}
+</script>    
     
 <div class="container">
 
@@ -47,21 +70,21 @@
     <hr>
    
    
-    <form action="" name="ntWrite" id="ntWrite">
-		<label for="title">제목<span class="text-danger">*</span></label>
-		<input type="text" id="title" name="title" placeholder="제목을 입력하세요.">
+    <form name="ntWrite" id="ntWrite">
+		<label for="subject">제목<span class="text-danger">*</span></label>
+		<input type="text" id="subject" name="subject" placeholder="공지사항 제목을 입력하세요.">
 		
 		<label for="content">내용<span class="text-danger">*</span></label>
-		<textarea id="content" name="content" placeholder="문의 내용을 입력하세요." style="height:200px"></textarea>
+		<textarea id="content" name="content" placeholder="공지사항 내용을 입력하세요." style="height:200px"></textarea>
 		
-		<label for="photo" style="margin: 6px 20px 16px 0;">사진 첨부</label><input type="file" id="photo" name="photo">
+		<label for="file" style="margin: 6px 20px 16px 0;">파일 첨부</label><input type="file" id="file" name="file">
 		<br>
 		
 		<hr>
 		
 		<div class="text-right" style="margin-top: 30px;">
-		   <input type="button" class="writeBtns" value="취소" style="margin-right: 0" />&nbsp;
-		   <input type="button" class="btn-secondary writeBtns" value="등록" style="margin-left: 5px;" />
+		   <input type="button" class="writeBtns" value="취소" onclick="location.href='javascript:history.back();'" style="margin-right: 0" />&nbsp;
+		   <input type="button" class="btn-secondary writeBtns" onclick="goSubmit();" value="등록" style="margin-left: 5px;" />
 		</div>
 	</form>
 	

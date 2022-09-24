@@ -1,7 +1,6 @@
 show user;
 -- USER이(가) "SEMI_ORAUSER2"입니다.
 
-
 desc tbl_member;
 
 select * from tbl_member;
@@ -76,4 +75,17 @@ values(seq_notice.nextval, '오셜록고객님들께', '안녕하세요', null);
 commit;
 
 -- 공지사항 글목록 가져오기 sql --
-String sql = "select noticeNo, noticeSubject, noticeContent, noticeHit, noticeDate, noticeFile from tbl_notice";
+String sql = "select noticeNo, noticeSubject, noticeContent, noticeHit, noticeDate from tbl_notice";
+
+-- 공지사항 글내용 가져오기 sql --
+String sql = "select noticeSubject, noticeContent, noticeHit, noticeDate, noticeFile from tbl_notice where noticeNo = ?";
+
+-- 공지사항 글 조회수 증가 sql --
+String sql = "update tbl_notice set noticeHit = noticeHit + 1 where noticeNo = ?";
+
+-- 시퀀스 얻기 sql --
+String sql = "select seq_notice.nextval from dual";
+
+-- 공지사항 글쓰기 sql --
+String sql = "insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)\n"+
+"values(?, ?, ?, ?)";

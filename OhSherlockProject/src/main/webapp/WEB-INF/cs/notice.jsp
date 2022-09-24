@@ -3,6 +3,11 @@
 <%@ include file="../header.jsp"%>    
     
 <style>
+	
+	a, a:hover, a:link, a:visited {
+		color: black;
+		text-decoration: none;
+	}
 
 	.page-link {
 	  color: #666666; 
@@ -45,6 +50,19 @@
 	
 </style>       
     
+<script>
+
+	$(document).ready(()=>{
+		$("#btnWriteNotice").click(()=>{
+			const frm = document.writeFrm
+			frm.action="<%=ctxPath%>/admin/noticeWrite.tea";
+	    	frm.method="POST";
+	    	frm.submit();
+		});
+	});
+
+</script>
+    
 <div class="container">
 
 	<div class="titleZone row">
@@ -73,7 +91,8 @@
 						<c:if test="${notice.fresh == true}">
 							<span class="badge badge-pill">new</span>&nbsp;&nbsp;
 						</c:if> 
-						${notice.noticeSubject}</td>
+						<a href="<%=ctxPath%>/cs/noticeDetail.tea?noticeNo=${notice.noticeNo}">${notice.noticeSubject}</a>
+						</td>
 					<td><fmt:formatDate pattern="yyyy.MM.dd" value="${notice.noticeDate}"/>
 					</td>
 					<td>${notice.noticeHit}</td>
@@ -84,9 +103,11 @@
 	</table>
 	<%-- 글쓰기 버튼은 관리자 계정에서만 보임 --%>
 	<c:if test="${sessionScope.loginuser ne null and loginuser.userid eq 'admin' }">
-		<div class="text-right" id="detail" style="display: block; margin-top: 50px;"> 
-		  <input type="button" class="btn-secondary" value="글쓰기" />
-	    </div>
+		<form name="writeFrm">
+			<div class="text-right" id="detail" style="display: block; margin-top: 50px;"> 
+			  <input type="button" class="btn-secondary" id="btnWriteNotice" value="글쓰기"/>
+		    </div>
+		</form>
 	</c:if>		
 
 	<nav aria-label="Page navigation example" style="margin-top: 20px;">

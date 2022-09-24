@@ -3,12 +3,23 @@ package pca.cs.model;
 import java.sql.SQLException;
 import java.util.List;
 
+import common.model.MemberVO;
 import common.model.NoticeVO;
 
 public interface InterNoticeDAO {
 	
-	// tbl_notice에서 글 목록을 가져오는 메소드
+	// 공지사항 목록
 	List<NoticeVO> showNoticeList() throws SQLException;
+
+	// 공지글 내용 조회 + 조회수 증가
+	NoticeVO showNoticeDetail(String noticeNo, MemberVO loginuser) throws SQLException;
+
+	// 공지사항 등록 전 시퀀스(글번호) 얻어오기
+	int getSeqNo() throws SQLException;
+
+	// 공지사항 등록(관리자)
+	int registerNotice(int seq, String subject, String content, String file) throws SQLException;
+
 
 	/*
 	 * Board_noticeDTO noticeVeiwcount2(Map<String, String> paraMap); // 글조회 메소드
