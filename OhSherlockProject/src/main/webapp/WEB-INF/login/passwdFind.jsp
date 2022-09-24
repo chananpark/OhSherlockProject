@@ -137,31 +137,19 @@
 		
 		//  비밀번호 찾기 버튼 클릭했을 때 이벤트
 		$("input#passwdFind_input").click(function(){
-			
-			const useridVal = $("input[name='userid']").val().trim();
-			const emailVal = $("input[name='email']").val().trim();
-			const nameVal = $("input[name='name']").val().trim();
-	
-			// 이름, 이메일, 아이디가 공백일 때 
-			if( useridVal != "" && emailVal != "" && nameVal != "") {
-				
-				// 올바르게 입력할 경우
-				const frm = document.pwdFindFrm;
-				// 다 올바르게 입력했다면 보내준다.
-				frm.action = "<%= ctxPath %>/login/passwdFind.tea"; 
-				frm.method = "POST";
-				frm.submit();
-				
-			} else {
-				// 올바르게 입력하지 않은 경우
-				alert("정보를 모두 입력하세요!");
-				return;
-			} // end of if-else
+			findPasswd_submit();
 			
 		}); // end of $("button#btn_passwdFind").click
 		
-
+		// 이메일 입력란에서 엔터쳤을 경우에 비밀번호 찾기 버튼과 같은 효과 주기
+		$("input[name='email']").bind("keydown", function(event){
+			if(event.keyCode == 13) { // 암호 입력란에서 엔터(13)를 했을 경우
+				findPasswd_submit(); 
+			}
+		}); // end of $("input[name='email']").bind("keydown", function(event)
 		
+				
+				
 		const method = "${requestScope.method}";
 	    if(method == "POST"){
 	        // input에 입력한 userid와 email을 찾기 버튼을 눌러도 그대로 유지
@@ -227,6 +215,32 @@
 	        }
 	    }, 1000);
 	} // end of function startTimer(duration, display)
+	
+	
+	// 비밀번호 찾기 확인 버튼 클릭시 호출되는 함수
+	function findPasswd_submit(){
+		const useridVal = $("input[name='userid']").val().trim();
+		const emailVal = $("input[name='email']").val().trim();
+		const nameVal = $("input[name='name']").val().trim();
+
+		// 이름, 이메일, 아이디가 공백일 때 
+		if( useridVal != "" && emailVal != "" && nameVal != "") {
+			
+			// 올바르게 입력할 경우
+			const frm = document.pwdFindFrm;
+			// 다 올바르게 입력했다면 보내준다.
+			frm.action = "<%= ctxPath %>/login/passwdFind.tea"; 
+			frm.method = "POST";
+			frm.submit();
+			
+		} else {
+			// 올바르게 입력하지 않은 경우
+			alert("정보를 모두 입력하세요!");
+			return;
+		} // end of if-else
+		
+	} // end of function findPasswd_submit()
+	
 
 </script>
       
