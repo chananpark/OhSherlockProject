@@ -19,6 +19,9 @@ public interface InterMemberDAO {
 
 	// 페이징 처리를 위한 검색 유무에 따른 회원 수에 대한 페이지 출력하기
 	int getTotalPage(Map<String, String> paraMap) throws SQLException;
+
+	// 관리자 회원 목록에서 회원 상세조회
+	MemberVO member_list_detail(Map<String, String> paraMap) throws SQLException;
 		
 	
 } // end of InterMemberDAO

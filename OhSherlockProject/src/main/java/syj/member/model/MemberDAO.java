@@ -211,5 +211,54 @@ public class MemberDAO implements InterMemberDAO {
 	} // end of public int getTotalPage(Map<String, String> paraMap) throws SQLException
 
 	
+	// 관리자 회원 목록에서 회원 상세조회
+	@Override
+	public MemberVO member_list_detail(Map<String, String> paraMap) throws SQLException {
+		
+		MemberVO member = null;
+	
+		try {
+			conn = ds.getConnection();
+					
+			String sql = "select userid, name, mobile, email, postcode, (address || ' ' || detail_address || ' ' || extra_address) as address, birthday, gender, coin, point, registerday\n"+
+					     "from tbl_member\n"+
+						 "where userid = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, paraMap.get("userid"));
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				
+				// select 해서 가져올 게 있냐
+				member = new MemberVO();
+				
+				member.setUserid(rs.getString(1));
+				member.setName(rs.getString(2));
+				member.setMobile(aes.decrypt(rs.getString(3)) ); // 복호화
+				member.setEmail(aes.decrypt(rs.getString(4)) ); // 복호화
+	            member.setPostcode(rs.getString(5));
+	            member.setAddress(rs.getString(6));
+	            member.setBirthday(rs.getString(7));
+	            member.setGender(rs.getString(8));
+	            member.setCoin(rs.getInt(9));
+	            member.setPoint(rs.getInt(10));
+	            member.setRegisterday(rs.getString(11));
+				
+			} // end of if(rs.next())
+			
+			
+		} catch(GeneralSecurityException | UnsupportedEncodingException e) { // 
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+	
+		return member;
+	} // end of public MemberVO member_list_detail(Map<String, String> paraMap) throws SQLException
+
+	
 	
 } // end of MemberDAO

@@ -69,12 +69,12 @@
 			
 			// 클릭한 tr의 userid 알아오기
 			const userid = $target.parent().find("td[name='userid']").text(); 
-		//	console.log("확인용 : "+ seq);
+		//	console.log("확인용 : "+ userid);
 			 
 		//	location.href = "personDetail.do?seq="+seq; // 상대경로 없이 맨 뒤에만 바뀐다
 			// 클릭했을 때 연결해줄 링크
 			
-		//	location.href = "<%= request.getContextPath() %>/admin/member_list_detail.jsp"; 
+			location.href = "<%= request.getContextPath() %>/member/member_list_detail.tea?userid="+userid; 
 		}); // end of $("tbody > tr").click(function()
 			
 				

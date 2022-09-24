@@ -16,6 +16,10 @@
 	  font-weight: bold;
 	}
 	
+	textarea, input {
+		vertical-align: middle;
+	}
+	
 </style>
 
 <script type="text/javascript">
@@ -52,55 +56,82 @@
 				<tbody>
 					<tr>
 						<td class="col-4">아이디</td>
-						<td class="col-8">leess</td>
+						<td class="col-8">${requestScope.member_select_one.userid}</td>
 					</tr>
 					<tr>
 						<td class="col-4">이름</td>
-						<td class="col-8">이순신</td>
+						<td class="col-8">${requestScope.member_select_one.name}</td>
 					</tr>
 					<tr>
 						<td class="col-4">연락처</td>
-						<td class="col-8">01012341234</td>
+						<td class="col-8">${requestScope.member_select_one.mobile}</td>
 					</tr>
 					<tr>
 						<td class="col-4">이메일</td>
-						<td class="col-8">leess@naver.com</td>
+						<td class="col-8">${requestScope.member_select_one.email}</td>
+					</tr>
+					<tr>
+						<td class="col-4">우편번호</td>
+						<td class="col-8">${requestScope.member_select_one.postcode}</td>
+					</tr>
+					<tr>
+						<td class="col-4">주소</td>
+						<td class="col-8">${requestScope.member_select_one.address}</td>
 					</tr>
 					<tr>
 						<td class="col-4">생년월일</td>
-						<td class="col-8">1997.02.01</td>
+						<td class="col-8">${requestScope.member_select_one.birthday}</td>
+					</tr>
+					<tr>
+						<td class="col-4">성별</td>
+						<td class="col-8">
+							<c:choose>
+								<c:when test="${requestScope.member_select_one.gender eq '1'}">남</c:when>
+								<c:otherwise>여</c:otherwise>
+							</c:choose>
+						</td>
 					</tr>
 					<tr>
 						<td class="col-4">예치금</td>
-						<td class="col-8">500,000원</td>
+						<td class="col-8">${requestScope.member_select_one.coin}원</td>
 					</tr>
 					<tr>
 						<td class="col-4">적립금</td>
-						<td class="col-8">3,000</td>
+						<td class="col-8">찻잎 ${requestScope.member_select_one.point}개</td>
 					</tr>
 					<tr>
 						<td class="col-4">가입일자</td>
-						<td class="col-8">2022.01.12</td>
+						<td class="col-8">${requestScope.member_select_one.registerday}</td>
 					</tr>
- 			   <%-- <tr>
-						<td class="col-4">휴면계정 여부</td>
-						<td class="col-8">휴면</td>
-					</tr>
-					<tr>
-						<td class="col-4">휴면 해제</td>
-						<td class="col-8">
-							<div class="adminOnlyBtns mb-1">
-								<input type="button" value="휴면 회원 해제" /> 
-							</div>
-						</td>
-					</tr> --%>
-					
 					
 				</tbody>
 			</table>
 		</div>
   	
+  	<%-- 문자발송 창 --%>
+  	<h5 style="font-weight:bold" class="mb-4">문자발송</h5>
   	
+  	<div style="border: 1px solid #ddd; "> <%-- text-align: center --%>
+  		<%-- 문자발송 상단부 --%>
+  		<div class="ml-5 mt-5">
+		  	<span>발송예약일</span> 
+		  	<input type="date" >
+		  	<input type="time" >
+	  	</div>
+	  	<hr style="width:92%;">
+	  	<%-- 문자발송 창 --%>
+	  	<div class="ml-5 mt-3 mb-5" >
+		  	<textarea rows="10" style="width: 83%;"></textarea>
+		  	<span><input id="submit_btn" type="button" class="btn btn-light" style="height: 250px; width: 100px; background-color: #f2f2f2;" value="전송" /></span>
+	  	</div>
+  	</div>
+  	
+	<div class="mt-4">  <%--text-center --%>
+  		<button class="btn float-right" style="background-color: #1E7F15; color:white; font-weight: bold;">
+  			회원 목록으로 돌아가기
+		</button> <%-- float-right --%>
+  	</div>
+  	<%-- 
   	<h5 style="font-weight:bold">구매정보</h5>
   	
   	<div style="overflow-x:auto;">
@@ -155,7 +186,7 @@
 			</table>
 		</div>
   	
- 
+ 	--%>
   	
 
 </div>
