@@ -1,4 +1,4 @@
-package pca.admin.controller;
+package pca.cs.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +19,7 @@ public class NoticeWrite extends AbstractController {
 		else {
 			
 			String message = "잘못된 접근입니다!";
-			String loc = "javascript:history.back()";
+			String loc = request.getContextPath() +  "/index.tea";
 
 			request.setAttribute("message", message);
 			request.setAttribute("loc", loc);

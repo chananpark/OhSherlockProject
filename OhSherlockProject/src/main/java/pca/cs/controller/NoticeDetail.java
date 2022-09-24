@@ -1,5 +1,8 @@
 package pca.cs.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -19,13 +22,18 @@ public class NoticeDetail extends AbstractController {
 		
 		HttpSession session = request.getSession();
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+		String userid = loginuser!=null? loginuser.getUserid(): "notLogined";
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("noticeNo", noticeNo);
+		paraMap.put("userid", userid);
 		
 		InterNoticeDAO ndao = new NoticeDAO();
 
-		NoticeVO noticeDetail = ndao.showNoticeDetail(noticeNo, loginuser);
+		NoticeVO nvo = ndao.showNoticeDetail(paraMap);
 		
-		if (noticeDetail != null) {
-			request.setAttribute("noticeDetail", noticeDetail);
+		if (nvo != null) {
+			request.setAttribute("nvo", nvo);
 		}
 
 		super.setViewPage("/WEB-INF/cs/notice_detail.jsp");

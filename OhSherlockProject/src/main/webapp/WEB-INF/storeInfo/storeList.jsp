@@ -35,7 +35,7 @@ $(document).ready(() => {
 				<tr>
 					<td style="display:none" class="storeNo">1</td>
 					<td>티하우스</td>
-					<td>서울 서교동 쌍용점</td>
+					<td>서울 서교동 쌍용본점</td>
 					<td>서울특별시 마포구 서교동 447-5</td>
 					<td>02-336-8546</td>
 				</tr>

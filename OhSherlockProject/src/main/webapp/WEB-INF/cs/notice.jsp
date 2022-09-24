@@ -55,7 +55,7 @@
 	$(document).ready(()=>{
 		$("#btnWriteNotice").click(()=>{
 			const frm = document.writeFrm
-			frm.action="<%=ctxPath%>/admin/noticeWrite.tea";
+			frm.action="<%=ctxPath%>/cs/noticeWrite.tea";
 	    	frm.method="POST";
 	    	frm.submit();
 		});

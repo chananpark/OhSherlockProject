@@ -4,6 +4,10 @@
     
 <style>
 
+	input[type="button"] {
+		border-style: none;
+	}
+
 	.listView {
 		width: 90px; 
 		margin: 15px; 
@@ -13,12 +17,39 @@
 	}
 	
 	.btn-secondary:hover {
-		border: 2px none #1E7F15;
 		background-color: #1E7F15;
 	    color: white;
 	}
 	
-</style>       
+</style>     
+
+<script>
+
+	$(document).ready(()=>{
+		const frm = document.noticeFrm;
+		
+		// 글 수정
+		$("#noticeUpdate").click(()=>{
+			frm.action="<%=ctxPath%>/cs/noticeUpdate.tea";
+	    	frm.method="POST";
+	    	frm.submit();
+		});
+		
+		// 글 삭제
+		$("#noticeDelete").click(()=>{
+			const bool = confirm("정말로 삭제하시겠습니까?");
+			
+			if(bool){
+		    	frm.action="<%=ctxPath%>/cs/noticeDelete.tea";
+		    	frm.method="POST";
+		    	frm.submit();
+			}
+			else
+				return;
+		});
+	});
+	
+</script>  
     
 <div class="container">
 
@@ -31,37 +62,40 @@
     </div>
     <hr style="background-color: black; height: 1.2px;"><br>
    
-    <div class="col text-left">
-      <div style="font-weight: bold; font-size: 20px;">${noticeDetail.noticeSubject}</div><br>
-      	<div class="row">
-	      <div class="col" style="font-weight: normal; font-size: 15.5px; margin-bottom: 10px;"><fmt:formatDate pattern="yyyy.MM.dd" value="${noticeDetail.noticeDate}"/></div>
-	      <div class="col text-right" style="font-weight: normal; font-size: 15.5px; margin-bottom: 10px;">조회수: ${noticeDetail.noticeHit}</div>
-    	</div>
-    </div>
+	    <div class="col text-left">
+	      <div style="font-weight: bold; font-size: 20px;">${nvo.noticeSubject}</div><br>
+	      	<div class="row">
+		      <div class="col" style="font-weight: normal; font-size: 15.5px; margin-bottom: 10px;"><fmt:formatDate pattern="yyyy.MM.dd" value="${nvo.noticeDate}"/></div>
+		      <div class="col text-right" style="font-weight: normal; font-size: 15.5px; margin-bottom: 10px;">조회수: ${nvo.noticeHit}</div>
+	    	</div>
+	    </div>
+	
+	    <hr style="border-top: solid 1.2px black">
+	    
+	    <div class="col text-left">
+	      <div style="font-size: 20px;">${nvo.noticeContent}</div>
+	    </div>
+	    
+   <form name="noticeFrm" >
+	    <input type="hidden" name="noticeNo" value="${nvo.noticeNo}"/>
+	    <input type="hidden" name="noticeSubject" value="${nvo.noticeSubject}"/>
+	    <input type="hidden" name="noticeContent" value="${nvo.noticeContent}"/>
+    </form>
     
 	<%-- 글수정, 삭제 버튼은 관리자 계정에서만 보임 --%>
-
-    <hr style="border-top: solid 1.2px black">
-    <div class="text-right" id="noticeFiles">
-	    <c:if test="${not empty noticeDetail.noticeFile}">
-	    	첨부파일: ${noticeDetail.noticeFile}
-	    </c:if>
-	    <c:if test="${empty noticeDetail.noticeFile}">
-	    	&nbsp;
-	    </c:if>
-    </div>
-    
-    <div class="col text-left">
-      <div style="font-size: 20px;">
-	      ${noticeDetail.noticeContent}
-	  </div>
-    </div>
+	<c:if test="${sessionScope.loginuser ne null and loginuser.userid eq 'admin' }">
+		<div class="text-right" style="margin-top: 30px;">
+		   <input type="button" id="noticeUpdate" value="수정" style="margin-right: 0" />&nbsp;
+		   <input type="button" class="btn-secondary" id="noticeDelete" value="삭제" style="margin-left: 5px;" />
+		</div>
+	</c:if>	
 	
+    <hr style="border-top: solid 1.2px black">
   	<div class="text-right" style="display: block; margin-top: 30px;"> 
 	  <a href="<%=ctxPath%>/cs/notice.tea"><input type="button" class="btn-secondary listView" value="목록보기" /></a>
     </div>
 	
-	
 </div>
+
 
 <%@ include file="../footer.jsp"%>

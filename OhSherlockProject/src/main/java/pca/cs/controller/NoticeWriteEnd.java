@@ -1,4 +1,7 @@
-package pca.admin.controller;
+package pca.cs.controller;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -6,8 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import common.controller.AbstractController;
 import pca.cs.model.InterNoticeDAO;
 import pca.cs.model.NoticeDAO;
-import pca.member.model.InterMemberDAO;
-import pca.member.model.MemberDAO;
 
 public class NoticeWriteEnd extends AbstractController {
 
@@ -20,17 +21,22 @@ public class NoticeWriteEnd extends AbstractController {
 		
 		String subject = request.getParameter("subject");
 		String content = request.getParameter("content");
-		String file = request.getParameter("file");
+//		String file = request.getParameter("file");
 		
 		if ("post".equalsIgnoreCase(method)) {
 			
 			InterNoticeDAO ndao = new NoticeDAO();
 			
 			// 글번호 시퀀스 얻어오기
-			int seq = ndao.getSeqNo();
+			String seq = ndao.getSeqNo();
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("seq", seq);
+			paraMap.put("subject", subject);
+			paraMap.put("content", content);
 			
 			// 공지사항 글작성
-			int n = ndao.registerNotice(seq, subject, content, file);
+			int n = ndao.registerNotice(paraMap);
 			
 			if (n==1) {
 				message = "공지사항 등록이 완료되었습니다.";
@@ -44,7 +50,7 @@ public class NoticeWriteEnd extends AbstractController {
 			}
 			else {
 				message = "공지사항 등록을 실패하였습니다.";
-				loc = request.getContextPath() + "javascript:history.back()";
+				loc = request.getContextPath() + "/cs/notice.tea";
 	
 				request.setAttribute("message", message);
 				request.setAttribute("loc", loc);
@@ -55,8 +61,8 @@ public class NoticeWriteEnd extends AbstractController {
 		else { // get 방식 접근
 			
 			message = "잘못된 접근입니다!";
-			loc = "javascript:history.back()";
-
+			loc = request.getContextPath() +  "/index.tea";
+			
 			request.setAttribute("message", message);
 			request.setAttribute("loc", loc);
 

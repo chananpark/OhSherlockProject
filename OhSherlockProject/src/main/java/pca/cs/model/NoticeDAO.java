@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -91,8 +92,8 @@ public class NoticeDAO implements InterNoticeDAO {
 	}
 
 	@Override
-	public NoticeVO showNoticeDetail(String noticeNo, MemberVO loginuser) throws SQLException {
-		NoticeVO noticeDetail = new NoticeVO();
+	public NoticeVO showNoticeDetail(Map<String, String> paraMap) throws SQLException {
+		NoticeVO nvo = new NoticeVO();
 		
 		try {
 			conn = ds.getConnection();
@@ -100,24 +101,24 @@ public class NoticeDAO implements InterNoticeDAO {
 			String sql = "select noticeSubject, noticeContent, noticeHit, noticeDate, noticeFile from tbl_notice where noticeNo = ?";
 
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, noticeNo);
+			pstmt.setString(1, paraMap.get("noticeNo"));
 			rs = pstmt.executeQuery();
 
 			if (rs.next()) {
-				noticeDetail = new NoticeVO();
-				noticeDetail.setNoticeSubject(rs.getString(1));
-				noticeDetail.setNoticeContent(rs.getString(2));
-				noticeDetail.setNoticeHit(rs.getInt(3));
-				noticeDetail.setNoticeDate(rs.getDate(4));
-				noticeDetail.setNoticeFile(rs.getString(5));
+				nvo.setNoticeSubject(rs.getString(1));
+				nvo.setNoticeContent(rs.getString(2));
+				nvo.setNoticeHit(rs.getInt(3));
+				nvo.setNoticeDate(rs.getDate(4));
+				nvo.setNoticeFile(rs.getString(5));
+				nvo.setNoticeNo(Integer.parseInt(paraMap.get("noticeNo")));
 				
 				// 조회수 증가시키기
 				// 로그인 안 한 상태이거나 일반유저로 로그인한 경우
-				if (loginuser == null || (loginuser != null && !loginuser.getUserid().equals("admin"))) {
+				if (!paraMap.get("userid").equals("admin")) {
 					sql = "update tbl_notice set noticeHit = noticeHit + 1 where noticeNo = ?";
 					
 					pstmt = conn.prepareStatement(sql);
-					pstmt.setString(1, noticeNo);
+					pstmt.setString(1, paraMap.get("noticeNo"));
 					int n = pstmt.executeUpdate();
 					
 					if (n != 1) {
@@ -130,13 +131,13 @@ public class NoticeDAO implements InterNoticeDAO {
 			close();
 		}	
 		
-		return noticeDetail;
+		return nvo;
 	}
 
 	@Override
-	public int getSeqNo() throws SQLException {
+	public String getSeqNo() throws SQLException {
 
-		int seq = 0;
+		String seq = "";
 
 		try {
 			conn = ds.getConnection();
@@ -146,7 +147,7 @@ public class NoticeDAO implements InterNoticeDAO {
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			rs.next();
-			seq = rs.getInt(1);
+			seq = rs.getString(1);
 
 		} finally {
 			close();
@@ -155,20 +156,39 @@ public class NoticeDAO implements InterNoticeDAO {
 	}
 
 	@Override
-	public int registerNotice(int seq, String subject, String content, String file) throws SQLException {
+	public int registerNotice(Map<String, String> paraMap) throws SQLException {
 		int n = 0;
 
 		try {
 			conn = ds.getConnection();
 
-			String sql = "insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)\n"+
-					"values(?, ?, ?, ?)";
+			String sql = "insert into tbl_notice(noticeNo, noticeSubject, noticeContent)\n"+
+					"values(?, ?, ?)";
 
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, seq);
-			pstmt.setString(2, subject);
-			pstmt.setString(3, content);
-			pstmt.setString(4, file);
+			pstmt.setString(1, paraMap.get("seq"));
+			pstmt.setString(2, paraMap.get("subject"));
+			pstmt.setString(3, paraMap.get("content"));
+			n = pstmt.executeUpdate();
+
+		} finally {
+			close();
+		}	
+		
+		return n;
+	}
+
+	@Override
+	public int noticeDelete(String noticeNo) throws SQLException {
+		int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+
+			String sql = "delete from tbl_notice where noticeNo = ?";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, noticeNo);
 			n = pstmt.executeUpdate();
 
 		} finally {
