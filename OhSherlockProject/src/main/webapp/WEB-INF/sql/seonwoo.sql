@@ -40,3 +40,7 @@ where userid= 'leeye';
 
 select userid, passwd, name, email, mobile, registerday, last_passwd_date
 from tbl_member
+
+delete 
+from tbl_member
+where userid='weqeqr241';

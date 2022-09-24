@@ -12,7 +12,7 @@ import javax.mail.internet.MimeMessage;
 
 public class GoogleMail {
 
-	public void sendmail(String userid, String recipient, String certificationCode) throws Exception {
+	public void sendmail(String recipient, String certificationCode) throws Exception {
         // 첫번째 파라미터 받는 사람의 이메일 주소, 두번째 파라미터는 인증코드
 		
         // 1. 정보를 담기 위한 객체
@@ -20,14 +20,13 @@ public class GoogleMail {
         
         // 2. SMTP(Simple Mail Transfer Protocoal) 서버의 계정 설정
         //    Google Gmail 과 연결할 경우 Gmail 의 email 주소를 지정 
-        prop.put("mail.smtp.user", "yj129800@gmail.com");
+        prop.put("mail.smtp.user", "limsunsoo1202@gmail.com");
             
         
         // 3. SMTP 서버 정보 설정
         //    Google Gmail 인 경우  smtp.gmail.com
         prop.put("mail.smtp.host", "smtp.gmail.com");
              
-        
         prop.put("mail.smtp.port", "465");
         prop.put("mail.smtp.starttls.enable", "true");
         prop.put("mail.smtp.auth", "true");
@@ -50,11 +49,11 @@ public class GoogleMail {
         MimeMessage msg = new MimeMessage(ses);
 
         // 제목 설정
-        String subject = " [오!셜록] "+ userid +" 회원님 비밀번호 찾기 인증코드 발송";
+        String subject = " [오!셜록] 회원가입 이메일 인증코드 발송";
         msg.setSubject(subject);
                 
         // 보내는 사람의 메일주소
-        String sender = "yj129800@gmail.com";
+        String sender = "limsunsoo1202@gmail.com";
         Address fromAddr = new InternetAddress(sender); // javax.mail
         msg.setFrom(fromAddr);
                 

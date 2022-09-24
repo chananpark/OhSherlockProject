@@ -20,7 +20,8 @@
 
 	#idCheck, 
 	#emailCheck,
-	#emailVerifyCodeCheck {
+	#btn_emailVerifyCodeCheck,
+	#btn_resendEmailVerifyCode{
 		color:#333333;
 		height: 30px;
 		border-style: none;
@@ -59,14 +60,19 @@
 	let b_flag_emailDuplicate_click = false;
 	// "이메일중복확인" 을 클릭했는지 클릭을 안했는지 여부를 알아오기 위한 용도.
 	
+	let b_flag_emailVerifyCode_click = false;
+	// "이메일인증코드확인" 을 확인 했는지 알아오기 위한 용도.
+	
+	
 	$(document).ready(function () {
+		
 	  $('span.error').hide();
 	  $('input#userid').focus();
 	  
 	  // 이메일 인증확인란 숨기기
 	  $('div#emailVerify').hide();
+	  $('div#emailVerifyConfirm').hide();
 	 
-	
 	  // #userid 포커스를 잃어버렸을 경우
 	  $('input#userid').blur((e) => {
 	    const $target = $(e.target);
@@ -348,6 +354,7 @@
 		  b_flag_idDuplicate_click = false;
 		});
 		
+	  
 		// "이메일중복확인" 을 클릭시 호출되는 함수
 		$('button#emailCheck').click(function () {
 			  b_flag_emailDuplicate_click = true;
@@ -368,10 +375,10 @@
 			          .css('color', 'red');
 			        $('input#email').val('');
 			      } else {
-			  /*      // 입력한 email 이 이미 DB 테이블에 존재하지 않는 경우라면
-			        $('span#emailCheckResult')
-			          .html($('input#email').val() + ' 은 사용가능 합니다.')
-			          .css('color', 'navy');*/
+			    	  	
+			    		// 이메일 인증코드 처리 함수 호출
+			    	  emailVerifyCertification();
+			          
 			      }
 			    },
 			    error: function (request, status, error) {
@@ -391,84 +398,153 @@
 		
 		  // 이메일값이 변경되면 가입하기 버튼을 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도 초기화 시키기
 		  $('input#email').bind('change', () => {
-		    b_flag_emailDuplicate_click = false;
+		    b_flag_emailDuplicate_click = false; // 중복확인
+		    $('input#userEmailVerifyCode').val('');// 인증코드 입력란 초기화
+			  $('div#emailVerify').hide();// 인증코드란 숨김
+				b_flag_emailVerifyCode_click = false;// 인증코드 확인 
+			  $('div#emailVerifyConfirm').hide(); // 인증확인메세지 숨김
 		  });
 		
+		  
 		  ////////////////////////////////////////////////////////////////
 		
-		  // 생년월일 월일란에 날짜 주기
-		  let mm_html = '';
-		  for (var i = 0; i <= 12; i++) {
-		    if (i < 10) {
-		      mm_html += '<option>0' + i + '</option>';
-		    } else {
-		      mm_html += '<option>' + i + '</option>';
-		    }
-		  }
-		
-		  $('select#birthmm').html(mm_html);
-		
-		  let dd_html = '';
-		  for (var i = 0; i <= 31; i++) {
-		    if (i < 10) {
-		      dd_html += '<option>0' + i + '</option>';
-		    } else {
-		      dd_html += '<option>' + i + '</option>';
-		    }
-		  }
-		
-		  $('select#birthdd').html(dd_html);
-		
-	  
+	   // 생년월일 월일란에 날짜 주기
+      let yyyy_html = "";  // 생년월일의 년도      
+      for(var i=1950; i<=2050; i++) {
+          yyyy_html += "<option>"+i+"</option>";
+      }
+      yyyy_html += "<option selected></option>";
+       
+       $("select#birthyyyy").html(yyyy_html);
+      
+       
+      let mm_html = '';
+      for (var i = 1; i <= 12; i++) {
+        if (i < 10) {
+          mm_html += '<option>0' + i + '</option>';
+        } else {
+          mm_html += '<option>' + i + '</option>';
+        }
+      }
+      mm_html += '<option selected></option>';
+    
+      $('select#birthmm').html(mm_html);
+    
+      
+      let dd_html = '';
+      for (var i = 1; i <= 31; i++) {
+        if (i < 10) {
+          dd_html += '<option>0' + i + '</option>';
+        } else {
+          dd_html += '<option>' + i + '</option>';
+        }
+      }
+      dd_html += '<option selected></option>';
+      
+      $('select#birthdd').html(dd_html);
+ 
 	}); // end of $(document).ready(function(){})---------------
 	
 	
-	// 5분 타이머 함수
-	function startTimer(duration, display) {
-	    var timer = duration, minutes, seconds;
-	    setInterval(function () {
-	        minutes = parseInt(timer / 60, 10);
-	        seconds = parseInt(timer % 60, 10);
-
-	        minutes = minutes < 10 ? "0" + minutes : minutes;
-	        seconds = seconds < 10 ? "0" + seconds : seconds;
-
-	        display.textContent = minutes + ":" + seconds;
-
-	        if (--timer == 0) {
-	            alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
-	            $('div#emailVerify').hide();
-	            return;
-	        }
-	    }, 1000);
-	} // end of function startTimer(duration, display)
-
-
-	
-	// 이메일 인증코드 처리 함수
-	function emailVerifyCertification() {
-			
-    	// 인증코드 발송되었다는 문구 출력
-
-    	// 이메일 인증확인란 나타내기
-	 		$('div#emailVerify').hide();
-    	
-   		// 5분 타이머 시작
-	   		var fiveMinutes =  60 *5,
-      	display = document.querySelector('#timer');
-       	startTimer(fiveMinutes, display);
-       	
-      
-    $.ajax({
-    		url:'<%= ctxPath%>/member/emailVerifyCertification.tea',
-    		data:{ email: $('input#email').val() },
-    		type:'POST',
-    		success : function(){},
-    		error: function(){}
+	/* // 5분 타이머 함수
+	const timer = function(){
 		
-			});
-    
+		const timer_div = document.querySelector('div#timer');
+		
+		let time = 600; // 타이머 시간을 10분을 지정함
+		
+		if (time < 0) {
+        alert("인증 시간이 초과되었습니다. 인증확인을 다시 요청하세요.");
+        
+        clearInterval(setTimer);
+        $('div#emailVerifyCode').val('');
+        $('div#emailVerify').hide();
+        return;
+		}
+		else {
+				let minute = '';
+        let second = '';
+
+        minute = parseInt(time / 60);
+        if (minute < 10) {
+          minute = '0' + minute;
+        }
+
+        second = time % 60;
+        if (second < 10) {
+          second = '0' + second;
+        }
+        
+        timer_div.innerHTML = `${minute}:${second}`;
+        
+        time--;
+		}
+		
+	}; */
+	
+	
+	/////////////////////////////////////////////////////////////
+	
+	
+	// 이메일 인증 처리 함수
+	function emailVerifyCertification() {
+		
+    	// 이메일 인증확인란 나타내기
+	 		$('div#emailVerify').show();
+    	
+   		/* // 5분 타이머 시작
+	   		
+	   		timer();// 타이머 함수 호출
+	   		const setTimer = setInterval(timer, 1000);
+	   		 */
+    	$.ajax({
+	    		url:'<%= ctxPath%>/member/emailVerifyCertification.tea',
+	    		data:{ email: $('input#email').val() },
+	    		type:'POST',
+	    	//	dataType: 'json', // json 값을 들고올때...
+	    		success : function(text){
+	    			const json = JSON.parse(text);
+	    			// console.log(json.certificationCode);
+   				 alert("인증코드가 이메일로 발송되었습니다.");
+   				 
+   				 certifiCode = json.certificationCode; // 변수 선언 안했는데...
+    		},
+    		error: function(e){
+    			alert('인증코드 발송을 실패했습니다. 다시 시도해주세요')
+    		}
+   		});
+		
 	}// end of function emailVerifyCertification() {} ----------
+	
+	
+	// 이메일 인증코드 확인 함수
+	function emailVerifyCodeCheck()	{
+		
+		/* clearInterval(setTimer); // 타이머 삭제하기 */
+		
+		const userVerifyCode = $("input#userEmailVerifyCode").val();
+		
+		// console.log("인증코드 확인 ==> "+certifiCode);
+		
+		if( certifiCode == userVerifyCode ){
+			b_flag_emailVerifyCode_click = true;
+			$('div#emailVerify').hide();
+			$('div#emailVerifyConfirm').show();
+			
+		}
+		else{
+			alert("인증번호가 틀렸습니다.");
+			b_flag_emailVerifyCode_click = false;
+		}
+		
+	}// end of function emailVerifyCodeCheck(){}---------------
+	
+	function resendEmailVerifyCode(){
+		
+	/* 	clearInterval(startTimer); // 타이머 초기화하기 */
+		$('input#userEmailVerifyCode').val(''); // 인증코드란 비우기
+		emailVerifyCertification(); // 인증처리 함수 호출
+	}// end of function resendEmailVerifyCode(){}------------
 	
 	
 	//"가입하기" 버튼 클릭시 호출되는 함수
@@ -524,9 +600,9 @@
 	  }
 	
 	  // "이메일중복확인" 을 클릭했는지 여부 알아오기
-	  if (!b_flag_emailDuplicate_click) {
+	  if (!b_flag_emailDuplicate_click ||!b_flag_emailVerifyCode_click ) {
 	    // "이메일중복확인" 을 클릭 안 했을 경우
-	    alert('이메일중복확인을 클릭하셔야 합니다.');
+	    alert('이메일 인증확인을 클릭하셔야 합니다.');
 	    return; // 종료
 	  }
 	
@@ -592,7 +668,7 @@
 					</td>
 				</tr>
 				<tr>
-					<th></th>
+					<th>비밀번호확인</th>
 					<td><input id="passwdCheck" type="password" class="required" name="passwdCheck"
 						size="50" placeholder="(비밀번호 확인)" />
 						<span class="error" style="color: red">암호가 일치하지 않습니다.</span>
@@ -641,10 +717,12 @@
 						<span class="error" style="color: red">이메일 형식에 맞지 않습니다.</span>
 						<br>
 						<div id="emailVerify">
-							<input id="emailVerifyCode" type="text" name="emailVerifyCode" class="mt-2" size="20"/>
-							<button type="button" id="emailVerifyCodeCheck">인증확인</button>
+							<input id="userEmailVerifyCode" type="text" name="emailVerifyCode" class="mt-2" size="20"/>
+							<button type="button" id="btn_emailVerifyCodeCheck" onclick="emailVerifyCodeCheck();">인증확인</button>
+							<button type="button" id="btn_resendEmailVerifyCode" onclick="resendEmailVerifyCode();">인증코드 재발송</button>
 							<span id="timer" class="text-danger"></span>
 						</div>
+						<div id="emailVerifyConfirm">이메일 인증이 확인되었습니다.</div>
 					</td>
 				</tr>
 			</thead>
@@ -666,22 +744,22 @@
 			<tr>
 			<th style="background-color: white;">성별</th>
 			<td >
-			   <input type="radio" id="none" name="gender" value="0" /><label for="none" style="margin-left: 1%;">선택안함</label>
+			   <input type="radio" id="none" name="gender" value="0" checked/><label for="none" style="margin-left: 1%;">선택안함</label>
 			   <input type="radio" id="male" name="gender" value="1" style="margin-left: 5%;"/><label for="male" style="margin-left: 1%;">남자</label>
 			   <input type="radio" id="female" name="gender" value="2" style="margin-left: 5%;" /><label for="female" style="margin-left: 1%;">여자</label>
 			</td>
 		</tr>
 		
 		<tr>
-			<th style="background-color: white;">생년월일</th>
-			<td >
-			   <input type="number" id="birthyyyy" name="birthyyyy" min="1950" max="2050" step="1" value="1995" style="width: 80px; padding: 5px;"/>년
-			   <select id="birthmm" name="birthmm" style="margin-left: 2%; width: 60px; padding: 5px;">
-				</select> 월
-			   <select id="birthdd" name="birthdd" style="margin-left: 2%; width: 60px; padding: 5px;">
-				</select> 일
-			</td>
-		</tr>
+      <th style="background-color: white;">생년월일</th>
+      <td >
+         <select  id="birthyyyy" name="birthyyyy" style="width: 80px; padding: 5px;"></select> 년
+          <select id="birthmm" name="birthmm" style="margin-left: 2%; width: 60px; padding: 5px;">
+          </select> 월
+          <select id="birthdd" name="birthdd" style="margin-left: 2%; width: 60px; padding: 5px;">
+         </select> 일
+      </td>
+    </tr>
 
 			</thead>
 		</table>

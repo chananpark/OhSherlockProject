@@ -58,32 +58,16 @@ public class EmailVerifyCertification extends AbstractController {
 			GoogleMail mail = new GoogleMail();
 			
 			try { 
-				mail.sendmail(userid, email, certificationCode);
+				mail.sendmail(email, certificationCode);
 				sendMailSuccess = true; // 메일 전송이 성공했음을 알려주는 플래그
-				
-				// 세션영역에 저장되어진 정보는 모든 클래스파일 및 모든 jsp 파일애서 사용가능하다. 
-				// request 영역의 저장되어진 정보는 forward 되어지는 특정 jsp 파일에서만 사용가능하다. 
-				// 세션(session)불러오기
-				// 이 때의 session은 톰캣서버가 깔린 서버의 세션(저장소)이다.
-				// 크롬f12의 어플리케이션의 로컬스토리지와 세션스토리지와는 세션이라는 이름만 같을 뿐 다르다.
-				HttpSession session = request.getSession(); // 저장영역 불러오기 
-				session.setAttribute("certificationCode", certificationCode); // session 에 저장해주었기 때문에 다른 class에서도 꺼내볼 수 있다.
-				// 발급한 인증코드를 세션영역에 저장시킨다.
-				// request에 넣으면 forward 되어진 파일만 열어볼 수 있기 때문에 session에 저장해서 누구나 확인할 수 있도록 만든다.
 				
 			} catch(Exception e) { // 메일 전송이 실패한 경우. GoogleMail 에서 throw Exception을 처리해 줬기 때문이다.
 				e.printStackTrace();
 				sendMailSuccess = false; // console 창에 에러 여부를 찍어주고, 메일 전송이 실패되었다는 것을 알리기 위해 플래그를 사용한다. 
 			}
-				
-			
-			
-			
-			InterMemberDAO mdao = new MemberDAO();
-			boolean isExists = mdao.emailDuplicateCheck(email);
 			
 			JSONObject jsonObj = new JSONObject(); // {}
-			jsonObj.put("isExists", isExists);     // {"isExists":true} 또는 {"isExists":false} 으로 만들어준다. 
+			jsonObj.put("certificationCode", certificationCode);     // {"isExists":true} 또는 {"isExists":false} 으로 만들어준다. 
 			
 			String json = jsonObj.toString(); // 문자열 형태인 "{"isExists":true}" 또는 "{"isExists":false}" 으로 만들어준다.
 			
@@ -91,7 +75,7 @@ public class EmailVerifyCertification extends AbstractController {
 			
 		//	super.setRedirect(false);
 			super.setViewPage("/WEB-INF/jsonview.jsp");
-		
+				
 		}
 	}
 }
