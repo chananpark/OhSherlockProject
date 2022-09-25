@@ -16,7 +16,7 @@
 		resize: vertical;
 	}
 
-	.updateBtns  {
+	#updateBtn  {
 		width: 80px; 
 		margin: 15px; 
 		border-style: none; 
@@ -30,7 +30,18 @@
 	    color: white;
 	}
 	
-</style>       
+</style>  
+
+<script>
+	$(document).ready(()=>{
+		$("#updateBtn").click(()=>{
+			const frm = document.ntUpdate;
+			frm.action="<%=ctxPath%>/cs/noticeUpdateEnd.tea";
+	    	frm.method="POST";
+	    	frm.submit();
+		});
+	});
+</script>     
     
 <div class="container">
 
@@ -48,20 +59,21 @@
    
    
     <form action="" name="ntUpdate" id="ntUpdate">
-		<label for="title">제목<span class="text-danger">*</span></label>
-		<input type="text" id="title" name="title" placeholder="제목을 입력하세요.">
+    	<input type="hidden" name="noticeNo" value="${noticeNo}"/>
+		<label for="noticeSubject">제목<span class="text-danger">*</span></label>
+		<input type="text" id="noticeSubject" name="noticeSubject" value="${noticeSubject}">
 		
-		<label for="content">내용<span class="text-danger">*</span></label>
-		<textarea id="content" name="content" placeholder="문의 내용을 입력하세요." style="height:200px"></textarea>
+		<label for="noticeContent">내용<span class="text-danger">*</span></label>
+		<textarea id="noticeContent" name="noticeContent" style="height:200px">${noticeContent}</textarea>
 		
-		<label for="photo" style="margin: 6px 20px 16px 0;">사진 첨부</label><input type="file" id="photo" name="photo">
+		<%--<label for="file" style="margin: 6px 20px 16px 0;">파일 첨부</label><input type="file" id="file" name="file"> --%>
 		<br>
 		
 		<hr>
 		
 		<div class="text-right" style="margin-top: 30px;">
-		   <input type="button" class="updateBtns" value="수정" style="margin-right: 0" />&nbsp;
-		   <input type="button" class="btn-secondary updateBtns" value="삭제" style="margin-left: 5px;" />
+		   <input type="button" id="updateBtn" value="수정" style="margin-right: 0" />&nbsp;
+		   <%--<input type="button" class="btn-secondary updateBtns" value="삭제" style="margin-left: 5px;" />--%>
 		</div>
 	</form>
 	

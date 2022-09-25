@@ -24,19 +24,33 @@ desc tbl_member;
 desc tbl_login_history;
 
 -- 로그인 sql --
-String sql = "select userid, name, email, mobile, postcode, address, detail_address, extra_address, gender,\n"+
-"       birthyyyy, birthmm, birthdd, coin, point, registerday, \n"+
-"       passwd_change_gap, nvl(last_login_gap, months_between(sysdate, registerday)) as last_login_gap\n"+
+select userid, name, email, mobile, postcode, address, detail_address, extra_address, gender,       
+birthyyyy, birthmm, birthdd, coin, point, registerday,        
+passwd_change_gap, last_login_date, nvl(last_login_gap, months_between(sysdate, registerday)) as last_login_gap
+from
+(select userid, name, email, mobile, postcode, address, detail_address, extra_address, gender     
+, substr(birthday,1,4) AS birthyyyy, substr(birthday,6,2) AS birthmm, substr(birthday,9) AS birthdd     
+, coin, point, to_char(registerday, 'yyyy-mm-dd') AS registerday     
+, trunc( months_between(sysdate, last_passwd_date) ) AS passwd_change_gap
+from tbl_member
+where status = 1 and userid = '5sherlock' and passwd = '0ffe1abd1a08215353c233d6e009613e95eec4253832a761af28ff37ac5a150c') M
+cross join
+(select max(logindate) as last_login_date, trunc(months_between(sysdate, max(logindate))) as last_login_gap
+from tbl_login_history
+where fk_userid = '5sherlock') H;
+
+String sql = "select userid, name, email, mobile, postcode, address, detail_address, extra_address, gender,       \n"+
+"birthyyyy, birthmm, birthdd, coin, point, registerday,        \n"+
+"passwd_change_gap, nvl(last_login_gap, months_between(sysdate, registerday)) as last_login_gap, last_login_date\n"+
 "from\n"+
-"(select userid, name, email, mobile, postcode, address, detail_address, extra_address, gender\n"+
-"     , substr(birthday,1,4) AS birthyyyy, substr(birthday,6,2) AS birthmm, substr(birthday,9) AS birthdd\n"+
-"     , coin, point, to_char(registerday, 'yyyy-mm-dd') AS registerday\n"+
-"     , trunc( months_between(sysdate, last_passwd_date) ) AS passwd_change_gap\n"+
+"(select userid, name, email, mobile, postcode, address, detail_address, extra_address, gender     \n"+
+", substr(birthday,1,4) AS birthyyyy, substr(birthday,6,2) AS birthmm, substr(birthday,9) AS birthdd     \n"+
+", coin, point, to_char(registerday, 'yyyy-mm-dd') AS registerday     \n"+
+", trunc( months_between(sysdate, last_passwd_date) ) AS passwd_change_gap\n"+
 "from tbl_member\n"+
-"where status = 1 and userid = ? and passwd = ?\n"+
-") M\n"+
+"where status = 1 and userid = ? and passwd = ?) M\n"+
 "cross join\n"+
-"(select trunc(months_between(sysdate, max(logindate))) as last_login_gap\n"+
+"(select max(logindate) as last_login_date, trunc(months_between(sysdate, max(logindate))) as last_login_gap\n"+
 "from tbl_login_history\n"+
 "where fk_userid = ?) H";
 
@@ -89,3 +103,9 @@ String sql = "select seq_notice.nextval from dual";
 -- 공지사항 글쓰기 sql --
 String sql = "insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)\n"+
 "values(?, ?, ?, ?)";
+
+-- 공지사항 글삭제 sql --
+String sql = "delete from tbl_notice where noticeNo = ?";
+
+-- 공지사항 글수정 sql --
+String sql = "update tbl_notice set noticeSubject = ?, noticeContent = ? where noticeNo = ?";

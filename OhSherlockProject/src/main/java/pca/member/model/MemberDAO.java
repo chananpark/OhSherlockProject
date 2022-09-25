@@ -59,19 +59,18 @@ public class MemberDAO implements InterMemberDAO {
 		try {
 			conn = ds.getConnection();
 
-			String sql = "select userid, name, email, mobile, postcode, address, detail_address, extra_address, gender,\n"+
-					"       birthyyyy, birthmm, birthdd, coin, point, registerday, \n"+
-					"       passwd_change_gap, nvl(last_login_gap, months_between(sysdate, registerday)) as last_login_gap\n"+
+			String sql = "select userid, name, email, mobile, postcode, address, detail_address, extra_address, gender,       \n"+
+					"birthyyyy, birthmm, birthdd, coin, point, registerday,        \n"+
+					"passwd_change_gap, nvl(last_login_gap, months_between(sysdate, registerday)) as last_login_gap, last_login_date\n"+
 					"from\n"+
-					"(select userid, name, email, mobile, postcode, address, detail_address, extra_address, gender\n"+
-					"     , substr(birthday,1,4) AS birthyyyy, substr(birthday,6,2) AS birthmm, substr(birthday,9) AS birthdd\n"+
-					"     , coin, point, to_char(registerday, 'yyyy-mm-dd') AS registerday\n"+
-					"     , trunc( months_between(sysdate, last_passwd_date) ) AS passwd_change_gap\n"+
+					"(select userid, name, email, mobile, postcode, address, detail_address, extra_address, gender     \n"+
+					", substr(birthday,1,4) AS birthyyyy, substr(birthday,6,2) AS birthmm, substr(birthday,9) AS birthdd     \n"+
+					", coin, point, to_char(registerday, 'yyyy-mm-dd') AS registerday     \n"+
+					", trunc( months_between(sysdate, last_passwd_date) ) AS passwd_change_gap\n"+
 					"from tbl_member\n"+
-					"where status = 1 and userid = ? and passwd = ?\n"+
-					") M\n"+
+					"where status = 1 and userid = ? and passwd = ?) M\n"+
 					"cross join\n"+
-					"(select trunc(months_between(sysdate, max(logindate))) as last_login_gap\n"+
+					"(select max(logindate) as last_login_date, trunc(months_between(sysdate, max(logindate))) as last_login_gap\n"+
 					"from tbl_login_history\n"+
 					"where fk_userid = ?) H";
 
@@ -109,6 +108,9 @@ public class MemberDAO implements InterMemberDAO {
 				if (rs.getInt(17) >= 12) {
 					// 마지막으로 로그인한지 1년이 지났으면 휴면으로 지정
 					member.setIdle(1);
+					
+					// 마지막 로그인 날짜
+					member.setLast_login_date(rs.getString(18));
 
 					// tbl_member 테이블에 휴면 상태 update
 					sql = " update tbl_member set idle = 1 " + " where userid = ? ";
@@ -120,7 +122,7 @@ public class MemberDAO implements InterMemberDAO {
 				}
 
 				// tbl_login_history(로그인기록) 테이블에 insert
-				if (member.getIdle() != 1) { // 휴면 회원이 아닐 경우
+				if (member.getIdle() != 1 && rs.getInt(16) >= 3) { // 휴면 회원이 아니고 비번 변경 3개월 지나지 않았으면
 					sql = " insert into tbl_login_history(fk_userid, clientip) " + " values(?, ?) ";
 
 					pstmt = conn.prepareStatement(sql);

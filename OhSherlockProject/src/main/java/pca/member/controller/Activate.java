@@ -25,7 +25,8 @@ public class Activate extends AbstractController {
 
 			String userid = request.getParameter("userid");
 			String email = request.getParameter("email");
-			String name = request.getParameter("name");
+			String last_login_date = request.getParameter("last_login_date");
+			String idleDate = request.getParameter("idleDate");
 
 			// 해당 유저의 이메일로 메일보내기
 			boolean sendMailSuccess = false; // 메일이 정상적으로 전송되었는지 유무를 알아오기 위한 용도
@@ -65,7 +66,8 @@ public class Activate extends AbstractController {
  
 			request.setAttribute("userid", userid);
 			request.setAttribute("email", email);
-			request.setAttribute("name", name);
+			request.setAttribute("last_login_date", last_login_date);
+			request.setAttribute("idleDate", idleDate);
 			request.setAttribute("sendMailSuccess", sendMailSuccess);
 			request.setAttribute("method", method);
 			super.setViewPage("/WEB-INF/login/activate.jsp");

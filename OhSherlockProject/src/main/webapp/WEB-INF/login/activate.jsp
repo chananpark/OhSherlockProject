@@ -2,14 +2,13 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="../header.jsp"%>
 
-
 <style>
-div#activate_box {
-	width: 380px;
-}
+ div#activate_box, div#div_activateResult {
+	width: 700px;
+} 
 
-/* 이름, 이메일 박스랑 확인 버튼 */
-div#input_activate>input, div#btnSubmit>input {
+/* 확인, 인증 버튼 */
+div#btnSubmit>input, div#btnConfirm>input{
 	width: 100%;
 	padding: 12px;
 	border: 1px solid gray;
@@ -19,16 +18,12 @@ div#input_activate>input, div#btnSubmit>input {
 	line-height: 20px;
 }
 
-div#input_activate>input:hover, div#btnSubmit>input:hover {
+div#btnConfirm>input:hover, div#btnSubmit>input:hover {
 	opacity: 1;
 }
 
-div#input_activate>input {
-	border-radius: 4px;
-}
-
-/* 확인 버튼 */
-div#btnSubmit>input[type='button'] {
+/* 버튼 */
+input[type='button'] {
 	height: 45px;
 	border-radius: 90px;
 	background-color: #1E7F15;
@@ -38,7 +33,14 @@ div#btnSubmit>input[type='button'] {
 
 #div_activateResult {
 	text-align: center;
+	font-size:14pt;
 }
+
+#date_div{
+	background-color: #f9fef6;
+	border-radius: 2%;
+}
+
 </style>
 
 
@@ -48,66 +50,24 @@ div#btnSubmit>input[type='button'] {
 let time = 60 * 5;
 
 $(document).ready(function(){
-	$("span.error").hide();
 	
-	$("input#email").blur( (e)=>{
-		
-		const $target = $(e.target);
-		
-        // 이메일 정규표현식 
-		const regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;  
-        
-        const bool = regExp.test($target.val());
-		
-		if(!bool) {
-			// 이메일이 정규표현식에 위배된 경우  
-			$("input").prop("disabled", true);
-			$target.prop("disabled", false);
-			
-		    $target.parent().find("span.error").show();
-			$target.focus();
-		}
-		else {
-			// 이메일이 정규표현식에 맞는 경우 
-			$("input").prop("disabled", false);			
-		    $target.parent().find("span.error").hide();
-		}
-		
+	// 확인버튼 클릭시
+   $("#btnActivate").click(function(){
+		const frm = document.activateFrm;
+		frm.action = "<%=ctxPath%>/login/activate.tea"; 
+		// 메일을 보내주는 컨트롤러
+		frm.method = "POST";
+		frm.submit();
 	});
-   
-   $("input#btnActivate").click(function(){
-      
-      const useridVal = $("input[name='userid']").val().trim();
-      const emailVal = $("input[name='email']").val().trim();
-      const nameVal = $("input[name='name']").val().trim();
-
-      if(useridVal != "" && emailVal != ""){
-			const frm = document.activateFrm;
-			frm.action = "<%=ctxPath%>/login/activate.tea"; 
-			// 메일을 보내주는 컨트롤러
-			frm.method = "POST";
-			frm.submit();
-		} else {
-	      // 올바르게 입력하지 않은 경우
-	      alert("정보를 모두 입력하세요!");
-	      return;
-	   } 
-	});
-
 
 	const method = "${requestScope.method}";
 	// post 방식으로 접근한 경우
 	 if(method == "POST"){
-	     // input에 입력한 userid, 이름, email 그대로 유지
-		$("input#userid").val("${requestScope.userid}"); 
-		$("input#email").val("${requestScope.email}");
-		$("input#name").val("${requestScope.name}");
-	
-	   // 인증코드 발송되었다는 문구 출력
+		// 결과부분 출력
 	    $("div#div_activateResult").show();
 	   
-	   // 메일 발송 성공시
-	   if(${requestScope.sendMailSuccess == true}) {
+	    // 메일 발송 성공시
+		if(${requestScope.sendMailSuccess == true}) {
 
 			// 5분 타이머 함수
 			const myTimer = () => {
@@ -123,10 +83,11 @@ $(document).ready(function(){
 			        if (time-- < 0) {
 			            alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
 			            clearInterval(setTimer); // 타이머 삭제
-			            $("div#div_activateResult").hide();
+				   	    $("div#div_activateResult").hide();
+				   	 	$("div#div_activateResult>div.jumbotron").hide();
 			            return;
 			        }
-			}
+				}
 			
 		   // 5분 타이머 시작
 	       const setTimer = setInterval(myTimer, 1000);
@@ -134,22 +95,27 @@ $(document).ready(function(){
         }
 	 } 
 	 
-	 // get방식으로 접근한 경우 인증결과창 숨기기
+	 // get방식으로 접근한 경우 인증창 숨기기
 	 else{
 	     $("div#div_activateResult").hide();
+	     $("div#div_activateResult>div.jumbotron").hide();
+	     
+	     if(${verifyFail eq true}) {
+	    	 alert("인증코드가 다릅니다. 인증코드를 다시 발급받으세요.");
+	    	 
+	     }
 	 }
 	
 	 // 인증하기 버튼 클릭시 인증코드 확인
-	 $("button#btnConfirmCode").click(function(){
-		 verifyCode();
+	 $("#btnConfirmCode").click(function(){
+		 const input_confirmCode = $("#input_confirmCode").val().trim();
+		 
+		 if(input_confirmCode != "")
+		 	verifyCode();
+		 else
+			 alert("인증코드를 입력하세요!");
 	 });
 	 
-	 // 이메일 입력 후 엔터 시 인증코드 확인
-	 $("input#email").bind("keydown", function(event){
-		 if(event.keyCode == 13) { 
-			 verifyCode();
-		 }
-	 });
    
 });
 
@@ -157,8 +123,7 @@ $(document).ready(function(){
 function verifyCode(){
 	
     const frm = document.authFrm;
- 	// 입력한 userid 값을 히든폼에 넣어준다.
-    frm.userid.value = $("input#userid").val(); 
+    
  	// 입력한 인증코드를 히든폼에 넣어준다.
     frm.userAuthentiCode.value = $("input#input_confirmCode").val(); 
     
@@ -173,62 +138,67 @@ function verifyCode(){
 </script>
 
 <div class="container">
-	<form name="activateFrm">
-		<div id="activate_box" class="d-flex flex-column m-auto">
-			<div id="activate_title">
-				<h2
-					style="text-align: center; font-size: 30px; line-height: 40px; font-weight: bold;">
-					휴면 해제</h2>
-			</div>
+	<div id="activate_box" class="d-flex flex-column m-auto">
+		<div id="activate_title">
+			<h2 style="text-align: center; font-size: 30px; line-height: 40px; font-weight: bold;"> 휴면 해제</h2>
+		</div>
 
-			<div id="input_activate" class="d-flex flex-column">
-				<input type="text" id="userid" name="userid" placeholder="아이디"
-					autocomplete="off" required /> <input type="text" id="name"
-					name="name" placeholder="이름" autocomplete="off" required /> <input
-					type="text" id="email" name="email" placeholder="이메일"
-					autocomplete="off" required /> <span
-					class="error text-danger text-center">이메일 형식에 맞지 않습니다.</span>
+		<div class="jumbotron mt-2">
+			<p><span class="h4 font-weight-bold" style="color:#1E7F15">${userid}</span> 회원님은 현재 휴면상태입니다.</p>
+			<div id="date_div" class="px-4 pt-3 pb-1 mb-3 font-weight-bold">
+				<p>마지막 접속일: ${last_login_date}</p>
+				<p>휴면 전환일: ${idleDate}</p>
 			</div>
-
+			
+			<p>휴면 해제를 위해서는 본인인증이 필요합니다.</p>
+			<p>가입 시 등록하신 이메일(<span class="font-weight-bold" style="color:#1E7F15">${email}</span>)로 인증코드가 발송됩니다.</p>
 			<div id="btnSubmit" class="d-flex flex-column">
 				<input type="button" class="btn" value="확인" id="btnActivate" />
 			</div>
 		</div>
-
-		<div class="my-3" id="div_activateResult">
-			<p class="text-center">
-				<%-- 메일 발송 성공 시 --%>
-				<c:if test="${requestScope.sendMailSuccess eq true}">
-					<span style="font-size: 10pt;">인증코드가 ${requestScope.email}로
-						발송되었습니다.</span>
-					<br>
-					<span style="font-size: 10pt;">인증코드를 입력해주세요.</span>
-
-					<span id="timer" class="text-danger"></span>
-
-					<br>
-					<input type="text" name="input_confirmCode" id="input_confirmCode"
-						required />
-					<br>
-					<br>
-					<button type="button" class="btn btn-info" id="btnConfirmCode">인증하기</button>
-				</c:if>
-
-				<%-- 메일 발송 실패 시 --%>
-				<c:if test="${requestScope.sendMailSuccess eq false}">
-					<span class="text-danger text-center">메일 발송이 실패하였습니다.</span>
-					<br>
-				</c:if>
-			</p>
-		</div>
+	</div>
+				
+	<form name="activateFrm">
+			<input type="hidden" name="userid" value="${userid}"/>	
+			<input type="hidden" name="email" value="${email}"/>	
+			<input type="hidden" name="last_login_date" value="${last_login_date}"/>	
+			<input type="hidden" name="idleDate" value="${idleDate}"/>	
 	</form>
+			
+	<div id="div_activateResult" class="d-flex flex-column m-auto">
+		<div class="jumbotron mt-2">
+			<%-- 메일 발송 성공 시 --%>
+			<c:if test="${requestScope.sendMailSuccess eq true}">
+				<span style="font-size:11pt">인증코드가 ${email}로 발송되었습니다.</span>
+				<br>
+				<span style="font-size:11pt">인증코드를 입력해주세요.</span>
+				<span id="timer" class="text-danger font-weight-bold"></span>
+
+				<br>
+				<input type="text" name="input_confirmCode" id="input_confirmCode" class="mt-3" required />
+				
+				<div id="btnConfirm" class="d-flex flex-column mt-3">
+					<input type="button" class="btn" id="btnConfirmCode" value="인증하기" />
+				</div>
+			</c:if>
+			<%-- 메일 발송 실패 시 --%>
+			<c:if test="${requestScope.sendMailSuccess eq false}">
+				<span class="text-danger text-center">메일 발송이 실패하였습니다.</span>
+				<br>
+			</c:if>
+		</div>
+	</div>
+		
 </div>
 
 <%-- 인증하기 form  --%>
 <form name="authFrm">
 	<%-- 위의 form 은 get 방식이기 때문에 히든 폼을 post 방식으로 보내준다. --%>
-	<input type="hidden" name="userid" /> <input type="hidden"
-		name="userAuthentiCode" />
+	<input type="hidden" name="userid" value="${userid}"/> 
+	<input type="hidden" name="email" value="${email}"/>	
+	<input type="hidden" name="last_login_date" value="${last_login_date}"/>	
+	<input type="hidden" name="idleDate" value="${idleDate}"/>	
+	<input type="hidden" name="userAuthentiCode" />
 	<%-- 사용자가 입력한 코드 받아오기, 받아서 인증하기 form을 넘겨줄 것이다. --%>
 </form>
 

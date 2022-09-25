@@ -101,8 +101,9 @@
 	        	비밀번호 변경
 	       	</h2>
 	    	</div>
-	       	<h5>비밀번호 변경 후 3개월 경과로 비밀번호 재설정이 필요합니다.</h5>
-	
+	       	<div class="text-center py-3">
+	       		<h5>비밀번호 변경 후 3개월 경과로 <br>비밀번호 재설정이 필요합니다.</h5>
+			</div>
 			<%-- 새 비밀번호 입력창 --%>
 		   	<div id="input_pwd" class="d-flex flex-column">
 		       	<input type="password" name="passwd" id="password" placeholder="새비밀번호" required />

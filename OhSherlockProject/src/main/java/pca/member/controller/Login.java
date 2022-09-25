@@ -1,5 +1,7 @@
 package pca.member.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,14 +53,18 @@ public class Login extends AbstractController {
 				
 				// 휴면 회원이라면
 				if (loginuser.getIdle() == 1) {
-					String message = "미접속 1년 경과로 휴면상태입니다.";
-					String loc = request.getContextPath() + "/login/activate.tea";
-					// 이메일 인증 + 휴면 해제 페이지로 이동
+					
+					String last_login_date = loginuser.getLast_login_date().substring(0,10);
+					int last_login_year = Integer.parseInt(last_login_date.substring(0, 4));
+					int idle_year = last_login_year + 1;
+					String idleDate = idle_year+last_login_date.substring(4);
+					
+					request.setAttribute("userid", loginuser.getUserid());
+					request.setAttribute("email", loginuser.getEmail());
+					request.setAttribute("last_login_date", last_login_date);
+					request.setAttribute("idleDate", idleDate);
 
-					request.setAttribute("message", message);
-					request.setAttribute("loc", loc);
-
-					super.setViewPage("/WEB-INF/msg.jsp");
+					super.setViewPage("/WEB-INF/login/activate.jsp");
 
 					return; // 메소드 종료
 				}
@@ -70,6 +76,8 @@ public class Login extends AbstractController {
 					// 비밀번호 변경 페이지로 이동
 					super.setRedirect(false);
 					super.setViewPage("/WEB-INF/login/passwdReset.jsp");
+					
+					return;
 				}
 				// 비밀번호를 변경한지 3개월 미만인 경우
 				else {

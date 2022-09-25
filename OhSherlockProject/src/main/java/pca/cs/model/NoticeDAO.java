@@ -15,7 +15,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import common.model.MemberVO;
 import common.model.NoticeVO;
 
 public class NoticeDAO implements InterNoticeDAO {
@@ -195,6 +194,32 @@ public class NoticeDAO implements InterNoticeDAO {
 			close();
 		}	
 		
+		return n;
+	}
+
+	@Override
+	public int noticeUpdate(Map<String, String> paraMap) throws SQLException {
+		int n = 0;
+
+		String noticeNo = paraMap.get("noticeNo");
+		String noticeSubject = paraMap.get("noticeSubject");
+		String noticeContent = paraMap.get("noticeContent");
+		
+		try {
+			conn = ds.getConnection();
+
+			String sql = "update tbl_notice set noticeSubject = ?, noticeContent = ? where noticeNo = ?";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, noticeSubject);
+			pstmt.setString(2, noticeContent);
+			pstmt.setString(3, noticeNo);
+			n = pstmt.executeUpdate();
+
+		} finally {
+			close();
+		}
+
 		return n;
 	}
 

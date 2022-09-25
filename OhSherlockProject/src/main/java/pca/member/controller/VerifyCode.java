@@ -26,6 +26,7 @@ public class VerifyCode extends AbstractController {
 			String userid = request.getParameter("userid");
 			String clientip = request.getRemoteAddr();
 			
+			// 인증코드 일치 시
 			if(authentiCode.equals(userAuthentiCode)) {
 				
 				// idle 컬럼 상태 update하기
@@ -41,12 +42,29 @@ public class VerifyCode extends AbstractController {
 					loc = request.getContextPath() + "/error.tea";
 				}
 			}
+			// 인증코드 불일치 시
 			else {
-				message = "인증코드가 다릅니다. \\n인증코드를 다시 발급받으세요.";
-				loc = request.getContextPath() + "/login/activate.tea";
+				String email = request.getParameter("email");
+				String last_login_date = request.getParameter("last_login_date");
+				String idleDate = request.getParameter("idleDate");
+
+				request.setAttribute("userid", userid);
+				request.setAttribute("email", email);
+				request.setAttribute("last_login_date", last_login_date);
+				request.setAttribute("idleDate", idleDate);
+				request.setAttribute("verifyFail", true);
+				
 				// 인증 창으로 다시 돌아간다.
+				super.setViewPage("/WEB-INF/login/activate.jsp");
+				
+				// 세션에 저장된 인증코드 삭제
+				session.removeAttribute("certificationCode");
+				
+				return;
 			}
-		} else {
+		} 
+		// get방식 접근 시
+		else {
 			message = "잘못된 접근입니다.";
 			loc = "javascript:history.back()";
 		}

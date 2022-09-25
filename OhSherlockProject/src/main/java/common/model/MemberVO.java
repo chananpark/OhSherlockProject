@@ -26,6 +26,8 @@ public class MemberVO {
 	// 마지막으로 암호를 변경한지 3개월이 지났으면 true
 	// 마지막으로 암호를 변경한지 3개월이 지나지 않았으면 false
 	
+	private String last_login_date;	   // 마지막으로 로그인한 날짜
+	
 	/////////////////////////////////////////////////////////////////////////////
 	
 	public MemberVO() {}
@@ -268,6 +270,14 @@ public class MemberVO {
 
 	public void setPasswdChangeRequired(boolean passwdChangeRequired) {
 		this.passwdChangeRequired = passwdChangeRequired;
+	}
+
+	public String getLast_login_date() {
+		return last_login_date;
+	}
+
+	public void setLast_login_date(String last_login_date) {
+		this.last_login_date = last_login_date;
 	}
 	
 }

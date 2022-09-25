@@ -21,8 +21,10 @@ public interface InterNoticeDAO {
 	// 공지사항 등록(관리자)
 	int registerNotice(Map<String, String> paraMap) throws SQLException;
 
-	// 공지사항 수정(관리자)
+	// 공지사항 삭제(관리자)
 	int noticeDelete(String noticeNo) throws SQLException;
 
+	// 공지사항 수정(관리자)
+	int noticeUpdate(Map<String, String> paraMap) throws SQLException;
 
 }
