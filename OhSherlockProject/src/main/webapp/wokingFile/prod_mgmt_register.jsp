@@ -36,48 +36,29 @@
 
 	$(document).ready(function(){
 		
-		// 등록 버튼을 클릭하면
-		$("input#prodRegister").click(function() {
-			// "등록" 버튼을 클릭시 호출되는 함수 
-			
-				goRegister();
-			
-		});
+		
+		
+		
+		
+		
+		
+		
 		
 	}); // end of $(document).ready(function(){});-------------------------
 	
 	
 	// "등록" 버튼을 클릭시 호출되는 함수 
 	function goRegister() {
-		
-
-		  // **** 필수입력사항에 모두 입력이 되었는지 검사한다. **** //
-		  let b_Flag_required = false;
-		
-		  const required_list = document.querySelectorAll('input.required');
-		  for (let i = 0; i < required_list.length; i++) {
-		    const val = required_list[i].value.trim();
-		    if (val == '') {
-		      alert('*표시된 필수입력사항은 모두 입력하셔야 합니다.');
-		      b_Flag_required = true;
-		      break;
-		    }
-		  } // end of for-----------------------
-		
-		  if (b_Flag_required) {
-			    return; // 종료
-			  }
-		   
 	  // 최종적으로 폼을 보내어 준다.
 	  const frm = document.pdRegFrm;
-	  frm.action = '<%=ctxPath%>/admin/prod_mgmt_register.tea';
+	  frm.action = '<%=ctxPath%>/myshop/prodRegister.tea';
 	  frm.method = 'post';
 	  frm.submit();
 	}
 	
-	 opener.location.reload(true);// 부모창 새로고침
-	 
 </script>
+
+
 
 
 <div class="container prodRegisterContainer">
@@ -91,7 +72,7 @@
 	<hr>
 
 
-	<form name="pdRegFrm" id="pdReg">
+	<form action="" name="pdRegFrm" id="pdReg">
 		<label for="qnatype">카테고리<span class="text-danger">*</span></label> <select
 			id="qnatype" name="p_category">
 			<option value="녹차/말차">녹차/말차</option>
@@ -101,32 +82,32 @@
 		</select> 
 			
 		<label for="title">상품명<span class="text-danger">*</span></label> 
-		<input type="text" id="p_name" name="p_name" placeholder="상품명을 입력하세요." class="required">
+		<input type="text" id="title" name="p_name" placeholder="상품명을 입력하세요.">
 			
 		<label for="title">상품한줄소개<span class="text-danger">*</span></label> 
-		<input type="text" id="p_info" name="p_info" placeholder="상품한줄소개를 입력하세요." class="required">
+		<input type="text" id="title" name="p_info" placeholder="상품한줄소개를 입력하세요.">
 
 		<label for="price">가격<span class="text-danger">*</span></label>
-		<input type="number" id="p_price" name="p_price" placeholder="숫자만 입력하세요." min="0" class="required"/>
+		<input type="number" id="price" name="p_price" placeholder="숫자만 입력하세요."/>
 
 		<label for="stock">재고<span class="text-danger">*</span></label>
-		<input type="number" id="p_stock" name="p_stock" placeholder="숫자만 입력하세요." min="0" class="required"/>
+		<input type="number" id="stock" name="p_stock" placeholder="숫자만 입력하세요."/>
 
 		<label for="salePrice">할인금액</label>
-		<input type="number" id="p_discount_rate" name="p_discount_rate" min="0" placeholder="숫자만 입력하세요."/>
+		<input type="number" id="salePrice" name="p_discount_rate" placeholder="숫자만 입력하세요."/>
 
 		<label for="thumbnail" style="margin: 6px 20px 16px 0;">대표이미지<span class="text-danger">*</span></label><br>
-		<input type="file" id="p_thumbnail" name="p_thumbnail" class="required"><br>
+		<input type="file" id="thumbnail" name="p_thumbnail"><br>
 
 		<label class="mt-4" for="content">내용<span class="text-danger">*</span></label><br>
-		<textarea id="p_desc" name="p_desc" placeholder="상품 설명을 입력하세요." style="height:200px" class="required"></textarea>
-		<span>파일첨부</span>&nbsp;<input type="file" id="p_image" name="p_image" > <br>
+		<textarea id="content" name="p_desc" placeholder="상품 설명을 입력하세요." style="height:200px"></textarea>
+		<span>파일첨부</span>&nbsp;<input type="file" id="p_image" name="p_image"> <br>
 		
 		<hr>
 
 		<div class="text-right" style="margin-top: 30px;">
 			<input type="button" class="writeBtns" value="취소" 	style="margin-right: 0" />&nbsp; 
-				<input type="button" id="prodRegister" class="btn-secondary writeBtns" value="등록" style="margin-left: 5px;" />
+				<input type="button" class="btn-secondary writeBtns" value="등록"  onclick="goRegister()" style="margin-left: 5px;" />
 		</div>
 	</form>
 

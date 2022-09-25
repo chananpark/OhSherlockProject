@@ -32,55 +32,6 @@
 	
 </style>
 
-<script type="text/javascript">
-
-
-	$(document).ready(function(){
-
-		// 신규 상품 등록 버튼 클릭할때
-		$("input#btn_goProdRegister").click(function() {
-			// 신규 상품 등록 메소드 호출
-			goProdRegister();
-		});
-    
-/* 		// 상품 수정 등록 버튼 클릭할때
-		$("input#btn_goProdRegister").click(function() {
-			// 신규 상품 등록 메소드 호출
-			goProdUpdate();
-		});
-     */
-    
-    
- });// end of $(document).ready(function(){})-----------------------------
-
- //=== 신규 상품 등록 === //
- function goProdRegister() {
- 
-    	// 신규 상품 등록하기 팝업창 띄우기
-     const url = "<%= request.getContextPath()%>/admin/prod_mgmt_register.tea";
-     
-     window.open(url, "prodRegister", 
-                "left=300, top=80, width=800, height=500");
-          
-   
- }// end of function goEditPersonal()----------------------
- 
-//=== 상품 정보 수정 === //
- function goProdUpdate() {
- 
-    	// 상품 수정하기 팝업창 띄우기
-     const url = "<%= request.getContextPath()%>/admin/prod_mgmt_update.tea";
-     
-     window.open(url, "prodUpdate", 
-                "left=300, top=80, width=800, height=500");
-          
-   
- }
- 
-
-
-</script>
-
 <div class="container">
 
    <h2 class="col text-left" style="font-weight:bold">상품관리</h2><br>
@@ -104,25 +55,38 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="pvo" items="${requestScope.productList}">
-					<tr>
-						<td name="p_code" >${pvo.p_code}</td>
-						<td name="p_name">${pvo.p_name}</td>
-						<td name="p_price">${pvo.p_price}</td>
-						<td name="p_discount_rate">${pvo.p_discount_rate}</td>
-						<td name="p_stock">${pvo.p_stock}</td>
-						<td>
+				<tr>
+					<td class="prodNo">1234</td>
+					<td>콤부차 리치피치</td>
+					<td>8,000</td>
+					<td>7,200</td>
+					<td>12,000</td>
+					<td>
 						<div class="adminOnlyBtns mb-1">
 							<input type="button" value="수정" /> 
+							<input class="btn-dark" type="button" value="품절" />
 						</div>
-						</td>
-					</tr>
-				</c:forEach>
+					</td>
+				</tr>
+				<tr>
+					<td class="prodNo">2345</td>
+					<td>제주 순수녹차</td>
+					<td>9,500</td>
+					<td>-</td>
+					<td>10,000</td>
+					<td>
+						<div class="adminOnlyBtns mb-1">
+							<input type="button" value="수정" /> 
+							<input class="btn-dark" type="button" value="품절" />
+						</div>
+					</td>
+				</tr>
+				
 			</tbody>
 		</table>
 		
 		 <div class="text-right" style="margin-top: 50px;">
-	      	<input type="button" id="btn_goProdRegister" class="writeBtns" value="신규 상품 등록" style="margin-left: 5px; background-color: #1E7F15; color:white;" />
+	      	<input type="button" class="writeBtns" value="신규 상품 등록" style="margin-left: 5px; background-color: #1E7F15; color:white;" />
 		</div>
   
 		

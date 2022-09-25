@@ -43,4 +43,45 @@ from tbl_member
 
 delete 
 from tbl_member
-where userid='weqeqr241';
+where userid like '%lim%';
+
+
+
+create table tbl_product
+(p_code             varchar2(40)  not null  -- 상품코드
+,p_category         varchar2(20)            -- 카테고리
+,p_name             varchar2(100)           -- 상품명      
+,P_price            number                  -- 상품가격
+,p_discount_rate    number default 0                  -- 할인율
+,p_stock            number default 0                 -- 재고 
+,p_soldout          number default 0                 -- 품절여부  품절: 1  품절아님: 0
+,p_best             number default 0                 -- 베스트여부 베스트: 1  베스트아님: 0
+,p_info             varchar2(400)           -- 상품한줄소개
+,p_desc             clob                    -- 상품설명
+,p_thumbnail        varchar2(400)           -- 썸네일이미지
+,p_image            varchar2(400)           -- 첨부이미지
+,p_registerday      date   default sysdate  -- 상품등록일 
+,constraint PK_tbl_product_p_code primary key(p_code)
+);
+
+insert into tbl_product (p_code, p_category, p_name, p_price, p_discount_rate, p_stock, p_info, p_desc, p_thumbnail, p_image)
+values ('1', '기프트박스', '벚꽃향 가득한 올레 20입', 23000, 0.3, 5, '벚꽃향이 아주 가득가득가득합니다.', '올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?'
+        , '벚꽃향가득한올레20입.jpg','tea_collection.png')
+
+
+insert into tbl_product (p_code, p_category, p_name, p_price, p_discount_rate, p_stock, p_info, p_desc)
+values ('c' || seq_pcode.nextval, '기프트박스', '벚꽃향 가득한 올레 20입', 23000, 0.3, 5, '벚꽃향이 아주 가득가득가득합니다.', '올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?'
+      )
+
+
+select *
+from tbl_product
+
+
+ create sequence seq_pcode
+   start with 10000                   -- 첫번째 출발은 1 부터 한다.
+   increment by 1                 -- 증가치는 1 이다. 즉, 1씩 증가한다. 
+   maxvalue 99999                     -- 최대값이 5 이다.
+   minvalue 10000                     -- 최소값이 2 이다.
+   cycle                          -- 반복을 한다.
+   nocache;

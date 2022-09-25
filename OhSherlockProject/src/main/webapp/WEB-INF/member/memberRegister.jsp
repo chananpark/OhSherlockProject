@@ -67,7 +67,7 @@
 	$(document).ready(function () {
 		
 		
-		let certifiCode;
+		let certifiCode; // 컨드롤러에서 이메일인증코드 가져오기용
 		
 	  $('span.error').hide();
 	  $('input#userid').focus();
@@ -542,6 +542,7 @@
 		
 	}// end of function emailVerifyCodeCheck(){}---------------
 	
+	// 이메일 인증코드 재발송 함수 
 	function resendEmailVerifyCode(){
 		
 	/* 	clearInterval(startTimer); // 타이머 초기화하기 */
