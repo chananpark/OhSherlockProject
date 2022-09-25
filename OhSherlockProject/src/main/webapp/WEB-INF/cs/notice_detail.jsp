@@ -73,7 +73,7 @@
 	    <hr style="border-top: solid 1.2px black">
 	    
 	    <div class="col text-left">
-	      <div style="font-size: 20px;">${nvo.noticeContent}</div>
+	      <div style="font-size: 17px; padding: 15px 0;">${nvo.noticeContent}</div>
 	    </div>
 	    
    <form name="noticeFrm" >

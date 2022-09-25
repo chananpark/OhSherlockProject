@@ -39,6 +39,9 @@
 
 <script>
 	$(function(){
+		
+		$("#header_menu").addClass("transparentBg");
+		
 	    // 스크롤 시 header fade-in
 	    $(document).on('scroll', function(){
 	        if($(window).scrollTop() > 100){
@@ -48,7 +51,7 @@
 	            $("#header_menu").removeClass("whiteBg");
 	            $("#header_menu").addClass("transparentBg");
 	        }
-	    })
+	    });
 
 		$("#topBtn").click(function() {
 			$('html, body').animate({scrollTop:0}, '300');
@@ -61,6 +64,20 @@
 	    	$("#header_menu").removeClass("whiteBg");
             $("#header_menu").addClass("transparentBg");
 	    });
+	    
+	    // xl이하일때 메뉴 배경 하얗게, 드롭다운 오른쪽 정렬
+	    $(window).resize(function(){
+	        var width = parseInt($(this).width());
+
+	        if (width < 1200){
+	            $('#navbarNavDropdown').css('background-color','white');    
+	            $('#navbarNavDropdown').css({'width':'100vw', 'margin': '0 calc(-50vw + 50%)','padding': '0 5%'});  
+	            $('#navbarNavDropdown .dropdown-item').addClass('text-right pr-0');
+	        } else {
+	            $('#navbarNavDropdown').css('background-color','transparent');
+	            $('#navbarNavDropdown .dropdown-item').removeClass('text-right pr-0');
+	        }
+	    }).resize();
 	}); 
 </script>
 
@@ -132,7 +149,7 @@ input[type=checkbox] {
 	left: 0;
 	width: 100%;
 	z-index: 100;
-	background: transparent;
+/* 	background: linear-gradient(to bottom, rgba(0,0,0,0.25), transparent); */
 	height: 90px;
 }
 
@@ -167,7 +184,7 @@ input[type=checkbox] {
 }
 
 .transparentBg {
-	background: transparent;
+	background: linear-gradient(to bottom, rgba(0,0,0,0.25), transparent);
 	transition-duration: 0.5s;
 	transition-timing-function: ease;
 	-webkit-transition-duration: 0.4s;
@@ -178,7 +195,7 @@ input[type=checkbox] {
 
 div.eventContainer {
    clear: both;
-	 margin-bottom: 37px;
+   margin-bottom: 37px;
 }
 
 h4.eventText{
@@ -205,7 +222,7 @@ div#indexEventText {
 div#indexEventText > p {
 	font-size: 26px;
 	margin: 0px;
-  margin-bottom: 3px;
+    margin-bottom: 3px;
 }
 
 div#priceInfo {
@@ -226,7 +243,7 @@ div#indexStoreStory {
 /* 매장안내 */
 
 #storebox {
-	position:relative;
+  position:relative;
   width: 91%;
   padding:5px;
   border-radius: 0.25rem;

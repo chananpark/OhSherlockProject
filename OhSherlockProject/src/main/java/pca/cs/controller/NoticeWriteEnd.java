@@ -21,6 +21,7 @@ public class NoticeWriteEnd extends AbstractController {
 		
 		String subject = request.getParameter("subject");
 		String content = request.getParameter("content");
+		content = content.replace("\r\n","<br>");
 //		String file = request.getParameter("file");
 		
 		if ("post".equalsIgnoreCase(method)) {

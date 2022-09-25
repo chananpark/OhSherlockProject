@@ -22,6 +22,7 @@ public class NoticeUpdateEnd extends AbstractController {
 			String noticeNo = request.getParameter("noticeNo");
 			String noticeSubject = request.getParameter("noticeSubject");
 			String noticeContent = request.getParameter("noticeContent");
+			noticeContent = noticeContent.replace("\r\n","<br>");
 
 			Map<String, String> paraMap = new HashMap<>();
 			paraMap.put("noticeNo", noticeNo);
