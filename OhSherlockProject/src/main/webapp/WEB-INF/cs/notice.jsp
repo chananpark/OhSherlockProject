@@ -47,6 +47,10 @@
 		background-color: #1E7F15;
 	    color: white;
 	}
+
+	button {
+		border-style: none;
+	}
 	
 </style>       
     
@@ -74,6 +78,11 @@
    </div>
    <hr style="background-color: black; height: 1.2px;"><br>
    
+    <div class="text-right">
+	  	<input type="text" placeholder=""/>&nbsp;
+	  	<button type="button"><i class="fas fa-search"></i></button>
+  	</div>
+  	
 		<table class="table mt-4 text-center">
 		<thead class="thead-light">
 			<tr>
