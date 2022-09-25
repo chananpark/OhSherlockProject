@@ -35,6 +35,20 @@
 <script>
 	$(document).ready(()=>{
 		$("#updateBtn").click(()=>{
+			
+			const noticeSubject = $("#noticeSubject").val().trim();
+			const noticeContent = $("#noticeContent").val().trim();
+			
+			if (noticeSubject == ""){
+				alert("제목을 입력하세요!");
+				return;
+			}
+			
+			if (noticeContent == ""){
+				alert("내용을 입력하세요!");
+				return;
+			}
+				
 			const frm = document.ntUpdate;
 			frm.action="<%=ctxPath%>/cs/noticeUpdateEnd.tea";
 	    	frm.method="POST";

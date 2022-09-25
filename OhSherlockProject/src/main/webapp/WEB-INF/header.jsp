@@ -44,7 +44,7 @@
 		
 	    // 스크롤 시 header fade-in
 	    $(document).on('scroll', function(){
-	        if($(window).scrollTop() > 100){
+	        if($(window).scrollTop() > 50){
 	            $("#header_menu").removeClass("transparentBg");
 	            $("#header_menu").addClass("whiteBg");
 	        }else{
@@ -311,16 +311,16 @@ div#brandStoryText {
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="#">기프트세트</a></li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="#">이벤트상품</a></li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/storeInfo/storeList.jsp">매장안내</a></li>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/brandStory/brandStory.jsp">브랜드스토리</a></li>
+					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/brandStory/brandStory.tea">브랜드스토리</a></li>
 				</ul>
 				<ul class="navbar-nav text-right mx-auto">
 				
 				
 				<%-- 로그인 전 상태일 때 --%>
 				<c:if test="${empty sessionScope.loginuser}"> 
-					<li class="nav-item dropdown mr-2"><a
-						class="nav-link dropdown-toggle menufont_size text-secondary"
-						href="<%=ctxPath%>/login/login.tea" id="navbarDropdown" data-toggle="dropdown">로그인</a> <%-- 로그인을 누르면 기본은 로그인 창으로 연결 --%>
+					<li class="nav-item dropdown mr-2"><a class="nav-link dropdown-toggle menufont_size text-secondary"
+						href="<%=ctxPath%>/login/login.tea" id="navbarDropdown" data-toggle="dropdown">로그인</a> 
+						<%-- 로그인을 누르면 기본은 로그인 창으로 연결 --%>
 						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="<%=ctxPath%>/login/login.tea">로그인</a> 
 							<a class="dropdown-item" href="<%=ctxPath%>/member/memberRegister.tea">회원가입</a>
@@ -350,9 +350,8 @@ div#brandStoryText {
 					</c:if>
 				</c:if>
 
-					<li class="nav-item dropdown mr-2"><span
-						class="nav-link dropdown-toggle menufont_size text-secondary"
-						id="navbarDropdown" data-toggle="dropdown">고객센터</span>
+					<li class="nav-item dropdown mr-2"><a href="#" class="nav-link dropdown-toggle menufont_size text-secondary"
+						id="navbarDropdown" data-toggle="dropdown">고객센터</a>
 						<div class="dropdown-menu no-border"
 							aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="<%=ctxPath%>/cs/notice.tea">공지사항</a> <a

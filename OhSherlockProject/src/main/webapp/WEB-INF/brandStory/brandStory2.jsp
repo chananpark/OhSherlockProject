@@ -134,7 +134,7 @@ $(function(){
 
     function findPosition(){
         $('section').each(function(){
-            if( ($(this).offset().top - $(window).scrollTop() ) < 10){
+            if( ($(this).offset().top - $(window).scrollTop() ) < 200){
                 link.removeClass('active');
                 $('#navbar').find('[data-scroll="'+ $(this).attr('id') +'"]').addClass('active');
             }
@@ -142,87 +142,122 @@ $(function(){
     }
 
     findPosition();
+    
+	// 페이지 로딩되면 자동으로 브랜드스토리 클릭
+	$("a#bsHome").trigger("click");
 });
 </script>
 
-<div class="container bsContainer">
+<div class="container bsContainer" >
 	<nav id="navbar" class="navbar">
 		<ul class="nav-menu">
-			<li><a data-scroll="home" href="#home" class="dot active"> <span>Oh!Sherlock</span>
+			<li><a data-scroll="home" href="#home" class="dot active" id="bsHome"> <span>Oh!Sherlock</span>
 			</a></li>
-			<li><a data-scroll="one" href="#one" class="dot"> <span>one</span>
+			<li><a data-scroll="bi" href="#bi" class="dot active"> <span>BI</span>
 			</a></li>
-			<li><a data-scroll="two" href="#two" class="dot"> <span>two</span>
+			<li><a data-scroll="pca" href="#pca" class="dot"> <span>박찬안</span>
 			</a></li>
-			<li><a data-scroll="three" href="#three" class="dot"> <span>Three</span>
+			<li><a data-scroll="lye" href="#lye" class="dot"> <span>이예은</span>
 			</a></li>
-			<li><a data-scroll="four" href="#four" class="dot"> <span>Four</span>
+			<li><a data-scroll="syj" href="#syj" class="dot"> <span>손여진</span>
 			</a></li>
-			<li><a data-scroll="five" href="#five" class="dot"> <span>Five</span>
+			<li><a data-scroll="lsw" href="#lsw" class="dot"> <span>임선우</span>
+			</a></li>
+			<li><a data-scroll="kcy" href="#kcy" class="dot"> <span>강채영</span>
 			</a></li>
 		</ul>
 	</nav>
 
 	<section id="home">
+	<hr style="padding-top: 90px; border-style:none">
 		<h2 style="font-weight: bold">오셜록 브랜드스토리</h2>
 		<hr>
-		<div class="my-4 text-center">
-			<img src="../images/o_logo_big.png" width=300>
-			<h6>
-				오셜록의 역사는 2022년 5월, 21B Worldcup Street에서 시작되었습니다.<br> 오셜록은 최고의
+		
+		<div class="d-flex" style="margin-top: 5%" >
+		<div class="card align-self-center" style="width: 500px">
+			<img class="card-img-top" src="../images/sherlock1.png"
+				alt="Card image">
+			<div class="card-img-overlay">
+				<h4 class="card-title text-white-50">OH! Sherlock</h4>
+				<p class="card-text text-white">오셜록은 향긋합니다</p>
+			</div>
+		</div>
+		<div class="card align-self-center" style="width: 500px">
+			<img class="card-img-top" src="../images/sherlock2.png"
+				alt="Card image">
+			<div class="card-img-overlay">
+				<h4 class="card-title text-white-50">OH! Sherlock</h4>
+				<p class="card-text text-white">오셜록은 맛있습니다</p>
+			</div>
+		</div>
+		<div class="card align-self-center" style="width: 500px">
+			<img class="card-img-top" src="../images/sherlock3.png"
+				alt="Card image">
+			<div class="card-img-overlay">
+				<h4 class="card-title text-white-50">OH! Sherlock</h4>
+				<p class="card-text text-white">오셜록은 진실합니다</p>
+			</div>
+		</div>
+	</div>
+		
+		<div class="text-center jumbotron" style="margin-top: 5%; background-color: rgb(210,219,198)">
+			<h5>
+				오셜록의 역사는 2022년 5월, 21B Worldcup Street에서 시작되었습니다.<br><br> 오셜록은 최고의
 				인재들을 영입하여 부단한 노력과 연구를 통하여 지속적으로 발전하고 있습니다.
-			</h6>
+			</h5>
 		</div>
-		<div class="d-flex">
-			<div class="card align-self-center" style="width: 500px">
-				<img class="card-img-top" src="../images/sherlock1.png"
-					alt="Card image">
-				<div class="card-img-overlay">
-					<h4 class="card-title text-white-50">OH! Sherlock</h4>
-					<p class="card-text text-white">오셜록은 향긋합니다</p>
-				</div>
-			</div>
-			<div class="card align-self-center" style="width: 500px">
-				<img class="card-img-top" src="../images/sherlock2.png"
-					alt="Card image">
-				<div class="card-img-overlay">
-					<h4 class="card-title text-white-50">OH! Sherlock</h4>
-					<p class="card-text text-white">오셜록은 맛있습니다</p>
-				</div>
-			</div>
-			<div class="card align-self-center" style="width: 500px">
-				<img class="card-img-top" src="../images/sherlock3.png"
-					alt="Card image">
-				<div class="card-img-overlay">
-					<h4 class="card-title text-white-50">OH! Sherlock</h4>
-					<p class="card-text text-white">오셜록은 진실합니다</p>
-				</div>
-			</div>
-		</div>
-
+		
 	</section>
 
-	<h2 class="mt-4" style="font-weight: bold" class="mt-5">임직원 소개</h2>
+
+	<section id="bi">
+		<hr style="padding-top: 90px; border-style:none">
+		<h2 style="font-weight: bold" class="mt-5">BI(Brand Identity)</h2>
+		<hr>
+		<div class="bi text-center" style="margin: 5% 0;">
+		<h4 style="margin-top: 5%; font-weight:bold">브랜드 로고<br>─</h4>
+		<h5 style="margin: 5% 0;">Fragrant World의 비전을 담은 OH!Sherlock의 얼굴을 소개합니다.</h5>
+		<img src="../images/o_logo_big.png" width=300>
+		<h5 style="margin: 5% 0;">OH!Sherlock의 심볼마크는 Java 커피잔의 향긋함을 담아<br>
+		인생의 모든 순간에 늘 아름다운 향기를 선사하겠다는 약속입니다.</h5>
+		<hr style="width:50%">
+		<h4 style="margin-top: 5%; font-weight:bold">브랜드 시그니처 컬러<br>─</h4>
+		<img src="../images/signature_color.png" width=80%/>
+		<h5 style="margin: 5% 0;">OH!Sherlock의 시그니처 컬러는 제주 녹차밭의 진녹색을 떠올리게 하여<br>
+		하루 종일 컴퓨터만 보느라 지친 현대인의 안구 피로감을 해소해줍니다.</h5>
+		</div>
+	</section>
+
+	<hr style="padding-top: 90px; border-style:none">
+	<h2 style="font-weight: bold" class="mt-5">임직원 소개</h2>
 	<hr>
 
-	<section id="one">
-		<h4>박찬안</h4>
+	<section id="pca">
+	<hr style="padding-top: 90px; border-style:none">
+		<div class="mt-4 pca">
+			<h4>박찬안</h4>
+		</div>
 	</section>
 	<hr>
-	<section id="two">
+	<section id="lye">
+	<hr style="padding-top: 90px; border-style:none">
 		<h4>이예은</h4>
 	</section>
 	<hr>
-	<section id="three">
+	<section id="syj">
+	<hr style="padding-top: 90px; border-style:none">
 		<h4>손여진</h4>
 	</section>
 	<hr>
-	<section id="four">
+	<section id="lsw">
+	<hr style="padding-top: 90px; border-style:none">
 		<h4>임선우</h4>
 	</section>
 	<hr>
-	<section id="five">
+	<section id="kcy">
+	<hr style="padding-top: 90px; border-style:none">
 		<h4>강채영</h4>
 	</section>
 </div>
+
 <%@ include file="../footer.jsp"%>

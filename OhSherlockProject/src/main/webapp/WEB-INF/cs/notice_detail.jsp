@@ -85,14 +85,14 @@
 	<%-- 글수정, 삭제 버튼은 관리자 계정에서만 보임 --%>
 	<c:if test="${sessionScope.loginuser ne null and loginuser.userid eq 'admin' }">
 		<div class="text-right" style="margin-top: 30px;">
-		   <input type="button" id="noticeUpdate" value="수정" style="margin-right: 0" />&nbsp;
-		   <input type="button" class="btn-secondary" id="noticeDelete" value="삭제" style="margin-left: 5px;" />
+		   <input type="button" class="rounded" id="noticeUpdate" value="수정" style="margin-right: 0" />&nbsp;
+		   <input type="button" class="btn-secondary rounded" id="noticeDelete" value="삭제" style="margin-left: 5px;" />
 		</div>
 	</c:if>	
 	
     <hr style="border-top: solid 1.2px black">
   	<div class="text-right" style="display: block; margin-top: 30px;"> 
-	  <a href="<%=ctxPath%>/cs/notice.tea"><input type="button" class="btn-secondary listView" value="목록보기" /></a>
+	  <a href="<%=ctxPath%>/cs/notice.tea"><input type="button" class="btn-secondary listView rounded" value="목록보기" /></a>
     </div>
 	
 </div>

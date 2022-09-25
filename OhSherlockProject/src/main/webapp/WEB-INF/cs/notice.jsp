@@ -64,7 +64,13 @@
 	    	frm.submit();
 		});
 	});
-
+	
+	// 검색 함수
+	function goSearch() {
+		   const frm = document.searchFrm;
+		   frm.action = "";
+		   frm.submit();
+	   }
 </script>
     
 <div class="container">
@@ -78,15 +84,24 @@
    </div>
    <hr style="background-color: black; height: 1.2px;"><br>
    
-    <div class="text-right">
-	  	<input type="text" placeholder=""/>&nbsp;
-	  	<button type="button"><i class="fas fa-search"></i></button>
-  	</div>
+   <form name="searchFrm">
+	    <div class="text-right">
+	    	<%-- 검색 구분 --%>
+	    	<select id="searchType" name="searchType" class="mr-1">
+				<option value="noticeSubject">제목</option>
+				<option value="noticeNo">글번호</option>
+			</select>
+			<%-- 검색어 입력창 --%>
+	    	<input type="text" style="display: none;"/>
+		  	<input type="text" id="searchWord" name="searchWord" placeholder="검색어를 입력하세요"/>&nbsp;
+		  	<button class="rounded" type="button" onclick="goSearch()"><i class="fas fa-search"></i></button>
+	  	</div>
+  	</form>
   	
 		<table class="table mt-4 text-center">
 		<thead class="thead-light">
 			<tr>
-				<th>번호</th>
+				<th>글번호</th>
 				<th>제목</th>
 				<th>등록일</th>
 				<th>조회수</th>
@@ -114,7 +129,7 @@
 	<c:if test="${sessionScope.loginuser ne null and loginuser.userid eq 'admin' }">
 		<form name="writeFrm">
 			<div class="text-right" id="detail" style="display: block; margin-top: 50px;"> 
-			  <input type="button" class="btn-secondary" id="btnWriteNotice" value="글쓰기"/>
+			  <input type="button" class="btn-secondary rounded" id="btnWriteNotice" value="글쓰기"/>
 		    </div>
 		</form>
 	</c:if>		
