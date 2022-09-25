@@ -66,6 +66,9 @@
 	
 	$(document).ready(function () {
 		
+		
+		let certifiCode;
+		
 	  $('span.error').hide();
 	  $('input#userid').focus();
 	  
