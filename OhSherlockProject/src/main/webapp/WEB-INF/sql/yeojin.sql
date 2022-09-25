@@ -66,9 +66,9 @@ commit;
 -----------------------------------------------------------------------------------------------------------------------------
 
 
-
-
-
+select userid, name, mobile, email, postcode, (address || ' ' || detail_address || ' ' || extra_address) as address, birthday, gender, coin, point, registerday
+from tbl_member
+where userid = 'imbori1'
 
 
 

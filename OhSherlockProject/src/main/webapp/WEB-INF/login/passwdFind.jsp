@@ -259,7 +259,7 @@
          	</div>
           
           	<div id="btn_passwdFind" class="d-flex flex-column">
-            	<input type="button" class="btn" value="확인" id="passwdFind_input"/>
+            	<input type="button" class="btn" value="찾기" id="passwdFind_input"/>
           	</div>
       		</div>
        
