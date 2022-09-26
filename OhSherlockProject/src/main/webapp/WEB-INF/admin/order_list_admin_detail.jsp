@@ -55,13 +55,12 @@
 </head>
 
 <body>
-
 	
 	<h2 class="text-left" style="font-weight:bold; margin: 10px 0 0 10px;">주문 상세 내역</h2>
 	<hr>
     
-    <h5 class="text-left" style="font-weight:bold; width:80%; margin: 0 auto;">주문자정보</h5>
-	<table class="table mt-4 mb-5 prodList text-left" id="order_member_info" style="width:80%; margin: 0 auto;">
+    <h5 class="text-left" style="font-weight:bold; width:90%; margin: 0 auto;">주문자정보</h5>
+	<table class="table mt-4 mb-5 prodList text-left" id="order_member_info" style="width:90%; margin: 0 auto;">
 		<tbody>
 			<tr>
 				<td class="col-4">주문번호</td>
@@ -80,6 +79,14 @@
 				<td class="col-8">010-1234-1234</td>
 			</tr>
 			<tr>
+				<td class="col-4">이메일</td>
+				<td class="col-8">leess@naver.com</td>
+			</tr>
+			<tr>
+				<td class="col-4">우편번호</td>
+				<td class="col-8">12345</td>
+			</tr>
+			<tr>
 				<td class="col-4">주소</td>
 				<td class="col-8">서울시 서대문구 쌍용빌딩 123호</td>
 			</tr>
@@ -90,14 +97,15 @@
 		</tbody>
 	</table>
 
-	<h5 class="text-left" style="font-weight:bold; width:80%; margin: 0 auto;">주문상품정보</h5>
-	<table class="table mt-4 mb-5 prodList text-left" id="order_prod_info" style="width:80%; margin: 0 auto;">
+	<h5 class="text-left" style="font-weight:bold; width:90%; margin: 0 auto;">주문상품정보</h5>
+	<table class="table mt-4 mb-5 prodList text-left" id="order_prod_info" style="width:90%; margin: 0 auto;">
 		<thead style="background-color:#f2f2f2;">
 			<tr>
-				<th class="col-3">상품명</th>
-				<th class="col-3">상품코드</th>
+				<th class="col-2">상품명</th>
+				<th class="col-2">상품코드</th>
 				<th class="col-2">수량</th>
 				<th class="col-2">가격</th>
+				<th class="col-2">적립금</th>
 				<th class="col-2">환불/교환 여부</th>
 			</tr>
 		</thead>
@@ -107,6 +115,7 @@
 				<td>20220913-0023355</td>
 				<td>3</td>
 				<td>35,000원</td>
+				<td>찻잎 350개</td>
 				<td>정상처리</td>
 			</tr>
 			<tr>
@@ -114,12 +123,13 @@
 				<td>20220913-0023355</td>
 				<td>1</td>
 				<td>10,000원</td>
+				<td>찻잎 100개</td>
 				<td>정상처리</td> <%-- 환불/교환 시 여기 테이블 내용 변경 --%>
 			</tr>
 		</tbody>
 		<tfoot>
 			<tr>
-				<td colspan="5" style="text-align:right;" class="bg-light">45,000(상품결제금액)+3,000(배송비)=48,000원</td>
+				<td colspan="6" style="text-align:right;" class="bg-light">45,000(상품결제금액)+3,000(배송비)=48,000원</td>
 			</tr>
 		</tfoot>
 	</table>
