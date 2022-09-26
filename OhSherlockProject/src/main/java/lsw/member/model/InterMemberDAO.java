@@ -2,6 +2,8 @@ package lsw.member.model;
 
 import java.sql.SQLException;
 
+import common.model.MemberVO;
+
 public interface InterMemberDAO {
 
 	// 회원가입을 해주는 메소드(tbl_member 테이블 insert)(임선우)

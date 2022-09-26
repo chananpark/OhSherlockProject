@@ -6,9 +6,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import common.controller.AbstractController;
+import common.model.MemberVO;
 import lsw.member.model.InterMemberDAO;
 import lsw.member.model.MemberDAO;
-import lsw.member.model.MemberVO;
 
 
 public class MemberRegister extends AbstractController {
@@ -20,8 +20,9 @@ public class MemberRegister extends AbstractController {
 		
 		if("GET".equalsIgnoreCase(method)) {
 		// GET 방식이라면    
-		//	super.setRedirect(false);
+			super.setRedirect(false);
 			super.setViewPage("/WEB-INF/member/memberRegister.jsp");
+			
 		}
 		
 		else {
@@ -53,7 +54,6 @@ public class MemberRegister extends AbstractController {
 				int n = mdao.registerMember(member);
 				
 				if(n==1) {
-				
 					request.setAttribute("userid", userid);
 					request.setAttribute("name", name);
 					request.setAttribute("email", email);
@@ -68,10 +68,7 @@ public class MemberRegister extends AbstractController {
 			    super.setViewPage(request.getContextPath()+"/error.tea");
 			}
 			
-			
 		}
-		
-		
 		
 	}
 

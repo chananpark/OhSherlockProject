@@ -134,13 +134,26 @@
 		
 		
 		
-		$("button#btnFind").click(function(){
+		$("button#btnFind").click(function(){  // 아이디찾기 버튼 클릭시
 			
 			const frm = document.idFindFrm;
 			frm.action = "<%= ctxPath%>/login/idFind.tea";
 			frm.method = "post";  
 			frm.submit();    // post 방식으로 IdFind.java 서블릿에 전송
 		});
+		
+		
+		$("input[name='email']").bind("keydown", function(event){  // 이메일 입력란에서 엔터쳤을 경우에 아이디찾기 버튼과 같은 효과 주기
+			
+	        if(event.keyCode == 13) { // 암호 입력란에서 엔터(13)를 했을 경우
+	            const frm = document.idFindFrm;
+	            frm.action = "<%= ctxPath%>/login/idFind.tea";
+	            frm.method = "post";  
+	            frm.submit();    // post 방식으로 IdFind.java 서블릿에 전송
+	        }
+		
+ 		}); // end of $("input[name='email']").bind("keydown", function(event)
+		
 		
 		
 		const method = "${requestScope.method}"; 

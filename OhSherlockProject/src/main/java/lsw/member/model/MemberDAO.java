@@ -12,6 +12,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import common.model.MemberVO;
 import util.security.AES256;
 import util.security.SecretMyKey;
 import util.security.Sha256;

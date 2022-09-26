@@ -1,4 +1,4 @@
-package syj.member.controller;
+package lsw.member.controller;
 
 import java.util.Properties;
 
@@ -12,7 +12,7 @@ import javax.mail.internet.MimeMessage;
 
 public class GoogleMail {
 
-	public void sendmail(String userid, String recipient, String certificationCode) throws Exception {
+	public void sendmail(String recipient, String certificationCode) throws Exception {
         // 첫번째 파라미터 받는 사람의 이메일 주소, 두번째 파라미터는 인증코드
 		
         // 1. 정보를 담기 위한 객체
@@ -27,7 +27,6 @@ public class GoogleMail {
         //    Google Gmail 인 경우  smtp.gmail.com
         prop.put("mail.smtp.host", "smtp.gmail.com");
              
-        
         prop.put("mail.smtp.port", "465");
         prop.put("mail.smtp.starttls.enable", "true");
         prop.put("mail.smtp.auth", "true");
@@ -50,7 +49,7 @@ public class GoogleMail {
         MimeMessage msg = new MimeMessage(ses);
 
         // 제목 설정
-        String subject = " [오!셜록] "+ userid +" 회원님 비밀번호 찾기 인증코드 발송";
+        String subject = " [오!셜록] 회원가입 이메일 인증코드 발송";
         msg.setSubject(subject);
                 
         // 보내는 사람의 메일주소

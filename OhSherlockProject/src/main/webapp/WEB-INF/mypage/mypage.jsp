@@ -110,42 +110,56 @@
 	       
 	       
 	     window.open(url, "memberEdit", 
-	                "left="+pop_left+", top="+pop_top+", width="+pop_width+", height="+pop_height); // 팝업창 띄우기(url, 팝업창이름, "팝업창 크기지정")   *url 은 보여줄 페이지(CoinPurchaseTypeChoice.java) 이다.  *팝업창이름은 생략해도 상관없음. 별지장 없음.
+	                "left="+pop_left+", top="+pop_top+", width="+pop_width+", height="+pop_height); // 팝업창 띄우기(url, 팝업창이름, "팝업창 크기지정")   *url 은 보여줄 페이지(CoinPurchaseTypeChoice.java) 이다. 
 	          
 	   
 	 }// end of function goEditPersonal()----------------------
 
 
-	 // 코인충전 결제금액 선택하기(실제로 카드결제) //
-	 function deposit_charge(userid){
-	      
-	      // 코인구매 금액 선택 팝업창 띄우기
-	      const url = "<%= request.getContextPath()%>/mypage/deposit_charge.tea?userid="+userid;
-	      
-	      window.open(url, "deposit_charge",
-	                "left=450px, top=100px, width=900px, height=650px");   
-	      
+	// 코인충전 결제금액 선택하기(실제로 카드결제) //
+	    function deposit_charge(userid){
+	         
+	         // 코인구매 금액 선택 팝업창 띄우기
+	         const url = "<%= request.getContextPath()%>/mypage/deposit_charge.tea?userid="+userid;
+	         
+	         window.open(url, "deposit_charge",
+	                   "left=450px, top=100px, width=900px, height=650px");   
+	         
+	         
+	   }// end of function goCoinPurchaseTypeChoice(userid){}-------------------
 
+	   
+	   
 	      // === 아임포트 결제를 해주는 함수 === //
-	      function goCoinPurchaseEnd(coinmoney) {
-	      //   alert("확인용 부모창의 함수 호출함. 결제금액 : " + coinmoney + "원");
+	      function goCoinPurchaseEnd(coinmoney) { 
+//	         alert("확인용 부모창의 함수 호출함. 결제금액 : " + coinmoney + "원"); 
+	     
+	           const userid = "${sessionScope.loginuser.userid}";  
+	        //   alert("확인용 결제할 사용자 아이디 : " + userid);
+	           
+	        //  아임포트 결제 팝업창 띄우기 
+	             const url = "<%= request.getContextPath()%>/mypage/coinPurchaseEnd.tea?userid="+userid+"&coinmoney="+coinmoney;
+	           
+	           window.open(url, "coinPurchaseEnd",
+	                     "left=350px, top=100px, width=1000px, height=600px");
+	      }  
+	     
 	      
-	         const userid = "${sessionScope.loginuser.userid}";  
-	      //   alert("확인용 결제할 사용자 아이디 : " + userid);
-	         
-	      //  아임포트 결제 팝업창 띄우기 
-	           const url = "<%= request.getContextPath()%>/mypage/coinPurchaseEnd.tea?userid="+userid+"&coinmoney="+coinmoney;
-	         
-	         window.open(url, "coinPurchaseEnd",
-	                   "left=350px, top=100px, width=1000px, height=600px");
-	      
-      }  
-	  
-		
-		
-	
-	}// end of function goCoinPurchaseTypeChoice(userid){}-------------------
- 
+	      // == DB 상의 tbl_member 테이블의 해당 사용자의 코인금액 및 포인트를 증가(update) 시켜주는 함수 == //
+	        function goCoinUpdate(userid, coinmoney){
+	           
+	           console.log("~~~ 확인용 ~~~ :" +userid+ ", coinmoney : " +coinmoney);
+	           
+	           const frm = document.coinUpdateFrm;
+	           frm.userid.value = userid;
+	           frm.coinmoney.value = coinmoney;
+	           
+	           frm.action = "<%= request.getContextPath()%>/mypage/coinUpdateLoginuser.tea"; 
+	           frm.method = "POST"; 
+	           frm.submit();
+	           
+	        }
+
 	
 	
 
@@ -157,19 +171,19 @@
 	<div class="card border-0">  
 	   <div class="card-body" style="background-color: #cccccc;">  
 	      <i style='font-size:48px; float: left; padding: 0 2%;' class='fas'>&#xf508;</i>     
-	      <h5 class="card-title mpComment">&nbsp;&nbsp;&nbsp;&nbsp;홍길동님,  안녕하세요.</h5>  
+	      <h5 class="card-title mpComment">&nbsp;&nbsp;&nbsp;&nbsp;${(sessionScope.loginuser).name}님,  안녕하세요.</h5>  
 	      <div>
-		      <a href="<%= request.getContextPath() %>/member/memberEdit.tea"><button type="button" class="btn infoUpdate">회원정보 수정</button></a>
-		      <i class="fas fa-coins" style="margin-left: 230px; font-size: 25px; vertical-align: middle;"></i>
-		      <span style="margin-left: 10px; font-weight: bold;">적립금  540p</span>
-		      <i class="far fa-credit-card" style="margin-left: 50px; font-size: 25px; vertical-align: middle;"></i>
-		      <span style="margin-left: 10px; font-weight: bold;">예치금  0원</span>
-<!-- 		  <input type="button" class="btn charge" id="balanceCharge" value="예치금충전" /> -->
-		      <a href="javascript:deposit_charge('${(sessionScope.loginuser).userid}');" type="button" class="btn charge">예치금충전</a>
-		      
+		      <a href="<%= request.getContextPath() %>/member/memberEdit.tea?userid=${(sessionScope.loginuser).userid}"><button type="button" class="btn infoUpdate">회원정보 수정</button></a>  <%-- 파라미터 userid 값을 넘겨줌 --%>
+		      <i class="fab fa-envira" style="margin-left: 230px; font-size: 25px; vertical-align: middle;"></i>
+		      <span style="font-weight: bold;">적립금 </span><fmt:formatNumber value="${(sessionScope.loginuser).point}" pattern="###,###찻잎" />  
+              <i class="far fa-credit-card" style="margin-left: 20px; font-size: 25px; vertical-align: middle;"></i>
+              <span style="font-weight: bold;">예치금 </span><fmt:formatNumber  value="${(sessionScope.loginuser).coin}" pattern="###,###원" /> 
+              <a href="javascript:deposit_charge('${(sessionScope.loginuser).userid}');" type="button" class="btn charge">예치금충전</a>
+            
 	      </div> 
 	   </div>
-    </div>
+	</div>
+
     
     <br><br><br>
 	<div>
@@ -247,6 +261,11 @@
 		</table>
 	</div>
 	
+    <%-- PG(Payment Gateway 결제대행)에 코인금액을 카드(카카오페이 등)로 결제 후 DB상에 사용자의 코인액을 update 를 해주는 폼이다. --%>
+    <form name="coinUpdateFrm" >
+      <input type="hidden" name="userid" />    
+      <input type="hidden" name="coinmoney" />    
+    </form>
     
 	
 </div>

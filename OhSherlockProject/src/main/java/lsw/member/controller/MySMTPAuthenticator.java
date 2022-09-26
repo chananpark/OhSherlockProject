@@ -1,4 +1,4 @@
-package syj.member.controller;
+package lsw.member.controller;
 
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
@@ -11,7 +11,7 @@ public class MySMTPAuthenticator extends Authenticator {
 		
 		// Gmail 의 경우 @gmail.com 을 제외한 아이디만 입력한다.
 		return new PasswordAuthentication("ssherlock.oh","znoiflzzvwtehkxf");
-		// hpwpnoaekzokspus 은 구글에 로그인 하기 위한 앱비밀번호 이다.
+		// kcmpponxyjpdqutv 은 구글에 로그인 하기 위한 앱비밀번호 이다.
 		
 	}
 	
