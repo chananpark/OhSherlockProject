@@ -97,7 +97,7 @@
 	
 	<div class="card border-0">   
 	   <div class="card-body" style="border: solid 2px gray; border-radius: 15px; height: 100px;">             
-	      <i class="fas fa-coins" style="font-size: 40px; float: left; padding-right: 10px;"></i>             
+	      <i class="fab fa-envira" style="font-size: 40px; float: left; padding-right: 10px;"></i>             
 	      <h3 style="padding-top: 5px;">사용 가능한 적립금</h3>           
 	      <h1 style="float: right; font-weight: bold; color: #1E7F15; position: relative; top: -45px;">540p</h1>        
 	   </div> 

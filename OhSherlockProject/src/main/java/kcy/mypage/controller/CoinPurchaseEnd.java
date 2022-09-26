@@ -5,9 +5,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
-import kcy.mypage.model.MemberVO;
+import common.model.MemberVO;
 
-public class CoinPurchaseEnd extends AbstractController {
+public class CoinPurchaseEnd extends AbstractController { 
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -64,18 +64,12 @@ public class CoinPurchaseEnd extends AbstractController {
 					
 				//	super.setRedirect(false);
 					super.setViewPage("/WEB-INF/msg.jsp");
+					return; 
 				}
-		
+	
+	
+	
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-
 }

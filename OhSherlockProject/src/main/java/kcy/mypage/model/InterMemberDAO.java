@@ -8,6 +8,9 @@ public interface InterMemberDAO {
 	// 아이디 찾기(성명, 이메일을 입력받아서 해당 사용자의 아이디를 알려준다)
 	String idFind(Map<String, String> paraMap) throws SQLException;
 
+	// 회원의 코인 및 포인트 변경하기
+	int coinUpdate(Map<String, String> paraMap) throws SQLException; 
+
 
 	
 }
