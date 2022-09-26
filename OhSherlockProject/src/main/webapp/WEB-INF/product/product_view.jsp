@@ -95,7 +95,7 @@
 		<div id="product_img" class="col-md-6" style="text-align:center;">
 			<img src="../images/tea_collection.png" width="90%" />
 			<p class="mt-2">
-				<span class="mr-3"><i class="fas fa-coins mr-1"></i>적립금 280P 적립</span>
+				<span class="mr-3"><i class="fab fa-envira mr-1"></i>적립금 280 찻잎 적립</span>
 				<span class="mr-3"><i class="fas fa-truck-moving mr-1"></i>3만원 이상 무료배송</span>
 				<span><i class="fas fa-shopping-bag mr-1"></i>쇼핑백 동봉</span>
 			</p>

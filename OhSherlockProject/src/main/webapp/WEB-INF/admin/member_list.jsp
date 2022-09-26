@@ -19,8 +19,9 @@
 	
 	.page-item.active .page-link {
 	 z-index: 1;
-	 color: #1E7F15;
+	 color: white;
 	 border-color: #1E7F15;
+	 background-color: #1E7F15; 
 	 
 	}
 	
@@ -62,6 +63,7 @@
 	$(document).ready(function(){
 		
 		// 각 행을 클릭했을 때 해당하는 행의 회원 상세 조회 보여주기
+		// 모든 tr을 잡아와서 그 중 name 이 userid 인 것의 text만 가져오는 이벤트
 		$("tbody > tr").click(function(e){
 			
 			const $target = $(e.target); // <td> 태그 이다. 왜냐하면 tr 속에 td가 있기 때문에
@@ -71,9 +73,6 @@
 			const userid = $target.parent().find("td[name='userid']").text(); 
 		//	console.log("확인용 : "+ userid);
 			 
-		//	location.href = "personDetail.do?seq="+seq; // 상대경로 없이 맨 뒤에만 바뀐다
-			// 클릭했을 때 연결해줄 링크
-			
 			location.href = "<%= request.getContextPath() %>/member/member_list_detail.tea?userid="+userid; 
 		}); // end of $("tbody > tr").click(function()
 			
@@ -83,6 +82,22 @@
 		$("select#sizePerPage").bind("change", function(){
 			goSearch();
 		});
+		
+		// 검색창에서 엔터 쳤을 경우
+		$("input#searchWord").bind("keydown", function(e){
+			if(e.keyCode == 13) { // 검색어에서 엔터를 치면 검색하러 간다.
+				goSearch();
+			}			
+		}); // end of $("input#searchWord").bind("keydown"
+				
+				
+		// 내가 검색한 값을 그대로 view 단에서 유지해주기
+		if( "${requestScope.searchWord}" != "" ) {
+			// 내가 검색한 값이 null이 아닐 때만 검색한 값을 저장해주겠다.(내가 검색을 했을 때만 검색한 값을 저장해주겠다.)
+			// 검색을 하지 않은 상태에서는 기본값을 보이기 위해서 if 문을 사용하여 조건을 걸어주었다.
+			$("select#searchType").val("${requestScope.searchType}");
+			$("input#searchWord").val("${requestScope.searchWord}");
+		}
 		
 		// select로 선택한 한 페이지에 출력될 회원수를 선택에 따라 값이 변하지 않고 유지하기(10명이면 10, 5명이면 5)
 		if(${requestScope.sizePerPage} != null) { // 또는 "${requestScope.sizePerPage}" != "" // url에 null 이외의 것이 들어왔다면
@@ -125,7 +140,7 @@
 				<option value="mobile">연락처</option>
 		    </select>
 		    
-		  	<input type="text" name="searchWord" placeholder="검색어를 입력하세요"/>&nbsp;
+		  	<input type="text" name="searchWord" id="searchWord" placeholder="검색어를 입력하세요"/>&nbsp;
 		  	<input type="text" style="display: none;" />
 		  	<button type="button" onclick="goSearch();"><i class="fas fa-search"></i></button>
 	  	</div>
@@ -145,7 +160,7 @@
 			<tbody>
 				<c:forEach var="mvo" items="${requestScope.memberList}">
 					<tr>
-						<td name="userid" >${mvo.userid}</td>
+						<td name="userid" id="userid" >${mvo.userid}</td>
 						<td name="name">${mvo.name}</td>
 						<td name="mobile">${mvo.mobile}</td>
 						<td name="idle">
@@ -161,20 +176,8 @@
 	</div>
 		
 		
-		<nav aria-label="Page navigation example" style="margin-top: 60px;">
-		<ul class="pagination justify-content-center">
-			<li class="page-item">
-				<a class="page-link" href="#" aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a>
-			</li>
-			<li class="page-item">
-				<a class="page-link" href="#">${requestScope.pageBar}</a>
-			</li>
-			<li class="page-item">
-				<a class="page-link" href="#" aria-label="Next">
-					<span aria-hidden="true">&raquo;</span>
-				</a>
-			</li>
-		</ul>
+	<nav aria-label="Page navigation example" style="margin-top: 60px;">
+		<ul class="pagination justify-content-center" style="margin:auto;">${requestScope.pageBar}</ul>
 	</nav>
 </div>
 

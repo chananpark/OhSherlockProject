@@ -4,6 +4,7 @@ import common.model.*;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -139,8 +140,26 @@ public class MemberDAO implements InterMemberDAO {
 						"    (\n"+
 						"        select userid, name, mobile, idle\n"+
 						"        from tbl_member\n"+
-						"        where userid != 'admin' -- 탈퇴한 회원도 색만 다르게 해서 볼 것이기 때문에 admin만 제외하고 보여준다.\n"+
-						"        order by registerday desc\n"+
+						"        where userid != 'admin' -- 탈퇴한 회원도 색만 다르게 해서 볼 것이기 때문에 admin만 제외하고 보여준다.\n";
+						
+				// 이 사이에 검색어를 넣을지 말지에 대해서 결정해야 한다.
+				// 맵에 4개가 들어있는데 서치워드 유무에 따라서 검색어를 넣을지 말지를 결정해주면 된다.
+				String colname = paraMap.get("searchType");
+				String searchWord = paraMap.get("searchWord");
+				
+				if( "mobile".equals(colname) ) {
+					// 검색대상이 이메일인 경우 암호화 해주어야 한다.
+					searchWord = aes.encrypt(searchWord); // db 에는 이메일이 암호화 되어서 나온다. 그래서 검색어가 이메일이면 암호화 해야한다.
+				}
+				
+				if( searchWord != null && !searchWord.trim().isEmpty() ) { // 서치워드에 공백을 지우고 동시에 비어있지 않는다면 // 검색어가 있다면
+					// !searchWord.trim().isEmpty() 이거만 단독으로 주게되면 nullPonitException 이 떨어진다
+					sql += " and " + colname + " like '%' || ? || '%' "; // 컬럼명과 변수명이 들어온다.
+					// 위치홀더는 컬럼명이나 테이블명이 올 경우에는 에러발생. 검색어만 들어와야 한다. 테이블명 또는 컬럼명이 변수로 들어올 수 없다.
+					// 테이블명 또는 컬럼명이 변수로 들어와야 할 경우에는 변수로 처리해주어야 한다.
+				}		
+						
+				 sql +=	"        order by registerday desc\n"+
 						"    )V\n"+
 						") T --RNO를 where 절에 사용할 수 없어서 다시 인라인뷰를 사용하여 T 라는 테이블로 간주한다.\n"+
 						"where RNO between ? and ? ";
@@ -154,9 +173,17 @@ public class MemberDAO implements InterMemberDAO {
 			
 			pstmt = conn.prepareStatement(sql);
 		
-			// 페이징 처리 공식
-			pstmt.setInt(1, (currentShowPageNo*sizePerPage) - (sizePerPage-1) );
-			pstmt.setInt(2, (currentShowPageNo*sizePerPage) );
+			/// 검색어가 있는 경우에 위치홀더 값
+			if( searchWord != null && !searchWord.trim().isEmpty() ) {
+				pstmt.setString(1, searchWord);
+				pstmt.setInt(2, (currentShowPageNo*sizePerPage) - (sizePerPage-1) );
+				pstmt.setInt(3, (currentShowPageNo*sizePerPage) );
+			} else {
+				// 페이징 처리 공식
+				// 검색어가 없는 경우의 위치홀더 값
+				pstmt.setInt(1, (currentShowPageNo*sizePerPage) - (sizePerPage-1) );
+				pstmt.setInt(2, (currentShowPageNo*sizePerPage) );
+			}
 			
 			rs = pstmt.executeQuery();
 			
@@ -196,12 +223,45 @@ public class MemberDAO implements InterMemberDAO {
 						+ " from tbl_member "
 						+ " where userid != 'admin' ";
 			
+			String colname = paraMap.get("searchType");
+			String searchWord = paraMap.get("searchWord");
+			
+			// 맵에는 서치월드와 서치타입이 있는데 서치타입은 default가 회원명이기 때문에 무조건 여기로 보내준다. 
+			// 디비에서도 검색어가 있는지 없는지에 대해서 알기 위해서는 서치 워드의 유무를 본다.
+			
+			if( "mobile".equals(colname) ) {
+				searchWord = aes.encrypt(searchWord); // db 에는 이메일이 암호화 되어서 나온다.
+			}
+			
+			if( searchWord != null && !searchWord.trim().isEmpty() ) { // 서치워드에 공백을 지우고 동시에 비어있지 않는다면
+				// !searchWord.trim().isEmpty() 이거만 단독으로 주게되면 nullPonitException 이 떨어진다
+				sql += " and "+ colname +" like '%' || ? || '%' "; 
+				// 위치홀더는 컬럼명이나 테이블명이 올 경우에는 에러발생. 검색어만 들어와야 한다. 테이블명 또는 컬럼명이 변수로 들어올 수 없다.
+				// 테이블명 또는 컬럼명이 변수로 들어와야 할 경우에는 변수로 처리해주어야 한다.
+			}
+			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, Integer.parseInt(paraMap.get("sizePerPage")));
+			
+			if( searchWord != null && !searchWord.trim().isEmpty() ) {
+				// 검색이 있다면
+				pstmt.setString(2, searchWord); // 두번째 위치홀더 자리엔 searchWord를 넣어주어야 한다.
+				
+			}
+			
 			rs = pstmt.executeQuery();
 			rs.next();
 			totalPage = rs.getInt(1);
 			
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (GeneralSecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
 			close();
 		}
