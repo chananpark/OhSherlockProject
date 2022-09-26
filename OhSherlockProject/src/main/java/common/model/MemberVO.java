@@ -58,7 +58,22 @@ public class MemberVO {
 		this.passwdChangeRequired = passwdChangeRequired;
 	}
 
-
+	// 나의정보수정 생성자
+	   public MemberVO(String userid, String passwd, String name, String postcode, String address,
+	         String detail_address, String extra_address, String birthday, String mobile, String email) {
+	      
+	      this.userid = userid;
+	      this.passwd = passwd;
+	      this.name = name;
+	      this.postcode = postcode;
+	      this.address = address;
+	      this.detail_address = detail_address;
+	      this.extra_address = extra_address;
+	      this.birthday = birthday;
+	      this.mobile = mobile;
+	      this.email = email;
+	      
+	   }
 
 	public String getUserid() {
 		return userid;

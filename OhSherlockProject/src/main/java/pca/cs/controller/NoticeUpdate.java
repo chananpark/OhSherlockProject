@@ -16,6 +16,7 @@ public class NoticeUpdate extends AbstractController {
 			String noticeNo = request.getParameter("noticeNo");
 			String noticeSubject = request.getParameter("noticeSubject");
 			String noticeContent = request.getParameter("noticeContent");
+			noticeContent = noticeContent.replace("<br>","\n");
 			
 			// 수정하기 전 내용
 			request.setAttribute("noticeNo", noticeNo);
