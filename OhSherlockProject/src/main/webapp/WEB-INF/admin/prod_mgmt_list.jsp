@@ -39,43 +39,18 @@
 
 		// 신규 상품 등록 버튼 클릭할때
 		$("input#btn_goProdRegister").click(function() {
-			// 신규 상품 등록 메소드 호출
-			goProdRegister();
+			//=== 신규 상품 등록 === //
+			location.href = "<%= ctxPath%>/admin/prod_mgmt_register.tea";
 		});
     
-/* 		// 상품 수정 등록 버튼 클릭할때
-		$("input#btn_goProdRegister").click(function() {
-			// 신규 상품 등록 메소드 호출
-			goProdUpdate();
-		});
-     */
-    
+		
+		//=== 상품 정보 수정 === //
+
+
+
     
  });// end of $(document).ready(function(){})-----------------------------
 
- //=== 신규 상품 등록 === //
- function goProdRegister() {
- 
-    	// 신규 상품 등록하기 팝업창 띄우기
-     const url = "<%= request.getContextPath()%>/admin/prod_mgmt_register.tea";
-     
-     window.open(url, "prodRegister", 
-                "left=300, top=80, width=800, height=500");
-          
-   
- }// end of function goEditPersonal()----------------------
- 
-//=== 상품 정보 수정 === //
- function goProdUpdate() {
- 
-    	// 상품 수정하기 팝업창 띄우기
-     const url = "<%= request.getContextPath()%>/admin/prod_mgmt_update.tea";
-     
-     window.open(url, "prodUpdate", 
-                "left=300, top=80, width=800, height=500");
-          
-   
- }
  
 
 
@@ -134,8 +109,7 @@
 			<li class="page-item"><a class="page-link" href="#">1</a></li>
 			<li class="page-item"><a class="page-link" href="#">2</a></li>
 			<li class="page-item"><a class="page-link" href="#">3</a></li>
-			<li class="page-item"><a class="page-link" href="#"
-				aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+			<li class="page-item"><a class="page-link" href="#"	aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 			</a></li>
 		</ul>
 	</nav>

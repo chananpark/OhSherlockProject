@@ -73,9 +73,10 @@
 	  frm.action = '<%=ctxPath%>/admin/prod_mgmt_register.tea';
 	  frm.method = 'post';
 	  frm.submit();
+	  
+	 	opener.location.reload(true);// 부모창 새로고침
 	}
 	
-	 opener.location.reload(true);// 부모창 새로고침
 	 
 </script>
 

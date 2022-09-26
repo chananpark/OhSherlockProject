@@ -542,14 +542,6 @@
 		
 	}// end of function emailVerifyCodeCheck(){}---------------
 	
-	// 이메일 인증코드 재발송 함수 
-	function resendEmailVerifyCode(){
-		
-	/* 	clearInterval(startTimer); // 타이머 초기화하기 */
-		$('input#userEmailVerifyCode').val(''); // 인증코드란 비우기
-		emailVerifyCertification(); // 인증처리 함수 호출
-	}// end of function resendEmailVerifyCode(){}------------
-	
 	
 	//"가입하기" 버튼 클릭시 호출되는 함수
 	function goRegister() {
@@ -672,7 +664,7 @@
 					</td>
 				</tr>
 				<tr>
-					<th>비밀번호확인</th>
+					<th>비밀번호확인<span class="mustIn">*</span></th>
 					<td><input id="passwdCheck" type="password" class="required" name="passwdCheck"
 						size="50" placeholder="(비밀번호 확인)" />
 						<span class="error" style="color: red">암호가 일치하지 않습니다.</span>
@@ -723,7 +715,6 @@
 						<div id="emailVerify">
 							<input id="userEmailVerifyCode" type="text" name="emailVerifyCode" class="mt-2" size="20"/>
 							<button type="button" id="btn_emailVerifyCodeCheck" onclick="emailVerifyCodeCheck();">인증확인</button>
-							<button type="button" id="btn_resendEmailVerifyCode" onclick="resendEmailVerifyCode();">인증코드 재발송</button>
 							<span id="timer" class="text-danger"></span>
 						</div>
 						<div id="emailVerifyConfirm">이메일 인증이 확인되었습니다.</div>
