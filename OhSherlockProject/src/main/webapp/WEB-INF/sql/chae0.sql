@@ -4,3 +4,5 @@ show user;
 
 select *
 from tbl_member;
+
+rollback;
