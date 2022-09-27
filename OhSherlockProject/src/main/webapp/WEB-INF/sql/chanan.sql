@@ -84,8 +84,27 @@ NOCACHE;
 
 -- 공지사항 글쓰기 sql --
 insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
-values(seq_notice.nextval, '오셜록고객님들께', '안녕하세요', null);
-
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
 commit;
 
 -- 공지사항 글목록 가져오기 sql --
@@ -109,3 +128,7 @@ String sql = "delete from tbl_notice where noticeNo = ?";
 
 -- 공지사항 글수정 sql --
 String sql = "update tbl_notice set noticeSubject = ?, noticeContent = ? where noticeNo = ?";
+
+select * from tbl_notice where noticeno=1;
+
+select ceil(count(*)) from tbl_notice;

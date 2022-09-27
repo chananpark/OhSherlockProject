@@ -265,9 +265,6 @@ div#brandStoryText {
 /* --- 이벤트 컨테이너 css 끝 --- */
 </style>
 
-<!-- js 파일 include -->
-<script type="text/javascript" src="../js/header_chanan.js" ></script> 
-
 </head>
 
 <body>

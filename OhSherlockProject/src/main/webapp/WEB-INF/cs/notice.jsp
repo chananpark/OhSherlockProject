@@ -17,8 +17,9 @@
 	
 	.page-item.active .page-link {
 	 z-index: 1;
-	 color: #1E7F15;
+	 color: white;
 	 border-color: #1E7F15;
+	 background-color: #1E7F15; 
 	 
 	}
 	
@@ -60,6 +61,19 @@
 		$("#btnWriteNotice").click(()=>{
 			location.href="<%=ctxPath%>/cs/noticeWrite.tea";
 		});
+		
+		$("input#searchWord").bind("keyup",(e)=>{
+		   // 검색어에서 엔터를 치면 검색함수 실행
+		   if(e.keyCode == "13")
+			   goSearch();
+	   });
+		
+	   // 검색어가 있을때 입력창에 넣어주기
+	   if('${requestScope.searchWord}' != "") {
+		   $("select#searchType").val('${requestScope.searchType}');
+		   $("input#searchWord").val('${requestScope.searchWord}');		   
+	   }
+	   
 	});
 	
 	// 검색 함수
@@ -95,7 +109,7 @@
 	  	</div>
   	</form>
   	
-		<table class="table mt-4 text-center">
+		<table class="table mt-4 text-center mb-5">
 		<thead class="thead-light">
 			<tr>
 				<th>글번호</th>
@@ -105,20 +119,30 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach items="${noticeList}" var="notice">
-				<tr>
-					<td>${notice.noticeNo}</td>
-					<td>
-						<c:if test="${notice.fresh == true}">
-							<span class="badge badge-pill">new</span>&nbsp;&nbsp;
-						</c:if> 
-						<a href="<%=ctxPath%>/cs/noticeDetail.tea?noticeNo=${notice.noticeNo}">${notice.noticeSubject}</a>
+			<c:if test="${not empty noticeList}">
+				<c:forEach items="${noticeList}" var="notice">
+					<tr>
+						<td>${notice.noticeNo}</td>
+						<td>
+							<c:if test="${notice.fresh == true}">
+								<span class="badge badge-pill">new</span>&nbsp;&nbsp;
+							</c:if> 
+							<a href="<%=ctxPath%>/cs/noticeDetail.tea?noticeNo=${notice.noticeNo}">${notice.noticeSubject}</a>
+							</td>
+						<td><fmt:formatDate pattern="yyyy.MM.dd" value="${notice.noticeDate}"/>
 						</td>
-					<td><fmt:formatDate pattern="yyyy.MM.dd" value="${notice.noticeDate}"/>
+						<td>${notice.noticeHit}</td>
+					</tr>
+				</c:forEach>
+			</c:if>
+			<c:if test="${empty noticeList}">
+				<tr>
+					<td class="pt-5" colspan="4">
+					해당하는 게시글이 없습니다.
 					</td>
-					<td>${notice.noticeHit}</td>
 				</tr>
-			</c:forEach>
+				
+			</c:if>
 
 		</tbody>
 	</table>
@@ -129,18 +153,8 @@
 	    </div>
 	</c:if>		
 
-	<nav aria-label="Page navigation example" style="margin-top: 20px;">
-		<ul class="pagination justify-content-center">
-			<li class="page-item"><a class="page-link" href="#"
-				aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-			</a></li>
-			<li class="page-item"><a class="page-link" href="#">1</a></li>
-			<li class="page-item"><a class="page-link" href="#">2</a></li>
-			<li class="page-item"><a class="page-link" href="#">3</a></li>
-			<li class="page-item"><a class="page-link" href="#"
-				aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-			</a></li>
-		</ul>
+	<nav aria-label="Page navigation example">
+		<ul class="pagination justify-content-center">${pageBar}</ul>
 	</nav>
 	
 	
