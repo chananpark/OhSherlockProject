@@ -182,7 +182,7 @@ public class MemberDAO implements InterMemberDAO {
 			
 			String sql = " select userid "
 					   + " from tbl_member "
-					   + " where status = 1 and userid = ? and email = ? ";  // status(회원탈퇴유무) 1: 사용가능(가입중)
+					   + " where status = 1 and (userid != ? and email = ?) ";  // status(회원탈퇴유무) 1: 사용가능(가입중)
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, paraMap.get("userid") );                // 1번째 위치홀더(?),  paraMap 에 있는 key값("name")
