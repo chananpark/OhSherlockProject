@@ -2,36 +2,36 @@ package common.model;
 
 public class MemberVO {
 
-   private String userid;             // 회원아이디
-   private String passwd;             // 비밀번호 (SHA-256 암호화 대상)
-   private String name;               // 회원명
-   private String email;              // 이메일 (AES-256 암호화/복호화 대상)
-   private String mobile;             // 연락처 (AES-256 암호화/복호화 대상) 
-   private String postcode;           // 우편번호
-   private String address;            // 주소
-   private String detail_address;     // 상세주소
-   private String extra_address;      // 참고항목
-   private String gender;             // 성별   남자:1  / 여자:2
-   private String birthday;           // 생년월일   
-   private int point;                 // 포인트 
-   private int coin;                  // 예치금
-   private String registerday;        // 가입일자 
-   private int idle;                  // 휴면유무 (0: 활동중 / 1: 휴면) 마지막으로 로그인 한 날짜시간이 현재시각으로 부터 1년이 지났으면 휴면으로 지정 
-   private int status;                // 회원탈퇴유무 (1: 가입중 / 0:탈퇴)
-   private String last_passwd_date;   // 마지막 비밀번호 변경 날짜  
-    
-   /////////////////////////////////////////////////////////////////////////////
-   
-   private boolean passwdChangeRequired = false;
-   // 마지막으로 암호를 변경한지 3개월이 지났으면 true
-   // 마지막으로 암호를 변경한지 3개월이 지나지 않았으면 false
-   
-   private String last_login_date;      // 마지막으로 로그인한 날짜
-   
-   /////////////////////////////////////////////////////////////////////////////
-   
-   public MemberVO() {}
-   
+	private String userid;             // 회원아이디
+	private String passwd;             // 비밀번호 (SHA-256 암호화 대상)
+	private String name;               // 회원명
+	private String email;              // 이메일 (AES-256 암호화/복호화 대상)
+	private String mobile;             // 연락처 (AES-256 암호화/복호화 대상) 
+	private String postcode;           // 우편번호
+	private String address;            // 주소
+	private String detail_address;     // 상세주소
+	private String extra_address;      // 참고항목
+	private String gender;             // 성별   남자:1  / 여자:2
+	private String birthday;           // 생년월일   
+	private int point;                 // 포인트 
+	private int coin;                  // 예치금
+	private String registerday;        // 가입일자 
+	private int idle;                  // 휴면유무 (0: 활동중 / 1: 휴면) 마지막으로 로그인 한 날짜시간이 현재시각으로 부터 1년이 지났으면 휴면으로 지정 
+	private int status;                // 회원탈퇴유무 (1: 가입중 / 0:탈퇴)
+	private String last_passwd_date;   // 마지막 비밀번호 변경 날짜  
+	 
+	/////////////////////////////////////////////////////////////////////////////
+	
+	private boolean passwdChangeRequired = false;
+	// 마지막으로 암호를 변경한지 3개월이 지났으면 true
+	// 마지막으로 암호를 변경한지 3개월이 지나지 않았으면 false
+	
+	private String last_login_date;	   // 마지막으로 로그인한 날짜
+	
+	/////////////////////////////////////////////////////////////////////////////
+	
+	public MemberVO() {}
+	
     /////////////////////////////////////////////////////////////////////////////
    
    public MemberVO(String userid, String passwd, String name, String email, String mobile, String postcode,

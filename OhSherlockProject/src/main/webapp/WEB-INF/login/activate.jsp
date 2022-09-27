@@ -51,8 +51,11 @@ let time = 60 * 5;
 
 $(document).ready(function(){
 	
+	$("#spinner").hide();
+	
 	// 확인버튼 클릭시
    $("#btnActivate").click(function(){
+	   $("#spinner").show();
 		const frm = document.activateFrm;
 		frm.action = "<%=ctxPath%>/login/activate.tea"; 
 		// 메일을 보내주는 컨트롤러
@@ -68,7 +71,7 @@ $(document).ready(function(){
 	   
 	    // 메일 발송 성공시
 		if(${requestScope.sendMailSuccess == true}) {
-
+			$("#spinner").hide();
 			// 5분 타이머 함수
 			const myTimer = () => {
 			    
@@ -155,6 +158,8 @@ function verifyCode(){
 			<div id="btnSubmit" class="d-flex flex-column">
 				<input type="button" class="btn" value="확인" id="btnActivate" />
 			</div>
+			
+			<div id="spinner" class="row justify-content-center mt-4 mb-0"><span class="spinner-border text-success"></span></div>
 		</div>
 	</div>
 				

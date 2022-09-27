@@ -53,6 +53,14 @@
     	frm.method="POST";
     	frm.submit();
 	}
+
+	function goCancel(){
+		const doCancle = confirm("공지사항 작성을 취소하시겠습니까?");
+		if(doCancle){
+			alert("공지사항 작성을 취소하셨습니다.");
+			location.href="javascript:history.back()";
+		}
+	}
 </script>    
     
 <div class="container">
@@ -83,8 +91,8 @@
 		<hr>
 		
 		<div class="text-right" style="margin-top: 30px;">
-		   <input type="button" class="writeBtns" value="취소" onclick="location.href='javascript:history.back();'" style="margin-right: 0" />&nbsp;
-		   <input type="button" class="btn-secondary writeBtns" onclick="goSubmit();" value="등록" style="margin-left: 5px;" />
+		   <input type="button" class="writeBtns rounded" value="취소" onclick="goCancel();" style="margin-right: 0" />&nbsp;
+		   <input type="button" class="btn-secondary writeBtns rounded" onclick="goSubmit();" value="등록" style="margin-left: 5px;" />
 		</div>
 	</form>
 	
