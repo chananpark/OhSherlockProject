@@ -40,7 +40,7 @@
 		// 신규 상품 등록 버튼 클릭할때
 		$("input#btn_goProdRegister").click(function() {
 			//=== 신규 상품 등록 === //
-			location.href = "<%= ctxPath%>/admin/prod_mgmt_register.tea";
+			location.href = "<%= request.getContextPath()%>/admin/prod_mgmt_register.tea";
 		});
     
 		

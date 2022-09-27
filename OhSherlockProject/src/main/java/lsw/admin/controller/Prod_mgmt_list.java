@@ -7,13 +7,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
-import lsw.admin.model.InterProductDAO;
-import lsw.admin.model.ProductDAO;
-import lsw.admin.model.ProductVO;
-import member.model.MemberVO;
 
 
 public class Prod_mgmt_list extends AbstractController {
@@ -36,35 +31,8 @@ public class Prod_mgmt_list extends AbstractController {
 		        super.setViewPage("/WEB-INF/msg.jsp");
 		        
 			}
-			 else {
-
-					HttpSession session =  request.getSession();
-					ProductVO loginuser = (ProductVO) session.getAttribute("loginuser");
-					
-					if( !( "admin".equals(loginuser.getUserid()) ) ) {
-						// == 관리자(admin) 가 아닌 일반 사용자로 로그인 했을 때는 조회가 불가능 하도록 한다. == //
-						String message = "관리자 이외에는 접근이 불가합니다.";
-				        String loc = "javascript:history.back()";
-				        
-				        request.setAttribute("message", message);
-				        request.setAttribute("loc", loc);
-				        
-				        super.setRedirect(false);
-				        super.setViewPage("/WEB-INF/msg.jsp");
-					
-					}
-			
-			InterProductDAO pdao = new ProductDAO();
-			
-			List<ProductVO> productList = new ArrayList<>();
-			productList = pdao.showProductList();
-			
-			if (productList.size() > 0) {
-				request.setAttribute("productList", productList);
-			}
 			
 		}
-		
 		else {	// "POST""
 
 		}
