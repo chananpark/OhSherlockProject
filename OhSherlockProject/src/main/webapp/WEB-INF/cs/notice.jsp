@@ -58,6 +58,10 @@
 <script>
 
 	$(document).ready(()=>{
+		const goBackURL = "${goBackURL}";
+		sessionStorage.setItem("goBackURL", goBackURL);
+		// 세션스토리지에 goBackURL 저장
+		
 		$("#btnWriteNotice").click(()=>{
 			location.href="<%=ctxPath%>/cs/noticeWrite.tea";
 		});
@@ -79,7 +83,8 @@
 	// 검색 함수
 	function goSearch() {
 		   const frm = document.searchFrm;
-		   frm.action = "";
+		   frm.action = "notice.tea";
+		   frm.method = "GET";
 		   frm.submit();
 	   }
 </script>

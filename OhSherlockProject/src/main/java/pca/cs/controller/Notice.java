@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import common.controller.AbstractController;
 import common.model.NoticeVO;
+import my.util.MyUtil;
 import pca.cs.model.InterNoticeDAO;
 import pca.cs.model.NoticeDAO;
 
@@ -107,6 +108,11 @@ public class Notice extends AbstractController {
 			pageBar += "<li class='page-item'><a class='page-link' href='notice.tea?currentShowPageNo="+pageNo+"&searchType="+searchType+"&searchWord="+searchWord+"'>></a></li>";
 			pageBar += "<li class='page-item'><a class='page-link' href='notice.tea?currentShowPageNo="+totalPage+"&searchType="+searchType+"&searchWord="+searchWord+"'>>></a></li>";
 		}
+		
+		//
+		String currentURL = MyUtil.getCurrentURL(request);
+		request.setAttribute("goBackURL", currentURL);
+		//
 		
 		request.setAttribute("pageBar", pageBar);
 		request.setAttribute("searchType", searchType);
