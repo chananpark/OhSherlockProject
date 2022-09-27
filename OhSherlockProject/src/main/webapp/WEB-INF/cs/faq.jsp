@@ -45,6 +45,7 @@
 	background-color: #1E7F15;
 	color: white;
 	height: 40px;
+	padding: 0 10px;
 }
 </style>       
     
@@ -61,16 +62,25 @@
 		$(".faqContainer .btn-group button#all").click();
 		
 		$("#faqRegister").click(()=>{
-			 location.href = "../admin/faqRegister_admin.jsp";
+			 location.href = "<%=ctxPath%>/cs/faqRegister.tea";
 		});
 
 		<%-- 세션에 저장된 userid가 admin(관리자)일 때만 질문 추가 등록 버튼을 노출시킨다.--%>
 		$("#faqRegister").hide();
 		
-		if ("${sessionScope.userid}" == 'admin') {
+		if ("${sessionScope.loginuser.userid}" == 'admin' && "${sessionScope.loginuser.userid}" != null) {
 			$("#faqRegister").show();
 		}
-	});
+		
+		$("#all").click(function(){
+			
+			
+			
+		});
+		
+		
+		
+	}); // end of $(document).ready
 </script>
     
     
@@ -103,13 +113,19 @@
 		</div>
 	</div>
 
+	
+
 	<iframe id="iframe_idFind" style="border: none; width: 100%; height: 350px;" 
-	src="<%=ctxPath %>/cs/faqContent.jsp"></iframe>
+		src="<%=ctxPath %>/cs/faqContent.tea">
+	</iframe>
 	
 	<%-- 로그인 된 사용자가 관리자일 경우에만 나타나도록 함 --%>
-	<div class="text-right" id="faqRegister">
-		<input type="button" value="질문 추가 등록"/>
-	</div>
+	<c:if test="${sessionScope.loginuser ne null and loginuser.userid eq 'admin' }">
+		<div class="text-right" id="faqRegister">
+			<input type="button" value="질문 추가 등록" class="btn"/>
+		</div>
+	</c:if>		
+	
 	
 </div>
 

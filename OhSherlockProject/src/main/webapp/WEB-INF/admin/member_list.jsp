@@ -73,7 +73,7 @@
 			const userid = $target.parent().find("td[name='userid']").text(); 
 		//	console.log("확인용 : "+ userid);
 			 
-			location.href = "<%= request.getContextPath() %>/member/member_list_detail.tea?userid="+userid; 
+			location.href = "<%= ctxPath %>/member/member_list_detail.tea?userid="+userid+"&goBackURL=${requestScope.goBackURL}"; 
 		}); // end of $("tbody > tr").click(function()
 			
 				
@@ -104,7 +104,6 @@
 			$("select#sizePerPage").val("${requestScope.sizePerPage}");
 		}
 		
-				
 	}); // end of $(document).ready
 		
 	
