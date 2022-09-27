@@ -41,12 +41,62 @@
 	  padding: 20px;
 	}
 
-	#inquiry #qnaFrm {
+	#inquiry #inquiryFrm {
 		padding: 3%;
 	}
 
 </style>       
     
+<script>
+	
+	$(document).ready(()=>{
+				
+		/* $("input:checkbox").on('click', (e) => {
+			if ( $(e.target).prop('checked') ) {
+			  $(e.target).val("y");
+			} else {
+			  $(e.target).val("n");
+			}
+	    }); */
+		
+		$("#btnSubmit").click(()=>{
+			const frm = document.inquiryFrm;
+			
+			const inquirytype = $("select[id='inquirytype']").val();
+			
+			if(inquirytype == ""){
+				alert("문의유형을 선택하세요!");
+				return;
+			}
+			
+			if($("#title").val().trim() == ""){
+				alert("제목을 입력하세요!");
+				return;
+			}
+			
+			if($("#content").val().trim() == ""){
+				alert("문의 내용을 입력하세요!");
+				return;
+			}
+			
+			frm.action="<%=ctxPath%>/cs/inquiry.tea";
+			frm.method="post";
+			frm.submit();
+			
+		});
+		
+		$("#btnCancel").click(()=>{
+			const doCancle = confirm("1:1 문의 작성을 취소하시겠습니까?");
+			if(doCancle){
+				alert("1:1 문의 작성을 취소하셨습니다.");
+				location.href="javascript:history.back()";
+			}
+		});
+		
+	});
+	
+</script>
+
 <div class="container" id="inquiry">
 
 	<div class="titleZone row">
@@ -72,9 +122,9 @@
 		· 고객상담센터 답변가능시간 오전 9시~오후 6시(토/일/공휴일 제외)
 	</div>
 	
-	<form action="" name="qnaFrm" id="qnaFrm">
-		<label for="qnatype">문의유형<span class="text-danger">*</span></label>
-		<select id="qnatype" name="qnatype">
+	<form action="" name="inquiryFrm" id="inquiryFrm">
+		<label for="inquirytype">문의유형<span class="text-danger">*</span></label>
+		<select id="inquirytype" name="inquirytype">
 			<option value="">문의유형을 선택해주세요</option>
 			<option value="상품문의">상품문의</option>
 			<option value="배송문의">배송문의</option>
@@ -87,24 +137,25 @@
 		<label for="title">제목<span class="text-danger">*</span></label>
 		<input type="text" id="title" name="title" placeholder="제목을 입력하세요.">
 		
-		<label for="content">내용<span class="text-danger">*</span></label>
+		<label for="content">문의 내용<span class="text-danger">*</span></label>
 		<textarea id="content" name="content" placeholder="문의 내용을 입력하세요." style="height:200px"></textarea>
 		
+		<%--
 		<label for="photo" style="margin: 6px 20px 16px 0;">사진 첨부</label><input type="file" id="photo" name="photo">
 		<br>
-		
+		--%>
 		<hr>
 		
-		<input type="checkbox" id="answer_email" name="answer_email" />
-		<label for="answer_email" style="margin-top: 16px;">답변 완료 시 이메일로 받으시겠습니까?<span>(이메일: hello@gmail.com)</span></label>
+		<input type="checkbox" id="answer_email" name="answer_email"/>
+		<label for="answer_email" style="margin-top: 16px;">답변 완료 시 이메일로 받으시겠습니까?<span>&nbsp;(이메일: ${loginuser.email })</span></label>
 		<br>
 		
-		<input type="checkbox" id="answer_sms" name="answer_sms" />
-		<label for="answer_sms" >답변 완료 시 SMS로 받으시겠습니까?<span>(연락처: 010-1234-1234)</span></label>
+		<input type="checkbox" id="answer_sms" name="answer_sms"/>
+		<label for="answer_sms">답변 완료 시 SMS로 받으시겠습니까?<span>&nbsp;(연락처: ${loginuser.mobile })</span></label>
 		
 		<div class="text-right" style="margin-top: 30px;">
-	    	<input type="button" class="writeBtns" value="취소" style="margin-right: 0" />&nbsp;
-	      	<input type="button" class="btn-secondary writeBtns" value="등록" style="margin-left: 5px;" />
+	    	<input type="button" class="writeBtns" id="btnCancel" value="취소" style="margin-right: 0" />&nbsp;
+	      	<input type="button" class="btn-secondary writeBtns" id="btnSubmit" value="등록" style="margin-left: 5px;" />
    		</div>
 	</form>
 	

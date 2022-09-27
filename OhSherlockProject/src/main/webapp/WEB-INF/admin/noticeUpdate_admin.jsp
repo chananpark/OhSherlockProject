@@ -16,7 +16,7 @@
 		resize: vertical;
 	}
 
-	#updateBtn  {
+	input[type="button"]  {
 		width: 80px; 
 		margin: 15px; 
 		border-style: none; 
@@ -55,6 +55,14 @@
 	    	frm.submit();
 		});
 	});
+
+	function goCancel(){
+		const doCancle = confirm("공지사항 수정을 취소하시겠습니까?");
+		if(doCancle){
+			alert("공지사항 수정을 취소하셨습니다.");
+			location.href="javascript:history.back()";
+		}
+	}
 </script>     
     
 <div class="container">
@@ -86,8 +94,8 @@
 		<hr>
 		
 		<div class="text-right" style="margin-top: 30px;">
-		   <input type="button" id="updateBtn" value="수정" style="margin-right: 0" />&nbsp;
-		   <%--<input type="button" class="btn-secondary updateBtns" value="삭제" style="margin-left: 5px;" />--%>
+			<input class="rounded" type="button" value="취소" onclick="goCancel();" style="margin-right:0"/>&nbsp;
+		   	<input class="rounded btn-secondary" type="button" id="updateBtn" value="수정" style="margin-left: 5px;" />
 		</div>
 	</form>
 	

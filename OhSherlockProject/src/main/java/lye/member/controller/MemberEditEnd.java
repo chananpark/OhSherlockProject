@@ -68,10 +68,10 @@ public class MemberEditEnd extends AbstractController {
 	        }
 			
 	        
-	        String loc = "javascript:history.go(-2)";  // 이전페이지로 이동시킴.
+	        String loc = request.getContextPath() + "/mypage/mypage.tea";  // 이전페이지로 이동시킴.
 	        
 	        HttpSession session = request.getSession();
-			session.invalidate(); 
+			session.removeAttribute("certificationCode");
 	         
 	        request.setAttribute("message", message);
 	        request.setAttribute("loc", loc);
