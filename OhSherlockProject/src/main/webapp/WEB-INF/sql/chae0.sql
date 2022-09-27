@@ -6,3 +6,10 @@ select *
 from tbl_member;
 
 rollback;
+
+select *
+from tbl_coin_history;
+
+select *
+from tbl_login_history;
+
