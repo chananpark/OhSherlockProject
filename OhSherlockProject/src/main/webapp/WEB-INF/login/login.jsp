@@ -89,6 +89,11 @@
 			goLogin(); // 로그인 함수 호출
 		});
 		
+		// 회원가입 버튼 클릭 시
+		$("input#btn_register").click(function(){
+			location.href="<%=ctxPath%>/member/memberRegister.tea";
+		});
+		
 		// 비밀번호 입력란에 엔터 시
 		$("input#loginPwd").bind("keydown", function(event){
 			if(event.keyCode == 13) { 

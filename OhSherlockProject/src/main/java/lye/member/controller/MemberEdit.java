@@ -26,6 +26,7 @@ public class MemberEdit extends AbstractController {
 				
 			 // super.setRedirect(false); 
 				request.setAttribute("loginuser", loginuser);
+				
 				super.setViewPage("/WEB-INF/member/memberInfo_edit.jsp");  // 회원정보수정으로 이동
 				
 			}
