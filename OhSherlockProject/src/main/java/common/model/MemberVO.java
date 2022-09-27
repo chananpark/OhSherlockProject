@@ -75,6 +75,22 @@ public class MemberVO {
 	      
 	   }
 
+	   // 회원가입 생성자(임선우)
+	   public MemberVO(String userid, String passwd, String name, String email, String mobile, String postcode,
+	               String address, String detail_address, String extra_address, String gender, String birthday) {
+	      this.userid = userid;
+	      this.passwd = passwd;
+	      this.name = name;
+	      this.email = email;
+	      this.mobile = mobile;
+	      this.postcode = postcode;
+	      this.address = address;
+	      this.detail_address = detail_address;
+	      this.extra_address = extra_address;
+	      this.gender = gender;
+	      this.birthday = birthday;
+	   }   
+	   
 	public String getUserid() {
 		return userid;
 	}

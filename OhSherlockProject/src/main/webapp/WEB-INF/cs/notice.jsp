@@ -58,10 +58,7 @@
 
 	$(document).ready(()=>{
 		$("#btnWriteNotice").click(()=>{
-			const frm = document.writeFrm
-			frm.action="<%=ctxPath%>/cs/noticeWrite.tea";
-	    	frm.method="POST";
-	    	frm.submit();
+			location.href="<%=ctxPath%>/cs/noticeWrite.tea";
 		});
 	});
 	
@@ -127,11 +124,9 @@
 	</table>
 	<%-- 글쓰기 버튼은 관리자 계정에서만 보임 --%>
 	<c:if test="${sessionScope.loginuser ne null and loginuser.userid eq 'admin' }">
-		<form name="writeFrm">
-			<div class="text-right" id="detail" style="display: block; margin-top: 50px;"> 
-			  <input type="button" class="btn-secondary rounded" id="btnWriteNotice" value="글쓰기"/>
-		    </div>
-		</form>
+		<div class="text-right" id="detail" style="display: block; margin-top: 50px;"> 
+		  <input type="button" class="btn-secondary rounded" id="btnWriteNotice" value="글쓰기"/>
+	    </div>
 	</c:if>		
 
 	<nav aria-label="Page navigation example" style="margin-top: 20px;">
