@@ -89,8 +89,17 @@
 	  background-color: #fafafa; 
 	  border-color: #1E7F15;
 	}	
+	
 
 </style>
+
+<script type="text/javascript">
+
+
+
+
+</script>
+
 
 <div class="container mypage">
 	<h2 style="font-weight: bold; margin-bottom: 20px;">예치금내역</h2>
@@ -99,7 +108,7 @@
 	   <div class="card-body" style="border: solid 2px gray; border-radius: 15px; height: 100px;">             
 	      <i class="far fa-credit-card" style="font-size: 40px; float: left; padding-right: 10px;"></i>          
 	      <h3 style="padding-top: 5px;">사용 가능한 예치금</h3>           
-	      <h1 style="float: right; font-weight: bold; color: #1E7F15; position: relative; top: -45px;">0원</h1>        
+	      <h1 style="float: right; font-weight: bold; color: #1E7F15; position: relative; top: -45px;"><fmt:formatNumber  value="${(sessionScope.loginuser).coin}" pattern="###,###원" /> </h1>        
 	   </div> 
     </div>
     
@@ -125,20 +134,8 @@
 			<i style='font-size:200px; padding: 5% 0 0 40%; color: gray;' class='fas'>&#xf06a;</i>  
 			<h6 style="text-align: center; padding-top: 2%;">조회하신 기간 내 적립/사용한 내역이 없습니다.</h6>        
 	
-    <nav aria-label="Page navigation example" style="margin-top: 60px;"> 
-	  <ul class="pagination justify-content-center">
-	    <li class="page-item">
-	      <a class="page-link" href="#" aria-label="Previous">
-	        <span aria-hidden="true">&laquo;</span>
-	      </a>
-	    </li>
-	    <li class="page-item"><a class="page-link" href="#">1</a></li>
-	    <li class="page-item">
-	      <a class="page-link" href="#" aria-label="Next">
-	        <span aria-hidden="true">&raquo;</span>
-	      </a>
-	    </li>
-	  </ul>
+    <nav aria-label="Page navigation example" style="margin-top: 60px;">
+		<ul class="pagination justify-content-center" style="margin:auto;">${requestScope.pageBar}</ul>
 	</nav>
 	
 </div>

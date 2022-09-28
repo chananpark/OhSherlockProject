@@ -1133,8 +1133,8 @@ $(function(){
 		
 		<div class="text-center jumbotron" style="margin-top: 5%; background: linear-gradient(rgb(210,219,198),#c1ceb1);">
 			<p style="font-size: 14pt; color: white; text-shadow: 2px 2px 2px gray;">
-				오셜록의 역사는 2022년 5월, 21B Worldcup Street에서 시작되었습니다.<br><br> 오셜록은 최고의
-				인재들을 영입하여 부단한 노력과 연구를 통하여 지속적으로 발전하고 있습니다.
+				오셜록의 역사는 <span style="font-style: italic;">2022년 5월, 21B Worldcup Street</span>에서 시작되었습니다.<br><br> 
+				오셜록은 <span style="color: #1E7F15;">최고의 인재들을 영입</span>하여 부단한 노력과 연구를 통하여 지속적으로 발전하고 있습니다.
 			</p>
 		</div>
 		
@@ -1149,12 +1149,12 @@ $(function(){
 		<h4 style="margin-top: 5%; font-weight:bold">브랜드 로고<br>─</h4>
 		<h5 style="margin: 5% 0;">Fragrant World의 비전을 담은 OH!Sherlock의 얼굴을 소개합니다.</h5>
 		<img src="../images/o_logo_big.png" width=300>
-		<h5 style="margin: 5% 0;">OH!Sherlock의 심볼마크는 Java 커피잔의 향긋함을 담아<br>
-		인생의 모든 순간에 늘 아름다운 향기를 선사하겠다는 약속입니다.</h5>
+		<h5 style="margin: 5% 0;">OH!Sherlock의 심볼마크는 Java 찻잔의 향긋함을 담아<br>
+		인생의 모든 순간에 늘 <span style="color: #1E7F15; font-weight:bold">아름다운 향기</span>를 선사하겠다는 약속입니다.</h5>
 		<hr style="width:50%">
 		<h4 style="margin-top: 5%; font-weight:bold">브랜드 시그니처 컬러<br>─</h4>
 		<img src="../images/signature_color.png" width=80%/>
-		<h5 style="margin: 5% 0;">OH!Sherlock의 시그니처 컬러는 제주 녹차밭의 진녹색을 떠올리게 하여<br>
+		<h5 style="margin: 5% 0;">OH!Sherlock의 시그니처 컬러는 <span style="color: #1E7F15; font-weight:bold">제주 녹차밭의 진녹색</span>을 떠올리게 하여<br>
 		하루 종일 컴퓨터만 보느라 지친 현대인의 안구 피로감을 해소해줍니다.</h5>
 		</div>
 	</section>

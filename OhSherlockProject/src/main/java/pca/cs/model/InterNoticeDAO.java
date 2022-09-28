@@ -10,7 +10,7 @@ import common.model.NoticeVO;
 public interface InterNoticeDAO {
 	
 	// 공지사항 목록
-	List<NoticeVO> showNoticeList() throws SQLException;
+	List<NoticeVO> showNoticeList(Map<String, String> paraMap) throws SQLException;
 
 	// 공지글 내용 조회 + 조회수 증가
 	NoticeVO showNoticeDetail(Map<String, String> paraMap) throws SQLException;
@@ -26,5 +26,8 @@ public interface InterNoticeDAO {
 
 	// 공지사항 수정(관리자)
 	int noticeUpdate(Map<String, String> paraMap) throws SQLException;
+
+	// 공지사항 전체 페이지 수 알아오기
+	int getTotalPage(Map<String, String> paraMap) throws SQLException;
 
 }

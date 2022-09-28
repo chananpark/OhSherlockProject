@@ -50,42 +50,50 @@
 		
 		// console.log(${requestScope.userid});
 		
-		$("input#btnUpdate").click(function(){
-			
-			const password = $("input#password").val();
-			const password2 = $("input#password2").val();
-			
-			const regExp = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g;
-			// 숫자, 문자, 특수문자 포함 형태의 8~15자리 이내의 암호 정규 표현식 객체 생성
-			
-			const bool = regExp.test(password); // passwd(타켓) 에 대한 암호의 값을 정규표현식에 넣는다. 
-			
-			if(!bool) {
-				alert("암호는 8글자 이상 15글자 이하에 영문자,숫자,특수기호가 혼합되어야만 합니다.");
-				$("input#password").val(""); // 잘못 입력해주면 싹 비우고 종료
-				$("input#password2").val("");
-				 
-				 return; // 종료
-			} else if(bool && password != password2) {
-				// pwd와 pwd2가 다를 경우
-				alert("암호가 일치하지 않습니다.");
-				$("input#password").val(""); // 잘못 입력해주면 싹 비우고 종료
-				$("input#password2").val("");
-				 
-				 return; // 종료
-			} else {
-				// 전부 올바르게 입력한 경우
-				const frm = document.passwdFind_update_frm;
-				frm.action = "<%=ctxPath%>/login/passwdReset.tea";
-				frm.method = "POST";
-				frm.submit();
-			}
+		$("input#btnUpdate").click(()=>{
+			goReset();
 			
 		}); // end of $("button#btnUpdate").click
 		
-		
+		$("input#password2").bind("keyup",(e)=>{
+		   // 비밀번호 확인에서 엔터 치면
+		   if(e.keyCode == "13")
+			   goReset();
+	   	});
 	}); // end of $(document).ready(function()
 
+	function goReset(){
+		
+		const password = $("input#password").val();
+		const password2 = $("input#password2").val();
+		
+		const regExp = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g;
+		// 숫자, 문자, 특수문자 포함 형태의 8~15자리 이내의 암호 정규 표현식 객체 생성
+		
+		const bool = regExp.test(password); // passwd(타켓) 에 대한 암호의 값을 정규표현식에 넣는다. 
+		
+		if(!bool) {
+			alert("암호는 8글자 이상 15글자 이하에 영문자,숫자,특수기호가 혼합되어야만 합니다.");
+			$("input#password").val(""); // 잘못 입력해주면 싹 비우고 종료
+			$("input#password2").val("");
+			 
+			 return; // 종료
+		} else if(bool && password != password2) {
+			// pwd와 pwd2가 다를 경우
+			alert("암호가 일치하지 않습니다.");
+			$("input#password").val(""); // 잘못 입력해주면 싹 비우고 종료
+			$("input#password2").val("");
+			 
+			 return; // 종료
+		} else {
+			// 전부 올바르게 입력한 경우
+			const frm = document.passwdFind_update_frm;
+			frm.action = "<%=ctxPath%>/login/passwdReset.tea";
+			frm.method = "POST";
+			frm.submit();
+		}	
+	}
+			
 </script>
     
     

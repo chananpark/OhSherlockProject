@@ -39,9 +39,19 @@ public class MemberRegister extends AbstractController {
 			String hp3 = request.getParameter("hp3"); 
 			String email = request.getParameter("email"); 
 			String gender = request.getParameter("gender"); 
-			String birthyyyy = request.getParameter("birthyyyy"); 
-			String birthmm = request.getParameter("birthmm"); 
-			String birthdd = request.getParameter("birthdd");
+			
+			String birthyyyy = request.getParameter("birthyyyy");
+	         if(birthyyyy.equals("")) {
+	            birthyyyy = "0000";
+	        }
+	        String birthmm = request.getParameter("birthmm"); 
+	        if(birthmm.equals("")) {
+	           birthmm = "00";
+	        }
+	        String birthdd = request.getParameter("birthdd");
+	        if(birthdd.equals("")) {
+	           birthdd = "00";
+	        }
 			
 			String mobile = hp1 + hp2 + hp3; // "01023456789"
 			String birthday = birthyyyy+"-"+birthmm+"-"+birthdd;  // "1996-10-25"
@@ -50,24 +60,27 @@ public class MemberRegister extends AbstractController {
 			
 			InterMemberDAO mdao = new MemberDAO();
 			
+			// ##### 회원가입이 성공되면 자동으로 로그인 되도록 하겠다. ##### //
 			try {
 				int n = mdao.registerMember(member);
 				
-				if(n==1) {
+				if(n==1) {  // DB 에 정상적으로 insert 됐다면,
 					request.setAttribute("userid", userid);
 					request.setAttribute("name", name);
 					request.setAttribute("email", email);
+					request.setAttribute("passwd", passwd);
 					
-					super.setRedirect(false);
-					super.setViewPage("/WEB-INF/member/memberRegister_success.jsp");
+				//	super.setRedirect(false);  
+					super.setViewPage("/WEB-INF/member/memberRegister_success.jsp");  
+					
 				}
 				
 			} catch(SQLException e) {
 				e.printStackTrace();
-				super.setRedirect(true); 
+				super.setRedirect(true);   
 			    super.setViewPage(request.getContextPath()+"/error.tea");
 			}
-			
+
 		}
 		
 	}
