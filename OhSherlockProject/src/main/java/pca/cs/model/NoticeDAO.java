@@ -50,17 +50,54 @@ public class NoticeDAO implements InterNoticeDAO {
 
 
 	@Override
-	public List<NoticeVO> showNoticeList() throws SQLException {
+	public List<NoticeVO> showNoticeList(Map<String, String> paraMap) throws SQLException {
 		
 		List<NoticeVO> noticeList = new ArrayList<>();
 		
 		try {
 			conn = ds.getConnection();
 
-			String sql = "select noticeNo, noticeSubject, noticeContent, noticeHit, noticeDate from tbl_notice "
-					+ "order by 1 desc";
+			String sql = "select noticeNo, noticeSubject, noticeContent, noticeHit, noticeDate from "
+					+ " (select rownum as rno, noticeNo, noticeSubject, noticeContent, noticeHit, noticeDate from "
+					+ " (select noticeNo, noticeSubject, noticeContent, noticeHit, noticeDate from "
+					+ "tbl_notice ";
+			
+			String colname = paraMap.get("searchType");
+			String searchWord = paraMap.get("searchWord");
 
+			// 검색어가 있다면
+			if (searchWord != null && !searchWord.trim().isEmpty()) {
+				
+				// 제목 검색의경우
+				if(colname.equals("noticeSubject"))
+					sql += " where " + colname + " like '%' || ? || '%'";
+				
+				// 글번호 검색의 경우
+				else
+					sql += " where " + colname + " = ?";
+			}
+			
+			sql += " order by 1 desc) V "
+				+ ") T "
+				+ " where RNO between ? and ?";
+			
+			// 페이징처리
+			
+			int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));  // 조회하고자 하는 페이지 번호
+			int sizePerPage = Integer.parseInt(paraMap.get("sizePerPage")); // 한페이지당 보여줄 행의 개수
+			
 			pstmt = conn.prepareStatement(sql);
+			
+			/// 검색어가 있는 경우
+			if( searchWord != null && !searchWord.trim().isEmpty() ) {
+				pstmt.setString(1, searchWord);
+				pstmt.setInt(2, (currentShowPageNo*sizePerPage) - (sizePerPage-1) );
+				pstmt.setInt(3, (currentShowPageNo*sizePerPage) );
+			} else {
+				// 검색어가 없는 경우
+				pstmt.setInt(1, (currentShowPageNo*sizePerPage) - (sizePerPage-1) );
+				pstmt.setInt(2, (currentShowPageNo*sizePerPage) );
+			}
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
@@ -221,6 +258,50 @@ public class NoticeDAO implements InterNoticeDAO {
 		}
 
 		return n;
+	}
+
+	// 공지사항 전체 페이지 수 알아오기
+	@Override
+	public int getTotalPage(Map<String, String> paraMap) throws SQLException {
+		int totalPage = 0;
+
+		try {
+			conn = ds.getConnection();
+
+			String sql = "select ceil(count(*)/?) from tbl_notice";
+
+			String colname = paraMap.get("searchType");
+			String searchWord = paraMap.get("searchWord");
+
+			// 검색어가 있다면
+			if (searchWord != null && !searchWord.trim().isEmpty()) {
+				
+				// 제목 검색의경우
+				if(colname.equals("noticeSubject"))
+					sql += " where " + colname + " like '%' || ? || '%'";
+				
+				// 글번호 검색의 경우
+				else
+					sql += " where " + colname + " = ?";
+			}
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, Integer.parseInt(paraMap.get("sizePerPage")));
+
+			// 검색어가 있다면 검색어로 두번째 위치홀더 채우기
+			if (searchWord != null && !searchWord.trim().isEmpty()) {
+				pstmt.setString(2, searchWord);
+			}
+			
+			rs = pstmt.executeQuery();
+			rs.next();
+			totalPage = rs.getInt(1);
+
+		} finally {
+			close();
+		}
+
+		return totalPage;
 	}
 
 }

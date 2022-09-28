@@ -25,10 +25,22 @@ public class MemberEditEnd extends AbstractController {
 			String address = request.getParameter("address"); 
 			String detail_address = request.getParameter("detail_address"); 
 			String extra_address = request.getParameter("extra_address"); 
+			
 			String birthyyyy = request.getParameter("birthyyyy"); 
 			String birthmm = request.getParameter("birthmm"); 
 			String birthdd = request.getParameter("birthdd"); 
-	        String hp1 = request.getParameter("hp1"); 
+			
+			if(birthyyyy == null) {
+				birthyyyy="0000";
+			}
+			if(birthmm == null) {
+				birthmm="00";
+			}
+			if(birthdd == null) {
+				birthdd="00";
+			}
+	        
+			String hp1 = request.getParameter("hp1"); 
 	        String hp2 = request.getParameter("hp2"); 
 	        String hp3 = request.getParameter("hp3"); 
 	        String email = request.getParameter("email"); 
@@ -50,6 +62,7 @@ public class MemberEditEnd extends AbstractController {
 	        	// !!! session 에 저장된 loginuser 를 변경된 사용자의 정보값으로 변경해주어야 한다 !!! //  재로그인없이도 바로 변경된 회원정보 update 반영될 수 있도록 세션값도 update 된 값으로 바꿈.
 	        	HttpSession sesseion = request.getSession();  // 세션 불러오기
 	        	MemberVO loginuser = (MemberVO) sesseion.getAttribute("loginuser");
+	        	birthday = birthyyyy+birthmm+birthdd; 
 	        	
 	        	loginuser.setPasswd(passwd);
 	        	loginuser.setName(name);
@@ -70,8 +83,8 @@ public class MemberEditEnd extends AbstractController {
 	        
 	        String loc = request.getContextPath() + "/mypage/mypage.tea";  // 이전페이지로 이동시킴.
 	        
-	        HttpSession session = request.getSession();
-			session.removeAttribute("certificationCode");
+//	        HttpSession session = request.getSession();
+//			session.removeAttribute("certificationCode");
 	         
 	        request.setAttribute("message", message);
 	        request.setAttribute("loc", loc);

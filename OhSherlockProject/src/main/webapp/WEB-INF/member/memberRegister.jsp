@@ -20,8 +20,7 @@
 
 	#idCheck, 
 	#emailCheck,
-	#btn_emailVerifyCodeCheck,
-	#btn_resendEmailVerifyCode{
+	#btn_emailVerifyCodeCheck	{
 		color:#333333;
 		height: 30px;
 		border-style: none;
@@ -63,11 +62,14 @@
 	let b_flag_emailVerifyCode_click = false;
 	// "이메일인증코드확인" 을 확인 했는지 알아오기 위한 용도.
 	
+	let time = 60 * 5; // 타이머 설정
 	
 	$(document).ready(function () {
 		
+		$("#spinner").hide();
 		
 		let certifiCode; // 컨드롤러에서 이메일인증코드 가져오기용
+		
 		
 	  $('span.error').hide();
 	  $('input#userid').focus();
@@ -75,7 +77,7 @@
 	  // 이메일 인증확인란 숨기기
 	  $('div#emailVerify').hide();
 	  $('div#emailVerifyConfirm').hide();
-	 
+	  
 	  // #userid 포커스를 잃어버렸을 경우
 	  $('input#userid').blur((e) => {
 	    const $target = $(e.target);
@@ -356,13 +358,17 @@
 		$('input#userid').bind('change', () => {
 		  b_flag_idDuplicate_click = false;
 		});
-		
+
 	  
 		// "이메일중복확인" 을 클릭시 호출되는 함수
 		$('button#emailCheck').click(function () {
 			  b_flag_emailDuplicate_click = true;
 			  // 가입하기 버튼을 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지 알아보기위한 용도임.
 			
+
+        // 오류메시지 삭제
+        $('span#emailCheckResult').empty();
+
 			  $.ajax({
 			    url: '<%= ctxPath%>/member/emailDuplicateCheck.tea',
 			    data: { email: $('input#email').val() },
@@ -378,10 +384,13 @@
 			          .css('color', 'red');
 			        $('input#email').val('');
 			      } else {
-			    	  	
-			    		// 이메일 인증코드 처리 함수 호출
-			    	  emailVerifyCertification();
-			          
+			    	  $("#spinner").show();
+			    	  
+	   			   // 5분 타이머 시작
+	 		       const setTimer = setInterval(myTimer, 1000);
+	   			   
+		    		 // 이메일 인증코드 처리 함수 호출
+		    	   emailVerifyCertification();
 			      }
 			    },
 			    error: function (request, status, error) {
@@ -449,57 +458,33 @@
 	}); // end of $(document).ready(function(){})---------------
 	
 	
-	/* // 5분 타이머 함수
-	const timer = function(){
-		
-		const timer_div = document.querySelector('div#timer');
-		
-		let time = 600; // 타이머 시간을 10분을 지정함
-		
-		if (time < 0) {
-        alert("인증 시간이 초과되었습니다. 인증확인을 다시 요청하세요.");
-        
-        clearInterval(setTimer);
-        $('div#emailVerifyCode').val('');
-        $('div#emailVerify').hide();
-        return;
-		}
-		else {
-				let minute = '';
-        let second = '';
-
-        minute = parseInt(time / 60);
-        if (minute < 10) {
-          minute = '0' + minute;
-        }
-
-        second = time % 60;
-        if (second < 10) {
-          second = '0' + second;
-        }
-        
-        timer_div.innerHTML = `${minute}:${second}`;
-        
-        time--;
-		}
-		
-	}; */
-	
-	
 	/////////////////////////////////////////////////////////////
-	
-	
+	  
+	 // 5분 타이머 함수
+	const myTimer = () => {
+    
+        let minutes = parseInt(time / 60);
+        let seconds = time % 60;
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        $("#timer").text(minutes + ":" + seconds);
+		
+        if (time-- < 0) {
+            alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
+            clearInterval(setTimer); // 타이머 삭제
+	   	    $("div#emailVerify").hide();
+          return;
+        }
+		}
+
 	// 이메일 인증 처리 함수
 	function emailVerifyCertification() {
 		
     	// 이메일 인증확인란 나타내기
 	 		$('div#emailVerify').show();
     	
-   		/* // 5분 타이머 시작
-	   		
-	   		timer();// 타이머 함수 호출
-	   		const setTimer = setInterval(timer, 1000);
-	   		 */
     	$.ajax({
 	    		url:'<%= ctxPath%>/member/emailVerifyCertification.tea',
 	    		data:{ email: $('input#email').val() },
@@ -509,8 +494,10 @@
 	    			const json = JSON.parse(text);
 	    			// console.log(json.certificationCode);
    				 alert("인증코드가 이메일로 발송되었습니다.");
-   				 
-   				 certifiCode = json.certificationCode; // 변수 선언 안했는데...
+   			 	
+		    	  $("#spinner").hide(); // 스피너 숨기기
+		    	  
+   				 certifiCode = json.certificationCode;
     		},
     		error: function(e){
     			alert('인증코드 발송을 실패했습니다. 다시 시도해주세요')
@@ -522,8 +509,6 @@
 	
 	// 이메일 인증코드 확인 함수
 	function emailVerifyCodeCheck()	{
-		
-		/* clearInterval(setTimer); // 타이머 삭제하기 */
 		
 		const userVerifyCode = $("input#userEmailVerifyCode").val();
 		
@@ -709,6 +694,7 @@
 					<td>
 						<input id="email" type="text" class="required" name="email" size="50" />
 						<button type="button" id="emailCheck">인증하기</button>
+						<div id="spinner" class="row justify-content-center mt-4 mb-0"><span class="spinner-border text-success"></span></div>
 						<span id="emailCheckResult"></span>
 						<span class="error" style="color: red">이메일 형식에 맞지 않습니다.</span>
 						<br>
@@ -774,7 +760,11 @@
 			<thead class="thead-light">
 				<tr>
 					<td colspan="2" style="text-align: center; vertical-align: middle;">
-						<iframe src="../iframeAgree/registerAgree.html" width="85%" height="150px" class="box" ></iframe>
+<<<<<<< HEAD
+						<iframe src="<%=ctxPath %>/iframeAgree/registerAgree.html" width="85%" height="150px" class="box" ></iframe></iframe>
+=======
+						<iframe src="<%=ctxPath %>/iframeAgree/registerAgree.html" width="85%" height="150px" class="box" ></iframe>
+>>>>>>> branch 'main' of https://github.com/Chanan-Park/OhSherlockProject.git
 					</td>
 				</tr>
 				<tr>

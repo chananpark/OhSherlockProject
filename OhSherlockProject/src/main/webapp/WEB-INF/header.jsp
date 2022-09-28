@@ -265,9 +265,6 @@ div#brandStoryText {
 /* --- 이벤트 컨테이너 css 끝 --- */
 </style>
 
-<!-- js 파일 include -->
-<script type="text/javascript" src="../js/header_chanan.js" ></script> 
-
 </head>
 
 <body>
@@ -355,7 +352,7 @@ div#brandStoryText {
 						<div class="dropdown-menu no-border"
 							aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="<%=ctxPath%>/cs/notice.tea">공지사항</a> <a
-								class="dropdown-item" href="#">자주 묻는 질문</a> <a
+								class="dropdown-item" href="<%=ctxPath%>/cs/faq.tea">자주 묻는 질문</a> <a
 								class="dropdown-item" href="<%=ctxPath%>/cs/inquiry.tea">1:1 상담</a>
 						</div></li>
 				</ul>
