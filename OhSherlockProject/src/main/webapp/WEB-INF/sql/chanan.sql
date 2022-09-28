@@ -1,6 +1,9 @@
 show user;
 -- USER이(가) "SEMI_ORAUSER2"입니다.
 
+select userid from tbl_member where status = 1 and userid != '5sherlock' and email = 'qzgtKJ690tyLSSPGMXbryWUeCF9ssiNwnUipv6RAvNM=';
+
+
 desc tbl_member;
 
 select * from tbl_member;
@@ -20,7 +23,7 @@ create table tbl_login_history
 ,constraint FK_tbl_login_history_fk_userid foreign key(fk_userid) references tbl_member(userid)
 );
 
-desc tbl_member;
+select * from tbl_member;
 desc tbl_login_history;
 
 -- 로그인 sql --
@@ -33,7 +36,7 @@ from
 , coin, point, to_char(registerday, 'yyyy-mm-dd') AS registerday     
 , trunc( months_between(sysdate, last_passwd_date) ) AS passwd_change_gap
 from tbl_member
-where status = 1 and userid = '5sherlock' and passwd = '0ffe1abd1a08215353c233d6e009613e95eec4253832a761af28ff37ac5a150c') M
+where status = 1 and userid = 'na0seok' and passwd = '0ffe1abd1a08215353c233d6e009613e95eec4253832a761af28ff37ac5a150c') M
 cross join
 (select max(logindate) as last_login_date, trunc(months_between(sysdate, max(logindate))) as last_login_gap
 from tbl_login_history
@@ -84,8 +87,27 @@ NOCACHE;
 
 -- 공지사항 글쓰기 sql --
 insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
-values(seq_notice.nextval, '오셜록고객님들께', '안녕하세요', null);
-
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
+insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
+values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
 commit;
 
 -- 공지사항 글목록 가져오기 sql --
@@ -109,3 +131,7 @@ String sql = "delete from tbl_notice where noticeNo = ?";
 
 -- 공지사항 글수정 sql --
 String sql = "update tbl_notice set noticeSubject = ?, noticeContent = ? where noticeNo = ?";
+
+select * from tbl_notice where noticeno=1;
+
+select ceil(count(*)) from tbl_notice;

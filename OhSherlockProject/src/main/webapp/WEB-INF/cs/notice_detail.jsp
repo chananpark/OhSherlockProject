@@ -47,6 +47,11 @@
 			else
 				return;
 		});
+		
+		$("#showList").click(()=>{
+			const goBackURL = sessionStorage.getItem("goBackURL");
+			location.href="<%=ctxPath%>"+goBackURL;
+		});
 	});
 	
 </script>  
@@ -92,7 +97,7 @@
 	
     <hr style="border-top: solid 1.2px black">
   	<div class="text-right" style="display: block; margin-top: 30px;"> 
-	  <a href="<%=ctxPath%>/cs/notice.tea"><input type="button" class="btn-secondary listView rounded" value="목록보기" /></a>
+	  <input type="button" id="showList" class="btn-secondary listView rounded" value="목록보기" />
     </div>
 	
 </div>
