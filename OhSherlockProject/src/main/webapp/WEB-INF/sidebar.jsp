@@ -12,8 +12,8 @@
 		  </div>
 		  
 		  <div class="nav flex-column" id="nav02">
-		    <div><a class="nav-link" href="#">적립금내역</a></div>
-		    <div><a class="nav-link" href="#">예치금내역</a></div>
+		      <div><a class="nav-link" href="<%= request.getContextPath() %>/mypage/point_history.tea?userid=${(sessionScope.loginuser).userid}">적립금내역</a></div>
+              <div><a class="nav-link" href="<%= request.getContextPath() %>/mypage/coin_history.tea?userid=${(sessionScope.loginuser).userid}">예치금내역</a></div>
 		  </div>
 		  
 		  <p class="title" id="activity" style="font-weight: bold; padding-top: 20px;">나의 활동</p>    
@@ -25,7 +25,7 @@
 		  <p class="title" id="information" style="font-weight: bold; padding-top: 20px;">나의 정보</p>
 		  <div class="nav flex-column" id="nav04">
 		      <div><a class="nav-link" href="#">회원정보수정</a></div>
-		      <div><a class="nav-link" href="#">회원탈퇴</a></div>
+		      <div><a class="nav-link" href="<%= request.getContextPath() %>/member/memberWithdrawal.tea?userid=${(sessionScope.loginuser).userid}">회원탈퇴</a></div>
 		  </div>
    </div>
 <%-- 사이드바끝 --%> 

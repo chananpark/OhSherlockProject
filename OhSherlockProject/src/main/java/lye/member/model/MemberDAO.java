@@ -129,7 +129,7 @@ public class MemberDAO implements InterMemberDAO {
 
 		int result = 0;  // 업데이트 성공하면 n==1, 실패하면 n==0
 		
-		System.out.println("333333333333333333333" +member.toString());
+	//	System.out.println("~~확인용" +member.toString());
 		
 		try {
 			conn = ds.getConnection();  
@@ -182,7 +182,7 @@ public class MemberDAO implements InterMemberDAO {
 			
 			String sql = " select userid "
 					   + " from tbl_member "
-					   + " where status = 1 and (userid != ? and email = ?) ";  // status(회원탈퇴유무) 1: 사용가능(가입중)
+					   + " where status = 1 and userid != ? and email = ? ";  // status(회원탈퇴유무) 1: 사용가능(가입중)
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, paraMap.get("userid") );                // 1번째 위치홀더(?),  paraMap 에 있는 key값("name")
@@ -201,6 +201,35 @@ public class MemberDAO implements InterMemberDAO {
 		return isUserEmailExist;
 		
 	}// end of public boolean isUserEmailExist(Map<String, String> paraMap) throws SQLException {}------------
+
+	
+	// 회원탈퇴하기
+	@Override
+	public int deleteMember(String userid) throws SQLException {
+		
+		int result = 0;  // 업데이트 성공하면 n==1, 실패하면 n==0
+		
+	//	System.out.println("확인용 ==> " +userid);
+		
+		try {
+			conn = ds.getConnection();  
+			
+			String sql = " update tbl_member set status = 0 "
+					   + " where userid = ? ";
+			
+			pstmt = conn.prepareStatement(sql);  
+			
+	        pstmt.setString(1, userid);  
+			
+	        result = pstmt.executeUpdate();
+			
+		} finally {
+			 close();
+		}
+		
+		return result;
+	}// end of public int deleteMember(MemberVO member) throws SQLException {}------------
+
 
 
 	
