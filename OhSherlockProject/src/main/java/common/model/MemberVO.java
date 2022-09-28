@@ -58,6 +58,22 @@ public class MemberVO {
 		this.passwdChangeRequired = passwdChangeRequired;
 	}
 
+	// 회원가입 생성자
+	   public MemberVO(String userid, String passwd, String name, String email, String mobile, String postcode,
+	               String address, String detail_address, String extra_address, String gender, String birthday) {
+	      this.userid = userid;
+	      this.passwd = passwd;
+	      this.name = name;
+	      this.email = email;
+	      this.mobile = mobile;
+	      this.postcode = postcode;
+	      this.address = address;
+	      this.detail_address = detail_address;
+	      this.extra_address = extra_address;
+	      this.gender = gender;
+	      this.birthday = birthday;
+	   }
+	
 	// 나의정보수정 생성자
 	   public MemberVO(String userid, String passwd, String name, String postcode, String address,
 	         String detail_address, String extra_address, String birthday, String mobile, String email) {
@@ -75,11 +91,10 @@ public class MemberVO {
 	      
 	   }
 
+
 	public String getUserid() {
 		return userid;
 	}
-
-
 
 	public void setUserid(String userid) {
 		this.userid = userid;

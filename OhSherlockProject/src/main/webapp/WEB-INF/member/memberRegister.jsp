@@ -67,7 +67,7 @@
 	$(document).ready(function () {
 		
 		
-		let certifiCode; // 컨드롤러에서 이메일인증코드 가져오기용
+	  let certifiCode; // 컨드롤러에서 이메일인증코드 가져오기용
 		
 	  $('span.error').hide();
 	  $('input#userid').focus();
@@ -411,40 +411,40 @@
 		  
 		  ////////////////////////////////////////////////////////////////
 		
-	   // 생년월일 월일란에 날짜 주기
-      let yyyy_html = "";  // 생년월일의 년도      
-      for(var i=1950; i<=2050; i++) {
-          yyyy_html += "<option>"+i+"</option>";
-      }
-      yyyy_html += "<option selected></option>";
-       
-       $("select#birthyyyy").html(yyyy_html);
-      
-       
-      let mm_html = '';
-      for (var i = 1; i <= 12; i++) {
-        if (i < 10) {
-          mm_html += '<option>0' + i + '</option>';
-        } else {
-          mm_html += '<option>' + i + '</option>';
-        }
-      }
-      mm_html += '<option selected></option>';
-    
-      $('select#birthmm').html(mm_html);
-    
-      
-      let dd_html = '';
-      for (var i = 1; i <= 31; i++) {
-        if (i < 10) {
-          dd_html += '<option>0' + i + '</option>';
-        } else {
-          dd_html += '<option>' + i + '</option>';
-        }
-      }
-      dd_html += '<option selected></option>';
-      
-      $('select#birthdd').html(dd_html);
+		// 생년월일 월일란에 날짜 주기
+		  let yyyy_html = "";  // 생년월일의 년도   	
+		  for(var i=1950; i<=2050; i++) {
+				yyyy_html += "<option>"+i+"</option>";
+		  }
+		  yyyy_html += "<option selected></option>";
+			
+	      $("select#birthyyyy").html(yyyy_html);
+		  
+	      
+		  let mm_html = '';
+		  for (var i = 1; i <= 12; i++) {
+		    if (i < 10) {
+		      mm_html += '<option>0' + i + '</option>';
+		    } else {
+		      mm_html += '<option>' + i + '</option>';
+		    }
+		  }
+		  mm_html += '<option selected></option>';
+		
+		  $('select#birthmm').html(mm_html);
+		
+		  
+		  let dd_html = '';
+		  for (var i = 1; i <= 31; i++) {
+		    if (i < 10) {
+		      dd_html += '<option>0' + i + '</option>';
+		    } else {
+		      dd_html += '<option>' + i + '</option>';
+		    }
+		  }
+		  dd_html += '<option selected></option>';
+		  
+		  $('select#birthdd').html(dd_html);
  
 	}); // end of $(document).ready(function(){})---------------
 	
@@ -614,6 +614,12 @@
 	  frm.action = '<%=ctxPath%>/member/memberRegister.tea';
 	  frm.method = 'post';
 	  frm.submit();
+	  
+	  history.pushState(null, null, location.href); // 뒤로가기 막기
+		window.onpopstate = function(event) { 
+			history.go(1); 
+		};
+		
 	} // end of function goRegister(){}---------------
 
 </script>
@@ -649,25 +655,24 @@
 					</th>
 					<td>
 						<input id="userid" type="text" class="required" name="userid"
-						size="50" placeholder="(영문소문자/숫자,4~16자)" />
+						size="50" placeholder="(영문 소문자/숫자,4~16자)" />
 						<button type="button" id="idCheck">중복확인</button>
 						<span id="idcheckResult"></span>
-						<span class="error" style="color: red">아이디는 영문소문자/숫자로 된 4~16자로 입력하세요.</span>
-    	  	</td>
-					 
+						<span class="error" style="color: red">아이디는 영문 소문자/숫자로 된 4~16자로 입력하세요.</span>
+    	  			</td>
 				</tr>
 				<tr>
 					<th>비밀번호<span class="mustIn">*</span></th>
 					<td><input id="passwd" type="password" class="required" name="passwd"
-						size="50" placeholder="(영문 대소문자/숫자/특수문자 포함, 8~15자)" />
-					<span class="error" style="color: red">비밀번호는 대소문자/숫자/특수문자 포함 8자~15자로 입력하세요.</span>
+						size="50" placeholder="(영문자/숫자/특수문자 포함, 8자~15자)" />
+					<span class="error" style="color: red">비밀번호는 영문자/숫자/특수문자 포함 8자~15자로 입력하세요.</span>
 					</td>
 				</tr>
 				<tr>
-					<th>비밀번호확인<span class="mustIn">*</span></th>
+					<th>비밀번호 확인</th>
 					<td><input id="passwdCheck" type="password" class="required" name="passwdCheck"
-						size="50" placeholder="(비밀번호 확인)" />
-						<span class="error" style="color: red">암호가 일치하지 않습니다.</span>
+						size="50" placeholder="(영문자/숫자/특수문자 포함, 8자~15자)" />
+						<span class="error" style="color: red">비밀번호가 일치하지 않습니다.</span>
 					</td>
 				</tr>
 				<tr>
@@ -692,15 +697,15 @@
 					<th>휴대전화<span class="mustIn">*</span></th>
 					<td>
 						<select id="hp1" name="hp1">
-               <option value="010">010</option>
-               <option value="011">011</option>
-               <option value="016">016</option>
-               <option value="017">017</option>
-               <option value="018">018</option>
-               <option value="019">019</option>
-            </select>&nbsp;-&nbsp;
-				    <input type="text" id="hp2" name="hp2" class="required" size="6" maxlength="4" />&nbsp;-&nbsp;
-				    <input type="text" id="hp3" name="hp3" class="required" size="6" maxlength="4" />
+			               <option value="010">010</option>
+			               <option value="011">011</option>
+			               <option value="016">016</option>
+			               <option value="017">017</option>
+			               <option value="018">018</option>
+			               <option value="019">019</option>
+			            </select>&nbsp;-&nbsp;
+					    <input type="text" id="hp2" name="hp2" class="required" size="6" maxlength="4" />&nbsp;-&nbsp;
+					    <input type="text" id="hp3" name="hp3" class="required" size="6" maxlength="4" />
 					</td>
 				</tr>
 				

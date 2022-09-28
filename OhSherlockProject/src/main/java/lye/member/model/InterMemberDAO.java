@@ -20,6 +20,8 @@ public interface InterMemberDAO {
 	// 회원의 개인정보 변경하기 - 이메일 인증하기
 	boolean isUserEmailExist(Map<String, String> paraMap) throws SQLException;
 
+	// 회원탈퇴하기
+	int deleteMember(String userid) throws SQLException;
 
 	
 }
