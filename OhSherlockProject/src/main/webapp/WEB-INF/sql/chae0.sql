@@ -2,6 +2,10 @@ show user;
 -- USER이(가) "SEMI_ORAUSER2"입니다.
 
 
+update tbl_member set coin 
+
+
+
 select *
 from tbl_member
 order by registerday desc;
@@ -22,12 +26,21 @@ nominvalue
 nocycle
 nocache;
 
+desc tbl_coin_history;
 
 
-insert into tbl_coin_history(COINNO, FK_USERID, COIN_DATE, COIN_AMOUNT) values(1,'codud1158', sysdate - 3, 2000);
 
-insert into tbl_coin_history(COINNO, FK_USERID, COIN_DATE, COIN_AMOUNT)
- values(seq_coin_history.nextval, 'codud1158',sysdate - 3, 2000);
+insert into tbl_coin_history(COINNO, FK_USERID, COIN_AMOUNT)
+values(seq_coin_history.nextval, ?, ? )
+
+
+
+
+
+
+
+insert into tbl_coin_history(COINNO, FK_USERID, COIN_AMOUNT)
+ values(seq_coin_history.nextval, 'codud1158',2000);
 
  commit;
  
@@ -50,4 +63,8 @@ CROSS JOIN
     from tbl_coin_history
     where fk_userid = 'codud1158'
 ) H;
+
+
+
+
 
