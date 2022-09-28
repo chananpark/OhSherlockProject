@@ -88,7 +88,7 @@ public class MemberDAO implements InterMemberDAO {
 	}// end of public String idFind(Map<String, String> paraMap) throws SQLException------------
 
 
-	// 회원의 coin 및 포인트 변경하기
+	// 회원의 coin 및 포인트 변경하기 및 내역 inser하기
 		@Override
 		public int coinUpdate(Map<String, String> paraMap) throws SQLException {
 
@@ -107,6 +107,21 @@ public class MemberDAO implements InterMemberDAO {
 				 pstmt.setString(3, paraMap.get("userid"));
 				 
 				 result = pstmt.executeUpdate();
+				 
+				 if(result==1) {
+					 // insert하는 코드
+					 
+					sql = " insert into tbl_coin_history(COINNO, FK_USERID, COIN_AMOUNT) "
+					    + " values(seq_coin_history.nextval, ?, ? ) ";
+					
+					pstmt = conn.prepareStatement(sql);
+					
+					pstmt.setString(1, paraMap.get("userid"));
+					pstmt.setInt(2, Integer.parseInt(paraMap.get("coinmoney")));
+					
+					result = pstmt.executeUpdate();
+					 
+				 }
 				 
 			} finally {
 				close();

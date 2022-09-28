@@ -44,6 +44,8 @@ public class CoinUpdateLoginuser extends AbstractController {
 				
 				message = loginuser.getName()+"님의 "+coinmoney+"원 결제가 되었습니다.";
 				loc = request.getContextPath()+"/mypage/mypage.tea"; 
+				
+				
 			}
 			else {
 				message = "코인액 결제가 실패되었습니다.";

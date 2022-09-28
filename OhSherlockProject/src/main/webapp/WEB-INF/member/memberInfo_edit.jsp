@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 
 <%@ include file="../header.jsp"%>
-    
+<%@ page import="javax.servlet.http.HttpServletRequest" %>    
 <style type="text/css">
 
 	div#tblTitle {
@@ -61,7 +61,7 @@
 <script type="text/javascript">
 
 	//타이머 시간
-	let time = 5; 
+	let time = 60 * 5; 
 
 	let b_flag_addressBtn_click = false;  // 초기값을 false 로 줌. 
 	// "우편번호찾기" 를 클릭했는지 클릭을 안했는지 여부를 알아오기 위한 용도.
@@ -72,12 +72,16 @@
 	let b_flag_emailVerifyCode_click = false;
 	// "이메일인증코드확인" 을 확인 했는지 알아오기 위한 용도.
 	
+	// 인증번호
+	let certificationCode = "";
+	
+	
 	$(document).ready(function(){
-		
 		$("span.error").hide();   // 처음에는 에러메시지를 숨기고 시작한다.
 		$("div#emailVerify").hide();  // 처음에는 인증하기 클릭시 인증란을 숨기고 시작한다.
 		$("span#emailCodeConfirm").hide();  // 인증결과도 숨기고 시작한다.
-		
+		$("#spinner").hide(); // 스피너 숨기고 시작
+	
 		$("input#name").blur( (e) => { 
 			
 			const $target = $(e.target); 
@@ -176,15 +180,18 @@
 		} );// 아이디가 email 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 		
 		
-		var hp1 = ${ fn:substring(sessionScope.loginuser.mobile, 1, 3) };
+		<c:set var="hp_1" value="${sessionScope.loginuser.mobile}"/>
+		let hp1 = ${ fn:substring(hp_1, 1, 3) };
+		
 		
 		if(hp1 < 20) {
 			hp1 = "0" + hp1;
 		}
 		
-		$("select[name='hp1']").val(hp1);
+		console.log(hp1);
+		//$("select[name='hp1']").val(hp1);
 		
-		
+		$("select[name='hp1'] option[value='" + hp1 + "']").attr('selected', 'selected');
 		
 		$("input#hp2").blur( (e)=>{
 			
@@ -304,14 +311,16 @@
    	    
      	// 생년월일 월일란에 날짜 주기
 	 	let yyyy_html = "";  // 생년월일의 년도   	
-		for(var i=1950; i<=2050; i++) {
+		for(var i=1950; i<=2010; i++) {
 			yyyy_html += "<option>"+i+"</option>";
 		}
 		yyyy_html += '<option selected></option>';
 		$("select#birthyyyy").html(yyyy_html); 
-
-		$("select[name='birthyyyy']").val(${fn:substring(requestScope.loginuser.birthday, 0, 4)});
 		
+
+		var birthyyyy = ${fn:substring(requestScope.loginuser.birthday, 0, 4)};
+		$("select[name='birthyyyy']").val(birthyyyy);
+
 		
         let mm_html = "";  // 생년월일의 월
 		for(var i=1; i<=12; i++) {
@@ -323,7 +332,7 @@
 		}
 		mm_html += '<option selected></option>';
 		$("select#birthmm").html(mm_html);
-		
+
 		var birthmm = ${fn:substring(requestScope.loginuser.birthday, 4, 6)};
 		
 		if(birthmm < 10) {
@@ -331,7 +340,6 @@
 		}
 		
 		$("select[name='birthmm']").val(birthmm);
-		
 		
 		let dd_html = "";  // 생년월일의 일
 		for(var i=1; i<=31; i++) {
@@ -345,8 +353,7 @@
 		dd_html += '<option selected></option>';
 		$("select#birthdd").html(dd_html);
 		
-		var birthdd = ${fn:substring(requestScope.loginuser.birthday, 6, 8)};
-		
+		var birthdd = ${fn:substring(requestScope.loginuser.birthday, 6, 8)}; 
 		if(birthdd < 10) {
 			birthdd = "0" + birthdd;
 		}
@@ -354,8 +361,6 @@
 		$("select[name='birthdd']").val(birthdd);
 		
 	});// end of $(document).ready(function(){})---------------------------
-	
-	
 	
 	// >>> Function Declaration <<< //
 	// 이메일 "인증하기" 을 클릭시 호출되는 함수
@@ -377,52 +382,13 @@
 				if(json.isExists) {
 					// 입력한 email 이 이미 사용중이라면 (isExists == true)
 					$("span#emailCheckResult").html($("input#email").val()+" 은 중복된 email 이므로 사용불가 합니다.").css("color", "red");
-   	 				$("input#userid").val("");  // 입력란에서 입력한 ID 값을 비워버리기
+   	 				// $("input#userid").val("");  // 입력란에서 입력한 ID 값을 비워버리기
 				}
 				else {
 					// 입력한 email 이 이미 DB 테이블에 존재하지 않는 경우라면
 					$("span#emailCheckResult").html($("input#email").val()+" 은 사용가능합니다.").css("color", "navy");
-					
-					// 이메일 인증코드 발송 함수 호출
-					$.ajax({
-			    		url:'<%= ctxPath%>/member/sendEmailCode_2.tea',
-			    		data:{"email":$("input#email").val()
-							 ,"userid":"${sessionScope.loginuser.userid}"},
-			    		type:'POST',
-			    		dataType:"json",
-			    		success:function(json){
-		   					alert("인증코드가 이메일로 발송되었습니다.");
-		   					
-		   					
-			    		},
-			    		error:function(json){
-			    			alert('인증코드 발송을 실패했습니다. 다시 시도해주세요')
-			    		}
-		   			});
-					
-					// 5분 타이머 함수
-			         const myTimer = () => {
-			             
-		                 let minutes = parseInt(time / 60);
-		                 let seconds = time % 60;
-		   
-		                 minutes = minutes < 10 ? "0" + minutes : minutes;
-		                 seconds = seconds < 10 ? "0" + seconds : seconds;
-		   
-		                 $("#timer").text(minutes + ":" + seconds);
-		               
-		                 if (time-- < 0) {
-		                     alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
-		                     clearInterval(setTimer); // 타이머 삭제
-		                     $("#timer").hide();
-		                     return;
-		                 }
-		            }
-			         
-			         // 5분 타이머 시작
-			          const setTimer = setInterval(myTimer, 1000);
-					
-					$("div#emailVerify").show();
+					$("#spinner").show();
+					sendEmail(); // 이메일 인증코드 발송 함수 호출
 				}
 			},
 			
@@ -432,33 +398,83 @@
 			
 		});
 		
+		
+		
 	}// end of function isEmailCheck()-----------------------
 	
+	function sendEmail() {
+		// 이메일 인증코드 발송 함수
+		$.ajax({
+    		url:'<%= ctxPath%>/member/sendEmailCode_2.tea',
+    		data:{"email":$("input#email").val()
+				 ,"userid":"${sessionScope.loginuser.userid}"},
+    		type:'POST',
+    		dataType:"json",
+    		success:function(json){
+    			$("#spinner").hide();
+    			if(json.sendMailSuccess){
+					alert("인증코드가 이메일로 발송되었습니다.");
+	    			certificationCode = json.certificationCode;
+	    			
+	    			// 5분 타이머 함수
+	    	         const myTimer = () => {
+	    	             
+	    	             let minutes = parseInt(time / 60);
+	    	             let seconds = time % 60;
+
+	    	             minutes = minutes < 10 ? "0" + minutes : minutes;
+	    	             seconds = seconds < 10 ? "0" + seconds : seconds;
+
+	    	             $("#timer").text(minutes + ":" + seconds);
+	    	           
+	    	             if (time-- < 0) {
+	    	                 alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
+	    	                 clearInterval(setTimer); // 타이머 삭제
+	    	                 $("#timer").hide();
+	    	                 return;
+	    	             }
+	    	        }
+	    	         
+	    	         // 5분 타이머 시작
+	    	          const setTimer = setInterval(myTimer, 1000);
+	    			
+	    			$("div#emailVerify").show();
+    			}
+    			else
+    				alert("인증코드 발송을 실패했습니다. 다시 시도해주세요.");
+    		},
+	    		error:function(request, status, error){
+	                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);  // 뭔가 잘못되어지면 alert 로 찍어본다.
+	            }
+			});
+
+	}
+	
 	// 인증확인하기
-		function emailVerifyCodeCheck() {
+	function emailVerifyCodeCheck() {
+		
+		const userVerifyCode = $("input#emailCode").val();
+
+			if(certificationCode == userVerifyCode){
 			
-			const userVerifyCode = $("input#emailCode").val();
-			
-			
-			if( ${not empty certificationCode && certificationCode == userVerifyCode}  ){
-				b_flag_emailVerifyCode_click = true;
-				$('div#emailVerify').hide();
-				$('span#emailCodeConfirm').show();
-				
-			console.log(${certificationCode});
-			console.log(userVerifyCode);
-				
-				
+			b_flag_emailVerifyCode_click = true;
+			$('div#emailVerify').hide();
+			$('span#emailCodeConfirm').show();
 			}
 			else{
-				alert("인증번호가 틀렸습니다.");
+				alert("인증번호가 틀렸습니다. 인증하기 버튼을 눌러 인증번호를 다시 발급받으세요.");
 				b_flag_emailVerifyCode_click = false;
-				
-				console.log(${certificationCode});
-				console.log(userVerifyCode);
+				$("input#emailCode").val("");
+				$("div#emailVerify").hide();  // 처음에는 인증하기 클릭시 인증란을 숨기고 시작한다.
+				$("span#emailCodeConfirm").hide();  // 인증결과도 숨기고 시작한다.
 			}
-			
-		}
+	}
+	
+	
+	// "취소" 버튼 클릭시 호출되는 함수
+    function cancel() {
+       location.href= "<%= ctxPath%>/mypage/mypage.tea"; 
+    }
 	
 	// "수정" 버튼 클릭시 호출되는 함수
 	function goEdit() {
@@ -618,6 +634,7 @@
 						<input type="text" name="email" id="email" size="50" value="${sessionScope.loginuser.email}" class="requiredInfo" /> 
 		                <button type="button" id="emailCheckBtn" style="cursor: pointer;" onclick="isEmailCheck();">인증하기</button>
 		                <span id="emailCheckResult"></span>
+		                <span id="spinner" class="spinner-border text-success"></span>
 		                <span class="error" style="color: red">이메일 형식에 맞지 않습니다.</span>
 		                <br>
 						<div id="emailVerify">
@@ -634,7 +651,7 @@
     <br><br>
     	
 	    <div class="text-center" id="detail" style="display: block; margin-top: 40px;">
-		  <input type="button" class="btn btn-light" id="btnUpdate" onClick="self.close()" value="취소" />
+		  <input type="button" class="btn btn-light" id="btnUpdate" onClick="cancel();" value="취소" />
 		  <input type="button" class="btn btn-secondary" onClick="goEdit();" value="수정" />
 	    </div>
     </div>

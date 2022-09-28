@@ -365,9 +365,10 @@
 			  b_flag_emailDuplicate_click = true;
 			  // 가입하기 버튼을 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지 알아보기위한 용도임.
 			
+
         // 오류메시지 삭제
         $('span#emailCheckResult').empty();
-			  
+
 			  $.ajax({
 			    url: '<%= ctxPath%>/member/emailDuplicateCheck.tea',
 			    data: { email: $('input#email').val() },
@@ -759,7 +760,11 @@
 			<thead class="thead-light">
 				<tr>
 					<td colspan="2" style="text-align: center; vertical-align: middle;">
+<<<<<<< HEAD
 						<iframe src="<%=ctxPath %>/iframeAgree/registerAgree.html" width="85%" height="150px" class="box" ></iframe></iframe>
+=======
+						<iframe src="<%=ctxPath %>/iframeAgree/registerAgree.html" width="85%" height="150px" class="box" ></iframe>
+>>>>>>> branch 'main' of https://github.com/Chanan-Park/OhSherlockProject.git
 					</td>
 				</tr>
 				<tr>
