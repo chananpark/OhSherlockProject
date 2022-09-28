@@ -92,8 +92,8 @@
 	<hr style="background-color: black; height: 1.2px;">
 
 	<form name="qnaFrm" id="qnaFrm">
-		<label for="qnatype">질문유형<span class="text-danger">*</span></label>
-		<select id="qnatype" name="qnatype">
+		<label for="faq_category">질문유형<span class="text-danger">*</span></label>
+		<select id="faq_category" name="faq_category">
 			<option value="operation">운영</option>
 			<option value="product">상품</option>
 			<option value="order">주문</option>

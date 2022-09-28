@@ -28,27 +28,25 @@ public class FaqRegisterEnd extends AbstractController {
 		if( loginuser != null && "admin".equals(loginuser.getUserid()) ) {
 			// 관리자(admin)으로 로그인 했을 경우
 			
-			String qnatype = request.getParameter("qnatype");
+			String faq_category = request.getParameter("faq_category");
 			String title = request.getParameter("title");
 			String content = request.getParameter("content");
 			content = content.replace("\r\n","<br>");
-			// TODO 시퀀스 값 알아오는 DAO 만들기
 			
-			InterFaqDAO ndao = new FaqDAO();
+			InterFaqDAO fdao = new FaqDAO();
 
-			// 글번호 시퀀스 얻어오기
-	//		String seq = ndao.getSeqNo();
-			
 			Map<String, String> paraMap = new HashMap<>();
-	//		paraMap.put("seq", seq);
+			paraMap.put("faq_category", faq_category);
 			paraMap.put("title", title);
 			paraMap.put("content", content);
 			
-			/*
+			// 자주묻는 질문 글 작성
+			int n = fdao.registerFaq(paraMap);
+			
 			if (n==1) {
-				message = "공지사항 등록이 완료되었습니다.";
+				message = "자주묻는질문 등록이 완료되었습니다.";
 				// 방금 작성한 글 조회 화면
-				loc = request.getContextPath() + "/cs/noticeDetail.tea?noticeNo="+seq;
+				loc = request.getContextPath() + "/cs/faq.tea";
 	
 				request.setAttribute("message", message);
 				request.setAttribute("loc", loc);
@@ -56,15 +54,14 @@ public class FaqRegisterEnd extends AbstractController {
 				super.setViewPage("/WEB-INF/msg.jsp");
 			}
 			else {
-				message = "공지사항 등록을 실패하였습니다.";
-				loc = request.getContextPath() + "/cs/notice.tea";
+				message = "자주묻는질문 등록을 실패하였습니다.";
+				loc = request.getContextPath() + "/cs/faq.tea";
 	
 				request.setAttribute("message", message);
 				request.setAttribute("loc", loc);
 	
 				super.setViewPage("/WEB-INF/msg.jsp");
 			}
-			*/
 			
 		} else {
 			// 로그인을 안한 경우 또는 일반 사용자로 로그인 했을 경우

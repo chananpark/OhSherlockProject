@@ -51,6 +51,8 @@
     
 <script>
 	
+	let buttonid="operation";
+	
 	$(document).ready(()=>{
 		
 		<%-- 클릭이벤트 바인딩 --%>
@@ -61,10 +63,6 @@
 		
 		$(".faqContainer .btn-group button#all").click();
 		
-		$("#faqRegister").click(()=>{
-			 location.href = "<%=ctxPath%>/cs/faqRegister.tea";
-		});
-
 		<%-- 세션에 저장된 userid가 admin(관리자)일 때만 질문 추가 등록 버튼을 노출시킨다.--%>
 		$("#faqRegister").hide();
 		
@@ -72,15 +70,27 @@
 			$("#faqRegister").show();
 		}
 		
-		$("#all").click(function(){
-			
-			
-			
+		///////////////////////////////////////////////////////////////////////////////////////////////////////
+		// 질문 추가 등록 클릭 시 이벤트
+		$("#faqRegister").click(()=>{
+			 location.href = "<%=ctxPath%>/cs/faqRegister.tea";
 		});
 		
+		// 버튼 클릭 시 해당 아이디 알아오기
+		$("div#btngroup > button").click(function(e){
+			const $target = $(e.target); 
+			buttonid = $target.attr("id"); 
+			
+			
+		}); // end of $("div#btngroup > button").click
 		
 		
 	}); // end of $(document).ready
+	
+	
+	
+	
+	
 </script>
     
     
@@ -99,10 +109,10 @@
 	<hr style="background-color: black; height: 1.2px;">
 	<br>
 	<%-- 특정 버튼 클릭했을때 버튼 아이디를 request영역에 담아서 요청을 보내고
-거기에 해당하는 글들을 db에서 가져온 뒤 faqContent.jsp에 보여준다. --%>
+		거기에 해당하는 글들을 db에서 가져온 뒤 faqContent.jsp에 보여준다. --%>
  
 	<div class="row">
-		<div class="btn-group col-12 text-center mb-4">
+		<div id="btngroup" class="btn-group col-12 text-center mb-4">
 			<button type="button" class="btn" id="all">전체</button>
 			<button type="button" class="btn" id="operation">운영</button>
 			<button type="button" class="btn" id="product">상품</button>
@@ -116,7 +126,7 @@
 	
 
 	<iframe id="iframe_idFind" style="border: none; width: 100%; height: 350px;" 
-		src="<%=ctxPath %>/cs/faqContent.tea">
+		src="<%= ctxPath%>/cs/faqContent.tea?buttonid="+buttonid>
 	</iframe>
 	
 	<%-- 로그인 된 사용자가 관리자일 경우에만 나타나도록 함 --%>

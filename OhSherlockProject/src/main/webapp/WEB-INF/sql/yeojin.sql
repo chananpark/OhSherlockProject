@@ -94,7 +94,7 @@ insert into tbl_faq(faq_num, faq_category, faq_subject, faq_content) values(seq_
 select *
 from tbl_faq;
 
-
+se
 
 
 
