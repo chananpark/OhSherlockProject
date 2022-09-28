@@ -39,9 +39,19 @@ public class MemberRegister extends AbstractController {
 			String hp3 = request.getParameter("hp3"); 
 			String email = request.getParameter("email"); 
 			String gender = request.getParameter("gender"); 
-			String birthyyyy = request.getParameter("birthyyyy"); 
+			
+			String birthyyyy = request.getParameter("birthyyyy");
+			if(birthyyyy.equals("")) {
+				birthyyyy = "0000";
+			}
 			String birthmm = request.getParameter("birthmm"); 
+			if(birthmm.equals("")) {
+				birthmm = "00";
+			}
 			String birthdd = request.getParameter("birthdd");
+			if(birthdd.equals("")) {
+				birthdd = "00";
+			}
 			
 			String mobile = hp1 + hp2 + hp3; // "01023456789"
 			String birthday = birthyyyy+"-"+birthmm+"-"+birthdd;  // "1996-10-25"

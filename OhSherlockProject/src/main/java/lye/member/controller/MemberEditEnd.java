@@ -25,10 +25,22 @@ public class MemberEditEnd extends AbstractController {
 			String address = request.getParameter("address"); 
 			String detail_address = request.getParameter("detail_address"); 
 			String extra_address = request.getParameter("extra_address"); 
+			
 			String birthyyyy = request.getParameter("birthyyyy"); 
 			String birthmm = request.getParameter("birthmm"); 
 			String birthdd = request.getParameter("birthdd"); 
-	        String hp1 = request.getParameter("hp1"); 
+			
+			if(birthyyyy == null) {
+				birthyyyy="0000";
+			}
+			if(birthmm == null) {
+				birthmm="00";
+			}
+			if(birthdd == null) {
+				birthdd="00";
+			}
+	        
+			String hp1 = request.getParameter("hp1"); 
 	        String hp2 = request.getParameter("hp2"); 
 	        String hp3 = request.getParameter("hp3"); 
 	        String email = request.getParameter("email"); 

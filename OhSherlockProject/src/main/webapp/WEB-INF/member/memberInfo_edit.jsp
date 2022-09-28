@@ -311,16 +311,16 @@
    	    
      	// 생년월일 월일란에 날짜 주기
 	 	let yyyy_html = "";  // 생년월일의 년도   	
-		for(var i=1950; i<=2050; i++) {
+		for(var i=1950; i<=2010; i++) {
 			yyyy_html += "<option>"+i+"</option>";
 		}
 		yyyy_html += '<option selected></option>';
 		$("select#birthyyyy").html(yyyy_html); 
+		
 
-		if(!isNaN("${loginuser.birthday}")){
-			var birthyyyy = ${fn:substring(requestScope.loginuser.birthday, 0, 4)};
-			$("select[name='birthyyyy']").val(birthyyyy);
-		}
+		var birthyyyy = ${fn:substring(requestScope.loginuser.birthday, 0, 4)};
+		$("select[name='birthyyyy']").val(birthyyyy);
+
 		
         let mm_html = "";  // 생년월일의 월
 		for(var i=1; i<=12; i++) {
@@ -332,17 +332,14 @@
 		}
 		mm_html += '<option selected></option>';
 		$("select#birthmm").html(mm_html);
-		
- 		if(!isNaN("${loginuser.birthday}")){
 
-			var birthmm = ${fn:substring(requestScope.loginuser.birthday, 4, 6)};
-			
-			if(birthmm < 10) {
-				birthmm = "0" + birthmm;
-			}
-			
-			$("select[name='birthmm']").val(birthmm);
-		} 
+		var birthmm = ${fn:substring(requestScope.loginuser.birthday, 4, 6)};
+		
+		if(birthmm < 10) {
+			birthmm = "0" + birthmm;
+		}
+		
+		$("select[name='birthmm']").val(birthmm);
 		
 		let dd_html = "";  // 생년월일의 일
 		for(var i=1; i<=31; i++) {
@@ -356,18 +353,14 @@
 		dd_html += '<option selected></option>';
 		$("select#birthdd").html(dd_html);
 		
-		 if(!isNaN("${loginuser.birthday}")){
-		 var birthdd = ${fn:substring(requestScope.loginuser.birthday, 6, 8)}; 
-			if(birthdd < 10) {
-				birthdd = "0" + birthdd;
-			}
-			
-			$("select[name='birthdd']").val(birthdd);
-		} 
+		var birthdd = ${fn:substring(requestScope.loginuser.birthday, 6, 8)}; 
+		if(birthdd < 10) {
+			birthdd = "0" + birthdd;
+		}
+		
+		$("select[name='birthdd']").val(birthdd);
 		
 	});// end of $(document).ready(function(){})---------------------------
-	
-	
 	
 	// >>> Function Declaration <<< //
 	// 이메일 "인증하기" 을 클릭시 호출되는 함수
@@ -476,6 +469,12 @@
 				$("span#emailCodeConfirm").hide();  // 인증결과도 숨기고 시작한다.
 			}
 	}
+	
+	
+	// "취소" 버튼 클릭시 호출되는 함수
+    function cancel() {
+       location.href= "<%= ctxPath%>/mypage/mypage.tea"; 
+    }
 	
 	// "수정" 버튼 클릭시 호출되는 함수
 	function goEdit() {
@@ -652,7 +651,7 @@
     <br><br>
     	
 	    <div class="text-center" id="detail" style="display: block; margin-top: 40px;">
-		  <input type="button" class="btn btn-light" id="btnUpdate" onClick="self.close()" value="취소" />
+		  <input type="button" class="btn btn-light" id="btnUpdate" onClick="cancel();" value="취소" />
 		  <input type="button" class="btn btn-secondary" onClick="goEdit();" value="수정" />
 	    </div>
     </div>
