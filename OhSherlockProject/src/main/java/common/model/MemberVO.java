@@ -33,282 +33,282 @@ public class MemberVO {
 	public MemberVO() {}
 	
     /////////////////////////////////////////////////////////////////////////////
-	
-	public MemberVO(String userid, String passwd, String name, String email, String mobile, String postcode,
-			String address, String detail_address, String extra_address, String gender, String birthday, int point,
-			int coin, String registerday, int idle, int status, String last_passwd_date, boolean passwdChangeRequired) {
-		super();
-		this.userid = userid;
-		this.passwd = passwd;
-		this.name = name;
-		this.email = email;
-		this.mobile = mobile;
-		this.postcode = postcode;
-		this.address = address;
-		this.detail_address = detail_address;
-		this.extra_address = extra_address;
-		this.gender = gender;
-		this.birthday = birthday;
-		this.point = point;
-		this.coin = coin;
-		this.registerday = registerday;
-		this.idle = idle;
-		this.status = status;
-		this.last_passwd_date = last_passwd_date;
-		this.passwdChangeRequired = passwdChangeRequired;
-	}
+   
+   public MemberVO(String userid, String passwd, String name, String email, String mobile, String postcode,
+         String address, String detail_address, String extra_address, String gender, String birthday, int point,
+         int coin, String registerday, int idle, int status, String last_passwd_date, boolean passwdChangeRequired) {
+      super();
+      this.userid = userid;
+      this.passwd = passwd;
+      this.name = name;
+      this.email = email;
+      this.mobile = mobile;
+      this.postcode = postcode;
+      this.address = address;
+      this.detail_address = detail_address;
+      this.extra_address = extra_address;
+      this.gender = gender;
+      this.birthday = birthday;
+      this.point = point;
+      this.coin = coin;
+      this.registerday = registerday;
+      this.idle = idle;
+      this.status = status;
+      this.last_passwd_date = last_passwd_date;
+      this.passwdChangeRequired = passwdChangeRequired;
+   }
 
-	// 나의정보수정 생성자
-	   public MemberVO(String userid, String passwd, String name, String postcode, String address,
-	         String detail_address, String extra_address, String birthday, String mobile, String email) {
-	      
-	      this.userid = userid;
-	      this.passwd = passwd;
-	      this.name = name;
-	      this.postcode = postcode;
-	      this.address = address;
-	      this.detail_address = detail_address;
-	      this.extra_address = extra_address;
-	      this.birthday = birthday;
-	      this.mobile = mobile;
-	      this.email = email;
-	      
-	   }
+   // 나의정보수정 생성자
+      public MemberVO(String userid, String passwd, String name, String postcode, String address,
+            String detail_address, String extra_address, String birthday, String mobile, String email) {
+         
+         this.userid = userid;
+         this.passwd = passwd;
+         this.name = name;
+         this.postcode = postcode;
+         this.address = address;
+         this.detail_address = detail_address;
+         this.extra_address = extra_address;
+         this.birthday = birthday;
+         this.mobile = mobile;
+         this.email = email;
+         
+      }
+      
+      // 회원가입 생성자(임선우)
+      public MemberVO(String userid, String passwd, String name, String email, String mobile, String postcode,
+                  String address, String detail_address, String extra_address, String gender, String birthday) {
+         this.userid = userid;
+         this.passwd = passwd;
+         this.name = name;
+         this.email = email;
+         this.mobile = mobile;
+         this.postcode = postcode;
+         this.address = address;
+         this.detail_address = detail_address;
+         this.extra_address = extra_address;
+         this.gender = gender;
+         this.birthday = birthday;
+      }
 
-	   // 회원가입 생성자(임선우)
-	   public MemberVO(String userid, String passwd, String name, String email, String mobile, String postcode,
-	               String address, String detail_address, String extra_address, String gender, String birthday) {
-	      this.userid = userid;
-	      this.passwd = passwd;
-	      this.name = name;
-	      this.email = email;
-	      this.mobile = mobile;
-	      this.postcode = postcode;
-	      this.address = address;
-	      this.detail_address = detail_address;
-	      this.extra_address = extra_address;
-	      this.gender = gender;
-	      this.birthday = birthday;
-	   }   
-	   
-	public String getUserid() {
-		return userid;
-	}
+   public String getUserid() {
+      return userid;
+   }
 
 
 
-	public void setUserid(String userid) {
-		this.userid = userid;
-	}
+   public void setUserid(String userid) {
+      this.userid = userid;
+   }
 
 
 
-	public String getPasswd() {
-		return passwd;
-	}
+   public String getPasswd() {
+      return passwd;
+   }
 
 
 
-	public void setPasswd(String passwd) {
-		this.passwd = passwd;
-	}
+   public void setPasswd(String passwd) {
+      this.passwd = passwd;
+   }
 
 
 
-	public String getName() {
-		return name;
-	}
+   public String getName() {
+      return name;
+   }
 
 
 
-	public void setName(String name) {
-		this.name = name;
-	}
+   public void setName(String name) {
+      this.name = name;
+   }
 
 
 
-	public String getEmail() {
-		return email;
-	}
+   public String getEmail() {
+      return email;
+   }
 
 
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+   public void setEmail(String email) {
+      this.email = email;
+   }
 
 
 
-	public String getMobile() {
-		return mobile;
-	}
+   public String getMobile() {
+      return mobile;
+   }
 
 
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
+   public void setMobile(String mobile) {
+      this.mobile = mobile;
+   }
 
 
 
-	public String getPostcode() {
-		return postcode;
-	}
+   public String getPostcode() {
+      return postcode;
+   }
 
 
 
-	public void setPostcode(String postcode) {
-		this.postcode = postcode;
-	}
+   public void setPostcode(String postcode) {
+      this.postcode = postcode;
+   }
 
 
 
-	public String getAddress() {
-		return address;
-	}
+   public String getAddress() {
+      return address;
+   }
 
 
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+   public void setAddress(String address) {
+      this.address = address;
+   }
 
 
 
-	public String getDetail_address() {
-		return detail_address;
-	}
+   public String getDetail_address() {
+      return detail_address;
+   }
 
 
 
-	public void setDetail_address(String detail_address) {
-		this.detail_address = detail_address;
-	}
+   public void setDetail_address(String detail_address) {
+      this.detail_address = detail_address;
+   }
 
 
 
-	public String getExtra_address() {
-		return extra_address;
-	}
+   public String getExtra_address() {
+      return extra_address;
+   }
 
 
 
-	public void setExtra_address(String extra_address) {
-		this.extra_address = extra_address;
-	}
+   public void setExtra_address(String extra_address) {
+      this.extra_address = extra_address;
+   }
 
 
 
-	public String getGender() {
-		return gender;
-	}
+   public String getGender() {
+      return gender;
+   }
 
 
 
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
+   public void setGender(String gender) {
+      this.gender = gender;
+   }
 
 
 
-	public String getBirthday() {
-		return birthday;
-	}
+   public String getBirthday() {
+      return birthday;
+   }
 
 
 
-	public void setBirthday(String birthday) {
-		this.birthday = birthday;
-	}
+   public void setBirthday(String birthday) {
+      this.birthday = birthday;
+   }
 
 
 
-	public int getPoint() {
-		return point;
-	}
+   public int getPoint() {
+      return point;
+   }
 
 
 
-	public void setPoint(int point) {
-		this.point = point;
-	}
+   public void setPoint(int point) {
+      this.point = point;
+   }
 
 
 
-	public int getCoin() {
-		return coin;
-	}
+   public int getCoin() {
+      return coin;
+   }
 
 
 
-	public void setCoin(int coin) {
-		this.coin = coin;
-	}
+   public void setCoin(int coin) {
+      this.coin = coin;
+   }
 
 
 
-	public String getRegisterday() {
-		return registerday;
-	}
+   public String getRegisterday() {
+      return registerday;
+   }
 
 
 
-	public void setRegisterday(String registerday) {
-		this.registerday = registerday;
-	}
+   public void setRegisterday(String registerday) {
+      this.registerday = registerday;
+   }
 
 
 
-	public int getIdle() {
-		return idle;
-	}
+   public int getIdle() {
+      return idle;
+   }
 
 
 
-	public void setIdle(int idle) {
-		this.idle = idle;
-	}
+   public void setIdle(int idle) {
+      this.idle = idle;
+   }
 
 
 
-	public int getStatus() {
-		return status;
-	}
+   public int getStatus() {
+      return status;
+   }
 
 
 
-	public void setStatus(int status) {
-		this.status = status;
-	}
+   public void setStatus(int status) {
+      this.status = status;
+   }
 
 
 
-	public String getLast_passwd_date() {
-		return last_passwd_date;
-	}
+   public String getLast_passwd_date() {
+      return last_passwd_date;
+   }
 
 
 
-	public void setLast_passwd_date(String last_passwd_date) {
-		this.last_passwd_date = last_passwd_date;
-	}
+   public void setLast_passwd_date(String last_passwd_date) {
+      this.last_passwd_date = last_passwd_date;
+   }
 
     /////////////////////////////////////////////////////////////////////////////
 
-	public boolean isPasswdChangeRequired() {
-		return passwdChangeRequired;
-	}
+   public boolean isPasswdChangeRequired() {
+      return passwdChangeRequired;
+   }
 
-	public void setPasswdChangeRequired(boolean passwdChangeRequired) {
-		this.passwdChangeRequired = passwdChangeRequired;
-	}
+   public void setPasswdChangeRequired(boolean passwdChangeRequired) {
+      this.passwdChangeRequired = passwdChangeRequired;
+   }
 
-	public String getLast_login_date() {
-		return last_login_date;
-	}
+   public String getLast_login_date() {
+      return last_login_date;
+   }
 
-	public void setLast_login_date(String last_login_date) {
-		this.last_login_date = last_login_date;
-	}
-	
+   public void setLast_login_date(String last_login_date) {
+      this.last_login_date = last_login_date;
+   }
+   
 }
