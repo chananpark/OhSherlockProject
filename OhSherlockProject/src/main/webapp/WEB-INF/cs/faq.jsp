@@ -47,11 +47,32 @@
 	height: 40px;
 	padding: 0 10px;
 }
+
+#btngroup > button { 
+	font-weight:bold;
+}
+.accordion {
+	font-family: 'Gowun Dodum', sans-serif;
+}
+
+#faqAccordion button {
+	color: black;
+	text-decoration: none;
+}
+
+#faqAccordion button:hover {
+	cursor: pointer;
+	color: #1E7F15;
+}
+
+#faqAccordion .btn:focus, #faqAccordion .btn:active {
+   outline: none !important;
+   box-shadow: none;
+}
+
 </style>       
     
 <script>
-	
-	let buttonid="operation";
 	
 	$(document).ready(()=>{
 		
@@ -76,19 +97,95 @@
 			 location.href = "<%=ctxPath%>/cs/faqRegister.tea";
 		});
 		
-		// 버튼 클릭 시 해당 아이디 알아오기
-		$("div#btngroup > button").click(function(e){
-			const $target = $(e.target); 
-			buttonid = $target.attr("id"); 
-			
-			
-		}); // end of $("div#btngroup > button").click
+		
 		
 		
 	}); // end of $(document).ready
 	
+	<%-- 세션에 저장된 userid가 admin(관리자)일 때만 수정/삭제 버튼을 노출시킨다.--%>
+	$(function() {
+		$(".adminOnlyBtns").hide();
+		
+		if ("${sessionScope.loginuser.userid}" == 'admin' && "${sessionScope.loginuser.userid}" != null) {
+			$(".adminOnlyBtns").show();
+		}
+	});
 	
+	// 질문 수정하기 버튼 클릭 시 이벤트
+	function faqEdit_click(faq_num) {
+		location.href = "<%=ctxPath%>/cs/faqEdit.tea?faq_num="+faq_num;
+	} // end of function faqEdit_click(faq_num)
 	
+	// 각 카테고리 버튼을 클릭했을 경우의 메소드
+	function click_category(selectid) {
+		let html = "";
+		
+		// 페이지는 그대로 있으면서 데이터에서 상품을 가져와서 ajax 로 뿌려준다.
+		$.ajax({
+			url: "<%= request.getContextPath() %>/cs/faqContentJSON.tea",
+		//	type: "GET",
+			data: {"selectid":selectid}, 	 
+			dataType: "JSON", // 성공하면 JSON 형태로 넣어주어야 한다.
+			success: function(json){ // 올바르게 값을 가져왔으면 버튼의 값을 바꿔준다.
+				
+				if( json.length == 0 ) { 
+					html += " "; // 나중에 적어줘야하는데 여기 적어주면 에러나니까 그냥 자주묻는 질문은 무조건 다 나오는 걸로 하는 건 어떤지..?
+	                
+	                // HIT 상품 결과를 출력하기
+	                $("div#faqAccordion").html(html);
+	                
+				} else if( json.length > 0 ) {	
+					// 상품이 있는 경우
+					$.each(json, function(index, item){ 
+						
+						html += "<div class='card'>" + 
+								"	<div class='card-header' id='heading"+item.faq_num+"'>" +								
+								"		<h2 class='mb-0'>" +
+								"			<button class='btn btn-link' type='button' data-toggle='collapse' data-target='#collapse"+item.faq_num+"' aria-expanded='true' aria-controls='collapseOne'>" + 
+											item.faq_subject +
+								"			</button>" +
+								"		</h2>" +
+								"	</div>";
+							
+					// 전체에서만 아코디온 닫아주고 다른 부분에서는 펼쳐주는 조건문
+					if( selectid != "all"){
+						html += "	<div id='collapse"+item.faq_num+"' class='collapse show' aria-labelledby='heading"+item.faq_num+"'data-parent='#faqAccordion'>";
+					} else {
+						html += "	<div id='collapse"+item.faq_num+"' class='collapse' aria-labelledby='heading"+item.faq_num+"'data-parent='#faqAccordion'>";
+					}
+						
+						html += "		<div class='card-body'>" +
+								 item.faq_content;
+						
+					// 관리자로 로그인 했을 경우만 수정, 삭제버튼 보여주기
+					if(${sessionScope.loginuser.userid == 'admin' && not empty sessionScope.loginuser.userid}) {
+						html += "<div class='text-right adminOnlyBtns mb-1'> " +
+		                  		"	<input id='faqEdit' type='button' value='수정' style='border-style: none;' onclick='faqEdit_click("+item.faq_num+")'/>" +
+								"	<input id='faqdelete' class='btn-dark' type='button' value='삭제' style='border-style: none;'/> " +
+		               			"</div>";
+					} else {
+						html += " ";
+					}
+							
+						html += "		</div>" +
+								"	</div>" +
+								"</div>";
+						
+					});  // end of $.each(json, function(index, item)		
+					
+					// HIT 상품 결과를 출력하기
+					$("div#faqAccordion").html(html); // html 을 기존의 코드에 덮어씌우는 것이기 때문에 뒤에 쌓아주는 append 를 사용한다.
+							
+				} // end of 상품이 있는 경우와 없는 경우이 if-else
+			},  // end of success
+			
+			error: function(request, status, error){
+	        	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	        }
+		}); // end of ajax
+		
+		
+	} // end of function click_category()
 	
 	
 </script>
@@ -113,21 +210,20 @@
  
 	<div class="row">
 		<div id="btngroup" class="btn-group col-12 text-center mb-4">
-			<button type="button" class="btn" id="all">전체</button>
-			<button type="button" class="btn" id="operation">운영</button>
-			<button type="button" class="btn" id="product">상품</button>
-			<button type="button" class="btn" id="order">주문</button>
-			<button type="button" class="btn" id="delivery">배송</button>
-			<button type="button" class="btn" id="member">회원</button>
-			<button type="button" class="btn" id="else">기타</button>
+			<button type="button" class="btn" id="all" onclick="click_category('all')">전체</button>
+			<button type="button" class="btn" id="operation" onclick="click_category('operation')">운영</button>
+			<button type="button" class="btn" id="product" onclick="click_category('product')">상품</button>
+			<button type="button" class="btn" id="order" onclick="click_category('order')">주문</button>
+			<button type="button" class="btn" id="delivery" onclick="click_category('delivery')">배송</button>
+			<button type="button" class="btn" id="member" onclick="click_category('member')">회원</button>
+			<button type="button" class="btn" id="else" onclick="click_category('else')">기타</button>
 		</div>
 	</div>
 
 	
-
-	<iframe id="iframe_idFind" style="border: none; width: 100%; height: 350px;" 
-		src="<%= ctxPath%>/cs/faqContent.tea?buttonid="+buttonid>
-	</iframe>
+	<%-- 아코디온 시작 --%>
+	<div class="accordion" id="faqAccordion" style="border: none; width: 100%; margin-bottom:100px;"></div>
+	<%-- 아코디온 끝 --%>
 	
 	<%-- 로그인 된 사용자가 관리자일 경우에만 나타나도록 함 --%>
 	<c:if test="${sessionScope.loginuser ne null and loginuser.userid eq 'admin' }">

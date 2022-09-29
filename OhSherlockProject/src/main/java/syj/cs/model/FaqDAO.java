@@ -1,12 +1,16 @@
 package syj.cs.model;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+
+import common.model.FaqVO;
 
 public class FaqDAO implements InterFaqDAO {
 
@@ -65,6 +69,58 @@ public class FaqDAO implements InterFaqDAO {
 		
 		return n;
 	} // end of public int registerFaq(Map<String, String> paraMap) throws SQLException
+
+	
+	
+	// 자주묻는질문 버튼아이디에 따른 리스트 select 해오기
+	@Override
+	public List<FaqVO> selectFaqList(Map<String, String> paraMap) throws SQLException {
+
+		List<FaqVO> faqList = new ArrayList<>();
+		
+		try {
+
+			conn = ds.getConnection();
+			
+			String sql = "select faq_num, faq_category, faq_subject, faq_content "+
+						"from tbl_faq ";
+			
+			String selectid = paraMap.get("selectid");
+			
+			if( !("all".equals(selectid)) ) {
+				// faq_category 가 선택되어질 경우의 sql 문
+				sql += " where faq_category = ? ";
+			}
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			// 만일 faq_category 가 all 이 아닌 경우에만 위치홀더에 값을 세팅해준다.
+			if( !("all".equals(selectid)) ) {
+				pstmt.setString(1, selectid);
+			} 
+			
+			rs = pstmt.executeQuery();
+			
+			// 복수개의 행 출력
+			while(rs.next()) {
+				
+				FaqVO fvo = new FaqVO();
+				
+				fvo.setFaq_num(rs.getInt(1)); // 질문번호
+				fvo.setFaq_category(rs.getString(2)); // 카테고리
+				fvo.setFaq_subject(rs.getString(3)); // 질문제목
+				fvo.setFaq_content(rs.getString(4)); // 질문답변
+
+				faqList.add(fvo);
+				
+			} // end of while
+			
+		} finally {
+			close();
+		}
+
+		return faqList;
+	} // end of public List<FaqVO> selectFaqList(Map<String, String> paraMap) throws SQLException
 
 	
 	
