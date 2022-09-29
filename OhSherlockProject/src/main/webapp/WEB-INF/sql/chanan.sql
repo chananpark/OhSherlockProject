@@ -135,3 +135,77 @@ String sql = "update tbl_notice set noticeSubject = ?, noticeContent = ? where n
 select * from tbl_notice where noticeno=1;
 
 select ceil(count(*)) from tbl_notice;
+
+alter table tbl_inquiry rename column inquiry_cat to inquiry_type;
+
+desc tbl_inquiry;
+
+create table tbl_inquiry(
+inquiry_no number,
+fk_userid varchar2(15),
+inquiry_type Nvarchar2(20)  not null,
+inquiry_subject Nvarchar2(100) not null,
+inquiry_content clob not null,
+inquiry_date date default sysdate,
+inquiry_answered number default 0, -- 미답변:0, 답변완료:1
+inquiry_email number default 0, -- 이메일발송거부:0, 이메일발송희망:1
+inquiry_sms number default 0, -- 문자발송거부:0, 문자발송희망:1
+constraint PK_tbl_inquiry_inquiry_no primary key(inquiry_no),
+constraint CK_tbl_inquiry_inquiry_answered check (inquiry_answered in (0,1)),
+constraint CK_tbl_inquiry_inquiry_email check (inquiry_email in (0,1)),
+constraint CK_tbl_inquiry_inquiry_sms check (inquiry_sms in (0,1))
+);
+
+-- inquiry 시퀀스 사용 --
+select seq_inquiry.nextval from dual;
+
+-- inquiry 테이블 insert문 --
+insert into tbl_inquiry(inquiry_no, fk_userid, inquiry_type, inquiry_subject, inquiry_content, inquiry_email, inquiry_sms)
+values(?, ?, ?, ?, ?, ?, ?);
+
+-- inquiry 내역 가져오기 select문 --
+String sql = "select inquiry_no, inquiry_type, inquiry_subject, inquiry_content, inquiry_date, inquiry_answered\n"+
+"from tbl_inquiry\n"+
+"where fk_userid = ?";
+
+select * from tbl_inquiry where fk_userid = '5sherlock' and inquiry_date between to_date('2022-09-25', 'YYYY-MM-DD') and to_date('2022-09-29', 'YYYY-MM-DD');
+
+select ceil(count(*)/5) from tbl_inquiry where fk_userid = '5sherlock' and inquiry_date between '2022-09-28' and '2022-09-28';
+
+select * from tbl_inquiry;
+
+
+String sql = "\n"+
+"SELECT\n"+
+"    inquiry_no,\n"+
+"    inquiry_type,\n"+
+"    inquiry_subject,\n"+
+"    inquiry_content,\n"+
+"    inquiry_date,\n"+
+"    inquiry_answered\n"+
+"FROM \n"+
+"(select rownum AS RNO , INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTENT , INQUIRY_DATE , INQUIRY_ANSWERED\n"+
+"FROM\n"+
+"    (\n"+
+"        SELECT\n"+
+"            inquiry_no,\n"+
+"            inquiry_type,\n"+
+"            inquiry_subject,\n"+
+"            inquiry_content,\n"+
+"            inquiry_date,\n"+
+"            inquiry_answered\n"+
+"        FROM\n"+
+"            tbl_inquiry\n"+
+"        WHERE\n"+
+"                fk_userid = ?\n"+
+"            AND inquiry_date BETWEEN ? and ?\n"+
+"        ORDER BY\n"+
+"            1 DESC\n"+
+"    ) v ) t\n"+
+"WHERE\n"+
+"    rno BETWEEN ? AND ?";
+
+select inquiry_no, inquiry_type, inquiry_subject, inquiry_content, inquiry_date, inquiry_answered
+from tbl_inquiry
+where fk_userid = '5sherlock';
+

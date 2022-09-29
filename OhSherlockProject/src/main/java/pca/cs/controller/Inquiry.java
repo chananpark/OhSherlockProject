@@ -5,7 +5,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
+import common.model.InquiryVO;
 import common.model.MemberVO;
+import pca.cs.model.InquiryDAO;
+import pca.cs.model.InterInquiryDAO;
 
 public class Inquiry extends AbstractController {
 
@@ -32,13 +35,47 @@ public class Inquiry extends AbstractController {
 			}
 			// post방식의 경우
 			else {
-				String inquirytype = request.getParameter("inquirytype");
-				String title = request.getParameter("title");
-				String content = request.getParameter("content");
-				String answer_email = request.getParameter("answer_email"); // 체크:on 미체크:null
-				String answer_sms = request.getParameter("answer_sms"); // 체크:on 미체크:null
+				String inquiry_type = request.getParameter("inquiry_type");
+				String inquiry_subject = request.getParameter("inquiry_subject");
+				String inquiry_content = request.getParameter("inquiry_content");
+				inquiry_content = inquiry_content.replace("\r\n","<br>");
+				String inquiry_email = request.getParameter("inquiry_email"); // 체크:on 미체크:null
+				String inquiry_sms = request.getParameter("inquiry_sms"); // 체크:on 미체크:null
 				
-				//System.out.println((answer_email==null));
+				InquiryVO ivo = new InquiryVO();
+				InterInquiryDAO idao = new InquiryDAO();
+				
+				ivo.setFk_userid(loginuser.getUserid());
+				ivo.setInquiry_type(inquiry_type);
+				ivo.setInquiry_subject(inquiry_subject);
+				ivo.setInquiry_content(inquiry_content);
+				
+				if(inquiry_email != null) {
+					ivo.setInquiry_email(1);
+				}else{
+					ivo.setInquiry_email(0);
+				}
+				
+				if(inquiry_sms != null) {
+					ivo.setInquiry_sms(1);
+				}else{
+					ivo.setInquiry_sms(0);
+				}
+				
+				int n = idao.makeInquiry(ivo);
+				
+				if (n==1) {
+					// 글쓰기 성공 시
+					// 마이페이지에서 1:1 문의내역 페이지로 이동시킨다.
+					super.setRedirect(true);
+					super.setViewPage(request.getContextPath() + "/mypage/inquiryList.tea");
+				}
+				else {
+					// 실패 시 오류 페이지로 리다이렉트
+					super.setRedirect(true);
+					super.setViewPage(request.getContextPath() + "/error.up");
+				}
+				
 			}
 			
 		} else {

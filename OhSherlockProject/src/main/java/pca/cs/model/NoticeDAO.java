@@ -115,6 +115,8 @@ public class NoticeDAO implements InterNoticeDAO {
 				
 				if ((nowDate - regDate) < 7) {
 					notice.setFresh(true); // 등록된지 7일 이내의 글이라면 최신글
+				}else {
+					notice.setFresh(false);
 				}
 				
 				noticeList.add(notice);
