@@ -101,37 +101,35 @@ public class InquiryDAO implements InterInquiryDAO {
 		return n;
 	}
 
+	// 문의 개수 조회
 	@Override
-	public int getTotalPage(Map<String, String> paraMap) throws SQLException {
-		int totalPage = 0;
-		
-		String userid = paraMap.get("userid");
-		String startDate = paraMap.get("startDate");
-		String endDate = paraMap.get("endDate");
-		int sizePerPage = Integer.parseInt(paraMap.get("sizePerPage")); // 한페이지당 보여줄 행의 개수
+	public int countInquiry(Map<String, String> paraMap) throws SQLException {
+	    int totalCount = 0;
 
-		try {
-			conn = ds.getConnection();
+	    try {
+	        conn = ds.getConnection();
 
-			String sql = "select ceil(count(*)/?) from tbl_inquiry where fk_userid = ? and inquiry_date between ? and ?";
+	        String sql = "select count(*) from tbl_inquiry where fk_userid = ? and inquiry_date between ? and to_date(? ||' 23:59:59', 'yyyy-mm-dd hh24:mi:ss')";
 
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, sizePerPage);
-			pstmt.setString(2, userid);
-			pstmt.setString(3, startDate);
-			pstmt.setString(4, endDate);
-			
-			rs = pstmt.executeQuery();
-			rs.next();
-			totalPage = rs.getInt(1);
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, paraMap.get("userid"));
+	        pstmt.setString(2, paraMap.get("startDate"));
+	        pstmt.setString(3, paraMap.get("endDate"));
 
-		} finally {
-			close();
-		}
+	        rs = pstmt.executeQuery();
 
-		return totalPage;
+	        rs.next();
+
+	        totalCount = rs.getInt(1);
+
+
+	    } finally {
+	        close();
+	    }
+	    return totalCount;
 	}
 
+	// 문의 내역 조회
 	@Override
 	public List<InquiryVO> showMyInquiryList(Map<String, String> paraMap) throws SQLException {
 		List<InquiryVO> inquiryList = new ArrayList<>();
@@ -139,49 +137,28 @@ public class InquiryDAO implements InterInquiryDAO {
 		String userid = paraMap.get("userid");
 		String startDate = paraMap.get("startDate");
 		String endDate = paraMap.get("endDate");
-
-		int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo")); // 조회하고자 하는 페이지 번호
-		int sizePerPage = Integer.parseInt(paraMap.get("sizePerPage")); // 한페이지당 보여줄 행의 개수
+		String lead = paraMap.get("lead");
+		String last = paraMap.get("last");
 
 		try {
 			conn = ds.getConnection();
 
-			String sql = "\n"+
-					"SELECT\n"+
-					"    inquiry_no,\n"+
-					"    inquiry_type,\n"+
-					"    inquiry_subject,\n"+
-					"    inquiry_content,\n"+
-					"    inquiry_date,\n"+
-					"    inquiry_answered\n"+
-					"FROM \n"+
-					"(select rownum AS RNO , INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTENT , INQUIRY_DATE , INQUIRY_ANSWERED\n"+
-					"FROM\n"+
-					"    (\n"+
-					"        SELECT\n"+
-					"            inquiry_no,\n"+
-					"            inquiry_type,\n"+
-					"            inquiry_subject,\n"+
-					"            inquiry_content,\n"+
-					"            inquiry_date,\n"+
-					"            inquiry_answered\n"+
-					"        FROM\n"+
-					"            tbl_inquiry\n"+
-					"        WHERE\n"+
-					"                fk_userid = ?\n"+
-					"            AND inquiry_date BETWEEN ? and ?\n"+
-					"        ORDER BY\n"+
-					"            1 DESC\n"+
-					"    ) v ) t\n"+
-					"WHERE\n"+
-					"    rno BETWEEN ? AND ?";
+			String sql = "select INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTENT , INQUIRY_DATE , INQUIRY_ANSWERED\n"+
+					"from\n"+
+					"(\n"+
+					"select row_number() over(order by INQUIRY_DATE desc) as rno,\n"+
+					"INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTENT , INQUIRY_DATE , INQUIRY_ANSWERED\n"+
+					"from tbl_inquiry\n"+
+					"where fk_userid = ? AND inquiry_date between ? and to_date(? ||' 23:59:59', 'yyyy-mm-dd hh24:mi:ss')\n"+
+					")\n"+
+					"where rno between ? and ?";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, userid);
 			pstmt.setString(2, startDate);
 			pstmt.setString(3, endDate);
-			pstmt.setInt(4, (currentShowPageNo*sizePerPage) - (sizePerPage-1));
-			pstmt.setInt(5, (currentShowPageNo*sizePerPage));
+			pstmt.setString(4, lead);
+			pstmt.setString(5, last);
 			
 			rs = pstmt.executeQuery();
 

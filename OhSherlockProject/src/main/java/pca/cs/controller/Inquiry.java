@@ -25,7 +25,7 @@ public class Inquiry extends AbstractController {
 			
 			// get방식의 경우
 			if("get".equalsIgnoreCase(method)) {
-				
+					super.setRedirect(false);
 				// 사용자의 경우
 				if(!loginuser.getUserid().equals("admin"))
 					super.setViewPage("/WEB-INF/cs/inquiry.jsp");

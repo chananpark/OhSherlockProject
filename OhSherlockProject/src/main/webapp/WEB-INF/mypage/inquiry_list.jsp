@@ -4,7 +4,7 @@
         
 <style>
 
-	* {box-sizing: border-box;}
+	/* * {box-sizing: border-box;} */
 	
 	.page-link {
 	  color: #666666; 
@@ -67,28 +67,51 @@
 		margin-right: 2%;
 		width: 20%;
 	}
+	
+	a, a:hover, a:link, a:visited {
+		color: black;
+		text-decoration: none;
+	}
 </style>       
 
 <script>
 
-	let period = 1;
-	let startDate;
-	let endDate;
+	let period = 1; // 조회기간 초기값
+	let startDate; // 시작날짜
+	let endDate; // 마지막날짜
+	let lenInquiry = 5; // 한번에 불러올 글 개수
+	let lead = 1; // 가져올 목록 중 첫번째 rownum
 	
 	$(() => {
 		
+		// 날짜 초기값
+		const now = new Date();
+		endDate = formatDate(now);
+		startDate = formatDate(now.setMonth(now.getMonth()-Number(period)));
+		
+		search();
+		
+		 // 더보기버튼 이벤트
+	    $("button#more").click(()=>{
+	    	$(this).val(Number(start) + lenInquiry);
+	    });
+		
 		// 기간조회 탭버튼 클릭이벤트
 		$("button.period").on('click', (e) => {
+			const now = new Date();
 			period = $(e.target).attr("id");
-			searchByTab();
+			endDate = formatDate(now);
+			startDate = formatDate(now.setMonth(now.getMonth()-Number(period)));
+			search();
 		});
 		
 		// 날짜선택 조회버튼 이벤트
 		$("input#datePickBtn").on('click', () => {
-			searchByDatePicker();
+			const now = new Date();
+            startDate = formatDate($("input#startDate").val());
+        	endDate = formatDate($("input#endDate").val());
+			search();
 		});
-		
-		searchByTab();
 		
 		// jQuery UI 의 datepicker
 		$("input.chooseDate").datepicker({
@@ -106,8 +129,8 @@
                 ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
                 ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
                 ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
-              //,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-              //,maxDate: "+1M" //최대 선택일자(+1D:하루후, +1M:한달후, +1Y:일년후)                
+                ,minDate: "-2Y" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
+                ,maxDate: "M" //최대 선택일자(+1D:하루후, +1M:한달후, +1Y:일년후)                
          });                    
             
          //input을 datepicker로 선언
@@ -119,89 +142,71 @@
          
          //startDate의 초기값을 7일전으로 설정
          $('input#startDate').datepicker('setDate', '-7D');
-         
-         // 변수에 초기값 대입
-  		 startDate = $("input#startDate").val();
- 		 endDate = $("input#endDate").val();
-         
-         // datepicker에서 날짜 선택 시 변수에 값 대입
-         $("input#startDate").on("change",function(){
-             startDate = $(this).val();
-         });
-         $("input#endDate").on("change",function(){
-        	 endDate = $(this).val();
-         }); 
-         
+ 		
 	});
 	
-	// 탭버튼 클릭시 호출 함수
-	function searchByTab(){
-		
-		$.ajax({
-			url:"<%=ctxPath%>/mypage/InquiryJson.tea",
-			type:"get",
-			data:{"period":period},
-			dataType:"JSON",
-			success:function(json){
-         		let html = '결과출력';
-         		
-         		if (json.length === 0) {
-         			// 데이터가 존재하지 않는 경우
-                    html += "<tr>1:1문의 내역이 없습니다.</tr>";
-         		}else{
-  	         		$.each(json, function(index, item){
-	         			html += "<tr><td>"
-	         			+item.inquiry_no+
-	         			"</td><td><a href='#'>"
-							+item.inquiry_subject+
-							"</a></td><td>"
-							+item.inquiry_date+
-							"</td></tr>";
-	         		}); 
-	         		
-				}
-	         		// 결과 출력
-	         		$("#inquiryTbl>tbody").html(html);
-			},
-			error: function(request, status, error){
-	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	        }
-		});						
+	// 날짜 포맷함수
+	function formatDate(date) {
+	    
+	    var d = new Date(date),
+	    
+	    month = '' + (d.getMonth() + 1) , 
+	    day = '' + d.getDate(), 
+	    year = d.getFullYear();
+	    
+	    if (month.length < 2) month = '0' + month; 
+	    if (day.length < 2) day = '0' + day; 
+	    
+	    return [year, month, day].join('-');
+	    
 	}
-	
-	// 날짜선택시 호출 함수
-	function searchByDatePicker(){
+
+	// 조회시 호출 함수
+	function search(){
 		
+		// 글 개수 조회
 		$.ajax({
-			url:"<%=ctxPath%>/mypage/InquiryJson.tea",
+			url:"<%=ctxPath%>/mypage/inquiryCountJson.tea",
 			type:"get",
-			data:{"startDate":startDate, "endDate":endDate},
+			data:{"lead":lead, "lenInquiry":lenInquiry, "startDate":startDate, "endDate":endDate},
 			dataType:"JSON",
 			success:function(json){
-         		let html = '결과출력';
-         		
-         		if (json.length === 0) {
-         			// 데이터가 존재하지 않는 경우
-                    html += "<tr>1:1문의 내역이 없습니다.</tr>";
-         		}else{
-  	         		$.each(json, function(index, item){
-	         			html += "<tr><td>"
-	         			+item.inquiry_no+
-	         			"</td><td><a href='#'>"
-							+item.inquiry_subject+
-							"</a></td><td>"
-							+item.inquiry_date+
-							"</td></tr>";
-	         		}); 
-	         		
-				}
-	         		// 결과 출력
-	         		$("#inquiryTbl>tbody").html(html);
+  	         	$("#inquiryLength").text(json.total);
 			},
 			error: function(request, status, error){
 	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 	        }
-		});						
+		});
+		
+		// 글 목록 조회
+		$.ajax({
+			url:"<%=ctxPath%>/mypage/inquiryListJson.tea",
+			type:"get",
+			data:{"lead":lead, "lenInquiry":lenInquiry, "startDate":startDate, "endDate":endDate},
+			dataType:"JSON",
+			success:function(json){
+         		let html = '';
+         		
+         		if (json.length == 0) {
+         			// 데이터가 존재하지 않는 경우
+         			 html += "<tr><td colspan='4'>1:1문의 내역이 없습니다.</td><tr>";
+	         		// 결과 출력
+	         		$("#inquiryTbl>tbody").html(html);
+         		}else{
+  	         		$.each(json, function(index, item){
+	         			html += "<tr><td>"+item.inquiry_type+"</td><td>"
+							+item.inquiry_subject+"</td><td>"+item.inquiry_date+
+							"</td><td>"+item.inquiry_answered+"</td></tr>";
+	         		}); 
+						
+	         		$("#inquiryTbl>tbody").html(html);
+				}
+  	         		
+			},
+			error: function(request, status, error){
+	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	        }
+		});	
 	}
 </script>
 
@@ -221,8 +226,8 @@
 	<hr style="background-color: black; height: 1.2px;">
 	<h5 style="font-weight: bold;">내 상담 내역</h5>
 	
-	<%-- 탭 버튼 --%>
 	 <div class="row bg-light" style="height: 80px; margin-top: 55px; width: 99.8%; margin-left: 0;">
+		<%-- 탭 버튼 --%>
 	    <div class="btn-group mx-auto" role="group" aria-label="Basic example" style="float: left;">
 		  <button id="1" type="button" class="btn btn-light period">1개월</button>
 		  <button id="3" type="button" class="btn btn-light period">3개월</button>
@@ -230,7 +235,7 @@
 		  <button id="12" type="button" class="btn btn-light period">12개월</button>
 		</div>
 	  
-	  <%-- datepicker --%>  
+	  	<%-- datepicker --%>  
 	    <div class="date" style="float: left; margin-top: 25px;">
 	    	<input class="chooseDate" type="text" id="startDate">
 			<span class="bar">~</span>
@@ -240,29 +245,27 @@
 	</div>
 	
 	<br>
-	<div style="margin-top: 10px;">총 건의 상담 내역이 있습니다.</div>
+	<div style="margin-top: 10px;">총 <span id="inquiryLength"></span>건의 상담 내역이 있습니다.</div>
 	<table class="table mt-2 text-center" id="inquiryTbl">
 			<thead class="thead-light">
 				<tr>
-					<th>번호</th>
+					<th>문의유형</th>
 					<th>제목</th>
 					<th>등록일</th>
+					<th>처리상태</th>
 				</tr>
 			</thead>
 			<tbody>
 				
 			</tbody>
+			<tfoot>
+			</tfoot>
 		</table>
 			
-
-	<nav aria-label="Page navigation example" style="margin-top: 60px;">
-		<ul class="pagination justify-content-center">
-			${pageBar}
-		</ul>
-	</nav>
+            <span id="count">0</span>
 	
 	<div class="text-right" id="detail" style="display: block; margin-top: 15px;">
-	  <input type="button" class="btn-secondary" value="문의남기기" />
+	  <input type="button" class="btn-secondary rounded" value="문의남기기" onclick="location.href='<%=ctxPath%>/cs/inquiry.tea'"/>
     </div>
 	
 	

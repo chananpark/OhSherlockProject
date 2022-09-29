@@ -3,7 +3,6 @@ show user;
 
 select userid from tbl_member where status = 1 and userid != '5sherlock' and email = 'qzgtKJ690tyLSSPGMXbryWUeCF9ssiNwnUipv6RAvNM=';
 
-
 desc tbl_member;
 
 select * from tbl_member;
@@ -163,49 +162,29 @@ select seq_inquiry.nextval from dual;
 insert into tbl_inquiry(inquiry_no, fk_userid, inquiry_type, inquiry_subject, inquiry_content, inquiry_email, inquiry_sms)
 values(?, ?, ?, ?, ?, ?, ?);
 
+-- inquiry 전체 개수 가져오기 select문 --
+select count(*) from tbl_inquiry where fk_userid = 'test1' and inquiry_date between '2022-09-28' and to_date('2022-09-28 23:59:59', 'yyyy-mm-dd hh24:mi:ss');
+
+String sql = "select count(*) from tbl_inquiry where fk_userid = ? and inquiry_date between ? and to_date(? ||' 23:59:59', 'yyyy-mm-dd hh24:mi:ss')";
+
 -- inquiry 내역 가져오기 select문 --
-String sql = "select inquiry_no, inquiry_type, inquiry_subject, inquiry_content, inquiry_date, inquiry_answered\n"+
-"from tbl_inquiry\n"+
-"where fk_userid = ?";
-
-select * from tbl_inquiry where fk_userid = '5sherlock' and inquiry_date between to_date('2022-09-25', 'YYYY-MM-DD') and to_date('2022-09-29', 'YYYY-MM-DD');
-
-select ceil(count(*)/5) from tbl_inquiry where fk_userid = '5sherlock' and inquiry_date between '2022-09-28' and '2022-09-28';
-
-select * from tbl_inquiry;
-
-
-String sql = "\n"+
-"SELECT\n"+
-"    inquiry_no,\n"+
-"    inquiry_type,\n"+
-"    inquiry_subject,\n"+
-"    inquiry_content,\n"+
-"    inquiry_date,\n"+
-"    inquiry_answered\n"+
-"FROM \n"+
-"(select rownum AS RNO , INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTENT , INQUIRY_DATE , INQUIRY_ANSWERED\n"+
-"FROM\n"+
-"    (\n"+
-"        SELECT\n"+
-"            inquiry_no,\n"+
-"            inquiry_type,\n"+
-"            inquiry_subject,\n"+
-"            inquiry_content,\n"+
-"            inquiry_date,\n"+
-"            inquiry_answered\n"+
-"        FROM\n"+
-"            tbl_inquiry\n"+
-"        WHERE\n"+
-"                fk_userid = ?\n"+
-"            AND inquiry_date BETWEEN ? and ?\n"+
-"        ORDER BY\n"+
-"            1 DESC\n"+
-"    ) v ) t\n"+
-"WHERE\n"+
-"    rno BETWEEN ? AND ?";
-
-select inquiry_no, inquiry_type, inquiry_subject, inquiry_content, inquiry_date, inquiry_answered
+select INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTENT , INQUIRY_DATE , INQUIRY_ANSWERED
+from
+(
+select row_number() over(order by INQUIRY_DATE desc) as rno,
+INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTENT , INQUIRY_DATE , INQUIRY_ANSWERED
 from tbl_inquiry
-where fk_userid = '5sherlock';
+where fk_userid = 'test1' AND inquiry_date between '2022-09-27' and to_date('2022-09-29 23:59:59', 'yyyy-mm-dd hh24:mi:ss')
+)
+where rno between 1 and 5;
 
+
+String sql = "select INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTENT , INQUIRY_DATE , INQUIRY_ANSWERED\n"+
+"from\n"+
+"(\n"+
+"select row_number() over(order by INQUIRY_DATE desc) as rno,\n"+
+"INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTENT , INQUIRY_DATE , INQUIRY_ANSWERED\n"+
+"from tbl_inquiry\n"+
+"where fk_userid = ? AND inquiry_date between ? and to_date(? ||' 23:59:59', 'yyyy-mm-dd hh24:mi:ss')\n"+
+")\n"+
+"where rno between ? and ?";
