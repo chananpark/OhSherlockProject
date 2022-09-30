@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <% String ctxPath = request.getContextPath(); %>
 <!-- Required meta tags -->
 <meta charset="utf-8">
@@ -43,6 +47,9 @@
    outline: none !important;
    box-shadow: none;
 }
+
+
+
 </style> 
 
 <script>
@@ -52,7 +59,7 @@
 		<%-- 세션에 저장된 userid가 admin(관리자)일 때만 수정/삭제 버튼을 노출시킨다.--%>
 		$(".adminOnlyBtns").hide();
 		
-		if ("${sessionScope.userid}" == 'admin') {
+		if ("${sessionScope.loginuser.userid}" == 'admin' && "${sessionScope.loginuser.userid}" != null) {
 			$(".adminOnlyBtns").show();
 		}
 		
@@ -63,23 +70,23 @@
 	<div class="card">
 		<div class="card-header" id="headingOne">
 			<h2 class="mb-0">
-				<button class="btn btn-link" type="button" data-toggle="collapse"
-					data-target="#collapseOne" aria-expanded="true"
-					aria-controls="collapseOne">고객센터 운영 시간이 궁금해요.</button>
+				<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+					고객센터 운영 시간이 궁금해요.
+				</button>
 			</h2>
 		</div>
 
-		<div id="collapseOne" class="collapse show"
-			aria-labelledby="headingOne" data-parent="#faqAccordion">
+		<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#faqAccordion">
 			<!-- .collapse show 는 맨 처음에는  내용물을 보여주도록 하는 것임. -->
 			<div class="card-body">
-				상담 가능한 시간은 AM 09:30-PM 6:00 이며 점심시간은 PM 12:30-PM 1:30 입니다. (주말 및 공휴일
-				휴무)<br> 상담 시간 외의 문의는 게시판이나 메일, 채팅 문의 주시면 가능한 빠른 시간에 답변을 드릴 수
-				있도록 하겠습니다.
-				<div class="text-right adminOnlyBtns mb-1">
-					<input type="button" value="수정"/>
-					<input class="btn-dark" type="button" value="삭제"/>
-				</div>
+				상담 가능한 시간은 AM 09:30-PM 6:00 이며 점심시간은 PM 12:30-PM 1:30 입니다. (주말 및 공휴일 휴무)<br> 
+				상담 시간 외의 문의는 게시판이나 메일, 채팅 문의 주시면 가능한 빠른 시간에 답변을 드릴 수 있도록 하겠습니다.
+				<c:if test="${sessionScope.loginuser ne null and loginuser.userid eq 'admin' }">
+					<div class="text-right adminOnlyBtns mb-1">
+						<input type="button" value="수정" style="border:none;"/>
+						<input class="btn-dark" type="button" value="삭제" style="border:none;"/>
+					</div>
+				</c:if>
 			</div>
 		</div>
 	</div>

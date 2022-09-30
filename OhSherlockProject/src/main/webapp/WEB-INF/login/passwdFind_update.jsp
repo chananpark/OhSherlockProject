@@ -151,6 +151,7 @@
 	   	<%-- post 방식으로 들어왔는데 결과물이 1(정상변경) 이라면 암호 변경 완료 --%>
 		   	<div id="div_updateResult" align="center">
 		    	사용자 ID ${requestScope.userid}님의 암호가 정상적으로 변경되었습니다.<br>
+		    	로그인 화면으로 이동하여 로그인 해주세요.
 		    </div>
 	   	</c:if>
 	   	

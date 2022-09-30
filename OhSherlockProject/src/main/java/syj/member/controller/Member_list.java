@@ -9,9 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
+import common.model.MemberVO;
+import my.util.MyUtil;
 import syj.member.model.InterMemberDAO;
 import syj.member.model.MemberDAO;
-import common.model.*;
 
 public class Member_list extends AbstractController {
 
@@ -65,9 +66,6 @@ public class Member_list extends AbstractController {
 				
 				String sizePerPage = request.getParameter("sizePerPage");
 				// 한 페이지당 화면상에 보여줄 회원의 개수
-		        // 메뉴에서 회원목록 만을 클릭했을 경우에는 sizePerPage 는 null 이 된다.
-		        // sizePerPage 가 null 이라면 sizePerPage 를 10 으로 바꾸어야 한다.
-		        // "10" or "5" or "3" 
 				
 			//	System.out.println("sizePerPage : " + sizePerPage);
 			//	System.out.println("sizePerPage : " + sizePerPage.length()); // 글자가 null 이 아니라, nullPointException 에서의 null 이다. url 에서 null 을 입력하면 이건 문자로서의 null
@@ -79,8 +77,6 @@ public class Member_list extends AbstractController {
 				
 				String currentShowPageNo = request.getParameter("currentShowPageNo");
 				// currentShowPageNo 은 사용자가 보고자하는 페이지바의 페이지번호 이다.
-		        // 메뉴에서 회원목록 만을 클릭했을 경우에는 currentShowPageNo 은 null 이 된다.
-		        // currentShowPageNo 이 null 이라면 currentShowPageNo 을 1 페이지로 바꾸어야 한다.
 				if(currentShowPageNo == null) {
 					currentShowPageNo = "1";
 				}
@@ -101,10 +97,6 @@ public class Member_list extends AbstractController {
 				
 				// 페이징 처리를 위한 검색이 있는 또는 검색이 없는 전체 회원에 대한 총 페이지 알아오기
 				int totalPage = mdao.getTotalPage(paraMap); 
-				// 전체 몇 페이지가 나올지를 알아야하는데, map에 다 담아서 작업해줄 것
-				// 이름에 '유'가 포함된 사람이 152명이라면 페이지바가 또 달라지게 된다.
-				// 모든 회원수가 필요한 게 아니라, 검색해서 알아오는 경우도 필요하기 때문에 map 에 담아주는 것이다.
-				// 따라서 map 에는 검색 컬럼이 뭔지 알고, 검색어도 알아서 보내야 한다. map 에서 보고싶은 것만 꺼내오면 되기 때문이다.
 			//	System.out.println("확인용 totalPage : "+totalPage);
 				
 				// == get 방식이므로 사용자가 웹브라우저 주소창에서 currentShowPageNo 에 토탈페이지수 보다 큰 값을 입력하여 장난친 경우에는 1페이지로 가게끔 막아주는 것 시작
@@ -134,64 +126,6 @@ public class Member_list extends AbstractController {
 				request.setAttribute("memberList", memberList);
 				
 				// *** 페이지바 만들기 시작 *** //
-				
-					/*
-		             1개 블럭당 10개씩 잘라서 페이지 만든다.  // 1 2 3 4 5 6 7 8 9 10 이게 한 블럭
-		             1개 페이지당 3개행 또는 5개행 또는  10개행을 보여주는데
-		                 만약에 1개 페이지당 5개행을 보여준다라면 
-		                 총 몇개 블럭이 나와야 할까? 
-		                 총 회원수가 207명 이고, 1개 페이지당 보여줄 회원수가 5 이라면
-		             207/5 = 41.4 ==> 42(totalPage)        
-		                 
-		             1블럭               1 2 3 4 5 6 7 8 9 10 [다음][마지막]
-		             2블럭   [맨처음][이전] 11 12 13 14 15 16 17 18 19 20 [다음][마지막]
-		             3블럭   [맨처음][이전] 21 22 23 24 25 26 27 28 29 30 [다음][마지막]
-		             4블럭   [맨처음][이전] 31 32 33 34 35 36 37 38 39 40 [다음][마지막]
-		             5블럭   [맨처음][이전] 41 42 
-		          */
-		         
-		         // ==== !!! pageNo 구하는 공식 !!! ==== // 
-			      /*
-			          1  2  3  4  5  6  7  8  9  10  -- 첫번째 블럭의 페이지번호 시작값(pageNo)은  1 이다.
-			          11 12 13 14 15 16 17 18 19 20  -- 두번째 블럭의 페이지번호 시작값(pageNo)은 11 이다.   
-			          21 22 23 24 25 26 27 28 29 30  -- 세번째 블럭의 페이지번호 시작값(pageNo)은 21 이다.
-			          
-			           currentShowPageNo        pageNo  ==> ( (currentShowPageNo - 1)/blockSize ) * blockSize + 1 
-			          ---------------------------------------------------------------------------------------------
-			                 1                   1 = ( (1 - 1)/10 ) * 10 + 1 			
-			                 2                   1 = ( (2 - 1)/10 ) * 10 + 1 			// 자바이기 때문에 몫만 나온다. 
-			                 3                   1 = ( (3 - 1)/10 ) * 10 + 1 			// 공식에 의해서 pageNo 는 무조건 1이 나오게 된다.
-			                 4                   1 = ( (4 - 1)/10 ) * 10 + 1  
-			                 5                   1 = ( (5 - 1)/10 ) * 10 + 1 			// 이 블럭에서 아무 숫자나 클릭하든 공식에 의해서 pageNo는 1이 나온다.
-			                 6                   1 = ( (6 - 1)/10 ) * 10 + 1 			// 7 페이지를 눌러도 1~10이라면 pageNo이 1 이기 때문에 1 ~ 10 까지만 화면에 나와야 한다.
-			                 7                   1 = ( (7 - 1)/10 ) * 10 + 1 
-			                 8                   1 = ( (8 - 1)/10 ) * 10 + 1 			// 그렇게 반복된 1~10까지를 pageBar 에 담에서 view 단에 보내준다.
-			                 9                   1 = ( (9 - 1)/10 ) * 10 + 1 			// 마지막 페이지의 경우에는 전체 41~50까지 하는 게 아니라, 남아있는 멤버 만큼만 보여준다.
-			                10                   1 = ( (10 - 1)/10 ) * 10 + 1 
-			                 
-			                11                  11 = ( (11 - 1)/10 ) * 10 + 1 
-			                12                  11 = ( (12 - 1)/10 ) * 10 + 1
-			                13                  11 = ( (13 - 1)/10 ) * 10 + 1
-			                14                  11 = ( (14 - 1)/10 ) * 10 + 1
-			                15                  11 = ( (15 - 1)/10 ) * 10 + 1
-			                16                  11 = ( (16 - 1)/10 ) * 10 + 1
-			                17                  11 = ( (17 - 1)/10 ) * 10 + 1
-			                18                  11 = ( (18 - 1)/10 ) * 10 + 1 
-			                19                  11 = ( (19 - 1)/10 ) * 10 + 1
-			                20                  11 = ( (20 - 1)/10 ) * 10 + 1
-			                 
-			                21                  21 = ( (21 - 1)/10 ) * 10 + 1 
-			                22                  21 = ( (22 - 1)/10 ) * 10 + 1
-			                23                  21 = ( (23 - 1)/10 ) * 10 + 1
-			                24                  21 = ( (24 - 1)/10 ) * 10 + 1
-			                25                  21 = ( (25 - 1)/10 ) * 10 + 1
-			                26                  21 = ( (26 - 1)/10 ) * 10 + 1
-			                27                  21 = ( (27 - 1)/10 ) * 10 + 1
-			                28                  21 = ( (28 - 1)/10 ) * 10 + 1 
-			                29                  21 = ( (29 - 1)/10 ) * 10 + 1
-			                30                  21 = ( (30 - 1)/10 ) * 10 + 1                    
-		
-			       */
 				
 				String pageBar = "";
 				
@@ -232,9 +166,6 @@ public class Member_list extends AbstractController {
 					if( pageNo == Integer.parseInt(currentShowPageNo) ) { // currentShowPageNo는 String 타입이라서 변경
 						// 내가 클릭한 페이지넘버와 내가 보고자한 페이지넘버와 같을 경우
 						pageBar += "<li class='page-item active'><a class='page-link' href='#'>"+pageNo+"</a></li>"; // 그래서 pageBar 에 반복해서 페이지를 쌓아준다.
-						// 자기가 자기한테 가야하기 때문에 상대경로 이다.
-						// active 를 하면 바탕색이 파랗게 깔리게 된다.
-						// 자기자신을 클릭했을 경우에는, 위치이동이 없기 때문에 클릭해도 자기 자신이 있는 페이지가 나온다.
 					} else {
 						pageBar += "<li class='page-item'><a class='page-link' href='member_list.tea?sizePerPage="+sizePerPage+"&currentShowPageNo="+pageNo+"&searchType="+searchType+"&searchWord="+searchWord+"'>"+pageNo+"</a></li>";
 					}
@@ -266,6 +197,18 @@ public class Member_list extends AbstractController {
 				request.setAttribute("pageBar", pageBar);
 				
 				// *** 페이지바 만들기 끝 *** //
+				// *** 현재 페이지를 돌아갈 페이지(goBackURL) 로 주소 지정하기 *** //
+				// 회원 상세보기에서 회원 목록으로 돌아올 때 돌아올 url 을 기억하고 있어야 한다. 
+				// 회원 조회를 했을 시 현재 그 페이지로 그대로 돌아가기 위한 용도로 쓰인다.
+				String currentURL = MyUtil.getCurrentURL(request);
+		//		System.out.println("확인용 : " + currentURL);
+				// 확인용 : /member/memberList.up?sizePerPage=10&currentShowPageNo=11&searchType=name&searchWord=%EC%A0%95
+				
+				currentURL = currentURL.replaceAll("&", " "); // & 를 공백으로 바꾸어라.
+		//		System.out.println("확인용 : " + currentURL);
+				// 확인용 : /member/memberList.up?sizePerPage=10 currentShowPageNo=11 searchType=name searchWord=%EC%A0%95 
+
+				request.setAttribute("goBackURL", currentURL);
 
 				super.setRedirect(false);
 				super.setViewPage("/WEB-INF/admin/member_list.jsp");

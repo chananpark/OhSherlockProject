@@ -92,6 +92,8 @@
 
 <script>
 
+	let time =  60 * 5;
+	
 	$(document).ready(function(){
 		
 		$("span.error").hide();
@@ -164,13 +166,31 @@
 				// 찾기 버튼 숨기기
 				$("#passwdFind_input").hide();
 			
-				// 5분 타이머 시작
-			   	var fiveMinutes =  60 *5,
-		      	display = document.querySelector('#timer');
-		       	startTimer(fiveMinutes, display);
-			} 
-			
-	    }
+				 // 5분 타이머 함수
+		         const myTimer = () => {
+		             
+		                 let minutes = parseInt(time / 60);
+		                 let seconds = time % 60;
+		   
+		                 minutes = minutes < 10 ? "0" + minutes : minutes;
+		                 seconds = seconds < 10 ? "0" + seconds : seconds;
+		   
+		                 $("#timer").text(minutes + ":" + seconds);
+		               
+		                 if (time-- < 0) {
+		                     alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
+		                     clearInterval(setTimer); // 타이머 삭제
+		                     $("div#div_findResult").hide();
+		     	             $("#passwdFind_input").show();
+		                     return;
+		                 }
+		            }
+		         
+		         // 5분 타이머 시작
+		          const setTimer = setInterval(myTimer, 1000);
+
+		        }
+		    } 
 	    else{
 	        $("div#div_findResult").hide();
 	    }
@@ -195,27 +215,6 @@
 	    
 	}); // end of $(document).ready(function()
 
-	// 5분 타이머 함수
-	function startTimer(duration, display) {
-	    var timer = duration, minutes, seconds;
-	    setInterval(function () {
-	        minutes = parseInt(timer / 60, 10);
-	        seconds = parseInt(timer % 60, 10);
-
-	        minutes = minutes < 10 ? "0" + minutes : minutes;
-	        seconds = seconds < 10 ? "0" + seconds : seconds;
-
-	        display.textContent = minutes + ":" + seconds;
-
-	        if (--timer == 0) {
-	            alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
-	            $("div#div_findResult").hide();
-	            $("#passwdFind_input").show();
-	            return;
-	        }
-	    }, 1000);
-	} // end of function startTimer(duration, display)
-	
 	
 	// 비밀번호 찾기 확인 버튼 클릭시 호출되는 함수
 	function findPasswd_submit(){
