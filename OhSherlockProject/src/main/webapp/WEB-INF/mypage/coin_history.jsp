@@ -95,9 +95,10 @@
 
 <script type="text/javascript">
 
+	$("#purchase").click(function(){
+	
 
-
-
+ 
 </script>
 
 
@@ -112,13 +113,32 @@
 	   </div> 
     </div>
     
-    <div class="money_date" style="float: left; margin-top: 25px;">
+ <!--  
+  	<div class="money_date" style="float: left; margin-top: 25px;">
 		<input class="fText hasDatepicker" readonly="readonly" size="15" value="2022-08-17" type="text" style="margin-left: 30px; text-align: center;"><button type="button" class="ui-datepicker-trigger" ><img src="//img.echosting.cafe24.com/skin/admin_ko_KR/myshop/ico_cal.gif" alt="..." title="..."></button>
 		<span class="bar">~</span>
 		<input class="fText hasDatepicker" readonly="readonly" size="15" value="2022-09-16" type="text" style="text-align: center;"><button type="button" class="ui-datepicker-trigger" ><img src="//img.echosting.cafe24.com/skin/admin_ko_KR/myshop/ico_cal.gif" alt="..." title="..."></button>				
-		<input type="button" value="조회" style="margin-left: 10px; width: 80px;"/>
+		<input style="margin-left: 10px; width: 80px;" type="submit" onclick="input()" value="조회" />
 	</div>
-
+ -->
+ 
+ 
+ 	<form>
+	<input type="date" name="date1">
+	~
+	<input type="date" name="date2">
+	<button type="submit" onclick="input()">조회</button>
+	</form>
+	
+	<div class="text-right" style="margin-top: 20px;"> 
+		<select id="sizePerPage" name="sizePerPage"> <%-- 값이 변하면 여기의 name에 담아준다. 여기다 담은 name을 goSearch에서 action 으로 보내준다. --%>
+			<option value="10">페이지당 예치금 내역</option>  
+			<option value="10">10</option>
+			<option value="5">5</option> 
+			<option value="3">3</option>
+		</select>
+	</div>
+	
 	<div class="orderIf">
 		<table class="table mt-4 text-center"> 
 			<thead class="thead-light"> 
@@ -128,11 +148,26 @@
 					<th>적립/사용</th>
 				</tr>
 			</thead> 
-			
+	  <tbody>
+				<c:forEach var="cvo" items="${requestScope.coin_history}"> 
+					<tr class="coinInfo">
+						<td name="name">${cvo.coin_date}</td>
+						<td name="mobile">${cvo.coin_amount}</td> 
+						<td name="idle">
+							<c:choose>
+								<c:when test="${cvo.coin_amount < 0}">사용</c:when>
+								<c:otherwise>적립</c:otherwise>
+							</c:choose>
+						</td>
+					</tr> 
+				</c:forEach>
+			</tbody>
 		</table>
 	</div>
-			<i style='font-size:200px; padding: 5% 0 0 40%; color: gray;' class='fas'>&#xf06a;</i>  
-			<h6 style="text-align: center; padding-top: 2%;">조회하신 기간 내 적립/사용한 내역이 없습니다.</h6>        
+	
+	
+	
+	
 	
     <nav aria-label="Page navigation example" style="margin-top: 60px;">
 		<ul class="pagination justify-content-center" style="margin:auto;">${requestScope.pageBar}</ul>
