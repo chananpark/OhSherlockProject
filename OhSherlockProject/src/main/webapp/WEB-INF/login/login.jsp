@@ -27,8 +27,9 @@
 	  font-size: 17px;
 	  line-height: 20px;
 	} 
-	
-	div#btn_loginbox > input {
+ 	
+	button#btn_submit,
+	button#btn_register {
 	  width: 100%;
 	  padding: 12px;
 	  border-style: none;
@@ -36,11 +37,12 @@
 	  opacity: 0.85;
 	  font-size: 17px;
 	  line-height: 20px;
-	}
+	} 
 	
 	div#input_login > input:hover,
-	div#btn_loginbox > input:hover {
-	  opacity: 1;
+	button#btn_submit:hover,
+	button#btn_register:hover {
+	 	opacity: 1;
 	}
 	
 	/* 아이디, 비밀번호 박스 */
@@ -49,24 +51,24 @@
 	}
 
 	/* 버튼로그인 */
-	#btn_submit{
-    height: 45px;
-    border-radius: 90px;
-    border-style: none;
-    background-color: #1E7F15;
-    color: white;
-    cursor: pointer;
+	button#btn_submit{
+	    height: 45px;
+	    border-radius: 90px;
+	    border-style: none;
+	    background-color: #1E7F15;
+	    color: white;
+	    cursor: pointer;
 	}
 	
 	/* 버튼회원가입 */
-	#btn_register {
-	  height:45px;
-	  border-radius: 90px;
-	  border-style: none;
-	  background-color: #c6c6c6;
-	  border:none;
-	  color: white;
-	  cursor: pointer;
+	button#btn_register {
+		height:45px;
+		border-radius: 90px;
+		border-style: none;
+		background-color: #c6c6c6;
+		border:none;
+		color: white;
+		cursor: pointer;
 	}
 
 </style>
@@ -85,7 +87,7 @@
 		}
 		
 		// 로그인 버튼 클릭 시
-		$("input#btn_submit").click(function(){
+		$("button#btn_submit").click(function(){
 			goLogin(); // 로그인 함수 호출
 		});
 		
@@ -184,8 +186,9 @@
 
 			</div>
 
-			<div id="btn_loginbox" class="d-flex flex-column">
-				<input type="button" id="btn_submit" value="로그인"> <input type="button" id="btn_register" value="회원가입">
+			<div class="d-flex flex-column">
+				<button type="button" id="btn_submit">로그인</button>
+				<a href="<%= ctxPath %>/member/memberRegister.tea"><button type="button" id="btn_register">회원가입</button></a>
 			</div>
 		</div>
 	</form>
