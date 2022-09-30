@@ -288,7 +288,7 @@ public class NoticeDAO implements InterNoticeDAO {
 			}
 
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, Integer.parseInt(paraMap.get("sizePerPage")));
+			pstmt.setInt(1, 10);
 
 			// 검색어가 있다면 검색어로 두번째 위치홀더 채우기
 			if (searchWord != null && !searchWord.trim().isEmpty()) {
