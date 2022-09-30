@@ -3,7 +3,6 @@ show user;
 
 select userid from tbl_member where status = 1 and userid != '5sherlock' and email = 'qzgtKJ690tyLSSPGMXbryWUeCF9ssiNwnUipv6RAvNM=';
 
-
 desc tbl_member;
 
 select * from tbl_member;
@@ -135,3 +134,57 @@ String sql = "update tbl_notice set noticeSubject = ?, noticeContent = ? where n
 select * from tbl_notice where noticeno=1;
 
 select ceil(count(*)) from tbl_notice;
+
+alter table tbl_inquiry rename column inquiry_cat to inquiry_type;
+
+desc tbl_inquiry;
+
+create table tbl_inquiry(
+inquiry_no number,
+fk_userid varchar2(15),
+inquiry_type Nvarchar2(20)  not null,
+inquiry_subject Nvarchar2(100) not null,
+inquiry_content clob not null,
+inquiry_date date default sysdate,
+inquiry_answered number default 0, -- 미답변:0, 답변완료:1
+inquiry_email number default 0, -- 이메일발송거부:0, 이메일발송희망:1
+inquiry_sms number default 0, -- 문자발송거부:0, 문자발송희망:1
+constraint PK_tbl_inquiry_inquiry_no primary key(inquiry_no),
+constraint CK_tbl_inquiry_inquiry_answered check (inquiry_answered in (0,1)),
+constraint CK_tbl_inquiry_inquiry_email check (inquiry_email in (0,1)),
+constraint CK_tbl_inquiry_inquiry_sms check (inquiry_sms in (0,1))
+);
+
+-- inquiry 시퀀스 사용 --
+select seq_inquiry.nextval from dual;
+
+-- inquiry 테이블 insert문 --
+insert into tbl_inquiry(inquiry_no, fk_userid, inquiry_type, inquiry_subject, inquiry_content, inquiry_email, inquiry_sms)
+values(?, ?, ?, ?, ?, ?, ?);
+
+-- inquiry 전체 개수 가져오기 select문 --
+select count(*) from tbl_inquiry where fk_userid = 'test1' and inquiry_date between '2022-09-28' and to_date('2022-09-28 23:59:59', 'yyyy-mm-dd hh24:mi:ss');
+
+String sql = "select count(*) from tbl_inquiry where fk_userid = ? and inquiry_date between ? and to_date(? ||' 23:59:59', 'yyyy-mm-dd hh24:mi:ss')";
+
+-- inquiry 내역 가져오기 select문 --
+select INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTENT , INQUIRY_DATE , INQUIRY_ANSWERED
+from
+(
+select row_number() over(order by INQUIRY_DATE desc) as rno,
+INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTENT , INQUIRY_DATE , INQUIRY_ANSWERED
+from tbl_inquiry
+where fk_userid = 'test1' AND inquiry_date between '2022-09-27' and to_date('2022-09-29 23:59:59', 'yyyy-mm-dd hh24:mi:ss')
+)
+where rno between 1 and 5;
+
+
+String sql = "select INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTENT , INQUIRY_DATE , INQUIRY_ANSWERED\n"+
+"from\n"+
+"(\n"+
+"select row_number() over(order by INQUIRY_DATE desc) as rno,\n"+
+"INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTENT , INQUIRY_DATE , INQUIRY_ANSWERED\n"+
+"from tbl_inquiry\n"+
+"where fk_userid = ? AND inquiry_date between ? and to_date(? ||' 23:59:59', 'yyyy-mm-dd hh24:mi:ss')\n"+
+")\n"+
+"where rno between ? and ?";

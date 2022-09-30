@@ -1,7 +1,5 @@
 package pca.member.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +21,15 @@ public class Login extends AbstractController {
  
 		// get 방식이라면
 		if ("GET".equalsIgnoreCase(method)) {
+			
+			// 로그인을 누르기 전 url을 세션에 담는 작업
+			String ctxPath = request.getContextPath();
+			String preURL = request.getHeader("referer"); // 로그인을 누르기 전에 있던 url(http://부터)
+			int idx = preURL.indexOf(ctxPath);
+			preURL = preURL.substring(idx); // 컨텍스트 패스 부분부터 자름
+			
+			HttpSession session = request.getSession();
+			session.setAttribute("preURL", preURL); // 세션에 저장
 			
 			super.setRedirect(false);
 			super.setViewPage("/WEB-INF/login/login.jsp"); // 로그인 페이지로 이동
@@ -86,8 +93,13 @@ public class Login extends AbstractController {
 					// session에 로그인 사용자 정보 저장
 					session.setAttribute("loginuser", loginuser);
 					
+					/*
 					super.setRedirect(true);
 					super.setViewPage(request.getContextPath() + "/index.tea"); // 시작페이지로 이동
+					*/
+					String preURL = (String) session.getAttribute("preURL");
+					super.setRedirect(true);
+					super.setViewPage(preURL);
 				}
 
 			} else {
