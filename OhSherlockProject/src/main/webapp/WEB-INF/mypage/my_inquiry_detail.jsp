@@ -1,8 +1,30 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="../header.jsp"%>
+<% String ctxPath = request.getContextPath(); %>    
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" type="text/css" href="<%=ctxPath%>/bootstrap-4.6.0-dist/css/bootstrap.min.css">
+
+<!-- Font Awesome 5 Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<!-- 폰트 목록 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Nanum+Gothic:wght@700&display=swap" rel="stylesheet">
+
+<!-- Optional JavaScript -->
+<script type="text/javascript" src="<%=ctxPath%>/js/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="<%=ctxPath%>/bootstrap-4.6.0-dist/js/bootstrap.bundle.min.js"></script>
 
 <style>
+* {
+		font-family: 'Gowun Dodum', sans-serif;
+	  }
+
 .listView {
 	width: 90px;
 	margin: 15px;
@@ -45,7 +67,7 @@
 
 	<%-- 사용자가 자신의 문의 내용과 그에 달린 댓글을 확인하는 페이지입니다.--%>
 
-	<div class="titleZone row">
+<%-- 	<div class="titleZone row">
 		<h2 class="col text-left" style="font-weight: bold">1:1 문의</h2>
 		<br>
 		<div class="col text-right">
@@ -54,42 +76,33 @@
 				~ 18:00 (점심시간 12:30 ~ 13:30)<br>주말 및 공휴일 휴무
 			</span>
 		</div>
-	</div>
+	</div> 
 	<hr style="background-color: black; height: 1.2px;">
-	<br>
+	<br>--%>
 
 	<div class="col text-left">
-		<div style="font-weight: bold; font-size: 20px;">예치금 충전 문의</div>
+		<div style="font-weight: bold; font-size: 20px;">${ivo.inquiry_subject}</div>
 		<br>
 		<div
-			style="font-weight: normal; font-size: 15.5px; margin-bottom: 10px;">2022.09.20</div>
+			style="font-weight: normal; font-size: 15.5px; margin-bottom: 10px;">${ivo.inquiry_date}</div>
 	</div>
 
 
-	<div class="col text-left inquiryContent jumbotron mt-4 pt-auto">
-		<br>안녕하세요 저는 서울 마포구에 사는 김쌍용입니다.<br> 다름이 아니오라 예치금 충전하는 방법을
-		알고싶습니다.<br> 친절한 답변 부탁드립니다.
+	<div class="col text-left inquiryContent jumbotron mt-4 pt-auto">${ivo.inquiry_content}
 	</div>
 
 	<div class="col text-left jumbotron px-0 pt-0 mt-4">
 		<table id="replyTitle">
 			<tr>
-				<td class="text-left">re: 예치금 충전 문의</td>
+				<td class="text-left"><span class="badge text-left" id="replyText">답변</span></td>
 				<td class="text-right" style="border-left: solid 1px white">2022.09.21</td>
 			</tr>
 		</table>
 		<div class="replyzone mx-5 mt-5">
-			<span class="badge text-left" id="replyText">답변</span> <span><br>안녕하세요
-				고객님, 오!셜록입니다.<br> 예치금 충전은 마이페이지의 예치금 충전 버튼을 클릭하세요.<br> 향긋한
-				하루 되세요.<br> </span>
+			 <div>답변내용 </div>
 		</div>
-	</div>
-
-	<div class="text-right" style="display: block; margin-top: 30px;">
-		<input type="button" class="btn-secondary listView" value="목록보기" />
 	</div>
 
 
 </div>
 
-<%@ include file="../footer.jsp"%>

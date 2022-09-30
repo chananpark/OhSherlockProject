@@ -1131,10 +1131,10 @@ $(function(){
 		</div>
 	</div>
 		
-		<div class="text-center jumbotron" style="margin-top: 5%; background: linear-gradient(rgb(210,219,198),#c1ceb1);">
-			<p style="font-size: 14pt; color: white; text-shadow: 2px 2px 2px gray;">
+		<div class="text-center jumbotron" style="margin-top: 5%; background: rgb(233, 243, 203)">
+			<p style="font-size: 15pt;">
 				오셜록의 역사는 <span style="font-style: italic;">2022년 5월, 21B Worldcup Street</span>에서 시작되었습니다.<br><br> 
-				오셜록은 <span style="color: #1E7F15;">최고의 인재들을 영입</span>하여 부단한 노력과 연구를 통하여 지속적으로 발전하고 있습니다.
+				오셜록은 최고의 인재들을 영입하여 부단한 노력과 연구를 통하여 지속적으로 발전하고 있습니다.
 			</p>
 		</div>
 		
