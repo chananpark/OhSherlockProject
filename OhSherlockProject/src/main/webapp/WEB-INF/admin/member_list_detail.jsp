@@ -24,26 +24,87 @@
 
 <script type="text/javascript">
 
+	let goBackURL = ""; // 전역변수
+
 	$(document).ready(function(){
 		
+		// 문자 발송을 클릭했을 경우
+		$("input#btnSend").click(function(e){
+			
+		//	console.log($("input#reservedate").val() + " " + $("input#reservetime").val() ); // 2022-08-30 01:30
+		
+			let reservedate = $("input#reservedate").val();
+			reservedate = reservedate.split("-").join(""); 
+		
+			let reservetime = $("input#reservetime").val();
+			reservetime = reservetime.split(":").join("");
+			
+			const datetime = reservedate + reservetime;
+			
+		//	console.log(datetime); // 202209061039
+		
+			let dataObj;
+		
+			if( reservedate == "" || reservetime == "") { 
+				// 예약일자가 없거나 예약시간이 없을 경우(둘 중 하나라도 없는 경우) 문자를 바로 보내기
+				dataObj = {"mobile":"${requestScope.member_select_one.mobile}", // java에서 getParameter 해올 값  : 문자를 받는 번호의 값
+						   "smsContent":$("textarea#smsContent").val()}; // java 에서 getParameter 해올 값 : 실제로 입력한 문자 내용 
+			} else {
+				// 둘 다 있는 경우 문자를 예약으로 보내기
+				dataObj = {"mobile":"${requestScope.member_select_one.mobile}", // java에서 getParameter 해올 값  : 문자를 받는 번호의 값
+						   "smsContent":$("textarea#smsContent").val(),  // java 에서 getParameter 해올 값 : 실제로 입력한 문자 내용 
+						   "datetime":datetime}; // 위에서 -와 : 를 뺀 시간
+			}
+		
+			$.ajax({
+				url: "<%= request.getContextPath() %>/member/smsSend.tea",
+				type: "POST",
+				data: dataObj, // 지금 바로 문자를 보낼 때와 날짜를 지정할 때로 나눠진다.
+				dataType: "json",
+				success:function(json){
+					// json 은 {"group_id":"R2GR4Gg10cYWguJf","success_count":1,"error_count":0} 처럼된다.
+					
+					if(json.success_count == 1) {
+						alert("문자 전송이 완료되었습니다.");
+					} else if(json.error_count != 0) {
+						alert("문자 전송이 실패되었습니다.");
+					}
+					
+					$("textarea#smsContent").val("");
+					$("input#reservedate").val("");
+					$("input#reservetime").val("");
+				},
+				error: function(request, status, error){
+		               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	            }
+			});
+			
+		}); // end of $("input#btnSend").click
+		
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////
+		goBackURL = "${requestScope.goBackURL}"; // MemberOneDetail에서 보내준 goBackURL 을 받아온다.
+		
+		// 변수 goBackURL 에 공백 " " 을 모두 "&" 로 변경하도록 한다.
+		goBackURL = goBackURL.replace(/ /gi, "&"); 
 		
 	}); // end of $(document).ready
 	
-	// 주문 상세 조회 팝업창
-	// 이거 만드는 사람이 파라미터로 클릭한 주문번호 아이디? 받아와야 해요~~~
-	function goOrderDetailPop() {
-		
-		// 코인 구매 금액 선택 팝업창 띄우기
-		const url = "<%= request.getContextPath() %>/admin/member_list_order_detail.jsp"; 
-		// 마지막의 userid 는 변수
-		
-		// coinPurchaseTypeChoice 이거도 이름 바꿔주셔야 해요~~
-		window.open(url, "coinPurchaseTypeChoice", 
-					"left=350px, top=100px, width=700px, height=700px");
-		
-	} // end of function goCoinPurchaseTypeChoice()
-		
+	
+	// function declaration
+	// 회원 상세조회에서 바로 직전에 보던 목록을 보여주기(검색된 목록이라면 검색된 회원목록 보여주기)
+	function goMemberList() {
+		location.href = "<%= request.getContextPath() %>" + goBackURL;
+	} // end of function goMemberList()
+	
 </script>
+
+<c:if test="${empty requestScope.member_select_one}">
+	존재하지 않는 회원입니다. <br>
+</c:if>
+
+<c:if test="${not empty requestScope.member_select_one}">
+
+<c:set var="mobile" value="${requestScope.member_select_one.mobile}"/>
 
 <div class="container" >
 
@@ -64,7 +125,7 @@
 					</tr>
 					<tr>
 						<td class="col-4">연락처</td>
-						<td class="col-8">${requestScope.member_select_one.mobile}</td>
+						<td class="col-8">${fn:substring(mobile,0,3)}-${fn:substring(mobile,3,7)}-${fn:substring(mobile,7,11)}</td>
 					</tr>
 					<tr>
 						<td class="col-4">이메일</td>
@@ -93,11 +154,11 @@
 					</tr>
 					<tr>
 						<td class="col-4">예치금</td>
-						<td class="col-8">${requestScope.member_select_one.coin} 원</td>
+						<td class="col-8"><fmt:formatNumber value="${requestScope.member_select_one.coin}" pattern="###,###"/> 원</td>
 					</tr>
 					<tr>
 						<td class="col-4">적립금</td>
-						<td class="col-8">${requestScope.member_select_one.point} 찻잎</td>
+						<td class="col-8"><fmt:formatNumber value="${requestScope.member_select_one.point}" pattern="###,###"/> 찻잎</td>
 					</tr>
 					<tr>
 						<td class="col-4">가입일자</td>
@@ -114,25 +175,27 @@
   	<div style="border: 1px solid #ddd; "> <%-- text-align: center --%>
   		<%-- 문자발송 상단부 --%>
   		<div class="ml-5 mt-5">
-		  	<span>발송예약일</span> 
-		  	<input type="date" >
-		  	<input type="time" >
+		  	<span class="mr-3">발송예약일</span> 
+		  	<input type="date" id="reservedate" />
+		  	<input type="time" id="reservetime" />
 	  	</div>
 	  	<hr style="width:92%;">
 	  	<%-- 문자발송 창 --%>
 	  	<div class="ml-5 mt-3 mb-5" >
-		  	<textarea rows="10" style="width: 83%;"></textarea>
-		  	<span><input id="submit_btn" type="button" class="btn btn-light" style="height: 250px; width: 100px; background-color: #f2f2f2;" value="전송" /></span>
+		  	<textarea rows="10" style="width: 83%;" id="smsContent"></textarea>
+		  	<span><input id="btnSend" type="button" class="btn btn-light" style="height: 250px; width: 100px; background-color: #f2f2f2;" value="전송" /></span>
 	  	</div>
   	</div>
-  	
-	<div class="mt-4">  <%--text-center --%>
-  		<button class="btn float-right" style="background-color: #1E7F15; color:white; font-weight: bold;">
+ 
+ 
+	<div class="mt-4">
+  		<button class="btn float-right" onclick="goMemberList()" style="background-color: #1E7F15; color:white; font-weight: bold;">
   			회원 목록으로 돌아가기
-		</button> <%-- float-right --%>
+		</button>
   	</div>
 
-
 </div>
+
+</c:if>
 
 <%@ include file="../footer.jsp"%>

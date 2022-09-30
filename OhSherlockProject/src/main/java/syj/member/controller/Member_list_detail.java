@@ -60,6 +60,12 @@ public class Member_list_detail extends AbstractController {
 				
 				request.setAttribute("member_select_one", member_select_one);
 				
+			//  *** 현재 페이지를 돌아갈 페이지(goBackURL)로 주소 지정하기 *** //
+				String goBackURL = request.getParameter("goBackURL");
+		//		System.out.println("확인용 : " + goBackURL); 
+
+				request.setAttribute("goBackURL", goBackURL); // 공백이 있는 상태 그대로 전달해준다.
+				
 				super.setRedirect(false);
 				super.setViewPage("/WEB-INF/admin/member_list_detail.jsp");
 				
