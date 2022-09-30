@@ -91,13 +91,14 @@ nocache;
 
 insert into tbl_faq(faq_num, faq_category, faq_subject, faq_content) values(seq_faq.nextval, '운영','고객센터 운영 시간이 궁금해요.','상담 가능한 시간은 AM 09:30-PM 6:00 이며 점심시간은 PM 12:30-PM 1:30 입니다.'|| chr(10) || '(주말 및 공휴일 휴무) 상담 시간 외의 문의는 게시판이나 메일, 채팅 문의 주시면 가능한 빠른 시간에 답변을 드릴 수 있도록 하겠습니다.');
 
-select *
-from tbl_faq;
-
-se
-
+select faq_num, faq_category, faq_subject, faq_content
+from tbl_faq
+where faq_category = 'delivery'; -- categoryid 가 all 이 넘어오면 where절 제외하기
 
 
+select faq_num, faq_category, faq_subject, faq_content
+from tbl_faq
+where faq_num = '7'; 
 
 
 

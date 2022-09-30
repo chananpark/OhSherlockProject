@@ -82,6 +82,15 @@
 </script>
 
 <style>
+
+* {
+  cursor: url("https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FeiQhQl%2FbtrNthzsaD4%2FVQ357a1QEcw8pqk9VBVSXk%2Fimg.png"), auto;
+}
+
+a:hover, button:hover, input[type='button']:hover, .btn:hover {
+   cursor: url("https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbLcHy8%2FbtrNprKfXky%2F8QmDKvqOmZx19ZPk9Zk1H0%2Fimg.png"), auto;
+}
+
 .container {
 	font-family: 'Gowun Dodum', sans-serif;
 	position: relative;
@@ -297,18 +306,19 @@ div#brandStoryText {
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
 				<ul class="navbar-nav text-right">
 					<li class="nav-item dropdown mr-2">
-					<a class="nav-link dropdown-toggle menufont_size text-dark" href="" 
-					id="navbarDropdown" data-toggle="dropdown">티제품</a> <%-- 여기 클릭시 전체 상품으로 연결 --%>
+					<a class="nav-link dropdown-toggle menufont_size text-dark" href="" id="navbarDropdown" data-toggle="dropdown">티제품</a> <%-- 여기 클릭시 전체 상품으로 연결 --%>
 						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown" id="teaProducts">
-							<a class="dropdown-item" href="">전체상품</a> <a
-								class="dropdown-item" href="#">베스트</a> <a class="dropdown-item"
-								href="#">녹차/말차</a> <a class="dropdown-item" href="#">홍차</a> <a
-								class="dropdown-item" href="#">허브차</a>
-						</div></li>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="#">기프트세트</a></li>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="#">이벤트상품</a></li>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/storeInfo/storeList.jsp">매장안내</a></li>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/brandStory/brandStory.tea">브랜드스토리</a></li>
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productAll.tea">전체상품</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productBest.tea">베스트</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productGreen.tea">녹차/말차</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productBlack.tea">홍차</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productHerb.tea">허브차</a>
+						</div>
+					</li>
+					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%= ctxPath %>/shop/productGiftset.tea">기프트세트</a></li>
+					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%= ctxPath %>/shop/productEvent.tea">이벤트상품</a></li>
+					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath %>/storeInfo/storeList.jsp">매장안내</a></li>
+					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath %>/brandStory/brandStory.tea">브랜드스토리</a></li>
 				</ul>
 				<ul class="navbar-nav text-right mx-auto">
 				
@@ -316,19 +326,27 @@ div#brandStoryText {
 				<%-- 로그인 전 상태일 때 --%>
 				<c:if test="${empty sessionScope.loginuser}"> 
 					<li class="nav-item dropdown mr-2"><a class="nav-link dropdown-toggle menufont_size text-secondary"
-						href="<%=ctxPath%>/login/login.tea" id="navbarDropdown" data-toggle="dropdown">로그인</a> 
+						href="<%= ctxPath %>/login/login.tea" id="navbarDropdown" data-toggle="dropdown">로그인</a> 
 						<%-- 로그인을 누르면 기본은 로그인 창으로 연결 --%>
 						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="<%=ctxPath%>/login/login.tea">로그인</a> 
-							<a class="dropdown-item" href="<%=ctxPath%>/member/memberRegister.tea">회원가입</a>
+							<a class="dropdown-item" href="<%= ctxPath %>/login/login.tea">로그인</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/member/memberRegister.tea">회원가입</a>
 						</div></li>
-					<li class="nav-item active mr-2"><a
-						class="nav-link menufont_size text-secondary" href="<%=ctxPath%>/mypage/mypage.tea">마이페이지</a></li>
+					<li class="nav-item active mr-2">
+					  <%-- 로그인 전 회원가입 접속가능 --%>
+					  <c:if test="${empty sessionScope.loginuser}">
+						<a class="nav-link menufont_size text-secondary" href="<%= ctxPath %>/member/memberRegister.tea">회원가입</a>
+					  </c:if>
+					  <%-- 로그인 후 마이페이지 접속가능 --%>
+					  <c:if test="${not empty sessionScope.loginuser}">
+						<a class="nav-link menufont_size text-secondary" href="<%= ctxPath %>/mypage/mypage.tea">마이페이지</a>
+					  </c:if>
+					</li>
 				</c:if>
 				
 				<%-- 로그인 후 로그인->로그아웃으로 바뀐 --%>
 				<c:if test="${not empty sessionScope.loginuser}">
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-secondary" href="<%=ctxPath%>/login/logout.tea">로그아웃</a></li>
+					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-secondary" href="<%= ctxPath %>/login/logout.tea">로그아웃</a></li>
 					
 					<%-- 관리자 로그인 시 마이페이지 -> 관리자전용 --%>
 					<c:if test="${sessionScope.loginuser.userid eq 'admin'}">
@@ -336,24 +354,23 @@ div#brandStoryText {
 						class="nav-link dropdown-toggle menufont_size text-secondary"
 						href="" id="navbarDropdown" data-toggle="dropdown">관리자전용</a>
 						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="<%=ctxPath%>/member/member_list.tea">회원조회</a> 
-							<a class="dropdown-item" href="<%=ctxPath%>/admin/prod_mgmt_list.tea">상품관리</a>
+							<a class="dropdown-item" href="<%= ctxPath %>/member/member_list.tea">회원조회</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/admin/prod_mgmt_list.tea">상품관리</a>
 						</div></li>
 					</c:if>
 									
 					<c:if test="${sessionScope.loginuser.userid ne 'admin'}">		
 					<li class="nav-item active mr-2"><a
-						class="nav-link menufont_size text-secondary" href="<%=ctxPath%>/mypage/mypage.tea">마이페이지</a></li>
+						class="nav-link menufont_size text-secondary" href="<%= ctxPath %>/mypage/mypage.tea">마이페이지</a></li>
 					</c:if>
 				</c:if>
 
 					<li class="nav-item dropdown mr-2"><a href="#" class="nav-link dropdown-toggle menufont_size text-secondary"
 						id="navbarDropdown" data-toggle="dropdown">고객센터</a>
-						<div class="dropdown-menu no-border"
-							aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="<%=ctxPath%>/cs/notice.tea">공지사항</a> <a
-								class="dropdown-item" href="<%=ctxPath%>/cs/faq.tea">자주 묻는 질문</a> <a
-								class="dropdown-item" href="<%=ctxPath%>/cs/inquiry.tea">1:1 상담</a>
+						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="<%= ctxPath %>/cs/notice.tea">공지사항</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/cs/faq.tea">자주 묻는 질문</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/cs/inquiry.tea">1:1 상담</a>
 						</div></li>
 				</ul>
 			</div>
@@ -380,7 +397,7 @@ div#brandStoryText {
 	        	<div id="search">
 	        	<%-- jsp 파일 연결을 위해서 iframe 을 사용하지 않고, 우선 include로 연결해 두었다. --%>
 	        	<%--	<iframe id="iframe_reviewWrite" style="border: none; width: 100%; height: 350px;" src="<%= request.getContextPath()%>/login/idFind.up"> </iframe>---%>
-             		<%@ include file="modal_search.jsp"%>
+             		<%@ include file="modal_search.jsp" %>
 	        	</div>
 	      	</div>
 	      

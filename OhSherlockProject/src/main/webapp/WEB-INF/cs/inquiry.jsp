@@ -50,31 +50,23 @@
 <script>
 	
 	$(document).ready(()=>{
-				
-		/* $("input:checkbox").on('click', (e) => {
-			if ( $(e.target).prop('checked') ) {
-			  $(e.target).val("y");
-			} else {
-			  $(e.target).val("n");
-			}
-	    }); */
 		
 		$("#btnSubmit").click(()=>{
 			const frm = document.inquiryFrm;
 			
-			const inquirytype = $("select[id='inquirytype']").val();
+			const inquiry_type = $("select[id='inquiry_type']").val();
 			
-			if(inquirytype == ""){
+			if(inquiry_type == ""){
 				alert("문의유형을 선택하세요!");
 				return;
 			}
 			
-			if($("#title").val().trim() == ""){
+			if($("#inquiry_subject").val().trim() == ""){
 				alert("제목을 입력하세요!");
 				return;
 			}
 			
-			if($("#content").val().trim() == ""){
+			if($("#inquiry_content").val().trim() == ""){
 				alert("문의 내용을 입력하세요!");
 				return;
 			}
@@ -123,22 +115,22 @@
 	</div>
 	
 	<form action="" name="inquiryFrm" id="inquiryFrm">
-		<label for="inquirytype">문의유형<span class="text-danger">*</span></label>
-		<select id="inquirytype" name="inquirytype">
+		<label for="inquiry_type">문의유형<span class="text-danger">*</span></label>
+		<select id="inquiry_type" name="inquiry_type">
 			<option value="">문의유형을 선택해주세요</option>
-			<option value="상품문의">상품문의</option>
-			<option value="배송문의">배송문의</option>
-			<option value="예치금">예치금/적립금</option>
-			<option value="취소">취소/환불/교환</option>
-			<option value="회원">회원</option>
-			<option value="기타">기타</option>
+			<option value="product">상품문의</option>
+			<option value="delivery">배송문의</option>
+			<option value="coin_point">예치금/적립금</option>
+			<option value="cancle">취소/환불/교환</option>
+			<option value="member">회원</option>
+			<option value="others">기타</option>
 		</select>
 	
-		<label for="title">제목<span class="text-danger">*</span></label>
-		<input type="text" id="title" name="title" placeholder="제목을 입력하세요.">
+		<label for="inquiry_subject">제목<span class="text-danger">*</span></label>
+		<input type="text" id="inquiry_subject" name="inquiry_subject" placeholder="제목을 입력하세요.">
 		
-		<label for="content">문의 내용<span class="text-danger">*</span></label>
-		<textarea id="content" name="content" placeholder="문의 내용을 입력하세요." style="height:200px"></textarea>
+		<label for="inquiry_content">문의 내용<span class="text-danger">*</span></label>
+		<textarea id="inquiry_content" name="inquiry_content" placeholder="문의 내용을 입력하세요." style="height:200px"></textarea>
 		
 		<%--
 		<label for="photo" style="margin: 6px 20px 16px 0;">사진 첨부</label><input type="file" id="photo" name="photo">
@@ -146,12 +138,12 @@
 		--%>
 		<hr>
 		
-		<input type="checkbox" id="answer_email" name="answer_email"/>
-		<label for="answer_email" style="margin-top: 16px;">답변 완료 시 이메일로 받으시겠습니까?<span>&nbsp;(이메일: ${loginuser.email })</span></label>
+		<input type="checkbox" id="inquiry_email" name="inquiry_email"/>
+		<label for="inquiry_email" style="margin-top: 16px;">답변 완료 시 이메일로 받으시겠습니까?<span>&nbsp;(이메일: ${loginuser.email })</span></label>
 		<br>
 		
-		<input type="checkbox" id="answer_sms" name="answer_sms"/>
-		<label for="answer_sms">답변 완료 시 SMS로 받으시겠습니까?<span>&nbsp;(연락처: ${loginuser.mobile })</span></label>
+		<input type="checkbox" id="inquiry_sms" name="inquiry_sms"/>
+		<label for="inquiry_sms">답변 완료 시 SMS로 받으시겠습니까?<span>&nbsp;(연락처: ${loginuser.mobile })</span></label>
 		
 		<div class="text-right" style="margin-top: 30px;">
 	    	<input type="button" class="writeBtns" id="btnCancel" value="취소" style="margin-right: 0" />&nbsp;
