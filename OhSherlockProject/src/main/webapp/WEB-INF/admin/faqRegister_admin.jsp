@@ -82,6 +82,15 @@
     	frm.submit();
 	} // end of function goRegister()
 
+	// 취소 버튼 클릭 메소드
+	function goCancel(){ 
+		const doCancle = confirm("자주묻는질문 등록을 취소하시겠습니까?");
+		if(doCancle){
+			alert("자주묻는질문 등록을 취소하셨습니다.");
+			location.href="javascript:history.back()";
+		}
+	} // end of function goCancel()
+
 </script>
 
 
@@ -109,7 +118,7 @@
 		<textarea id="content" name="content" placeholder="답변을 입력하세요."style="height: 200px"></textarea>
 
 		<div class="text-right" style="margin-top: 30px;">
-			<input type="button" class="writeBtns" value="취소" style="margin-right: 0" />&nbsp;
+			<input type="button" class="writeBtns" value="취소" style="margin-right: 0" onclick="goCancel();"/>&nbsp;
 			<input type="button" id="registerBtn" class="btn-secondary writeBtns" value="등록" style="margin-left: 5px;" />
 		</div>
 	</form>

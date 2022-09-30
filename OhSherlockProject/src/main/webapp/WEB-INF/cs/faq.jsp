@@ -116,6 +116,16 @@
 		location.href = "<%=ctxPath%>/cs/faqEdit.tea?faq_num="+faq_num;
 	} // end of function faqEdit_click(faq_num)
 	
+	// 질문 삭제하기 버튼 클릭 시 이벤트
+	function faqDelete_click(faq_num) {
+		if (confirm("정말 삭제하시겠습니까??") == true){    //확인
+			console.log(faq_num);
+			location.href = "<%=request.getContextPath() %>/cs/faqDelete.tea?faq_num="+faq_num; 
+		}else{   //취소
+		    return false;
+		}
+	} // end of function faqDelete_click(faq_num)
+	
 	// 각 카테고리 버튼을 클릭했을 경우의 메소드
 	function click_category(selectid) {
 		let html = "";
@@ -161,7 +171,7 @@
 					if(${sessionScope.loginuser.userid == 'admin' && not empty sessionScope.loginuser.userid}) {
 						html += "<div class='text-right adminOnlyBtns mb-1'> " +
 		                  		"	<input id='faqEdit' type='button' value='수정' style='border-style: none;' onclick='faqEdit_click("+item.faq_num+")'/>" +
-								"	<input id='faqdelete' class='btn-dark' type='button' value='삭제' style='border-style: none;'/> " +
+								"	<input id='faqdelete' class='btn-dark' type='button' value='삭제' style='border-style: none;' onclick='faqDelete_click("+item.faq_num+")'/> " +
 		               			"</div>";
 					} else {
 						html += " ";
@@ -231,7 +241,6 @@
 			<input type="button" value="질문 추가 등록" class="btn"/>
 		</div>
 	</c:if>		
-	
 	
 </div>
 

@@ -11,6 +11,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import common.model.FaqVO;
+import util.security.Sha256;
 
 public class FaqDAO implements InterFaqDAO {
 
@@ -121,6 +122,79 @@ public class FaqDAO implements InterFaqDAO {
 
 		return faqList;
 	} // end of public List<FaqVO> selectFaqList(Map<String, String> paraMap) throws SQLException
+
+	
+	// 기존의 faq 내용을 faqEdit_admin.jsp 단에 뿌려주기
+	@Override
+	public FaqVO faqEditSelect(String faq_num) throws SQLException {
+
+		FaqVO fvo = new FaqVO();
+		
+		try {
+
+			conn = ds.getConnection();
+			
+			String sql = "select faq_num, faq_category, faq_subject, faq_content\n"+
+						"from tbl_faq\n"+
+						"where faq_num = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, faq_num);
+			
+			rs = pstmt.executeQuery();
+			
+			// 복수개의 행 출력
+			while(rs.next()) {
+				
+				fvo = new FaqVO();
+				
+				fvo.setFaq_num(rs.getInt(1)); // 질문번호
+				fvo.setFaq_category(rs.getString(2)); // 카테고리
+				fvo.setFaq_subject(rs.getString(3)); // 질문제목
+				fvo.setFaq_content(rs.getString(4)); // 질문답변
+				
+				
+			} // end of while
+			
+		} finally {
+			close();
+		}
+
+		return fvo;
+	
+	} // end of public FaqVO faqEditSelect(String faq_num) throws SQLException
+
+	
+	// 수정된 FAQ DB에 업데이트 해주는 메소드
+	@Override
+	public int faqEditUpdate(Map<String, String> paraMap) throws SQLException {
+
+		int result = 0;
+	      
+		try {
+			conn = ds.getConnection();
+         
+			String sql = " update tbl_faq "
+						+ " set	faq_category = ?, "
+						+ "  	faq_subject = ?, "
+						+ "		faq_content = ? "
+						+ " where faq_num = ? ";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, paraMap.get("faq_category"));
+			pstmt.setString(2, paraMap.get("title"));
+			pstmt.setString(3, paraMap.get("content"));
+			pstmt.setString(4, paraMap.get("faq_num"));
+
+			result = pstmt.executeUpdate(); // 0 아니면 1이 나와서 result 에 넣어준다.
+         
+		} finally {
+			close();
+		}
+      
+		return result;
+	} // end of public int faqEditUpdate(Map<String, String> paraMap) throws SQLException
 
 	
 	

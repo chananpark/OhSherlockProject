@@ -26,7 +26,7 @@ public class FaqRegister extends AbstractController {
 		} else {
 			// 로그인을 안한 경우 또는 일반 사용자로 로그인 했을 경우
 			String message = "관리자 이외에는 접근이 불가합니다.";
-	        String loc = "javascript:history.back()";
+	        String loc = request.getContextPath() + "/login/login.tea";
 	        
 	        request.setAttribute("message", message);
 	        request.setAttribute("loc", loc);
