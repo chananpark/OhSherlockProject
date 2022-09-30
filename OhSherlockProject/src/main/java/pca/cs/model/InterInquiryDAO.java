@@ -18,4 +18,7 @@ public interface InterInquiryDAO {
 	// 자신의 1:1 문의 내역 가져오기
 	List<InquiryVO> showMyInquiryList(Map<String, String> paraMap) throws SQLException;
 
+	// 자신의 1:1 문의 글 내용 가져오기
+	InquiryVO showMyInquiryDetail(Map<String, String> paraMap) throws SQLException;
+
 }

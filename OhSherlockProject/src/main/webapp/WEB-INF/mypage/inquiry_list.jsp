@@ -4,7 +4,7 @@
         
 <style>
 
-	/* * {box-sizing: border-box;} */
+	* {box-sizing: border-box;} 
 	
 	.page-link {
 	  color: #666666; 
@@ -43,6 +43,7 @@
 		border: 2px none #1E7F15;
 		background-color: #1E7F15;
 	    color: white;
+	    cursor: pointer;
 	}
 	
 	/* 기간 탭 기본 css 시작 */
@@ -72,6 +73,13 @@
 		color: black;
 		text-decoration: none;
 	}
+	
+	#more:hover{
+		cursor: pointer;
+		background-color: #1E7F15;
+		color:white;
+	}
+	
 </style>       
 
 <script>
@@ -81,6 +89,8 @@
 	let endDate; // 마지막날짜
 	let lenInquiry = 5; // 한번에 불러올 글 개수
 	let lead = 1; // 가져올 목록 중 첫번째 rownum
+	let inquiry_no;
+	let fk_userid;
 	
 	$(() => {
 		
@@ -93,11 +103,23 @@
 		
 		 // 더보기버튼 이벤트
 	    $("button#more").click(()=>{
-	    	$(this).val(Number(start) + lenInquiry);
+	    	// 전체개수==누적개수(끝까지 불러온경우)
+       		if($("#inquiryLength").text() == $("#count").text()){
+       			// 시작 rownum 초기화
+    	    	lead = 1;
+       			// 누적개수 초기화
+    	    	$("#count").text(0);
+       		}else{ // 아직 더 남아있는 경우
+       			// 시작 rownum 증가
+    	    	lead = (Number(lead) + lenInquiry);
+       		} 
+	    	search();
 	    });
 		
 		// 기간조회 탭버튼 클릭이벤트
 		$("button.period").on('click', (e) => {
+			lead = 1;
+			$("#count").text(0);
 			const now = new Date();
 			period = $(e.target).attr("id");
 			endDate = formatDate(now);
@@ -107,6 +129,8 @@
 		
 		// 날짜선택 조회버튼 이벤트
 		$("input#datePickBtn").on('click', () => {
+			lead = 1;
+			$("#count").text(0);
 			const now = new Date();
             startDate = formatDate($("input#startDate").val());
         	endDate = formatDate($("input#endDate").val());
@@ -190,16 +214,37 @@
          		if (json.length == 0) {
          			// 데이터가 존재하지 않는 경우
          			 html += "<tr><td colspan='4'>1:1문의 내역이 없습니다.</td><tr>";
-	         		// 결과 출력
+	         		// 메시지 출력
 	         		$("#inquiryTbl>tbody").html(html);
          		}else{
+         			// 데이터가 존재하는 경우
   	         		$.each(json, function(index, item){
 	         			html += "<tr><td>"+item.inquiry_type+"</td><td>"
-							+item.inquiry_subject+"</td><td>"+item.inquiry_date+
+							+"<button style='border-style:none; background-color:transparent'  "
+							+"onclick='openModal(event)' "
+							+"data-inquiry_no='"+item.inquiry_no+"' data-fk_userid='"+item.fk_userid+"'>"+item.inquiry_subject+"</button>"
+							+"</td><td>"+item.inquiry_date+
 							"</td><td>"+item.inquiry_answered+"</td></tr>";
 	         		}); 
-						
-	         		$("#inquiryTbl>tbody").html(html);
+  	         		
+  	         		if(lead == 1) { // 첫번째 불러온 목록이라면
+		         		$("#inquiryTbl>tbody").html(html);
+  	         		} else { // 그 다음 목록이라면 append
+  	         			$("#inquiryTbl>tbody").append(html);
+  	         		}
+  	         		
+  	         		// 불러온 문의 개수 누적하기
+  	         		$("#count").text(Number($("#count").text())+json.length);
+					
+					// 전체개수==누적개수(끝까지 불러온경우)
+  	         		if($("#inquiryLength").text() == $("#count").text()){
+  	         			// 처음으로버튼
+  	         			$("button#more").html("<i class='fas fa-angle-double-up'></i>");
+  	         			
+  	         		}else{ // 아직 더 남아있는 경우
+  	         			// 더보기버튼
+  	         			$("button#more").html("<i class='fas fa-angle-double-down'></i>");
+  	         		} 
 				}
   	         		
 			},
@@ -207,7 +252,19 @@
 	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 	        }
 		});	
+		
 	}
+	
+	// 모달창 띄우는 함수
+	function openModal(event) {
+		inquiry_no = $(event.target).data('inquiry_no');
+		fk_userid = $(event.target).data('fk_userid');
+		
+		$("#iframe_inquiryDetail").prop("src", "<%=ctxPath%>/mypage/myInquiryDetail.tea?inquiry_no="+inquiry_no+"&fk_userid="+fk_userid)
+        $('#inquiryDetailModal').modal('show');
+    }
+
+	
 </script>
 
 	<div class="container" id="inquiry">
@@ -256,19 +313,46 @@
 				</tr>
 			</thead>
 			<tbody>
-				
+			<%-- 문의내역 목록 --%>
 			</tbody>
 			<tfoot>
+			<%-- 더보기 버튼 --%>
+			<tr><td colspan='4'><button type='button' class='btn' id='more' value=''></button></td></tr>
 			</tfoot>
 		</table>
 			
-            <span id="count">0</span>
+        <span id="count" style="display: none;">0</span>
 	
 	<div class="text-right" id="detail" style="display: block; margin-top: 15px;">
 	  <input type="button" class="btn-secondary rounded" value="문의남기기" onclick="location.href='<%=ctxPath%>/cs/inquiry.tea'"/>
     </div>
 	
-	
+	<%-- **** Modal **** --%>
+	<div class="modal fade" id="inquiryDetailModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<h4 class="modal-title">1:1 문의 내용</h4>
+					<button type="button" class="close inquiryDetailModalClose"
+						data-dismiss="modal">&times;</button>
+				</div>
+
+				<div class="modal-body">
+					<div id="inquiryDetailDiv">
+						<iframe id="iframe_inquiryDetail"
+							style="border: none; width: 100%; height: 350px;"></iframe>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger inquiryDetailClose"
+						data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
 
 </div>
 

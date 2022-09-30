@@ -143,7 +143,7 @@ public class InquiryDAO implements InterInquiryDAO {
 		try {
 			conn = ds.getConnection();
 
-			String sql = "select INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTENT , INQUIRY_DATE , INQUIRY_ANSWERED\n"+
+			String sql = "select INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_DATE , INQUIRY_ANSWERED\n"+
 					"from\n"+
 					"(\n"+
 					"select row_number() over(order by INQUIRY_DATE desc) as rno,\n"+
@@ -167,9 +167,9 @@ public class InquiryDAO implements InterInquiryDAO {
 				ivo.setInquiry_no(rs.getInt(1));
 				ivo.setInquiry_type(rs.getString(2));
 				ivo.setInquiry_subject(rs.getString(3));
-				ivo.setInquiry_content(rs.getString(4));
-				ivo.setInquiry_date(rs.getString(5).substring(0,10));
-				ivo.setInquiry_answered(rs.getInt(6));
+				ivo.setInquiry_date(rs.getString(4).substring(0,10));
+				ivo.setInquiry_answered(rs.getInt(5));
+				ivo.setFk_userid(userid);
 
 				inquiryList.add(ivo);
 			}
@@ -179,6 +179,42 @@ public class InquiryDAO implements InterInquiryDAO {
 		}
 
 		return inquiryList;
+	}
+
+	// 문의 글내용 조회
+	@Override
+	public InquiryVO showMyInquiryDetail(Map<String, String> paraMap) throws SQLException {
+		InquiryVO ivo = null;
+
+		try {
+			conn = ds.getConnection();
+
+			String sql = "select inquiry_type, inquiry_subject, inquiry_content, inquiry_date, inquiry_answered, inquiry_email, inquiry_sms\n"+
+					"from tbl_inquiry \n"+
+					"where fk_userid = ? and INQUIRY_NO = ?";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("fk_userid"));
+			pstmt.setString(2, paraMap.get("inquiry_no"));
+			
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				ivo = new InquiryVO();
+				ivo.setInquiry_type(rs.getString(1));
+				ivo.setInquiry_subject(rs.getString(2));
+				ivo.setInquiry_content(rs.getString(3));
+				ivo.setInquiry_date(rs.getString(4).substring(0,10));
+				ivo.setInquiry_answered(rs.getInt(5));
+				ivo.setInquiry_email(rs.getInt(6));
+				ivo.setInquiry_sms(rs.getInt(7));
+			}
+
+		} finally {
+			close();
+		}
+
+		return ivo;
 	}
 
 

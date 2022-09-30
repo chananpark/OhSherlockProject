@@ -38,7 +38,7 @@ public class InquiryListJson extends AbstractController {
 		String lenInquiry = request.getParameter("lenInquiry");
 		paraMap.put("lead", lead);
 		
-		String last = String.valueOf(Integer.parseInt(lead)+Integer.parseInt(lenInquiry));
+		String last = String.valueOf(Integer.parseInt(lead)+Integer.parseInt(lenInquiry)-1);
 		paraMap.put("last", last);
 		
 		List<InquiryVO> inquiryList = idao.showMyInquiryList(paraMap);
@@ -53,8 +53,8 @@ public class InquiryListJson extends AbstractController {
 				jsonObj.put("inquiry_no", ivo.getInquiry_no());
 				jsonObj.put("inquiry_type", ivo.getInquiry_type());
 				jsonObj.put("inquiry_subject", ivo.getInquiry_subject());
-				jsonObj.put("inquiry_content", ivo.getInquiry_content());
 				jsonObj.put("inquiry_date", ivo.getInquiry_date());
+				jsonObj.put("fk_userid", ivo.getFk_userid());
 				if(ivo.getInquiry_answered() == 1)
 					jsonObj.put("inquiry_answered", "답변완료");
 				else

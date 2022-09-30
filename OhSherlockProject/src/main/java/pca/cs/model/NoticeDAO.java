@@ -48,7 +48,7 @@ public class NoticeDAO implements InterNoticeDAO {
 		}
 	}
 
-
+	// 페이징 처리하여 공지사항 글목록 가져오기
 	@Override
 	public List<NoticeVO> showNoticeList(Map<String, String> paraMap) throws SQLException {
 		
@@ -84,7 +84,7 @@ public class NoticeDAO implements InterNoticeDAO {
 			// 페이징처리
 			
 			int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));  // 조회하고자 하는 페이지 번호
-			int sizePerPage = Integer.parseInt(paraMap.get("sizePerPage")); // 한페이지당 보여줄 행의 개수
+			int sizePerPage = 10; // 한페이지당 보여줄 행의 개수
 			
 			pstmt = conn.prepareStatement(sql);
 			
