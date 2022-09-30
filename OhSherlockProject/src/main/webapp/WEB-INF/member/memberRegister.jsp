@@ -20,13 +20,15 @@
 
 	#idCheck, 
 	#emailCheck,
-	#btn_emailVerifyCodeCheck	{
+	#btn_emailVerifyCodeCheck,
+	#mobileCheck,
+	#btn_mobileVerifyCodeCheck	{
 		color:#333333;
 		height: 30px;
 		border-style: none;
 		border-radius: 5%;
-	
 	} 
+	
 	#btnRegister {
     width: 126px;
     padding: 12px;
@@ -73,14 +75,21 @@
 		
 		$("#spinner").hide();
 		
-		let certifiCode; // 컨드롤러에서 이메일인증코드 가져오기용
+		let randnum; // 컨트롤러에서 휴대전화 인증 코드 가져오기용
+		let certifiCode; // 컨트롤러에서 이메일인증코드 가져오기용
 		
 	  $('span.error').hide();
 	  $('input#userid').focus();
 	  
+	  
+		// 휴대전화 인증확인란 숨기기
+	  $('div#mobileVerify').hide();
+	  $('div#mobileVerifyConfirm').hide();
+	  
 	  // 이메일 인증확인란 숨기기
 	  $('div#emailVerify').hide();
 	  $('div#emailVerifyConfirm').hide();
+	  
 	  
 	  // #userid 포커스를 잃어버렸을 경우
 	  $('input#userid').blur((e) => {
@@ -370,9 +379,6 @@
 		$('button#mobileCheck').click(function () {
 			  b_flag_mobileDuplicate_click = true;
 			  // 가입하기 버튼을 클릭시 "휴대폰인증" 을 클릭했는지 클릭안했는지 알아보기위한 용도임.
-			/* 	
-        // 오류메시지 삭제
-        $('span#emailCheckResult').empty(); */
 
         $.ajax({
 						url:"<%= request.getContextPath()%>/member/smsSend.tea",
@@ -383,6 +389,9 @@
 							
 							if(json.success_count == 1) {
 								$("div#smsResult").html("문자전송이 성공되었습니다");
+								
+								$('div#mobileVerify').show();
+								
 							}
 						
 							else if(json.success_count != 0) {
@@ -521,8 +530,31 @@
 	
 	/////////////////////////////////////////////////////////////
 	  
-
-
+	// 휴대전화 인증 확인 함수
+	function mobileVerifyCodeCheck() {
+		
+		const userRandnum = $("input#userMobileVerifyCode").val();
+		
+		console.log("인증코드 확인 ==> "+randnum);
+		
+		if( randnum == userRandnum ){
+			b_flag_mobileDuplicate_click = true;
+			$('div#mobileVerify').hide();
+			$('div#mobileVerifyConfirm').show();
+			
+		}
+		else{
+			alert("인증번호가 틀렸습니다.");
+			b_flag_mobileDuplicate_click = false;
+		}
+		
+		
+	}
+	
+	
+	
+	
+	
 	// 이메일 인증 처리 함수
 	function emailVerifyCertification() {
 		
@@ -731,6 +763,12 @@
 				    <input type="text" id="hp2" name="hp2" class="required" size="6" maxlength="4" />&nbsp;-&nbsp;
 				    <input type="text" id="hp3" name="hp3" class="required" size="6" maxlength="4" />
 				    <button type="button" id="mobileCheck">인증하기</button>
+				    <div id="mobileVerify">
+							<input id="userMobileVerifyCode" type="text" name="mobileVerifyCode" class="mt-2" size="20"/>
+							<button type="button" id="btn_mobileVerifyCodeCheck" onclick="mobileVerifyCodeCheck();">인증확인</button>
+							<span id="timer" class="text-danger"></span>
+						</div>
+						<div id="mobileVerifyConfirm">휴대전화 인증이 확인되었습니다.</div>
 					</td>
 				</tr>
 				

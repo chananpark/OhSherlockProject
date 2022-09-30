@@ -3,9 +3,12 @@ package lsw.member.controller;
 import java.util.HashMap;
 import java.util.Random;
 
+import javax.management.StringValueExp;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import common.controller.AbstractController;
@@ -31,19 +34,19 @@ public class SmsSend extends AbstractController {
 		String mobile = request.getParameter("mobile");
 		// 인증키를 랜덤하게 생성하도록 한다. 
 		
-		Random rnd = new Random();
-		// 인증코드 만들기 
+		CreateRandomCode ranCode = new CreateRandomCode();
 		
-		int randnum = 0;
-		for(int i=0; i<7; i++) { 
-			// 공식 : min 부터 max 사이의 값으로 랜덤한 정수를 얻으려면 
-            // int rndnum = rnd.nextInt(max - min + 1) + min;
-			
-			// 숫자 0 부터 9 까지 랜덤하게 1개를 만든다. 
-			randnum += rnd.nextInt(9 - 0 + 1) + 0; // int 보다 작은 byte, short, char는 사칙연산을 만나면 자연적으로 int를 만난다. 
-			
-		} // end of for
+		int ranNum = ranCode.ranNum();
 		
+		String certificationCode = "오!셜록 본인확인 인증번호는 [";
+        // 인증키는 숫자 6글자 로 만들겠습니다.
+        // 예 : certificationCode ==> dngrn4745003
+		
+		certificationCode += ranNum;
+        
+        certificationCode += "] 입니다. 정확히 입력해주세요.";
+        
+        System.out.println("인증코드 확인 certificationCode => " + certificationCode);
 		
 		// == 4개 파라미터(to, from, type, text)는 필수사항이다. == 
 	      HashMap<String, String> paraMap = new HashMap<>();
@@ -51,7 +54,7 @@ public class SmsSend extends AbstractController {
 	      paraMap.put("from", "01074474388"); // 발신번호
 	      // 2020년 10월 16일 이후로 발신번호 사전등록제로 인해 등록된 발신번호로만 문자를 보내실 수 있습니다
 	      paraMap.put("type", "SMS"); // Message type ( SMS(단문), LMS(장문), MMS, ATA )
-	      paraMap.put("text", String.valueOf(randnum)); // 문자내용
+	      paraMap.put("text", certificationCode); // 문자내용
 	      
 	      paraMap.put("app_version", "JAVA SDK v2.2"); // application name and version
 	      
@@ -76,12 +79,11 @@ public class SmsSend extends AbstractController {
 			   org.json.JSONObject 이 아니라 
 			   org.json.simple.JSONObject 이어야 한다.  
 			*/
-			
-			String json = jsonObj.toString();
+	      String json = jsonObj.toString(); 
 			
 		//	System.out.println("~~~~ 확인용 json => " + json);
 			// ~~~~ 확인용 json => {"group_id":"R2G6h2GgdLQJJZay","success_count":1,"error_count":0} 
-			
+	      
 			request.setAttribute("json", json);
 			
 		//	super.setRedirect(false);
