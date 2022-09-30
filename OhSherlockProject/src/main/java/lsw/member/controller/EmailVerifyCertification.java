@@ -4,13 +4,10 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 
 import common.controller.AbstractController;
-import lsw.member.model.InterMemberDAO;
-import lsw.member.model.MemberDAO;
 
 public class EmailVerifyCertification extends AbstractController {
 

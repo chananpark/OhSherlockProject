@@ -62,14 +62,18 @@
 	let b_flag_emailVerifyCode_click = false;
 	// "이메일인증코드확인" 을 확인 했는지 알아오기 위한 용도.
 	
+	let b_flag_mobileDuplicate_click = false;
+	// "휴데폰인증" 을 확인 했는지 알아오기 위한 용도.
+	
 	let time = 60 * 5; // 타이머 설정
+	let setTimer;
+	
 	
 	$(document).ready(function () {
 		
 		$("#spinner").hide();
 		
 		let certifiCode; // 컨드롤러에서 이메일인증코드 가져오기용
-		
 		
 	  $('span.error').hide();
 	  $('input#userid').focus();
@@ -358,13 +362,50 @@
 		$('input#userid').bind('change', () => {
 		  b_flag_idDuplicate_click = false;
 		});
+	  
+///////////////////////////////////////////////////////////////////////////////////
+	  
+	  
+		// "휴대폰인증" 을 클릭시 호출되는 함수
+		$('button#mobileCheck').click(function () {
+			  b_flag_mobileDuplicate_click = true;
+			  // 가입하기 버튼을 클릭시 "휴대폰인증" 을 클릭했는지 클릭안했는지 알아보기위한 용도임.
+			/* 	
+        // 오류메시지 삭제
+        $('span#emailCheckResult').empty(); */
 
+        $.ajax({
+						url:"<%= request.getContextPath()%>/member/smsSend.tea",
+						type:"post",
+						data:{ mobile: $('#hp1').val()+$('#hp2').val()+$('#hp3').val() },
+						dataType:"json",
+						success:function(json){
+							
+							if(json.success_count == 1) {
+								$("div#smsResult").html("문자전송이 성공되었습니다");
+							}
+						
+							else if(json.success_count != 0) {
+								$("div#smsResult").html("문자전송이 성공되었습니다");
+							}			    
+						},
+						error: function(request, status, error){
+			      	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+						}
+					});
+		  }); // end of $("button#emailCheck").click(function() {})----------
+		
+	  
+	  //////////////////////////////////////////////////////////////////////////////////////////
+	  
+	  
 	  
 		// "이메일중복확인" 을 클릭시 호출되는 함수
 		$('button#emailCheck').click(function () {
 			  b_flag_emailDuplicate_click = true;
 			  // 가입하기 버튼을 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지 알아보기위한 용도임.
-			
+				
+			  clearInterval(setTimer);// 작동 안함... 다시 조정해야함 
 
         // 오류메시지 삭제
         $('span#emailCheckResult').empty();
@@ -384,10 +425,30 @@
 			          .css('color', 'red');
 			        $('input#email').val('');
 			      } else {
+			    	  
 			    	  $("#spinner").show();
 			    	  
+			    		 // 5분 타이머 함수
+			    		const myTimer = () => {
+			    					
+			    	        let minutes = parseInt(time / 60);
+			    	        let seconds = time % 60;
+
+			    	        minutes = minutes < 10 ? "0" + minutes : minutes;
+			    	        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+			    	        $("#timer").text(minutes + ":" + seconds);
+			    			
+			    	        if (time-- < 0) {
+			    	            alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
+			    	            clearInterval(setTimer); // 타이머 삭제
+			    		   	    $("div#emailVerify").hide();
+			    	          return;
+			    	        }
+	    				}
+			    		
 	   			   // 5분 타이머 시작
-	 		       const setTimer = setInterval(myTimer, 1000);
+	 		       setTimer = setInterval(myTimer, 1000);
 	   			   
 		    		 // 이메일 인증코드 처리 함수 호출
 		    	   emailVerifyCertification();
@@ -460,24 +521,7 @@
 	
 	/////////////////////////////////////////////////////////////
 	  
-	 // 5분 타이머 함수
-	const myTimer = () => {
-    
-        let minutes = parseInt(time / 60);
-        let seconds = time % 60;
 
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-
-        $("#timer").text(minutes + ":" + seconds);
-		
-        if (time-- < 0) {
-            alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
-            clearInterval(setTimer); // 타이머 삭제
-	   	    $("div#emailVerify").hide();
-          return;
-        }
-		}
 
 	// 이메일 인증 처리 함수
 	function emailVerifyCertification() {
@@ -686,6 +730,7 @@
             </select>&nbsp;-&nbsp;
 				    <input type="text" id="hp2" name="hp2" class="required" size="6" maxlength="4" />&nbsp;-&nbsp;
 				    <input type="text" id="hp3" name="hp3" class="required" size="6" maxlength="4" />
+				    <button type="button" id="mobileCheck">인증하기</button>
 					</td>
 				</tr>
 				
@@ -706,6 +751,7 @@
 						<div id="emailVerifyConfirm">이메일 인증이 확인되었습니다.</div>
 					</td>
 				</tr>
+				
 			</thead>
 		</table>
 	
@@ -760,11 +806,7 @@
 			<thead class="thead-light">
 				<tr>
 					<td colspan="2" style="text-align: center; vertical-align: middle;">
-<<<<<<< HEAD
 						<iframe src="<%=ctxPath %>/iframeAgree/registerAgree.html" width="85%" height="150px" class="box" ></iframe></iframe>
-=======
-						<iframe src="<%=ctxPath %>/iframeAgree/registerAgree.html" width="85%" height="150px" class="box" ></iframe>
->>>>>>> branch 'main' of https://github.com/Chanan-Park/OhSherlockProject.git
 					</td>
 				</tr>
 				<tr>
