@@ -91,12 +91,12 @@
 
 
 	$(document).ready(function(){
+		
+		
 	
 	    $("button#btnSubmit").click(function(){ // 로그인 버튼을 클릭하면
 	          goLogin(); 
 	    });
-	       
-	    
 	    
 	    
 	 });// end of $(document).ready(function(){})-----------------------------
