@@ -95,7 +95,11 @@
 
 <script type="text/javascript">
 
-	$("#purchase").click(function(){
+	$("#dateSearch").click(function(){
+		
+		
+		
+	});
 	
 
  
@@ -127,8 +131,10 @@
 	<input type="date" name="date1">
 	~
 	<input type="date" name="date2">
-	<button type="submit" onclick="input()">조회</button>
+	<button name="dateSearch" type="submit" onclick="input()">조회</button>
 	</form>
+	
+	
 	
 	<div class="text-right" style="margin-top: 20px;"> 
 		<select id="sizePerPage" name="sizePerPage"> <%-- 값이 변하면 여기의 name에 담아준다. 여기다 담은 name을 goSearch에서 action 으로 보내준다. --%>
