@@ -48,7 +48,121 @@
 	background-color: #1E7F15;
 	color: white;
 }
+
 </style>
+
+<script>
+
+	let mobile;
+
+	$(()=>{
+
+		
+		$("#replyBtn").click(()=>{
+			if ($("#inquiry_reply_content").val().trim() == ""){
+				alert("답변을 작성하세요!");
+				$("#inquiry_reply_content").focus();
+				return;
+			}
+			const bool = confirm('1:1 문의 답변을 등록하시겠습니까?');
+			
+			if (bool) {
+				const inquiry_no = '${ivo.inquiry_no}';
+				const inquiry_reply_content = $('#inquiry_reply_content').val();
+				
+				// 답변 등록
+				$.ajax({
+					url:"<%=ctxPath%>/cs/inquiryReply.tea",
+					type:"post",
+					data:{"inquiry_no":inquiry_no, "inquiry_reply_content":inquiry_reply_content},
+					dataType:"JSON",
+					success:function(json){
+						if(json.success){ // 답변 등록 성공
+							alert("1:1 문의 답변 등록 완료");
+						
+		  	         		// 이메일 발송을 요청하였으면
+		  	         		if (${ivo.inquiry_email == 1}){
+		  	         			$('#myModal').modal('show');
+		  	         			sendMailAlert();
+		  	         		} 
+		  	         		// 문자 발송만 요청하였으면
+		  	         		else if (${ivo.inquiry_sms == 1}) {
+		  	         			$('#myModal').modal('show');
+			         			sendSMSAlert();
+		  	  	         	}
+		  	         		// 알림을 요청하지 않았으면
+		  	         		else {
+		  	         			// 페이지 새로고침
+		  	  	         		location.href="javascript:location.reload(true)";
+		  	         		}
+						}
+					},
+					error: function(request, status, error){
+			            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			        }
+				});
+			} else {
+				alert("1:1 문의 답변 작성을 취소하셨습니다.");
+				return;
+			}
+		});
+		
+		$("#showList").click(()=>{
+			const goBackURLInquiry = sessionStorage.getItem("goBackURLInquiry");
+			location.href="<%=ctxPath%>"+goBackURLInquiry;
+		});
+		
+	});
+	
+	// 메일 알림 보내기
+	function sendMailAlert() {
+		
+		const userid = '${ivo.fk_userid}';
+		const inquiry_subject = '${ivo.inquiry_subject}';
+		
+		$.ajax({
+			url:"<%=ctxPath%>/cs/sendMailAlert.tea",
+			type:"post",
+			data:{"userid":userid, "inquiry_subject":inquiry_subject},
+			dataType:"JSON",
+			success:function(json){
+				if(json.success){
+					// 문자 발송도 요청하였으면
+  	         		if (${ivo.inquiry_sms == 1}) {
+	         			sendSMSAlert();
+  	  	         	} else {
+  	  	         		// 페이지 새로고침
+  	  	         		location.href="javascript:location.reload(true)";
+  	  	         	}
+				}
+			},
+			error: function(request, status, error){
+	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	        }
+		});
+	}
+	
+	// 핸드폰 알림 보내기
+	function sendSMSAlert() {
+		
+		const userid = '${ivo.fk_userid}';
+		
+		const smsContent = '[오!셜록] 고객님의 1:1 문의 [${ivo.inquiry_subject}]에 답변이 등록되었습니다.';
+		$.ajax({
+			url:"<%=ctxPath%>/cs/sendSMSAlert.tea",
+			type:"post",
+			data:{"userid":userid, "smsContent":smsContent},
+			dataType:"JSON",
+			success:function(json){
+					// 페이지 새로고침
+	  	         	location.href="javascript:location.reload(true)";
+			},
+			error: function(request, status, error){
+	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	        }
+		});
+	}
+</script>
 
 <div class="container">
 
@@ -68,26 +182,55 @@
 	<br>
 
 	<div class="col text-left">
-		<div style="font-weight: bold; font-size: 20px;">예치금 충전 문의</div>
+		<div style="font-weight: bold; font-size: 20px;">${ivo.inquiry_subject}</div>
+		<br>
+		<div style="font-weight: normal; font-size: 15.5px; margin-bottom: 10px;">${ivo.inquiry_date}</div>
+	</div>
+
+	<div class="col text-left inquiryContent jumbotron mt-4 pt-4">
+	<p class="text-right">작성자: ${ivo.fk_userid}</p>
+	<hr>
+	<p class="mt-4">${ivo.inquiry_content}</p>
+	</div>
+
+	<%-- 미답변시 답변작성 페이지 --%>
+	<c:if test="${empty ivo.irevo}">
+		<label class="mt-4" for="reply">답변<span class="text-danger">*</span></label><br>
+		<textarea id="inquiry_reply_content" name="inquiry_reply_content" placeholder="답변은 한 번 작성하면 수정/삭제가 불가하니 신중하게 작성하시기 바랍니다." style="height:200px; width:100%; padding:2%;"></textarea>
+	
+		<div class="text-right" style="display: block; margin-top: 30px;">
+			<input type="button" id="replyBtn" class="btn-secondary writeReply py-2 px-3 rounded" value="답변작성" />
+		</div>
+	</c:if>
+	
+	<%-- 답변완료시 답변확인 페이지 --%>
+	<c:if test="${not empty ivo.irevo}">
+	
+		<div class="col text-left pt-4">
+		<div style="font-weight: bold; font-size: 20px;">RE:&nbsp;${ivo.inquiry_subject}</div>
 		<br>
 		<div
-			style="font-weight: normal; font-size: 15.5px; margin-bottom: 10px;">2022.09.20</div>
-	</div>
+			style="font-weight: normal; font-size: 15.5px; margin-bottom: 10px;">${ivo.irevo.inquiry_reply_date}</div>
+		</div>
 
-	<div class="col text-left inquiryContent jumbotron mt-4">
-		<br>안녕하세요 저는 서울 마포구에 사는 김쌍용입니다.<br> 다름이 아니오라 예치금 충전하는 방법을
-		알고싶습니다.<br> 친절한 답변 부탁드립니다.
-	</div>
-
-	<label class="mt-4" for="content">답변<span class="text-danger">*</span></label><br>
-	<textarea id="content" name="content" placeholder="답변 내용을 입력하세요." style="height:200px; width:100%;"></textarea>
+		<div class="col text-left inquiryContent jumbotron mt-4">
+		${ivo.irevo.inquiry_reply_content}
+		</div>	
 		
+	  	<div class="text-right" style="display: block; margin-top: 30px;"> 
+	    <input type="button" id="showList" class="btn-secondary listView rounded" value="목록보기" />
+        </div>
+	</c:if>
 
-	<div class="text-right" style="display: block; margin-top: 30px;">
-		<input type="button" class="btn-secondary writeReply py-2 px-3" value="댓글작성" />
+	<%-- 알림 전송 표시 모달 --%>
+	<div class="modal fade" id="myModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-body">고객에게 답변 알림 전송 중..</div>
+			</div>
+		</div>
 	</div>
-
-
 </div>
 
 <%@ include file="../footer.jsp"%>

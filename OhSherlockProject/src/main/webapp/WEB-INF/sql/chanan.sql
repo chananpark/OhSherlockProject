@@ -41,21 +41,6 @@ cross join
 from tbl_login_history
 where fk_userid = '5sherlock') H;
 
-String sql = "select userid, name, email, mobile, postcode, address, detail_address, extra_address, gender,       \n"+
-"birthyyyy, birthmm, birthdd, coin, point, registerday,        \n"+
-"passwd_change_gap, nvl(last_login_gap, months_between(sysdate, registerday)) as last_login_gap, last_login_date\n"+
-"from\n"+
-"(select userid, name, email, mobile, postcode, address, detail_address, extra_address, gender     \n"+
-", substr(birthday,1,4) AS birthyyyy, substr(birthday,6,2) AS birthmm, substr(birthday,9) AS birthdd     \n"+
-", coin, point, to_char(registerday, 'yyyy-mm-dd') AS registerday     \n"+
-", trunc( months_between(sysdate, last_passwd_date) ) AS passwd_change_gap\n"+
-"from tbl_member\n"+
-"where status = 1 and userid = ? and passwd = ?) M\n"+
-"cross join\n"+
-"(select max(logindate) as last_login_date, trunc(months_between(sysdate, max(logindate))) as last_login_gap\n"+
-"from tbl_login_history\n"+
-"where fk_userid = ?) H";
-
 -- 휴면 상태 해제 sql --
 String sql = "update tbl_member set idle = 0 where userid = ?";
 
@@ -87,27 +72,6 @@ NOCACHE;
 -- 공지사항 글쓰기 sql --
 insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
 values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
-insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
-values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
-insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
-values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
-insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
-values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
-insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
-values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
-insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
-values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
-insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
-values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
-insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
-values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
-insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
-values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
-insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
-values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
-insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeFile)
-values(seq_notice.nextval, '2조 화이팅', '아좌좌', null);
-commit;
 
 -- 공지사항 글목록 가져오기 sql --
 String sql = "select noticeNo, noticeSubject, noticeContent, noticeHit, noticeDate from tbl_notice";
@@ -131,14 +95,7 @@ String sql = "delete from tbl_notice where noticeNo = ?";
 -- 공지사항 글수정 sql --
 String sql = "update tbl_notice set noticeSubject = ?, noticeContent = ? where noticeNo = ?";
 
-select * from tbl_notice where noticeno=1;
-
-select ceil(count(*)) from tbl_notice;
-
-alter table tbl_inquiry rename column inquiry_cat to inquiry_type;
-
-desc tbl_inquiry;
-
+-- 1:1 문의 테이블 --
 create table tbl_inquiry(
 inquiry_no number,
 fk_userid varchar2(15),
@@ -160,25 +117,15 @@ select seq_inquiry.nextval from dual;
 
 -- inquiry 테이블 insert문 --
 insert into tbl_inquiry(inquiry_no, fk_userid, inquiry_type, inquiry_subject, inquiry_content, inquiry_email, inquiry_sms)
-values(?, ?, ?, ?, ?, ?, ?);
+values(seq_inquiry.nextval, 'test1', 'delivery', '둘다받을거임', 'ㅇㅇ', 1, 1);
+commit;
 
--- inquiry 전체 개수 가져오기 select문 --
+-- (사용자) 자신의 inquiry 전체 개수 가져오기 select문 --
 select count(*) from tbl_inquiry where fk_userid = 'test1' and inquiry_date between '2022-09-28' and to_date('2022-09-28 23:59:59', 'yyyy-mm-dd hh24:mi:ss');
 
 String sql = "select count(*) from tbl_inquiry where fk_userid = ? and inquiry_date between ? and to_date(? ||' 23:59:59', 'yyyy-mm-dd hh24:mi:ss')";
 
--- inquiry 내역 가져오기 select문 --
-select INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTENT , INQUIRY_DATE , INQUIRY_ANSWERED
-from
-(
-select row_number() over(order by INQUIRY_DATE desc) as rno,
-INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTENT , INQUIRY_DATE , INQUIRY_ANSWERED
-from tbl_inquiry
-where fk_userid = 'test1' AND inquiry_date between '2022-09-27' and to_date('2022-09-29 23:59:59', 'yyyy-mm-dd hh24:mi:ss')
-)
-where rno between 1 and 5;
-
-
+-- (사용자) 자신의 inquiry 내역 가져오기 select문 --
 String sql = "select INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTENT , INQUIRY_DATE , INQUIRY_ANSWERED\n"+
 "from\n"+
 "(\n"+
@@ -188,3 +135,71 @@ String sql = "select INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTE
 "where fk_userid = ? AND inquiry_date between ? and to_date(? ||' 23:59:59', 'yyyy-mm-dd hh24:mi:ss')\n"+
 ")\n"+
 "where rno between ? and ?";
+
+-- (사용자) 자신의 문의글 상세보기 --
+select inquiry_no, inquiry_reply_content, inquiry_type, inquiry_subject, inquiry_content, inquiry_date, inquiry_answered
+FROM tbl_inquiry join tbl_inquiry_reply
+on inquiry_no = fk_inquiry_no
+where INQUIRY_NO = 1;
+
+-- (관리자) 1:1문의 전체 페이지 수 --
+select ceil(count(*)/7) from tbl_inquiry where INQUIRY_ANSWERED = 0;
+
+String sql = "select ceil(count(*)/7) from tbl_inquiry where INQUIRY_ANSWERED = ?";
+
+-- (관리자) 1:1 문의 글목록 --
+String sql = "SELECT inquiry_no, inquiry_type, inquiry_subject, inquiry_content, inquiry_date, fk_userid "+
+        " FROM ( SELECT ROWNUM AS rno, inquiry_no, inquiry_type, inquiry_subject, inquiry_content, inquiry_date, fk_userid "+
+        " FROM ( SELECT inquiry_no, inquiry_type, inquiry_subject, inquiry_content, inquiry_date, fk_userid "+
+        " FROM tbl_inquiry WHERE inquiry_answered = ? ORDER BY 1 DESC ) v ) t\n"+
+        " WHERE rno BETWEEN ? AND ?";
+
+-- 카테고리 테이블 생성 --
+create table tbl_category
+(cnum    number(8)     not null  -- 카테고리 대분류 번호
+,code    varchar2(20)  not null  -- 카테고리 코드
+,cname   varchar2(100) not null  -- 카테고리명
+,constraint PK_tbl_category_cnum primary key(cnum)
+,constraint UQ_tbl_category_code unique(code)
+);
+
+-- 카테고리 시퀀스 생성 --
+create sequence seq_category_cnum 
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+-- 상품번호 시퀀스 생성 --
+create sequence seq_product_pnum
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+-- 관리자 1:1 문의글 상세 --
+SELECT inquiry_reply_content, inquiry_reply_date
+FROM tbl_inquiry_reply
+WHERE fk_inquiry_no = 29;
+
+-- 1:1 문의 댓글 시퀀스 --
+create sequence seq_inquiry_reply_no
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+-- 관리자 1:1 문의글 댓글달기 --
+String sql = "insert into tbl_inquiry_reply(inquiry_reply_no, fk_inquiry_no, inquiry_reply_content)\n"+
+"values(?, ?, ?)";
+
+-- 1:1 문의글의 답변여부 update --
+String sql = "update tbl_inquiry set inquiry_answered = 1 where inquiry_no = ?";
+
+-- 특정 회원 개인정보 조회 --

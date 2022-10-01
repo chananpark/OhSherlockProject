@@ -12,7 +12,16 @@ public class InquiryVO {
 	private int inquiry_email; // 이메일발송거부:0; 이메일발송희망:1
 	private int inquiry_sms; // 문자발송거부:0; 문자발송희망:1
 	
+	private InquiryReplyVO irevo; // 댓글vo
 		
+	public InquiryReplyVO getIrevo() {
+		return irevo;
+	}
+
+	public void setIrevo(InquiryReplyVO irevo) {
+		this.irevo = irevo;
+	}
+
 	public InquiryVO() {}
 
 	public InquiryVO(int inquiry_no, String fk_userid, String inquiry_type, String inquiry_subject,
