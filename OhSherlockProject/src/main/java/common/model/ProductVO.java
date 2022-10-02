@@ -1,124 +1,187 @@
-package lsw.admin.model;
+package common.model;
 
 public class ProductVO {
 
-	private String p_code;             // 상품코드
-	private String p_category;         // 카테고리
-	private String p_name;             // 상품명      
-	private int p_price;               // 상품가격
-	private String p_discount_rate;       // 할인율
-	private int p_stock;               // 재고 
-	private int p_soldout;             // 품절여부
-	private int p_best;                // 베스트여부
-	private String p_info;             // 상품한줄소개
-	private String p_desc;             // 상품설명
-	private String p_thumbnail;        // 썸네일이미지
-	private String p_image;            // 첨부이미지
-	private String p_registerday;	   // 상품등록일자 
+	private int pnum;             				// 상품코드(PK)
+	private String pname;             			// 상품명
+	private int fk_cnum;         				// 스펙번호(FK)
+	private String pimage;        				// 썸네일이미지
+	private String prdmanual_systemfilename;	// 시스템파일명
+	private String prdmanual_orginfilename;		// 오리진파일명
+	private int pqty;               			// 재고 
+	private int price;               			// 상품가격
+	private int saleprice;       				// 판매가격
+	private int fk_snum;               			// 베스트여부
+	private String pcontent;             		// 상품설명
+	private String psummary;            		// 상품한줄소개
+	private int point;							// 적립금액수
+	private String pinputdate; 					// 등록일자
 	
+	private CategoryVO categvo; // 카테고리VO 
+	private SpecVO spvo;        // 스펙VO 
+	
+	/*
+	    제품판매가와 포인트점수 컬럼의 값은 관리자에 의해서 변경(update)될 수 있으므로
+	    해당 제품의 판매총액과 포인트부여 총액은 판매당시의 제품판매가와 포인트 점수로 구해와야 한다.  
+	*/
+	private int totalPrice;         // 판매당시의 제품판매가 * 주문량
+	private int totalPoint;         // 판매당시의 포인트점수 * 주문량 
+		
 	
 	public ProductVO() {
 	}
-
+	
 	// 상품 등록
-	public ProductVO(String p_code, String p_category, String p_name, int p_price, String p_discount_rate, int p_stock,
-					 String p_info, String p_desc, String p_thumbnail, String p_image) {
-		this.p_code = p_code;
-		this.p_category = p_category;
-		this.p_name = p_name;
-		this.p_price = p_price;
-		this.p_discount_rate = p_discount_rate;
-		this.p_stock = p_stock;
-		this.p_info = p_info;
-		this.p_desc = p_desc;
-		this.p_thumbnail = p_thumbnail;
-		this.p_image = p_image;
+	
+	public ProductVO(int pnum, String pname, int fk_cnum, String pimage, String prdmanual_systemfilename,
+					String prdmanual_orginfilename, int pqty, int price, int saleprice, int fk_snum,
+					String pcontent, String psummary, int point, String pinputdate) {
+		this.pnum = pnum;
+		this.pname = pname;
+		this.fk_cnum = fk_cnum;
+		this.pimage = pimage;
+		this.prdmanual_systemfilename = prdmanual_systemfilename;
+		this.prdmanual_orginfilename = prdmanual_orginfilename;
+		this.pqty = pqty;
+		this.price = price;
+		this.saleprice = saleprice;
+		this.fk_snum = fk_snum;
+		this.pcontent = pcontent;
+		this.psummary = psummary;
+		this.point = point;
+		this.pinputdate = pinputdate;
+	}
+
+	public void setPnum(int pnum) {
+		this.pnum = pnum;
+	}
+	public String getPname() {
+		return pname;
+	}
+	public void setPname(String pname) {
+		this.pname = pname;
+	}
+	public int getFk_cnum() {
+		return fk_cnum;
+	}
+	public void setFk_cnum(int fk_cnum) {
+		this.fk_cnum = fk_cnum;
+	}
+	public String getPimage() {
+		return pimage;
+	}
+	public void setPimage(String pimage) {
+		this.pimage = pimage;
+	}
+	public String getPrdmanual_systemfilename() {
+		return prdmanual_systemfilename;
+	}
+	public void setPrdmanual_systemfilename(String prdmanual_systemfilename) {
+		this.prdmanual_systemfilename = prdmanual_systemfilename;
+	}
+	public String getPrdmanual_orginfilename() {
+		return prdmanual_orginfilename;
+	}
+	public void setPrdmanual_orginfilename(String prdmanual_orginfilename) {
+		this.prdmanual_orginfilename = prdmanual_orginfilename;
+	}
+	public int getPqty() {
+		return pqty;
+	}
+	public void setPqty(int pqty) {
+		this.pqty = pqty;
+	}
+	public int getPrice() {
+		return price;
+	}
+	public void setPrice(int price) {
+		this.price = price;
+	}
+	public int getSaleprice() {
+		return saleprice;
+	}
+	public void setSaleprice(int saleprice) {
+		this.saleprice = saleprice;
+	}
+	public int getFk_snum() {
+		return fk_snum;
+	}
+	public void setFk_snum(int fk_snum) {
+		this.fk_snum = fk_snum;
+	}
+	public String getPcontent() {
+		return pcontent;
+	}
+	public void setPcontent(String pcontent) {
+		this.pcontent = pcontent;
+	}
+	public String getPsummary() {
+		return psummary;
+	}
+	public void setPsummary(String psummary) {
+		this.psummary = psummary;
+	}
+	public int getPoint() {
+		return point;
+	}
+	public void setPoint(int point) {
+		this.point = point;
+	}
+	public String getPinputdate() {
+		return pinputdate;
+	}
+	public void setPinputdate(String pinputdate) {
+		this.pinputdate = pinputdate;
+	}
+	
+	public CategoryVO getCategvo() {
+		return categvo;
+	}
+
+	public void setCategvo(CategoryVO categvo) {
+		this.categvo = categvo;
+	}
+
+	public SpecVO getSpvo() {
+		return spvo;
+	}
+
+	public void setSpvo(SpecVO spvo) {
+		this.spvo = spvo;
+	}
+	
+	///////////////////////////////////////////////
+	// *** 제품의 할인률 ***
+	public int getDiscountPercent() {
+	// 정가   :  판매가 = 100 : x
+	
+	// 5000 : 3800 = 100 : x
+	// x = (3800*100)/5000 
+	// x = 76
+	// 100 - 76 ==> 24% 할인
+	
+	// 할인률 = 100 - (판매가 * 100) / 정가
+	return 100 - (saleprice * 100)/price;
 	}
 	
 	
+	/////////////////////////////////////////////////
+	// *** 제품의 총판매가(실제판매가 * 주문량) 구해오기 ***
+	public void setTotalPriceTotalPoint(int oqty) {   
+	// int oqty 이 주문량이다.
+	
+	totalPrice = saleprice * oqty; // 판매당시의 제품판매가 * 주문량
+	totalPoint = point * oqty;     // 판매당시의 포인트점수 * 주문량 
+	}
+	
+	public int getTotalPrice() {
+	return totalPrice;
+	}
+	
+	public int getTotalPoint() {
+	return totalPoint;
+	}
 
 
-	public String getP_code() {
-		return p_code;
-	}
-	public void setP_code(String p_code) {
-		this.p_code = p_code;
-	}
-	public String getP_category() {
-		return p_category;
-	}
-	public void setP_category(String p_category) {
-		this.p_category = p_category;
-	}
-	public String getP_name() {
-		return p_name;
-	}
-	public void setP_name(String p_name) {
-		this.p_name = p_name;
-	}
-	public int getP_price() {
-		return p_price;
-	}
-	public void setP_price(int p_price) {
-		this.p_price = p_price;
-	}
-	public String getP_discount_rate() {
-		return p_discount_rate;
-	}
-	public void setP_discount_rate(String p_discount_rate) {
-		this.p_discount_rate = p_discount_rate;
-	}
-	public int getP_stock() {
-		return p_stock;
-	}
-	public void setP_stock(int p_stock) {
-		this.p_stock = p_stock;
-	}
-	public int getP_soldout() {
-		return p_soldout;
-	}
-	public void setP_soldout(int p_soldout) {
-		this.p_soldout = p_soldout;
-	}
-	public int getP_best() {
-		return p_best;
-	}
-	public void setP_best(int p_best) {
-		this.p_best = p_best;
-	}
-	public String getP_info() {
-		return p_info;
-	}
-	public void setP_info(String p_info) {
-		this.p_info = p_info;
-	}
-	public String getP_desc() {
-		return p_desc;
-	}
-	public void setP_desc(String p_desc) {
-		this.p_desc = p_desc;
-	}
-	public String getP_thumbnail() {
-		return p_thumbnail;
-	}
-	public void setP_thumbnail(String p_thumbnail) {
-		this.p_thumbnail = p_thumbnail;
-	}
-	public String getP_image() {
-		return p_image;
-	}
-	public void setP_image(String p_image) {
-		this.p_image = p_image;
-	}
-	public String getP_registerday() {
-		return p_registerday;
-	}
-	public void setP_registerday(String p_registerday) {
-		this.p_registerday = p_registerday;
-	}
-	
-	
-	
-	
 	
 }

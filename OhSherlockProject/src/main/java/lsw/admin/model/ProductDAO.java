@@ -1,8 +1,5 @@
 package lsw.admin.model;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,7 +13,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import common.model.MemberVO;
+import common.model.ProductVO;
 
 public class ProductDAO implements InterProductDAO {
 
@@ -60,7 +57,7 @@ public class ProductDAO implements InterProductDAO {
 		try {
 			conn = ds.getConnection();
 
-			String sql = "select p_code, p_name, p_price, p_discount_rate, p_stock "
+			String sql = "select "
 					   + " from tbl_product ";
 
 			pstmt = conn.prepareStatement(sql);
@@ -70,11 +67,11 @@ public class ProductDAO implements InterProductDAO {
 				
 				ProductVO pvo = new ProductVO();
 				
-				pvo.setP_code(rs.getString(1));
-				pvo.setP_name(rs.getString(2));
-				pvo.setP_price(rs.getInt(3));
-				pvo.setP_discount_rate(rs.getString(4));
-				pvo.setP_stock(rs.getInt(5));
+				pvo.setPnum(rs.getInt(1));
+				pvo.setPname(rs.getString(2));
+				pvo.setPrice(rs.getInt(3));
+				pvo.setSaleprice(rs.getInt(4));
+				pvo.setPqty(rs.getInt(5));
 				
 				productList.add(pvo);
 			}
@@ -85,10 +82,7 @@ public class ProductDAO implements InterProductDAO {
 		
 		return productList;
 	} // end of public List<ProductVO> showProductList() throws SQLException{} ---------------
-	
-	
-	
-	
+
 	// 관리자가 상품등록하는 메소드(임선우)  
 	@Override
 	public int registerProduct(ProductVO product) {

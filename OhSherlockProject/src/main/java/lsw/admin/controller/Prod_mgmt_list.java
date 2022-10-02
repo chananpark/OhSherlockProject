@@ -10,9 +10,9 @@ import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
 import common.model.MemberVO;
+import common.model.ProductVO;
 import lsw.admin.model.InterProductDAO;
 import lsw.admin.model.ProductDAO;
-import lsw.admin.model.ProductVO;
 
 
 public class Prod_mgmt_list extends AbstractController {

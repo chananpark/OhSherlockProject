@@ -65,10 +65,7 @@
 	// "이메일인증코드확인" 을 확인 했는지 알아오기 위한 용도.
 	
 	let b_flag_mobileDuplicate_click = false;
-	// "휴데폰인증" 을 확인 했는지 알아오기 위한 용도.
-	
-	let time = 60 * 5; // 타이머 설정
-	let setTimer;
+	// "휴대폰인증" 을 확인 했는지 알아오기 위한 용도.
 	
 	
 	$(document).ready(function () {
@@ -77,6 +74,7 @@
 		
 		let randnum; // 컨트롤러에서 휴대전화 인증 코드 가져오기용
 		let certifiCode; // 컨트롤러에서 이메일인증코드 가져오기용
+		let setTimer; // 셋인터벌 담아주는 변수 (타이머) 
 		
 	  $('span.error').hide();
 	  $('input#userid').focus();
@@ -90,7 +88,7 @@
 	  $('div#emailVerify').hide();
 	  $('div#emailVerifyConfirm').hide();
 	  
-	  
+
 	  // #userid 포커스를 잃어버렸을 경우
 	  $('input#userid').blur((e) => {
 	    const $target = $(e.target);
@@ -381,26 +379,23 @@
 			  // 가입하기 버튼을 클릭시 "휴대폰인증" 을 클릭했는지 클릭안했는지 알아보기위한 용도임.
 
         $.ajax({
-						url:"<%= request.getContextPath()%>/member/smsSend.tea",
+						url:"<%= request.getContextPath()%>/member/mobileVerifyCertification.tea",
 						type:"post",
 						data:{ mobile: $('#hp1').val()+$('#hp2').val()+$('#hp3').val() },
 						dataType:"json",
 						success:function(json){
-							
-							if(json.success_count == 1) {
-								$("div#smsResult").html("문자전송이 성공되었습니다");
-								
-								$('div#mobileVerify').show();
-								
-							}
-						
-							else if(json.success_count != 0) {
-								$("div#smsResult").html("문자전송이 성공되었습니다");
-							}			    
+			    			 console.log(json.randnum);
+		   			 	
+			    	  // $("#spinner").hide(); // 스피너 숨기기
+				 
+		   				randnum = json.randnum;
+			    	  
+		   				mobileVerifyCodeCheck();
 						},
-						error: function(request, status, error){
-			      	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-						}
+						
+						error: function(e){
+			    			alert('인증코드 발송을 실패했습니다. 다시 시도해주세요')
+		    		}
 					});
 		  }); // end of $("button#emailCheck").click(function() {})----------
 		
@@ -414,11 +409,9 @@
 			  b_flag_emailDuplicate_click = true;
 			  // 가입하기 버튼을 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지 알아보기위한 용도임.
 				
-			  clearInterval(setTimer);// 작동 안함... 다시 조정해야함 
-
         // 오류메시지 삭제
         $('span#emailCheckResult').empty();
-
+       
 			  $.ajax({
 			    url: '<%= ctxPath%>/member/emailDuplicateCheck.tea',
 			    data: { email: $('input#email').val() },
@@ -437,28 +430,6 @@
 			    	  
 			    	  $("#spinner").show();
 			    	  
-			    		 // 5분 타이머 함수
-			    		const myTimer = () => {
-			    					
-			    	        let minutes = parseInt(time / 60);
-			    	        let seconds = time % 60;
-
-			    	        minutes = minutes < 10 ? "0" + minutes : minutes;
-			    	        seconds = seconds < 10 ? "0" + seconds : seconds;
-
-			    	        $("#timer").text(minutes + ":" + seconds);
-			    			
-			    	        if (time-- < 0) {
-			    	            alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
-			    	            clearInterval(setTimer); // 타이머 삭제
-			    		   	    $("div#emailVerify").hide();
-			    	          return;
-			    	        }
-	    				}
-			    		
-	   			   // 5분 타이머 시작
-	 		       setTimer = setInterval(myTimer, 1000);
-	   			   
 		    		 // 이메일 인증코드 처리 함수 호출
 		    	   emailVerifyCertification();
 			      }
@@ -530,12 +501,13 @@
 	
 	/////////////////////////////////////////////////////////////
 	  
+
 	// 휴대전화 인증 확인 함수
 	function mobileVerifyCodeCheck() {
 		
 		const userRandnum = $("input#userMobileVerifyCode").val();
 		
-		console.log("인증코드 확인 ==> "+randnum);
+		console.log("인증코드 확인 ==> "+ randnum);
 		
 		if( randnum == userRandnum ){
 			b_flag_mobileDuplicate_click = true;
@@ -547,12 +519,7 @@
 			alert("인증번호가 틀렸습니다.");
 			b_flag_mobileDuplicate_click = false;
 		}
-		
-		
 	}
-	
-	
-	
 	
 	
 	// 이메일 인증 처리 함수
@@ -572,8 +539,9 @@
    				 alert("인증코드가 이메일로 발송되었습니다.");
    			 	
 		    	  $("#spinner").hide(); // 스피너 숨기기
-		    	  
+		 
    				 certifiCode = json.certificationCode;
+   				 
     		},
     		error: function(e){
     			alert('인증코드 발송을 실패했습니다. 다시 시도해주세요')
@@ -655,13 +623,20 @@
 	    alert('아이디중복확인을 클릭하셔야 합니다.');
 	    return; // 종료
 	  }
+	  
+/* 	  // "휴대전화인증확인" 을 클릭했는지 여부 알아오기
+	  if (!b_flag_mobileDuplicate_click) {
+	    // "휴대전화인증확인" 을 클릭 안 했을 경우
+	    alert('휴대전화인증을 하셔야 합니다.');
+	    return; // 종료
+	  } */
 	
-	  // "이메일중복확인" 을 클릭했는지 여부 알아오기
+/* 	  // "이메일중복확인" 을 클릭했는지 여부 알아오기
 	  if (!b_flag_emailDuplicate_click ||!b_flag_emailVerifyCode_click ) {
 	    // "이메일중복확인" 을 클릭 안 했을 경우
 	    alert('이메일 인증확인을 클릭하셔야 합니다.');
 	    return; // 종료
-	  }
+	  } */
 	
 	  const checkbox_length = $("input:checkbox[id='agree']:checked").length;
 	
@@ -777,7 +752,7 @@
 					<td>
 						<input id="email" type="text" class="required" name="email" size="50" />
 						<button type="button" id="emailCheck">인증하기</button>
-						<div id="spinner" class="row justify-content-center mt-4 mb-0"><span class="spinner-border text-success"></span></div>
+						<span id="spinner" class="spinner-border text-success"></span>
 						<span id="emailCheckResult"></span>
 						<span class="error" style="color: red">이메일 형식에 맞지 않습니다.</span>
 						<br>

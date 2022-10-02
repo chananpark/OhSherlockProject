@@ -4,9 +4,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import common.controller.AbstractController;
+import common.model.ProductVO;
 import lsw.admin.model.InterProductDAO;
 import lsw.admin.model.ProductDAO;
-import lsw.admin.model.ProductVO;
 
 public class Prod_mgmt_register extends AbstractController {
 
