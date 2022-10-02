@@ -362,7 +362,7 @@
 				</div>
 
 				<div class="modal-footer">
-					<button type="button" class="btn inquiryDetailClose" style="background-color: #1E7F15; color:white"
+					<button type="button" onClick="self.close()" class="btn inquiryDetailClose" style="background-color: #1E7F15; color:white"
 						data-dismiss="modal">Close</button>
 				</div>
 			</div>
