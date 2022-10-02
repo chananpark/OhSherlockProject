@@ -20,4 +20,7 @@ public interface InterFaqDAO {
 	// 수정된 FAQ DB에 업데이트 해주는 메소드
 	int faqEditUpdate(Map<String, String> paraMap) throws SQLException;
 
+	// 자주묻는질문 삭제하기
+	int faqDelete(String faq_num) throws SQLException;
+
 }

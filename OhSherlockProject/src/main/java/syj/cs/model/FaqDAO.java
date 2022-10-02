@@ -11,7 +11,6 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import common.model.FaqVO;
-import util.security.Sha256;
 
 public class FaqDAO implements InterFaqDAO {
 
@@ -195,6 +194,32 @@ public class FaqDAO implements InterFaqDAO {
       
 		return result;
 	} // end of public int faqEditUpdate(Map<String, String> paraMap) throws SQLException
+
+	
+	// 자주묻는질문 삭제하기
+	@Override
+	public int faqDelete(String faq_num) throws SQLException {
+
+		int result = 0;
+	      
+		try {
+			conn = ds.getConnection();
+         
+			String sql = " delete tbl_faq where faq_num = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, faq_num);
+
+			result = pstmt.executeUpdate(); // 0 아니면 1이 나와서 result 에 넣어준다.
+         
+		} finally {
+			close();
+		}
+      
+		return result;
+	
+	} // end of public int faqDelete(String faq_num)
 
 	
 	
