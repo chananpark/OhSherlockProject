@@ -57,6 +57,7 @@ public class Inquiry extends AbstractController {
 					
 					// 답변여부
 					String inquiry_answered = request.getParameter("inquiry_answered");
+					request.setAttribute("inquiry_answered", inquiry_answered);
 					
 					if (inquiry_answered == null) {
 						inquiry_answered = "0";

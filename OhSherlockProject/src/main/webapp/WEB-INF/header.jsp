@@ -370,7 +370,7 @@ div#brandStoryText {
 						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="<%= ctxPath %>/cs/notice.tea">공지사항</a> 
 							<a class="dropdown-item" href="<%= ctxPath %>/cs/faq.tea">자주 묻는 질문</a> 
-							<a class="dropdown-item" href="<%= ctxPath %>/cs/inquiry.tea">1:1 상담</a>
+							<a class="dropdown-item" href="<%= ctxPath %>/cs/inquiry.tea">1:1 문의</a>
 						</div></li>
 				</ul>
 			</div>
