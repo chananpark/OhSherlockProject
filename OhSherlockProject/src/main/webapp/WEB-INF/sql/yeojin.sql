@@ -112,25 +112,65 @@ select PNUM, PNAME, PIMAGE, PRDMANUAL_SYSTEMFILENAME,PRDMANUAL_ORGINFILENAME, PQ
 from tbl_product;
 
 
-INSERT INTO tbl_product(PNUM, PNAME, PIMAGE, PQTY, PRICE, SALEPRICE, FK_SNUM, PCONTENT, PSUMMARY, POINT, PINPUTDATE, FK_CNUM)
-VALUES (SEQ_PRODUCT_PNUM.nextval, 가루녹차, 가루녹차.png, 10, 15000, 12000,    , 제주 녹차로 만든 고급 가루 녹차, PRICE*0.01, sysdate, )
+INSERT INTO tbl_product(PNUM, PNAME, PIMAGE, PQTY, PRICE, SALEPRICE, FK_SNUM, PSUMMARY, POINT, PINPUTDATE, FK_CNUM)
+VALUES (SEQ_PRODUCT_PNUM.nextval, '가루녹차', '가루녹차.png', 10, 15000, 12000, 1, '제주 녹차로 만든 고급 가루 녹차', ,sysdate, 1);
+
+INSERT INTO tbl_product(PNUM, PNAME, PIMAGE, PQTY, PRICE, SALEPRICE, FK_SNUM, PSUMMARY, PINPUTDATE, FK_CNUM)
+VALUES (SEQ_PRODUCT_PNUM.nextval, '가루녹차', '가루녹차.png', 10, 15000, 12000, 1, '제주 녹차로 만든 고급 가루 녹차', sysdate, 1);
+
+INSERT INTO tbl_product(PNUM, PNAME, PIMAGE, PQTY, PRICE, SALEPRICE, FK_SNUM, PSUMMARY, PINPUTDATE, FK_CNUM)
+VALUES (SEQ_PRODUCT_PNUM.nextval, '가루녹차', '가루녹차.png', 10, 15000, 12000, 1, '제주 녹차로 만든 고급 가루 녹차', sysdate, 1);
+
+INSERT INTO tbl_product(PNUM, PNAME, PIMAGE, PQTY, PRICE, SALEPRICE, FK_SNUM, PSUMMARY, PINPUTDATE, FK_CNUM)
+VALUES (SEQ_PRODUCT_PNUM.nextval, '가루녹차', '가루녹차.png', 10, 15000, 12000, 1, '제주 녹차로 만든 고급 가루 녹차', sysdate, 1);
+
+INSERT INTO tbl_product(PNUM, PNAME, PIMAGE, PQTY, PRICE, SALEPRICE, FK_SNUM, PSUMMARY, PINPUTDATE, FK_CNUM)
+VALUES (SEQ_PRODUCT_PNUM.nextval, '가루녹차', '가루녹차.png', 10, 15000, 12000, 1, '제주 녹차로 만든 고급 가루 녹차', sysdate, 1);
+
+INSERT INTO tbl_product(PNUM, PNAME, PIMAGE, PQTY, PRICE, SALEPRICE,  PSUMMARY, PINPUTDATE, FK_CNUM)
+VALUES (SEQ_PRODUCT_PNUM.nextval, '가루녹차2', '가루녹차.png', 10, 15000, 12000, '제주 녹차로 만든 고급 가루 녹차', sysdate, 1);
+
+select CNUM, CODE, CNAME
+from tbl_category;
+
+insert into tbl_category(CNUM, CODE, CNAME)
+values (seq_category_cnum.nextval, 10000, 'greentea');
+
+insert into tbl_category(CNUM, CODE, CNAME)
+values (seq_category_cnum.nextval, 20000, 'blacktea');
+
+insert into tbl_category(CNUM, CODE, CNAME)
+values (seq_category_cnum.nextval, 30000, 'herbtea');
+
+-- 40000, 50000, 60000 은 세트상품
+
+commit;
+
+select PNUM, PNAME, PIMAGE, PRDMANUAL_SYSTEMFILENAME,PRDMANUAL_ORGINFILENAME, PQTY, PRICE, SALEPRICE, FK_SNUM, PCONTENT, PSUMMARY, POINT, PINPUTDATE, FK_CNUM
+from tbl_product
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+         String sql = "select cname, sname, pnum, pname, pcompany, pimage1, pimage2, pqty, price, saleprice, pcontent, point, pinputdate "+
+                   "from "+
+                   "( "+
+                   "    select rownum AS RNO, cname, sname, pnum, pname, pcompany, pimage1, pimage2, pqty, price, saleprice, pcontent, point, pinputdate "+ 
+                   "    from "+
+                   "    ( "+
+                   "        select C.cname, S.sname, pnum, pname, pcompany, pimage1, pimage2, pqty, price, saleprice, pcontent, point, pinputdate "+
+                   "        from "+
+                   "            (select pnum, pname, pcompany, pimage1, pimage2, pqty, price, saleprice, pcontent, point "+
+                   "                  , to_char(pinputdate, 'yyyy-mm-dd') as pinputdate, fk_cnum, fk_snum  "+
+                   "             from tbl_product  "+
+                   "             where fk_cnum = ? "+
+                   "             order by pnum desc "+
+                   "        ) P "+
+                   "        JOIN tbl_category C "+
+                   "        ON P.fk_cnum = C.cnum "+
+                   "        left outer JOIN tbl_spec S "+
+                   "        ON P.fk_snum = S.snum "+
+                   "    ) V "+
+                   ") T "+
+                   "where T.RNO between 1 and 10 ";
 
 
 

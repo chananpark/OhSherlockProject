@@ -12,8 +12,25 @@
 		$('i.heart').click(function() {
 	        $(this).removeClass("text-secondary");
 	        $(this).addClass("text-danger");
-	    })
+	    });
+	    
 		
+	    <%-- 클릭이벤트 바인딩 --%>
+		$(".faqContainer .btn-group button").click(function(e){
+			$(".faqContainer .btn-group button").removeClass("btnColor");
+			$(e.target).addClass("btnColor");
+		});
+		
+		$(".faqContainer .btn-group button#all").click();
+		
+		<%-- 세션에 저장된 userid가 admin(관리자)일 때만 질문 추가 등록 버튼을 노출시킨다.--%>
+		$("#faqRegister").hide();
+		
+		if ("${sessionScope.loginuser.userid}" == 'admin' && "${sessionScope.loginuser.userid}" != null) {
+			$("#faqRegister").show();
+		}
+	    
+	    
 		
 	}); // end of $(document).ready
 	
@@ -86,31 +103,46 @@
 	text-decoration-line: none;
 	color: #1E7F15;
 }
+
+.productListContainer .add_button_color {
+	color: #1E7F15;
+}
+
+.productListContainer .remove_button_color {
+	color: black;	
+}
+
+
 </style>
 	
 	<div class="container productListContainer">
-		<div><img src= "../images/tea_header_img.png" width=100%/></div>
+		<div><img src= "../images/이벤트배너.png" width=100%/></div>
       
 		<div class="row">
 	      	<%-- 사이드 메뉴 시작 --%>
 	       	<div class="col-md-2" id="sideinfo" style="padding-left: 2%;  margin-top: 1.8%;">
 				<div style="text-align: left; padding: 5%;">
-	            	<span class="h4" style="font-weight:bold;">티 제품</span>
+	            	<span class="h4" style="font-weight:bold;">이벤트상품</span>
+	         	</div>
+	         	<a style="padding: 5%; font-weight:bold;" id="allProd">전체 상품</a>
+	         	<hr>
+	         	<div style="padding: 5%; font-weight:bold;">단품</div>
+	         	<div style="text-align: left; padding: 4%; margin-left:10%;">
+	            	<a id="bestProd">베스트</a>
 	         	</div>
 	         	<div style="text-align: left; padding: 4%; margin-left:10%;">
-	            	<a href="#">전체 상품</a>
+	            	<a id="greenProd">녹차/말차</a>
 	         	</div>
 	         	<div style="text-align: left; padding: 4%; margin-left:10%;">
-	            	<a href="#">베스트</a>
+	            	<a id="blackProd">홍차</a>
 	         	</div>
 	         	<div style="text-align: left; padding: 4%; margin-left:10%;">
-	            	<a href="#">녹차/말차</a>
+	            	<a id="herbProd">허브차</a>
 	         	</div>
+	         	<hr>
+	         	<div style="padding: 5%; font-weight:bold;">세트</div>
 	         	<div style="text-align: left; padding: 4%; margin-left:10%;">
-	            	<a href="#">홍차</a>
-	         	</div>
-	         	<div style="text-align: left; padding: 4%; margin-left:10%;">
-	            	<a href="#">허브차</a>
+	            	<a id="herbProd">기프트세트</a>
 	         	</div>
 	       	</div>
     	    <%-- 사이드 메뉴 끝 --%>
@@ -123,15 +155,15 @@
 					
 					<%-- 정렬 선택 창 --%>
 					<span id="order_list">
-						<a href="#">신상품순</a>
+						<a id="newProd">신상품순</a>
 						<span class="text-dark">&nbsp;|&nbsp;</span>
-						<a href="#">높은가격순</a>
+						<a id="highPrice">높은가격순</a>
 						<span class="text-dark">&nbsp;|&nbsp;</span>
-						<a href="#">낮은가격순</a>
+						<a id="rowPrice">낮은가격순</a>
 						<span class="text-dark">&nbsp;|&nbsp;</span>
-						<a href="#">리뷰많은순</a>
+						<a id="review">리뷰많은순</a>
 						<span class="text-dark">&nbsp;|&nbsp;</span>
-						<a href="#">판매순</a>
+						<a id="sellList">판매순</a>
 					</span>
 		    	    <%-- 본문 내부 상단 바 끝 --%>
 					
@@ -140,8 +172,8 @@
 					<%-- 상품 목록 시작 --%>
 					<div class="row"> 
 						
-						<%-- ★ 여기서부터 아래의 별까지 for문으로 반복해서 출력. 별 안쪽이 상품하나. --%>
-				  		<div class="card border-0 mb-4 mt-1 col-lg-4 col-md-6 ">
+						<c:forEach items="">
+					  		<div class="card border-0 mb-4 mt-1 col-lg-4 col-md-6 ">
 				    		<a href="<%= ctxPath %>/product/product_view.jsp"><img src="../images/tea_set.png" class="card-img-top"/></a>
 			    			<div class="card-body">
 			    				<%-- 여기는 c:if문 사용하여 경우의 수에 따라 다르게 div 출력 --%>
@@ -159,7 +191,7 @@
 				      			
 				   			</div>
 				  		</div>
-				  		<%-- ★ 여기까지! --%>
+				  		</c:forEach>
 				  		
 				  		<div class="card border-0 col-lg-4 col-md-6 ">
 				    		<a href="#"><img src="../images/tea_set.png" class="card-img-top"/></a>
