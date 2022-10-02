@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import common.model.ProductVO;
+
 public interface InterProductDAO {
 
 	// 상품관리를 눌렀을때 나오는 상품목록리스트 출력 메소드(임선우) 

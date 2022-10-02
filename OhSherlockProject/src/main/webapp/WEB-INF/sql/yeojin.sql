@@ -101,6 +101,37 @@ from tbl_faq
 where faq_num = '7'; 
 
 
+delete tbl_faq where faq_num = '14';
+commit;
+
+
+--------------------------------------------------------------------------------------------------------
+-- 상품정보 테이블 select
+
+select PNUM, PNAME, PIMAGE, PRDMANUAL_SYSTEMFILENAME,PRDMANUAL_ORGINFILENAME, PQTY, PRICE, SALEPRICE, FK_SNUM, PCONTENT, PSUMMARY, POINT, PINPUTDATE, FK_CNUM
+from tbl_product;
+
+
+INSERT INTO tbl_product(PNUM, PNAME, PIMAGE, PQTY, PRICE, SALEPRICE, FK_SNUM, PCONTENT, PSUMMARY, POINT, PINPUTDATE, FK_CNUM)
+VALUES (SEQ_PRODUCT_PNUM.nextval, 가루녹차, 가루녹차.png, 10, 15000, 12000,    , 제주 녹차로 만든 고급 가루 녹차, PRICE*0.01, sysdate, )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

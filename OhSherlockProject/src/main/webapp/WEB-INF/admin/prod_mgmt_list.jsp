@@ -137,11 +137,11 @@
 			<tbody>
 				<c:forEach var="pvo" items="${requestScope.productList}">
 					<tr>
-						<td name="p_code" >${pvo.p_code}</td>
-						<td name="p_name">${pvo.p_name}</td>
-						<td name="p_price">${pvo.p_price}</td>
-						<td name="p_discount_rate">${pvo.p_discount_rate}</td>
-						<td name="p_stock">${pvo.p_stock}</td>
+						<td name="pnum" >${pvo.pnum}</td>
+						<td name="pname">${pvo.pname}</td>
+						<td name="price">${pvo.price}</td>
+						<td name="saleprice">${pvo.saleprice}</td>
+						<td name="pqty">${pvo.pqty}</td>
 						<td>
 						<div class="adminOnlyBtns mb-1">
 							<input type="button" value="수정" /> 

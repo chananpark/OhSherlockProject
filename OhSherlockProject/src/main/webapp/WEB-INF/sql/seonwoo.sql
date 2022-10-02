@@ -85,3 +85,8 @@ from tbl_product
    minvalue 10000                     -- 최소값이 2 이다.
    cycle                          -- 반복을 한다.
    nocache;
+
+insert into tbl_product (pnum, pname, fk_cnum, pimage, prdmanual_systemfilename, prdmanual_orginfilename, pqty, price, saleprice, fk_snum, pcontent, psummary, point, pinputdate)
+values ('1', '기프트박스', '벚꽃향 가득한 올레 20입', 23000, 0.3, 5, '벚꽃향이 아주 가득가득가득합니다.', '올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?올레올레 제주도 올레 나는 제주도 여행가고 싶은데 언제 갈 수 있을까?'
+        , '벚꽃향가득한올레20입.jpg','tea_collection.png')
+   
