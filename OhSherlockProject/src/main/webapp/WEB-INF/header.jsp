@@ -88,7 +88,7 @@
 }
 
 a:hover, button:hover, input[type='button']:hover, .btn:hover {
-   cursor: url("https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbLcHy8%2FbtrNprKfXky%2F8QmDKvqOmZx19ZPk9Zk1H0%2Fimg.png"), auto;
+   cursor: url("https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbLcHy8%2FbtrNprKfXky%2F8QmDKvqOmZx19ZPk9Zk1H0%2Fimg.png"), auto !important;
 }
 
 .container {

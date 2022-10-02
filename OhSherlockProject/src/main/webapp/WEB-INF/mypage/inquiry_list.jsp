@@ -75,7 +75,6 @@
 	}
 	
 	#more:hover{
-		cursor: pointer;
 		background-color: #1E7F15;
 		color:white;
 	}
@@ -122,7 +121,7 @@
 			$("#count").text(0);
 			const now = new Date();
 			period = $(e.target).attr("id");
-			endDate = formatDate(now);
+ 			endDate = formatDate(now);
 			startDate = formatDate(now.setMonth(now.getMonth()-Number(period)));
 			search();
 		});
@@ -166,6 +165,9 @@
          
          //startDate의 초기값을 7일전으로 설정
          $('input#startDate').datepicker('setDate', '-7D');
+         
+         // 모달창 닫기
+		
  		
 	});
 	
@@ -219,12 +221,26 @@
          		}else{
          			// 데이터가 존재하는 경우
   	         		$.each(json, function(index, item){
-	         			html += "<tr><td>"+item.inquiry_type+"</td><td>"
+	         			html += "<tr class='row'><td class='col col-2'>";
+	         				if (item.inquiry_type == 'product') 
+	         					html += "상품문의";
+	         				else if (item.inquiry_type == 'delivery') 
+	         					html += "배송문의";
+	         				else if (item.inquiry_type == 'coin_point') 
+	         					html += "예치금/적립금";
+	         				else if (item.inquiry_type == 'cancle') 
+	         					html += "취소/환불/교환";
+	         				else if (item.inquiry_type == 'member') 
+	         					html += "회원";
+	         				else 
+	         					html += "기타";
+	         				
+	         			html += "</td><td class='col col-6'>"
 							+"<button style='border-style:none; background-color:transparent'  "
 							+"onclick='openModal(event)' "
 							+"data-inquiry_no='"+item.inquiry_no+"' data-fk_userid='"+item.fk_userid+"'>"+item.inquiry_subject+"</button>"
-							+"</td><td>"+item.inquiry_date+
-							"</td><td>"+item.inquiry_answered+"</td></tr>";
+							+"</td><td class='col col-2'>"+item.inquiry_date+
+							"</td><td class='col col-2'>"+item.inquiry_answered+"</td></tr>";
 	         		}); 
   	         		
   	         		if(lead == 1) { // 첫번째 불러온 목록이라면
@@ -302,14 +318,14 @@
 	</div>
 	
 	<br>
-	<div style="margin-top: 10px;">총 <span id="inquiryLength"></span>건의 상담 내역이 있습니다.</div>
+	<div style="margin-top: 10px;">총 <span id="inquiryLength"></span>건의 문의 내역이 있습니다.</div>
 	<table class="table mt-2 text-center" id="inquiryTbl">
 			<thead class="thead-light">
-				<tr>
-					<th>문의유형</th>
-					<th>제목</th>
-					<th>등록일</th>
-					<th>처리상태</th>
+				<tr class='row'>
+					<th class='col col-2'>문의유형</th>
+					<th class='col col-6'>제목</th>
+					<th class='col col-2'>등록일</th>
+					<th class='col col-2'>처리상태</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -346,7 +362,7 @@
 				</div>
 
 				<div class="modal-footer">
-					<button type="button" class="btn btn-danger inquiryDetailClose"
+					<button type="button" class="btn inquiryDetailClose" style="background-color: #1E7F15; color:white"
 						data-dismiss="modal">Close</button>
 				</div>
 			</div>

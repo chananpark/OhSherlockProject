@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<% String ctxPath = request.getContextPath(); %>    
+<% String ctxPath = request.getContextPath(); %>   
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" type="text/css" href="<%=ctxPath%>/bootstrap-4.6.0-dist/css/bootstrap.min.css">
@@ -48,17 +49,12 @@
 	background-color: white;
 }
 
-#inquiryText, #replyText {
-	display: inline-block;
-	background-color: #1E7F15;
-	color: white;
+#replyTbl{
+	width: 100%;
 }
 
-#replyTitle td {
-	/* border: 1px solid black; */
-	padding: 10px 30px;
-	width: 100%;
-	background-color: #999999;
+#replyTbl thead {
+	background-color: #1E7F15;
 	color: white
 }
 </style>
@@ -67,20 +63,7 @@
 
 	<%-- 사용자가 자신의 문의 내용과 그에 달린 댓글을 확인하는 페이지입니다.--%>
 
-<%-- 	<div class="titleZone row">
-		<h2 class="col text-left" style="font-weight: bold">1:1 문의</h2>
-		<br>
-		<div class="col text-right">
-			<span style="font-weight: bold; font-size: 20px;">02-336-8546</span><br>
-			<span style="font-weight: normal; font-size: 15.5px;">평일 09:30
-				~ 18:00 (점심시간 12:30 ~ 13:30)<br>주말 및 공휴일 휴무
-			</span>
-		</div>
-	</div> 
-	<hr style="background-color: black; height: 1.2px;">
-	<br>--%>
-
-	<div class="col text-left">
+	<div class=" text-left">
 		<div style="font-weight: bold; font-size: 20px;">${ivo.inquiry_subject}</div>
 		<br>
 		<div
@@ -88,20 +71,36 @@
 	</div>
 
 
-	<div class="col text-left inquiryContent jumbotron mt-4 pt-auto">${ivo.inquiry_content}
+	<div class="text-left inquiryContent jumbotron mt-4 pt-auto">${ivo.inquiry_content}
 	</div>
 
-	<div class="col text-left jumbotron px-0 pt-0 mt-4">
-		<table id="replyTitle">
+	<table id="replyTbl">
+		<thead>
 			<tr>
-				<td class="text-left"><span class="badge text-left" id="replyText">답변</span></td>
-				<td class="text-right" style="border-left: solid 1px white">2022.09.21</td>
+				<td class="p-2 pl-3">답변</td>
+				<td class="text-right p-2 pr-3">
+					<c:if test="${not empty ivo.irevo}">
+						${ivo.irevo.inquiry_reply_date }
+					</c:if>
+					<c:if test="${empty ivo.irevo}">
+					-
+					</c:if>
+				</td>
 			</tr>
-		</table>
-		<div class="replyzone mx-5 mt-5">
-			 <div>답변내용 </div>
-		</div>
-	</div>
+		</thead>
+		<tbody class="bg-light">
+			<tr>
+				<td colspan='2' class="p-3">
+					<c:if test="${not empty ivo.irevo}">
+					 ${ivo.irevo.inquiry_reply_content}
+					 </c:if>
+					 <c:if test="${empty ivo.irevo}">
+					 답변 준비중입니다.
+					 </c:if>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 
 
 </div>
