@@ -57,7 +57,7 @@ public class ProductDAO implements InterProductDAO {
 		try {
 			conn = ds.getConnection();
 
-			String sql = "select "
+			String sql = " select pnum, pname, price, saleprice, pqty "
 					   + " from tbl_product ";
 
 			pstmt = conn.prepareStatement(sql);
@@ -96,16 +96,17 @@ public class ProductDAO implements InterProductDAO {
 			pstmt = conn.prepareStatement(sql);
 			
 			
-			pstmt.setString(1, product.getP_code());
+			pstmt.setInt(1, product.getPnum());
 			pstmt.setString(2, product.getP_category());
-			pstmt.setString(3, product.getP_name());
-			pstmt.setInt(4, product.getP_price());
-			pstmt.setString(5, product.getP_discount_rate());
-			pstmt.setInt(6, product.getP_stock());
+			pstmt.setString(3, product.getPname());
+			pstmt.setInt(4, product.getPrice());
+			pstmt.setInt(5, product.getSaleprice());
+			pstmt.setInt(6, product.getPqty());
 			pstmt.setString(7, product.getP_info());
 			pstmt.setString(8, product.getP_desc());
 			pstmt.setString(9, product.getP_thumbnail());
 			pstmt.setString(10, product.getP_image());
+
 		
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -175,13 +176,13 @@ public class ProductDAO implements InterProductDAO {
 			try {
 				conn = ds.getConnection();
 				
-				String sql = "select p_code, p_name, p_price, p_discount_rate, p_stock "+
+				String sql = "select pnum, pname, price, saleprice, pqty "+
 							"from\n"+
 							"(\n"+
-							"    select rownum AS RNO, p_code, p_name, p_price, p_discount_rate, p_stock "+
+							"    select rownum AS RNO, pnum, pname, price, saleprice, pqty "+
 							"    from\n"+
 							"    (\n"+
-							"        select p_code, p_name, p_price, p_discount_rate, p_stock"+
+							"        select pnum, pname, price, saleprice, pqty "+
 							"        from tbl_product ";
 						
 					String searchWord = paraMap.get("searchWord");
@@ -189,12 +190,12 @@ public class ProductDAO implements InterProductDAO {
 					
 					if( searchWord != null && !searchWord.trim().isEmpty() ) { // 서치워드에 공백을 지우고 동시에 비어있지 않는다면 // 검색어가 있다면
 						// !searchWord.trim().isEmpty() 이거만 단독으로 주게되면 nullPonitException 이 떨어진다
-						sql += " and p_code like '%' || ? || '%' ";  // 컬럼명과 변수명이 들어온다.
+						sql += " and pnum like '%' || ? || '%' ";  // 컬럼명과 변수명이 들어온다.
 						// 위치홀더는 컬럼명이나 테이블명이 올 경우에는 에러발생. 검색어만 들어와야 한다. 테이블명 또는 컬럼명이 변수로 들어올 수 없다.
 						// 테이블명 또는 컬럼명이 변수로 들어와야 할 경우에는 변수로 처리해주어야 한다.
 					}		
 							
-					 sql +=	"        order by p_registerday desc\n"+
+					 sql +=	"        order by pinputdate desc\n"+
 							"    )V\n"+
 							") T --RNO를 where 절에 사용할 수 없어서 다시 인라인뷰를 사용하여 T 라는 테이블로 간주한다.\n"+
 							"where RNO between ? and ? ";
@@ -225,11 +226,11 @@ public class ProductDAO implements InterProductDAO {
 				while(rs.next()) {
 					
 					ProductVO pvo = new ProductVO();
-					pvo.setP_code(rs.getString(1)); 
-					pvo.setP_name(rs.getString(2));
-					pvo.setP_price(rs.getInt(3));
-					pvo.setP_discount_rate(rs.getString(4)); 
-					pvo.setP_stock(rs.getInt(4)); 
+					pvo.setPnum(rs.getInt(1));
+					pvo.setPname(rs.getString(2));
+					pvo.setPrice(rs.getInt(3));
+					pvo.setSaleprice(rs.getInt(4));
+					pvo.setPqty(rs.getInt(5));
 					
 					productList.add(pvo); // 리스트에 담아준다.
 					

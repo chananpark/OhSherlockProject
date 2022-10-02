@@ -52,6 +52,9 @@ public class ProductVO {
 		this.pinputdate = pinputdate;
 	}
 
+	public int getPnum() {
+		return pnum;
+	}
 	public void setPnum(int pnum) {
 		this.pnum = pnum;
 	}
