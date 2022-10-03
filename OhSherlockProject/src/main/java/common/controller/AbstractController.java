@@ -1,9 +1,15 @@
 package common.controller;
 
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import common.model.MemberVO;
+import pca.shop.model.InterProductDAO;
+import pca.shop.model.ProductDAO;
 
 
 public abstract class AbstractController implements InterCommand {
@@ -53,19 +59,15 @@ public abstract class AbstractController implements InterCommand {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	///////////////////////////////////////////////////////////////
+	// 카테고리 조회
+	public void getGiftsetCategoryList(HttpServletRequest request) throws SQLException {
+	    InterProductDAO pdao = new ProductDAO();
+	    List<HashMap<String, String>> categoryList = pdao.getCategoryList(); 
+	    //ProductDAO 카테고리 조회 메소드 실행
+
+	    request.setAttribute("giftsetCategoryList", categoryList);
+	    // request 영역에 저장
+	}
 	
 }

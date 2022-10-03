@@ -27,6 +27,37 @@ public class ProductVO {
 	private int totalPrice;         // 판매당시의 제품판매가 * 주문량
 	private int totalPoint;         // 판매당시의 포인트점수 * 주문량 
 		
+	//////////////////////////////////////////////////////////////
+	// 목록 정렬시 활용
+	
+	private int reviewCnt; // 리뷰 개수
+	private int orederCnt; // 주문수
+	
+	public int getReviewCnt() {
+		return reviewCnt;
+	}
+
+	public void setReviewCnt(int reviewCnt) {
+		this.reviewCnt = reviewCnt;
+	}
+
+	public int getOrederCnt() {
+		return orederCnt;
+	}
+
+	public void setOrederCnt(int orederCnt) {
+		this.orederCnt = orederCnt;
+	}
+
+	public void setTotalPrice(int totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public void setTotalPoint(int totalPoint) {
+		this.totalPoint = totalPoint;
+	}
+
+	//////////////////////////////////////////////////////////////
 	
 	public ProductVO() {
 	}

@@ -1,19 +1,3 @@
-show user;
--- USER이(가) "SEMI_ORAUSER2"입니다.
-
-select userid from tbl_member where status = 1 and userid != '5sherlock' and email = 'qzgtKJ690tyLSSPGMXbryWUeCF9ssiNwnUipv6RAvNM=';
-
-desc tbl_member;
-
-select * from tbl_member;
-
--- 제약조건 조회하기 -- 
-select A.constraint_name, A.constraint_type, A.search_condition, A.R_constraint_name
-, A.status, A.index_name, B.column_name, B.position
-from user_constraints A Join user_cons_columns B
-on A.constraint_name = B.constraint_name
-where A.table_name = 'TBL_MEMBER';
-  
 -- 로그인 이력 테이블 -- 
 create table tbl_login_history
 (fk_userid    varchar2(15)   not null
@@ -42,12 +26,10 @@ from tbl_login_history
 where fk_userid = '5sherlock') H;
 
 -- 휴면 상태 해제 sql --
-String sql = "update tbl_member set idle = 0 where userid = ?";
-
 update tbl_member set idle = 1 where userid = 'leess';
 commit;
 
-desc tbl_notice;
+--------------------------------------------------------------------------------
 
 -- 공지사항 테이블 --
 create table tbl_notice (
@@ -95,6 +77,8 @@ String sql = "delete from tbl_notice where noticeNo = ?";
 -- 공지사항 글수정 sql --
 String sql = "update tbl_notice set noticeSubject = ?, noticeContent = ? where noticeNo = ?";
 
+--------------------------------------------------------------------------------
+
 -- 1:1 문의 테이블 --
 create table tbl_inquiry(
 inquiry_no number,
@@ -117,15 +101,15 @@ select seq_inquiry.nextval from dual;
 
 -- inquiry 테이블 insert문 --
 insert into tbl_inquiry(inquiry_no, fk_userid, inquiry_type, inquiry_subject, inquiry_content, inquiry_email, inquiry_sms)
-values(seq_inquiry.nextval, 'test1', 'delivery', '둘다받을거임', 'ㅇㅇ', 1, 1);
+values(seq_inquiry.nextval, 'test1', 'delivery', '문의', 'ㅇㅇ', 0, 0);
 commit;
 
--- (사용자) 자신의 inquiry 전체 개수 가져오기 select문 --
+-- (사용자) 자신의 문의글 전체 개수 가져오기 select문 --
 select count(*) from tbl_inquiry where fk_userid = 'test1' and inquiry_date between '2022-09-28' and to_date('2022-09-28 23:59:59', 'yyyy-mm-dd hh24:mi:ss');
 
 String sql = "select count(*) from tbl_inquiry where fk_userid = ? and inquiry_date between ? and to_date(? ||' 23:59:59', 'yyyy-mm-dd hh24:mi:ss')";
 
--- (사용자) 자신의 inquiry 내역 가져오기 select문 --
+-- (사용자) 자신의 문의 내역 가져오기 select문 --
 String sql = "select INQUIRY_NO , INQUIRY_TYPE , INQUIRY_SUBJECT , INQUIRY_CONTENT , INQUIRY_DATE , INQUIRY_ANSWERED\n"+
 "from\n"+
 "(\n"+
@@ -154,32 +138,6 @@ String sql = "SELECT inquiry_no, inquiry_type, inquiry_subject, inquiry_content,
         " FROM tbl_inquiry WHERE inquiry_answered = ? ORDER BY 1 DESC ) v ) t\n"+
         " WHERE rno BETWEEN ? AND ?";
 
--- 카테고리 테이블 생성 --
-create table tbl_category
-(cnum    number(8)     not null  -- 카테고리 대분류 번호
-,code    varchar2(20)  not null  -- 카테고리 코드
-,cname   varchar2(100) not null  -- 카테고리명
-,constraint PK_tbl_category_cnum primary key(cnum)
-,constraint UQ_tbl_category_code unique(code)
-);
-
--- 카테고리 시퀀스 생성 --
-create sequence seq_category_cnum 
-start with 1
-increment by 1
-nomaxvalue
-nominvalue
-nocycle
-nocache;
-
--- 상품번호 시퀀스 생성 --
-create sequence seq_product_pnum
-start with 1
-increment by 1
-nomaxvalue
-nominvalue
-nocycle
-nocache;
 
 -- 관리자 1:1 문의글 상세 --
 SELECT inquiry_reply_content, inquiry_reply_date
@@ -202,4 +160,145 @@ String sql = "insert into tbl_inquiry_reply(inquiry_reply_no, fk_inquiry_no, inq
 -- 1:1 문의글의 답변여부 update --
 String sql = "update tbl_inquiry set inquiry_answered = 1 where inquiry_no = ?";
 
--- 특정 회원 개인정보 조회 --
+--------------------------------------------------------------------------------
+
+-- 카테고리 테이블 생성 --
+create table tbl_category
+(cnum    number(8)     not null  -- 카테고리 대분류 번호
+,code    varchar2(20)  not null  -- 카테고리 코드
+,cname   varchar2(100) not null  -- 카테고리명
+,constraint PK_tbl_category_cnum primary key(cnum)
+,constraint UQ_tbl_category_code unique(code)
+);
+
+-- 카테고리 시퀀스 생성 --
+create sequence seq_category_cnum 
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+--------------------------------------------------------------------------------
+-- 상품번호 시퀀스 생성 --
+create sequence seq_product_pnum
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+--------------------------------------------------------------------------------
+
+-- 주문 테이블 --
+create table tbl_order (
+onum number(8) not null, -- 주문번호
+fk_userid varchar2(15), -- 주문자 아이디
+odate date default sysdate, -- 주문일자
+recipient_name varchar2(30) not null, -- 수령자 이름
+recipient_mobile varchar2(200) not null, -- 수령자 핸드폰번호
+recipient_postcode varchar2(5) not null, -- 수령자 우편번호
+recipient_address varchar2(100) not null, -- 수령자 주소
+recipient_detail_address varchar2(100) not null, -- 수령자 상세주소
+recipient_extra_address varchar2(100) not null, -- 수령자 추가주소
+osum number(8) not null, -- 총주문금액
+delivery_cost number(4) not null, -- 배송비
+payment_method varchar2(10) not null, -- 결제수단
+constraint PK_tbl_order_onum primary key(onum),
+constraint FK_tbl_order_fk_userid foreign key(fk_userid) references tbl_member(userid)
+);
+
+-- 주문상세 테이블 --
+create table tbl_order_detail (
+odnum number(8) not null, -- 주문상세번호
+fk_onum number(8) not null, -- 주문번호
+fk_pnum number(8) not null, -- 상품번호
+oqty NUMBER(8) not null, -- 주문수량
+oprice NUMBER(8) not null, -- 주문금액: 판매가격(할인율반영)*주문수량
+refund number(1) default 0, -- 환불여부. 여:1, 부:0
+exchange number(1) default 0, -- 교환여부. 여:1, 부:0
+constraint PK_tbl_order_detail_odnum primary key(odnum),
+constraint FK_tbl_order_detail_fk_onum foreign key(fk_onum) references tbl_order(onum),
+constraint FK_tbl_order_detail_fk_pnum foreign key(fk_pnum) references tbl_product(pnum),
+constraint CK_tbl_order_detail_refund check (refund in (0,1)),
+constraint CK_tbl_order_detail_exchange check (exchange in (0,1))
+);
+
+-- 리뷰 테이블 --
+create table tbl_review (
+rnum number(8) not null, -- 리뷰번호
+fk_onum number(8) not null, -- 주문번호
+fk_odnum number(8) not null, -- 주문상세번호
+fk_pnum number(8) not null, -- 상품번호
+fk_userid varchar2(15), -- 주문자 아이디
+score NUMBER(1) not null, -- 별점(1~5)
+rsubject Nvarchar2(100) not null, -- 리뷰제목
+rcontent Nvarchar2(500) not null, -- 리뷰내용
+rimage VARCHAR2(100), -- 리뷰이미지
+constraint PK_tbl_review_rnum primary key(rnum),
+constraint FK_tbl_review_fk_onum foreign key(fk_onum) references tbl_order(onum),
+constraint FK_tbl_review_fk_odnum foreign key(fk_odnum) references tbl_order_detail(odnum),
+constraint FK_tbl_review_fk_pnum foreign key(fk_pnum) references tbl_product(pnum),
+constraint FK_tbl_review_fk_userid foreign key(fk_userid) references tbl_member(userid)
+);
+
+
+
+
+-- 카테고리별 상품 가져오기 --
+SELECT cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,
+    pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt
+FROM
+    (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,
+            pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt
+    FROM
+        (SELECT c.cname, s.sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,
+                pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,
+                (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,
+                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt
+        FROM
+            (SELECT
+                pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,
+                pqty, price, saleprice, pcontent, PSUMMARY, point,
+                to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum
+            FROM tbl_product
+            WHERE fk_cnum = ?
+            ORDER BY ? DESC) p
+            JOIN tbl_category  c ON p.fk_cnum = c.cnum
+            LEFT OUTER JOIN tbl_spec s
+            ON p.fk_snum = s.snum)V
+    ) t
+WHERE t.rno BETWEEN ? AND ?
+    
+INSERT INTO tbl_product(PNUM, PNAME, PIMAGE, PQTY, PRICE, SALEPRICE, PSUMMARY, POINT, PINPUTDATE, FK_CNUM)
+VALUES (SEQ_PRODUCT_PNUM.nextval, '프리미엄 티 컬렉션', '프리미엄 티 컬렉션.png', 1000, 28000, 28000, 
+'취향과 기분에 따라 다채로운 맛과 향을 즐기기 좋은, 알찬 구성의 베스트셀러 티 세트', 
+280, sysdate, 4);
+COMMIT;
+
+
+String sql = "SELECT cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
+"    pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt\n"+
+"FROM\n"+
+"    (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
+"            pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt\n"+
+"    FROM\n"+
+"        (SELECT c.cname, s.sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
+"                pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,\n"+
+"                (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
+"                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt\n"+
+"        FROM\n"+
+"            (SELECT\n"+
+"                pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
+"                pqty, price, saleprice, pcontent, PSUMMARY, point,\n"+
+"                to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum\n"+
+"            FROM tbl_product\n"+
+"            WHERE fk_cnum = ?\n"+
+"            ORDER BY ? DESC) p\n"+
+"            JOIN tbl_category  c ON p.fk_cnum = c.cnum\n"+
+"            LEFT OUTER JOIN tbl_spec s\n"+
+"            ON p.fk_snum = s.snum)V\n"+
+"    ) t\n"+
+"WHERE t.rno BETWEEN ? AND ?";
