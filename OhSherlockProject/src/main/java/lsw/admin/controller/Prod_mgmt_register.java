@@ -13,7 +13,6 @@ public class Prod_mgmt_register extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		
 		String method = request.getMethod(); 
 		
 		if("GET".equalsIgnoreCase(method)) {

@@ -25,27 +25,31 @@ public class MobileVerifyCertification extends AbstractController {
 			Random rnd  = new Random();
 			
 		     int randnum = 0;
+		     String num6 = "";
 		        for (int i = 0; i < 6; i++) {
-		        	randnum += rnd.nextInt(9 - 0 + 1) + 0;
-		           
+		        	randnum = rnd.nextInt(9 - 0 + 1) + 0;
+		        	num6 += randnum;
 		        } // end of for---------------
 			
-			String certificationCode = "오!셜록 본인확인 인증번호는 ["+randnum+"] 입니다. 정확히 입력해주세요.";
+			String certificationCode = "오!셜록 본인확인 인증번호는 ["+num6+"] 입니다. 정확히 입력해주세요.";
+			
+			System.out.println(certificationCode);
+		
 	        
 			// System.out.println("확인용 인증코드 : " + certificationCode);
 			
 			// 랜덤하게 생성한 인증코드(certificationCode) 를 비밀번호 찾기를 하고자 하는 사용자의 이메일로 전송시켜준다.
-			SmsSend sms = new SmsSend();
-			
-			sms.sendSms(mobile, certificationCode);
-			
+	//SmsSend sms = new SmsSend();
+	
+	//sms.sendSms(mobile, certificationCode);
+	
 			// System.out.println("문자 전송 결과 확인용 => " +  result);
 			//sendSmsSuccess = true; // 메일 전송이 성공했음을 알려주는 플래그
 				
 			//	sendSmsSuccess = false; // console 창에 에러 여부를 찍어주고, 메일 전송이 실패되었다는 것을 알리기 위해 플래그를 사용한다. 
 		
 			JSONObject jsonObj = new JSONObject(); // {}
-			jsonObj.put("randnum", randnum);     // {"isExists":true} 또는 {"isExists":false} 으로 만들어준다. 
+			jsonObj.put("randnum", num6);     // {"isExists":true} 또는 {"isExists":false} 으로 만들어준다. 
 			
 			String json = jsonObj.toString(); // 문자열 형태인 "{"isExists":true}" 또는 "{"isExists":false}" 으로 만들어준다.
 			

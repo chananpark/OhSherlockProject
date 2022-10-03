@@ -67,12 +67,12 @@
 	let b_flag_mobileDuplicate_click = false;
 	// "휴대폰인증" 을 확인 했는지 알아오기 위한 용도.
 	
+	let randnum6; // 컨트롤러에서 휴대전화 인증 코드 가져오기용
 	
 	$(document).ready(function () {
 		
 		$("#spinner").hide();
 		
-		let randnum; // 컨트롤러에서 휴대전화 인증 코드 가져오기용
 		let certifiCode; // 컨트롤러에서 이메일인증코드 가져오기용
 		let setTimer; // 셋인터벌 담아주는 변수 (타이머) 
 		
@@ -384,13 +384,20 @@
 						data:{ mobile: $('#hp1').val()+$('#hp2').val()+$('#hp3').val() },
 						dataType:"json",
 						success:function(json){
-			    			 console.log(json.randnum);
-		   			 	
-			    	  // $("#spinner").hide(); // 스피너 숨기기
+			    			 // console.log(json.randnum);
 				 
-		   				randnum = json.randnum;
+			    	  randnum6 = json.randnum; 
 			    	  
-		   				mobileVerifyCodeCheck();
+			    	  alert("인증코드가 이메일로 발송되었습니다.");
+			    		
+				    	// 휴대전화 박스 readonly 처리
+				  		$("#hp1").attr("disabled",true); 
+				  		$("#hp2").attr("readonly",true); 
+				  		$("#hp3").attr("readonly",true); 
+			    	  
+			    	  // 휴대전화 인증확인란 보이기
+			    	  $('div#mobileVerify').show();
+			    		
 						},
 						
 						error: function(e){
@@ -507,13 +514,10 @@
 		
 		const userRandnum = $("input#userMobileVerifyCode").val();
 		
-		console.log("인증코드 확인 ==> "+ randnum);
-		
-		if( randnum == userRandnum ){
+		if( randnum6 == userRandnum ){
 			b_flag_mobileDuplicate_click = true;
 			$('div#mobileVerify').hide();
 			$('div#mobileVerifyConfirm').show();
-			
 		}
 		else{
 			alert("인증번호가 틀렸습니다.");
@@ -624,12 +628,12 @@
 	    return; // 종료
 	  }
 	  
-/* 	  // "휴대전화인증확인" 을 클릭했는지 여부 알아오기
+	  // "휴대전화인증확인" 을 클릭했는지 여부 알아오기
 	  if (!b_flag_mobileDuplicate_click) {
 	    // "휴대전화인증확인" 을 클릭 안 했을 경우
 	    alert('휴대전화인증을 하셔야 합니다.');
 	    return; // 종료
-	  } */
+	  } 
 	
 /* 	  // "이메일중복확인" 을 클릭했는지 여부 알아오기
 	  if (!b_flag_emailDuplicate_click ||!b_flag_emailVerifyCode_click ) {
