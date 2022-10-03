@@ -151,6 +151,8 @@ public class ProductDAO implements InterProductDAO {
 	            pvo.setPsummary(rs.getString("psummary"));
 	            pvo.setPoint(rs.getInt("point"));
 	            pvo.setPinputdate(rs.getString("pinputdate"));
+	            pvo.setReviewCnt(rs.getInt("reviewCnt"));
+	            pvo.setOrederCnt(rs.getInt("orederCnt"));
 
 	            productList.add(pvo);
 	        }
