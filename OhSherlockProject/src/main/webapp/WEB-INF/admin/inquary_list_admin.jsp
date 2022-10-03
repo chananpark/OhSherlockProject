@@ -7,7 +7,7 @@
 	* {box-sizing: border-box;}
 		
 	.clickedBtn {
-		background-color: rgb(226, 230, 234);
+		background-color: rgb(226, 230, 234) !important;
 	}
 	
 	.page-link {
@@ -72,15 +72,23 @@
 <script>
 
 $(document).ready(()=>{
-
+	const answered = '${inquiry_answered}';
+	
+	$(".answerBtn[value="+answered+"]").addClass('clickedBtn');
+	
+	let answered_yn;
+	if(answered == 0)
+		answered_yn = '미답변';
+	else
+		answered_yn = '답변완료';
+	
+	$(".answered_yn").text(answered_yn);
+	
 	// 세션스토리지에 goBackURLInquiry 저장
 	const goBackURLInquiry = "${goBackURLInquiry}";
 	sessionStorage.setItem("goBackURLInquiry", goBackURLInquiry);
 	
 	$(".answerBtn").click((e)=>{
-		// removeClass, addClass안먹음 개빡쳐ㅡㅡ
-		$(".answerBtn").removeClass("clickedBtn");
-		$(e.target).addClass("clickedBtn");
 		const answerFrm = document.answerFrm;
 		answerFrm.inquiry_answered.value=$(e.target).val();
 		answerFrm.action = "inquiry.tea";
@@ -95,7 +103,7 @@ $(document).ready(()=>{
 	<div class="container" id="inquiry">
 
 	<div class="titleZone row">
-		<h2 class="col text-left" style="font-weight: bold">1:1문의</h2>
+		<h2 class="col text-left" style="font-weight: bold">1:1 문의</h2>
 		<br>
 		<div class="col text-right">
 			<span style="font-weight: bold; font-size: 20px;">02-336-8546</span><br>

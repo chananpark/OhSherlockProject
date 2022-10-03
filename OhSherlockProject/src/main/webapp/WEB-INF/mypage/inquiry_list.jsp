@@ -286,7 +286,7 @@
 	<div class="container" id="inquiry">
 
 	<div class="titleZone row">
-		<h2 class="col text-left" style="font-weight: bold">1:1문의</h2>
+		<h2 class="col text-left" style="font-weight: bold">1:1 문의</h2>
 		<br>
 		<div class="col text-right">
 			<span style="font-weight: bold; font-size: 20px;">02-336-8546</span><br>
@@ -297,7 +297,7 @@
 	</div>
 	
 	<hr style="background-color: black; height: 1.2px;">
-	<h5 style="font-weight: bold;">내 상담 내역</h5>
+	<h5 style="font-weight: bold;">내 문의 내역</h5>
 	
 	 <div class="row bg-light" style="height: 80px; margin-top: 55px; width: 99.8%; margin-left: 0;">
 		<%-- 탭 버튼 --%>
@@ -362,7 +362,7 @@
 				</div>
 
 				<div class="modal-footer">
-					<button type="button" class="btn inquiryDetailClose" style="background-color: #1E7F15; color:white"
+					<button type="button" onClick="self.close()" class="btn inquiryDetailClose" style="background-color: #1E7F15; color:white"
 						data-dismiss="modal">Close</button>
 				</div>
 			</div>

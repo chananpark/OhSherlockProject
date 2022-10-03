@@ -62,7 +62,9 @@ public class InquiryReply extends AbstractController {
 				
 				// 댓글내용
 				String inquiry_reply_content = request.getParameter("inquiry_reply_content");
-				inquiry_reply_content = inquiry_reply_content.replace("\r\n","<br>");
+				inquiry_reply_content = inquiry_reply_content.replace("\n","<br>");
+				
+				System.out.println(inquiry_reply_content);
 				
 				Map<String, String> paraMap = new HashMap<>();
 				paraMap.put("inquiry_reply_content", inquiry_reply_content);

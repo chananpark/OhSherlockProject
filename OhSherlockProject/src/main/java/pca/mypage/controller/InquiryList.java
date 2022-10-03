@@ -24,7 +24,15 @@ public class InquiryList extends AbstractController {
 
 			super.setViewPage("/WEB-INF/msg.jsp");
 		}else {
-			super.setViewPage("/WEB-INF/mypage/inquiry_list.jsp");
+			if(!loginuser.getUserid().equals("admin"))
+				super.setViewPage("/WEB-INF/mypage/inquiry_list.jsp");
+			else {
+				String message = "회원 전용 메뉴입니다.";
+				String loc = request.getContextPath() + "/index.tea";
+	
+				request.setAttribute("message", message);
+				request.setAttribute("loc", loc);
+			}
 		}
 	}
 }

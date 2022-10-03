@@ -92,7 +92,7 @@
 <div class="container" id="inquiry">
 
 	<div class="titleZone row">
-		<h2 class="col text-left" style="font-weight: bold">1:1문의</h2>
+		<h2 class="col text-left" style="font-weight: bold">1:1 문의</h2>
 		<br>
 		<div class="col text-right">
 			<span style="font-weight: bold; font-size: 20px;">02-336-8546</span><br>
