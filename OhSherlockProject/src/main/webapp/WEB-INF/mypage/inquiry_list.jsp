@@ -297,7 +297,7 @@
 	</div>
 	
 	<hr style="background-color: black; height: 1.2px;">
-	<h5 style="font-weight: bold;">내 상담 내역</h5>
+	<h5 style="font-weight: bold;">내 문의 내역</h5>
 	
 	 <div class="row bg-light" style="height: 80px; margin-top: 55px; width: 99.8%; margin-left: 0;">
 		<%-- 탭 버튼 --%>

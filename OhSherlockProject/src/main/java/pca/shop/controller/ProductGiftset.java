@@ -1,17 +1,18 @@
-package pca.brandStory.controller;
+package pca.shop.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import common.controller.AbstractController;
 
-public class BrandStory extends AbstractController {
+public class ProductGiftset extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-		super.setViewPage("/WEB-INF/brandStory/brandStory.jsp");
 		
+		super.getGiftsetCategoryList(request);
+		
+		super.setViewPage("/WEB-INF/product/product_list_giftset.jsp");
 	}
 
 }
