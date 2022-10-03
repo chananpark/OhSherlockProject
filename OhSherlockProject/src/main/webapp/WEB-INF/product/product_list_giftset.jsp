@@ -86,6 +86,10 @@
 	text-decoration-line: none;
 	color: #1E7F15;
 }
+
+.badges {
+	display: inline-block;
+}
 </style>
 	
 	<div class="container productListContainer">
@@ -134,24 +138,49 @@
 					<div class="row"> 
 						
 						<%-- ★ 여기서부터 아래의 별까지 for문으로 반복해서 출력. 별 안쪽이 상품하나. --%>
+						<c:if test="${not empty productList }">
+						<c:forEach var="pvo" items="${productList }">
 				  		<div class="card border-0 mb-4 mt-1 col-lg-4 col-md-6 ">
-				    		<a href="<%= ctxPath %>/product/product_view.jsp"><img src="../images/tea_set.png" class="card-img-top"/></a>
+				    		<a href="<%= ctxPath %>/product/product_view.jsp"><img src="../images/giftset/${pvo.pimage}" class="card-img-top"/></a>
 			    			<div class="card-body">
-			    				<%-- 여기는 c:if문 사용하여 경우의 수에 따라 다르게 div 출력 --%>
-			    				<%-- 베스트, 품절, 공백으로 if 문 3개 사용. 카드 하나당 높이 동일하게 사용하기 위해서 &nbsp;(공백) 사용 --%>
-			    				<div class="rounded text-light text-center mb-2" style="width:70px; font-weight:bold; background-color: #1E7F15;">베스트</div>
-			    			
-			      				<h5 class="card-title" style="font-weight:bold;"><a href="#">프리미엄 티 세트</a></h5>
-				      			<p class="card-text">25,000원</p>
+			    				
+			    				<c:if test="${not empty pvo.spvo.sname}">
+			    					<c:if test="${pvo.spvo.sname eq 'BEST'}">
+				    				<div class="badges rounded text-light text-center mb-2 badge-danger" style="width:70px; font-weight:bold;">
+				    				${pvo.spvo.sname}
+				    				</div>
+				    				</c:if>
+			    					<c:if test="${pvo.spvo.sname eq 'NEW'}">
+				    				<div class="badges rounded text-light text-center mb-2" style="width:70px; font-weight:bold; background-color: #1E7F15;">
+				    				${pvo.spvo.sname}
+				    				</div>
+				    				</c:if>
+			    				</c:if>
+
+									<c:if test="${pvo.pqty eq 0 }">
+									<div class="badges rounded text-light text-center mb-2 badge-dark"style="width: 70px; font-weight: bold; ">품절</div>
+									</c:if>
+								
+								<c:if test="${empty pvo.spvo.sname}">
+			    				<div class="mb-2" ></div>
+			    				</c:if>
+			    				
+			      				<h5 class="card-title" style="font-weight:bold;"><a href="#">${pvo.pname}</a></h5>
+				      			<p class="card-text"><fmt:formatNumber value="${pvo.price}" pattern="#,###"/>원</p>
 				      			
 				      			<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart"></i></a>
-				      			<a class="card-text text-secondary mr-5">25</a>
+				      			<a class="card-text text-secondary mr-5">찜하기</a>
 				      							      			
 				      			<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a>
 				      			<a class="card-text text-secondary">담기</a>
 				      			
 				   			</div>
 				  		</div>
+				  		</c:forEach>
+				  		</c:if>
+				  		<c:if test="${empty productList }">
+				  		상품 준비중입니다.
+				  		</c:if>
 				  		<%-- ★ 여기까지! --%>
 				  		
 						
@@ -164,7 +193,9 @@
 			</div>
     	    
 		</div>
-	      
+	<nav aria-label="Page navigation example">
+		<ul class="pagination justify-content-center">${pageBar}</ul>
+	</nav>
 	</div>
 	
 <%@ include file="../footer.jsp"%>
