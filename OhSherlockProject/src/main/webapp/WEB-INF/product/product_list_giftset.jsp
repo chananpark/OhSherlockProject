@@ -200,6 +200,11 @@ function getOrderedList() {
          		}); 
 	         	
 	         	$("#giftSetList").html(html);
+	         	
+	    		$('i.heart').click(function() {
+	    	        $(this).removeClass("text-secondary");
+	    	        $(this).addClass("text-danger");
+	    	    })
 		},
 		error: function(request, status, error){
             alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);

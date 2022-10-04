@@ -34,7 +34,7 @@ public class PageBarJSON extends AbstractController {
 		// [맨처음][이전] 만들기
 		if (pageNo > 1) {
 			pageBar += "<li class='page-item'><button id='1' class='page-link ajaxPage'>[맨처음]</button></li>";				
-			pageBar += "<li class='page-item'><button id='"+(Integer.parseInt(currentShowPageNo) - 1)+"' class='page-link ajaxPage'>[이전]</button></li>";
+			pageBar += "<li class='page-item'><button id='"+(pageNo - 1)+"' class='page-link ajaxPage'>[이전]</button></li>";
 		}
 		
 		//while( !(loop > blockSize || pageNo > totalPage)) {
