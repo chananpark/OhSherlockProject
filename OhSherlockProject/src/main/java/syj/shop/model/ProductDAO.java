@@ -151,6 +151,7 @@ public class ProductDAO implements InterProductDAO {
 
 	        String snum = paraMap.get("snum");
 	        String cnum = paraMap.get("cnum");
+	        String orderSQL = paraMap.get("orderSQL");
 	        
 	        if(snum != null) {
 	        	// 스펙(new, best) 가 넘어올 경우
@@ -167,12 +168,19 @@ public class ProductDAO implements InterProductDAO {
 	        	// 전체 조회할 경우
 	        	sql += " ";
 	        }
-	        sql += " ORDER BY pnum DESC) p\n"+
+	        sql += " )p\n"+
 		    		"            JOIN tbl_category  c ON p.fk_cnum = c.cnum\n"+
 		    		"            LEFT OUTER JOIN tbl_spec s\n"+
 		    		"            ON p.fk_snum = s.snum)V\n"+
 		    		"    ) t\n"+
-		    		"WHERE t.rno BETWEEN ? AND ?";
+		    //		" WHERE t.rno BETWEEN ? AND ? " +
+		    		" ORDER BY ";
+	        
+	        if(orderSQL == null) {
+	        	sql += " pnum desc ";
+	        } else {
+	        	sql += orderSQL;
+	        }
 	        
 	        /*
 	         === 페이징처리 공식 === 
@@ -180,8 +188,8 @@ public class ProductDAO implements InterProductDAO {
 	         (한페이지당 보여줄 행의 개수 - 1) and (조회하고자 하는 페이지 번호 * 한페이지당 보여줄 행의 개수)
 	         */
 	        
-	        int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));
-	        int sizePerPage = 6;
+	//        int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));
+	//        int sizePerPage = 6;
 
 	        pstmt = conn.prepareStatement(sql);
 	        
@@ -189,23 +197,23 @@ public class ProductDAO implements InterProductDAO {
 	        if(snum != null) {
 	        	// 스펙(new, best) 가 넘어올 경우
 	        	pstmt.setString(1, snum);
-		        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
-		        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
+		//        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+		//        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
 	        } else if(cnum != null) {
 	        	if("1".equals(cnum) || "2".equals(cnum) || "3".equals(cnum)) {
 	        		// 카테고리(홍차,말차,허브차) 가 넘어올 경우 
 	        		pstmt.setString(1, cnum);
-			        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
-			        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
+		//	        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+		//	        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
 	        	} else {
 	        		// 기프트세트는 4
-	        		pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
-			        pstmt.setInt(2, (currentShowPageNo * sizePerPage));
+	     //   		pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+		//	        pstmt.setInt(2, (currentShowPageNo * sizePerPage));
 	        	}
 	        } else {
 	        	// 전체 조회할 경우
-	        	pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
-		        pstmt.setInt(2, (currentShowPageNo * sizePerPage));
+	    //    	pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+		//        pstmt.setInt(2, (currentShowPageNo * sizePerPage));
 	        }
 	        
 	        rs = pstmt.executeQuery();
