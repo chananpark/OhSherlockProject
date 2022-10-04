@@ -20,6 +20,9 @@ public interface InterProductDAO {
 	// 상품조회에서 특정 조건의 상품 페이징처리해서 보여주기
 	// 페이징 처리를 한 모든 상품 또는 검색한 상품 목록 보여주기
 	List<ProductVO> selectPagingProduct(Map<String, String> paraMap) throws SQLException;
+
+	// 특정 상품 상세 페이지 불러오기 
+	ProductVO product_list_detail(Map<String, String> paraMap) throws SQLException;
 	
 
 }

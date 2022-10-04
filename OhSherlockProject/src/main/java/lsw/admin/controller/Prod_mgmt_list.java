@@ -149,8 +149,8 @@ public class Prod_mgmt_list extends AbstractController {
 					// ***** 맨처음/이전 만들기 ***** //
 					if( pageNo != 1 ) {  
 						// 맨처음으로 가기는 pageNo가 1이 아닐 때만 나오면 된다.
-						pageBar += "<li class='page-item'><a class='page-link' href='member_list.tea?sizePerPage="+sizePerPage+"&currentShowPageNo=1&searchWord="+searchWord+"'><<</a></li>";
-						pageBar += "<li class='page-item'><a class='page-link' href='member_list.tea?sizePerPage="+sizePerPage+"&currentShowPageNo="+(pageNo-1)+"&searchWord="+searchWord+"'><</a></li>";
+						pageBar += "<li class='page-item'><a class='page-link' href='prod_mgmt_list.tea?sizePerPage="+sizePerPage+"&currentShowPageNo=1&searchWord="+searchWord+"'><<</a></li>";
+						pageBar += "<li class='page-item'><a class='page-link' href='prod_mgmt_list.tea?sizePerPage="+sizePerPage+"&currentShowPageNo="+(pageNo-1)+"&searchWord="+searchWord+"'><</a></li>";
 						// 이전으로 가는 페이지넘버는 페이지넘버보다 하나가 작아야하기 때문에 -1 을 해준다.
 					} 
 					
@@ -163,7 +163,7 @@ public class Prod_mgmt_list extends AbstractController {
 							// active 를 하면 바탕색이 파랗게 깔리게 된다.
 							// 자기자신을 클릭했을 경우에는, 위치이동이 없기 때문에 클릭해도 자기 자신이 있는 페이지가 나온다.
 						} else {
-							pageBar += "<li class='page-item'><a class='page-link' href='member_list.tea?sizePerPage="+sizePerPage+"&currentShowPageNo="+pageNo+"&searchWord="+searchWord+"'>"+pageNo+"</a></li>";
+							pageBar += "<li class='page-item'><a class='page-link' href='prod_mgmt_list.tea?sizePerPage="+sizePerPage+"&currentShowPageNo="+pageNo+"&searchWord="+searchWord+"'>"+pageNo+"</a></li>";
 						}
 						
 						loop++;   //  1  2  3  4  5  6  7  8  9 10
@@ -184,8 +184,8 @@ public class Prod_mgmt_list extends AbstractController {
 					
 					if( pageNo <= totalPage ) {  // 계속 다음을 누르면 22페이지가 나오게 되는데 없는 번호를 누르면 1페이지로 보내주기 때문에 마지막 페이지(totalPage 보다 작아질 때)에서는 다음 버튼을 막아주어야 한다.
 						// 제일 마지막 블럭은 페이지넘버가 토탈페이지보다 커버리면 안되고 그 전까지만 다음과 마지막이 나와야 한다.
-						pageBar += "<li class='page-item'><a class='page-link' href='member_list.tea?sizePerPage="+sizePerPage+"&currentShowPageNo="+pageNo+"&searchWord="+searchWord+"'>></a></li>";
-						pageBar += "<li class='page-item'><a class='page-link' href='member_list.tea?sizePerPage="+sizePerPage+"&currentShowPageNo="+totalPage+"&searchWord="+searchWord+"'>>></a></li>";
+						pageBar += "<li class='page-item'><a class='page-link' href='prod_mgmt_list.tea?sizePerPage="+sizePerPage+"&currentShowPageNo="+pageNo+"&searchWord="+searchWord+"'>></a></li>";
+						pageBar += "<li class='page-item'><a class='page-link' href='prod_mgmt_list.tea?sizePerPage="+sizePerPage+"&currentShowPageNo="+totalPage+"&searchWord="+searchWord+"'>>></a></li>";
 						// 다음은 11페이지가 나와야 하고 while 문 빠져나온 다음에 pageNo는 11이 되어 있다. 다음을 클릭하면 currentShowPageNo 가 11이다. 
 						// 글자는 다음이지만 11 페이지를 보여주어야 한다.
 					}

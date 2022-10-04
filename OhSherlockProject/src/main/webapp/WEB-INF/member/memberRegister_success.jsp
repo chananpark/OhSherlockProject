@@ -41,17 +41,17 @@
 <script type="text/javascript">
 
 	window.onload = function() {
-		
+	
 		history.pushState(null, null, location.href); // 뒤로가기 막기
 		window.onpopstate = function(event) { 
 			history.go(1); 
 		};
-		
+		 
 		$("div.header").mouseup(function(){ // 메인 페이지로 이동 버튼 클릭시
 			
 			// 회원가입 성공시 자동로그인 시켜준다.
 			const frm = document.loginFrm;
-			frm.action = "<%= ctxPath%>/login/login.tea";
+			frm.action = "<%= ctxPath%>/login/autoLogin.tea";
 			frm.method = "POST";
 			frm.submit();
 			
@@ -62,7 +62,7 @@
 			
 			// 회원가입 성공시 자동로그인 시켜준다.
 			const frm = document.loginFrm;
-			frm.action = "<%= ctxPath%>/login/login.tea";
+			frm.action = "<%= ctxPath%>/login/autoLogin.tea";
 			frm.method = "POST";
 			frm.submit();
 			

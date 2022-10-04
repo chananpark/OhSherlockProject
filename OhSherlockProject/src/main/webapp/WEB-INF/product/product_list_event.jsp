@@ -112,7 +112,7 @@ a:visited {
 	                
 				} else if( json.length > 0 ) {	
 				
-					
+					 
 					
 				} // end of if( json.length == 0 ) - else
 			},
@@ -241,7 +241,13 @@ a:visited {
        		<%-- 본문 끝 --%>
 			
 		</div>
+<<<<<<< HEAD
    	    
+=======
+		
+
+	      
+>>>>>>> branch 'main' of https://github.com/Chanan-Park/OhSherlockProject.git
 	</div>
 	
 </div>

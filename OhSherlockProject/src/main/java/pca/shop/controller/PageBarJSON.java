@@ -33,8 +33,8 @@ public class PageBarJSON extends AbstractController {
 		
 		// [맨처음][이전] 만들기
 		if (pageNo > 1) {
-			pageBar += "<li class='page-item'><button id='1' class='page-link ajaxPage'>[맨처음]</button></li>";				
-			pageBar += "<li class='page-item'><button id='"+(pageNo - 1)+"' class='page-link ajaxPage'>[이전]</button></li>";
+			pageBar += "<li class='page-item'><button id='1' class='page-link ajaxPage move'><<</button></li>";				
+			pageBar += "<li class='page-item'><button id='"+(pageNo - 1)+"' class='page-link ajaxPage move'><</button></li>";
 		}
 		
 		//while( !(loop > blockSize || pageNo > totalPage)) {
@@ -53,8 +53,8 @@ public class PageBarJSON extends AbstractController {
 		
 		// [다음][마지막] 만들기
 		if (pageNo <= totalPage) {
-			pageBar += "<li class='page-item'><button id='"+(Integer.parseInt(currentShowPageNo) - 1)+"' class='page-link ajaxPage'>[다음]</button></li>";
-			pageBar += "<li class='page-item'><button id='"+totalPage+"' class='page-link ajaxPage'>[마지막]</button></li>";				
+			pageBar += "<li class='page-item'><button id='"+pageNo+"' class='page-link ajaxPage move'>></button></li>";
+			pageBar += "<li class='page-item'><button id='"+totalPage+"' class='page-link ajaxPage move'>>></button></li>";				
 		}
 		
 		JSONObject jsonObj = new JSONObject();

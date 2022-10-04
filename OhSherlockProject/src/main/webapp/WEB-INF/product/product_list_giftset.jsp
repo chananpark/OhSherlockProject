@@ -169,32 +169,32 @@ function getOrderedList() {
     			
     		if(item.sname=='BEST'){
 				html +=
-   				'<div class="badges rounded text-light text-center mb-2 badge-danger" style="width:70px; font-weight:bold;">'+
+   				' <div class="badges rounded text-light text-center mb-2 badge-danger" style="width:70px; font-weight:bold;">'+
    				item.sname+'</div>';
     		}
 				else if(item.sname=='NEW'){
 					html +=
-   				'<div class="badges rounded text-light text-center mb-2" style="width:70px; font-weight:bold; background-color: #1E7F15;">'+
+   				' <div class="badges rounded text-light text-center mb-2" style="width:70px; font-weight:bold; background-color: #1E7F15;">'+
    				item.sname+'</div>';
 				}
 				else if(item.sname==null){
-					html += '<div class="badges mb-2"></div>';
+					html += ' <div class="badges mb-2">&nbsp;</div>';
 				}
 				
 				if(item.pqty==0)
 						html +=
-			'<div class="badges rounded text-light text-center mb-2 badge-dark"style="width: 70px; font-weight: bold; ">품절</div>';
+			' <div class="badges rounded text-light text-center mb-2 badge-dark"style="width: 70px; font-weight: bold; ">품절</div>';
 					
     				
-    				html += '<h5 class="card-title" style="font-weight:bold;"><a href="#">'+item.pname+'</a></h5>'+
-	      			'<p class="card-text">'+item.price.toLocaleString('en')+'원</p>'+
+    				html += ' <h5 class="card-title" style="font-weight:bold;"><a href="#">'+item.pname+'</a></h5>'+
+	      			' <p class="card-text">'+item.price.toLocaleString('en')+'원</p>'+
 	      			
 	      			
-	      			'<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart"></i></a>'+
-	      			'<a class="card-text text-secondary mr-5">찜하기</a>'+
+	      			' <a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart"></i></a>'+
+	      			' <a class="card-text text-secondary mr-5">찜하기</a>'+
 	      							      			
-	      			'<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a>'+
-	      			'<a class="card-text text-secondary">담기</a>'+
+	      			' <a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a>'+
+	      			' <a class="card-text text-secondary">담기</a>'+
 	      			
 	   			'</div> </div>';
          		}); 
@@ -245,6 +245,14 @@ function getPageBar() {
 	    		
 	    		getOrderedList();
 	    	});
+	        
+	        // 처음,이전,다음,마지막페이지로 버튼 클릭시
+	        $("button.move").click((e)=>{
+	    		currentShowPageNo = $(e.target).attr('id');
+	    		getPageBar();
+	    		getOrderedList();
+	    	});
+	        
 		},
 		error: function(request, status, error){
             alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -326,7 +334,7 @@ function getPageBar() {
 									</c:if>
 								
 								<c:if test="${empty pvo.spvo.sname}">
-			    				<div class="badges mb-2" ></div>
+			    				<div class="badges mb-2" >&nbsp;</div>
 			    				</c:if>
 			    				
 			      				<h5 class="card-title" style="font-weight:bold;"><a href="#">${pvo.pname}</a></h5>

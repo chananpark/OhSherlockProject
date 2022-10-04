@@ -71,8 +71,8 @@ public class ProductGiftset extends AbstractController {
 		
 		// [맨처음][이전] 만들기
 		if (pageNo > 1) {
-			pageBar += "<li class='page-item'><a class='page-link' href='productGiftset.tea?currentShowPageNo=1&cnum="+cnum+">[맨처음]</a></li>";				
-			pageBar += "<li class='page-item'><a class='page-link' href='productGiftset.tea?currentShowPageNo="+ (pageNo - 1) +"&cnum="+cnum+"'>[이전]</a></li>";
+			pageBar += "<li class='page-item'><a class='page-link' href='productGiftset.tea?currentShowPageNo=1&cnum="+cnum+"'> << </a></li>";				
+			pageBar += "<li class='page-item'><a class='page-link' href='productGiftset.tea?currentShowPageNo="+ (pageNo - 1) +"&cnum="+cnum+"'><</a></li>";
 		}
 		
 		//while( !(loop > blockSize || pageNo > totalPage)) {
@@ -91,8 +91,8 @@ public class ProductGiftset extends AbstractController {
 		
 		// [다음][마지막] 만들기
 		if (pageNo <= totalPage) {
-			pageBar += "<li class='page-item'><a class='page-link' href='productGiftset.tea?currentShowPageNo=" + pageNo + "&cnum="+cnum+"'>[다음]</a></li>";
-			pageBar += "<li class='page-item'><a class='page-link' href='productGiftset.tea?currentShowPageNo=" + totalPage + "&cnum="+cnum+"'>[마지막]</a></li>";				
+			pageBar += "<li class='page-item'><a class='page-link' href='productGiftset.tea?currentShowPageNo=" + pageNo + "&cnum="+cnum+"'>></a></li>";
+			pageBar += "<li class='page-item'><a class='page-link' href='productGiftset.tea?currentShowPageNo=" + totalPage + "&cnum="+cnum+"'>>></a></li>";				
 		}
 		
 		request.setAttribute("pageBar", pageBar);

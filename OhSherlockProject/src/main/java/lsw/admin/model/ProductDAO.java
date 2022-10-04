@@ -1,5 +1,7 @@
 package lsw.admin.model;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +15,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import common.model.MemberVO;
 import common.model.ProductVO;
 
 public class ProductDAO implements InterProductDAO {
@@ -57,7 +60,7 @@ public class ProductDAO implements InterProductDAO {
 		try {
 			conn = ds.getConnection();
 
-			String sql = " select pnum, pname, price, saleprice, pqty "
+			String sql = " select pnum, pname, price, saleprice, pqty, to_char(pinputdate,'yyyy-mm-dd')  pinputdate "
 					   + " from tbl_product ";
 
 			pstmt = conn.prepareStatement(sql);
@@ -72,6 +75,7 @@ public class ProductDAO implements InterProductDAO {
 				pvo.setPrice(rs.getInt(3));
 				pvo.setSaleprice(rs.getInt(4));
 				pvo.setPqty(rs.getInt(5));
+				pvo.setPinputdate(rs.getString(6));
 				
 				productList.add(pvo);
 			}
@@ -83,6 +87,7 @@ public class ProductDAO implements InterProductDAO {
 		return productList;
 	} // end of public List<ProductVO> showProductList() throws SQLException{} ---------------
 
+	
 	// 관리자가 상품등록하는 메소드(임선우)  
 	@Override
 	public int registerProduct(ProductVO product) {
@@ -90,22 +95,24 @@ public class ProductDAO implements InterProductDAO {
 		try {
 			conn = ds.getConnection();
 			
-			String sql = " insert into tbl_product (p_code, p_category, p_name, p_price, p_discount_rate, p_stock, p_info, p_desc, p_thumbnail, p_image) "
-					   + " values (? || seq_pcode.nextval , ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			String sql = " insert into tbl_product (pnum, fk_cnum, pname, price, saleprice, point, pqty , psummary, pcontent, pimage, prdmanual_systemfilename, prdmanual_orginfilename) "
+					   + " values ( seq_product_pnum.nextval , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			
-			pstmt.setInt(1, product.getPnum());
-			pstmt.setString(2, product.getP_category());
-			pstmt.setString(3, product.getPname());
-			pstmt.setInt(4, product.getPrice());
-			pstmt.setInt(5, product.getSaleprice());
+			// fk_snum, 베스트 여부 없음
+			pstmt.setInt(1, product.getFk_cnum());
+			pstmt.setString(2, product.getPname());
+			pstmt.setInt(3, product.getPrice());
+			pstmt.setInt(4, product.getSaleprice());
+			pstmt.setInt(5, product.getPoint());
 			pstmt.setInt(6, product.getPqty());
-			pstmt.setString(7, product.getP_info());
-			pstmt.setString(8, product.getP_desc());
-			pstmt.setString(9, product.getP_thumbnail());
-			pstmt.setString(10, product.getP_image());
+			pstmt.setString(7, product.getPsummary());
+			pstmt.setString(8, product.getPcontent());
+			pstmt.setString(9, product.getPimage());
+			pstmt.setString(10, product.getPrdmanual_systemfilename());
+			pstmt.setString(11, product.getPrdmanual_orginfilename());
 
 		
 			result = pstmt.executeUpdate();
@@ -176,13 +183,13 @@ public class ProductDAO implements InterProductDAO {
 			try {
 				conn = ds.getConnection();
 				
-				String sql = "select pnum, pname, price, saleprice, pqty "+
+				String sql = "select pnum, pname, price, saleprice, pqty, to_char(pinputdate,'yyyy-mm-dd') pinputdate "+
 							"from\n"+
 							"(\n"+
-							"    select rownum AS RNO, pnum, pname, price, saleprice, pqty "+
+							"    select rownum AS RNO, pnum, pname, price, saleprice, pqty, pinputdate "+
 							"    from\n"+
 							"    (\n"+
-							"        select pnum, pname, price, saleprice, pqty "+
+							"        select pnum, pname, price, saleprice, pqty, pinputdate "+
 							"        from tbl_product ";
 						
 					String searchWord = paraMap.get("searchWord");
@@ -231,6 +238,7 @@ public class ProductDAO implements InterProductDAO {
 					pvo.setPrice(rs.getInt(3));
 					pvo.setSaleprice(rs.getInt(4));
 					pvo.setPqty(rs.getInt(5));
+					pvo.setPinputdate(rs.getString(6));
 					
 					productList.add(pvo); // 리스트에 담아준다.
 					
@@ -243,5 +251,57 @@ public class ProductDAO implements InterProductDAO {
 			return productList;
 		} // end of public List<MemberVO> selectPagingMember(Map<String, String> paraMap) throws SQLException
 
+		
+		
+		// 특정 상품 상세 페이지 불러오기 
+		@Override
+		public ProductVO product_list_detail(Map<String, String> paraMap) throws SQLException {
 			
+			ProductVO product = null;
+			
+			try {
+				conn = ds.getConnection();
+						
+				String sql = "select pnum, pname, fk_cnum, pimage, prdmanual_systemfilename, prdmanual_orginfilename, pqty, price, saleprice, fk_snum, pcontent, psummary, point, pinputdate "+
+						     "from tbl_product "+
+							 "where pnum = ? ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, paraMap.get("pnum"));
+				
+				rs = pstmt.executeQuery();
+				
+				if(rs.next()) {
+					
+					// select 해서 가져올 게 있냐
+					product = new ProductVO();
+					
+					product.setPnum(rs.getInt(1));
+					product.setPname(rs.getString(2));
+					product.setFk_cnum(rs.getInt(3));
+					product.setPimage(rs.getString(4));
+					product.setPrdmanual_systemfilename(rs.getString(5));
+					product.setPrdmanual_orginfilename(rs.getString(6));
+					product.setPqty(rs.getInt(7));
+					product.setPrice(rs.getInt(8));
+					product.setSaleprice(rs.getInt(9));
+					product.setFk_cnum(rs.getInt(10));
+					product.setPcontent(rs.getString(11));
+					product.setPsummary(rs.getString(12));
+					product.setPoint(rs.getInt(13));
+					product.setPinputdate(rs.getString(14));
+			
+				} // end of if(rs.next())
+				
+			} finally {
+				close();
+			}
+		
+			return product;
+		}// end of public ProductVO product_list_detail(Map<String, String> paraMap) throws SQLException			
+		
+		
+		
+		
 }
