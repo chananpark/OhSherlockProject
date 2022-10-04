@@ -39,7 +39,7 @@
 	}); // end of $(document).ready
 	
 	
-	// function declaration
+	// function declaration // 이거 지금 작동안함... gobackurl 원리 이해하기
 	// 상품 상세조회에서 바로 직전에 보던 목록을 보여주기(검색된 목록이라면 검색된 상품목록 보여주기)
 	function goProductList() {
 		location.href = "<%= request.getContextPath() %>" + goBackURL;
@@ -76,7 +76,7 @@
 						<td class="col-8"><img src="${requestScope.product_select_one.pimage}" /></td>
 					</tr>
 					<tr>
-						<td class="col-4">상품한줄설명</td>
+						<td class="col-4" style="vertical-align: middle">상품한줄설명</td>
 						<td class="col-8">${requestScope.product_select_one.psummary}</td>
 					</tr>
 					<tr>

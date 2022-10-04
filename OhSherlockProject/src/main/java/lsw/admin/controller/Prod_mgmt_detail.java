@@ -13,7 +13,7 @@ import common.model.ProductVO;
 import lsw.admin.model.InterProductDAO;
 import lsw.admin.model.ProductDAO;
 
-public class Prod_mgmt_list_detail extends AbstractController {
+public class Prod_mgmt_detail extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -69,7 +69,7 @@ public class Prod_mgmt_list_detail extends AbstractController {
 				request.setAttribute("goBackURL", goBackURL); // 공백이 있는 상태 그대로 전달해준다.
 				
 				super.setRedirect(false);
-				super.setViewPage("/WEB-INF/admin/prod_mgmt_list_detail.jsp");
+				super.setViewPage("/WEB-INF/admin/prod_mgmt_detail.jsp");
 				
 				
 			} // end of if(!( "admin".equals(loginuser.getUserid()) ))-else 

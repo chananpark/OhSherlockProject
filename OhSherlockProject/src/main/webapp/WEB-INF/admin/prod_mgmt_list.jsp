@@ -62,7 +62,7 @@
 			const pnum = $target.parent().find("td[name='pnum']").text(); 
 		//	console.log("확인용 : "+ pnum);
 			 
-			location.href = "<%= request.getContextPath() %>/admin/prod_mgmt_list_detail.tea?pnum="+pnum+"&goBackURL=${requestScope.goBackURL}";
+			location.href = "<%= request.getContextPath() %>/admin/prod_mgmt_detail.tea?pnum="+pnum+"&goBackURL=${requestScope.goBackURL}";
 		}); // end of $("tbody > tr").click(function()
 		
 				

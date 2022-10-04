@@ -92,11 +92,12 @@
 	<hr>
 
 
-	<form name="pdRegFrm" id="pdReg" action="<%=request.getContextPath()%>/shop/admin/productRegister.up"
+	<form name="pdRegFrm" id="pdReg" action="<%=request.getContextPath()%>/admin/prod_mgmt_register.tea"
 		  method="post" 
 		  enctype="multipart/form-data">
-		<label for="qnatype">카테고리<span class="text-danger">*</span></label> <select
-			id="qnatype" name="p_category">
+		<label for="qnatype">카테고리<span class="text-danger">*</span></label>
+		 <select id="qnatype" name="p_category">
+			<option value="">선택하세요</option>
 			<option value="녹차/말차">녹차/말차</option>
 			<option value="홍차">홍차</option>
 			<option value="허브차">허브차</option>
