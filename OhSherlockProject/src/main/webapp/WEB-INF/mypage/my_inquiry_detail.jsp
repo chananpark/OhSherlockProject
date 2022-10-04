@@ -26,14 +26,14 @@
 		font-family: 'Gowun Dodum', sans-serif;
 	  }
 
-.listView {
+/* .listView {
 	width: 90px;
 	margin: 15px;
 	border-style: none;
 	height: 30px;
 	font-size: 14px;
 }
-
+ */
 .btn-secondary:hover {
 	border: 2px none #1E7F15;
 	background-color: #1E7F15;
@@ -59,7 +59,7 @@
 }
 </style>
 
-<div class="container">
+<div class="container-fluid">
 
 	<%-- 사용자가 자신의 문의 내용과 그에 달린 댓글을 확인하는 페이지입니다.--%>
 

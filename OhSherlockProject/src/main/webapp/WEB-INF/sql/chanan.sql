@@ -264,13 +264,15 @@ FROM
                 pqty, price, saleprice, pcontent, PSUMMARY, point,
                 to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum
             FROM tbl_product
-            WHERE fk_cnum = ?
-            ORDER BY ? DESC) p
+            WHERE fk_cnum in (4, 5, 6)
+            ORDER BY pnum DESC) p
             JOIN tbl_category  c ON p.fk_cnum = c.cnum
             LEFT OUTER JOIN tbl_spec s
             ON p.fk_snum = s.snum)V
     ) t
-WHERE t.rno BETWEEN ? AND ?
+WHERE t.rno BETWEEN 1 AND 5;
+
+select ceil( count(*)/10 )  from tbl_product  where fk_cnum in (4,5,6);
     
 INSERT INTO tbl_product(PNUM, PNAME, PIMAGE, PQTY, PRICE, SALEPRICE, PSUMMARY, POINT, PINPUTDATE, FK_CNUM)
 VALUES (SEQ_PRODUCT_PNUM.nextval, '프리미엄 티 컬렉션', '프리미엄 티 컬렉션.png', 1000, 28000, 28000, 
