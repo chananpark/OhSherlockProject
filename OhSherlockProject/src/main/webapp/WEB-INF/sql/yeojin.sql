@@ -113,7 +113,7 @@ from tbl_product;
 
 
 INSERT INTO tbl_product(PNUM, PNAME, PIMAGE, PQTY, PRICE, SALEPRICE, FK_SNUM, PSUMMARY, POINT, PINPUTDATE, FK_CNUM)
-VALUES (SEQ_PRODUCT_PNUM.nextval, '가루녹차', '가루녹차.png', 10, 15000, 12000, 1, '제주 녹차로 만든 고급 가루 녹차', ,sysdate, 1);
+VALUES (SEQ_PRODUCT_PNUM.nextval, '가루녹차', '가루녹차.png', 10, 15000, 12000, 1, '제주 녹차로 만든 고급 가루 녹차', if(PRICE=SALEPRICE, PRICE*0.01, SALEPRICE*0.01), sysdate, 1);
 
 INSERT INTO tbl_product(PNUM, PNAME, PIMAGE, PQTY, PRICE, SALEPRICE, FK_SNUM, PSUMMARY, PINPUTDATE, FK_CNUM)
 VALUES (SEQ_PRODUCT_PNUM.nextval, '가루녹차', '가루녹차.png', 10, 15000, 12000, 1, '제주 녹차로 만든 고급 가루 녹차', sysdate, 1);
@@ -129,6 +129,10 @@ VALUES (SEQ_PRODUCT_PNUM.nextval, '가루녹차', '가루녹차.png', 10, 15000,
 
 INSERT INTO tbl_product(PNUM, PNAME, PIMAGE, PQTY, PRICE, SALEPRICE,  PSUMMARY, PINPUTDATE, FK_CNUM)
 VALUES (SEQ_PRODUCT_PNUM.nextval, '가루녹차2', '가루녹차.png', 10, 15000, 12000, '제주 녹차로 만든 고급 가루 녹차', sysdate, 1);
+
+INSERT INTO tbl_product(PNUM, PNAME, PIMAGE, PQTY, PRICE, SALEPRICE, FK_SNUM, PSUMMARY, POINT, PINPUTDATE, FK_CNUM)
+VALUES (SEQ_PRODUCT_PNUM.nextval, '가루녹차', '가루녹차.png', 10, 15000, 12000, 1, '제주 녹차로 만든 고급 가루 녹차', 
+(select case when PRICE = SALEPRICE then PRICE*0.01 else SALEPRICE*0.01 end as point from tbl_product), sysdate, 1);
 
 select CNUM, CODE, CNAME
 from tbl_category;
@@ -147,37 +151,48 @@ values (seq_category_cnum.nextval, 30000, 'herbtea');
 commit;
 
 select PNUM, PNAME, PIMAGE, PRDMANUAL_SYSTEMFILENAME,PRDMANUAL_ORGINFILENAME, PQTY, PRICE, SALEPRICE, FK_SNUM, PCONTENT, PSUMMARY, POINT, PINPUTDATE, FK_CNUM
-from tbl_product
-
-
-         String sql = "select cname, sname, pnum, pname, pcompany, pimage1, pimage2, pqty, price, saleprice, pcontent, point, pinputdate "+
-                   "from "+
-                   "( "+
-                   "    select rownum AS RNO, cname, sname, pnum, pname, pcompany, pimage1, pimage2, pqty, price, saleprice, pcontent, point, pinputdate "+ 
-                   "    from "+
-                   "    ( "+
-                   "        select C.cname, S.sname, pnum, pname, pcompany, pimage1, pimage2, pqty, price, saleprice, pcontent, point, pinputdate "+
-                   "        from "+
-                   "            (select pnum, pname, pcompany, pimage1, pimage2, pqty, price, saleprice, pcontent, point "+
-                   "                  , to_char(pinputdate, 'yyyy-mm-dd') as pinputdate, fk_cnum, fk_snum  "+
-                   "             from tbl_product  "+
-                   "             where fk_cnum = ? "+
-                   "             order by pnum desc "+
-                   "        ) P "+
-                   "        JOIN tbl_category C "+
-                   "        ON P.fk_cnum = C.cnum "+
-                   "        left outer JOIN tbl_spec S "+
-                   "        ON P.fk_snum = S.snum "+
-                   "    ) V "+
-                   ") T "+
-                   "where T.RNO between 1 and 10 ";
+from tbl_product;
 
 
 
+-- 카테고리별 상품 가져오기 --
+SELECT cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,
+    pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,
+    reviewCnt , -- 리뷰수
+    orederCnt -- 판매수
+FROM
+    (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,
+            pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt
+    FROM
+        (SELECT c.cname, s.sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,
+                pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,
+                (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,
+                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt
+        FROM
+            (SELECT
+                pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,
+                pqty, price, saleprice, pcontent, PSUMMARY, point,
+                to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum
+            FROM tbl_product
+            WHERE saleprice != price -- and fk_cnum = '1'
+            ORDER BY pnum DESC) p
+            JOIN tbl_category  c ON p.fk_cnum = c.cnum
+            LEFT OUTER JOIN tbl_spec s
+            ON p.fk_snum = s.snum)V
+    ) t
+WHERE t.rno BETWEEN 1 AND 5;
 
 
+select ceil(count(*)/6) 
+from tbl_product 
+where saleprice != price;
 
+select cnum, code, cname
+from tbl_category
+where cnum between 1 and 3;
 
-
+select ceil(count(*)/6) 
+from tbl_product 
+where saleprice != price and FK_SNUM = 2;
 
 
