@@ -17,9 +17,6 @@ public class ProductEvent_category extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		// 카테고리 목록을 조회하기
-		super.getEventCategoryList(request);
-		
 		String cnum = request.getParameter("cnum");
 		
 		// *** 카테고리 번호에 해당하는 제품들을 페이징처리하여 보여주기 *** //
@@ -50,7 +47,7 @@ public class ProductEvent_category extends AbstractController {
 		InterProductDAO pdao = new ProductDAO();
 		
 		// 페이지바를 위한 검색이 없는 특정 카테고리 상품에 대한 총 페이지 알아오기
-		int totalPage = pdao.getTotalCategoryPage(paraMap); 
+		int totalPage = pdao.getEventTotalPage(paraMap); 
 		// System.out.println("확인용totalpage : " + totalPage);
 		
 		// == get 방식이므로 사용자가 웹브라우저 주소창에서 currentShowPageNo 에 토탈페이지수 보다 큰 값을 입력하여 장난친 경우에는 1페이지로 가게끔 막아주는 것 시작
@@ -63,7 +60,7 @@ public class ProductEvent_category extends AbstractController {
 		}
 		// == get 방식이므로 사용자가 웹브라우저 주소창에서 currentShowPageNo 에 토탈페이지수 보다 큰 값을 입력하여 장난친 경우에는 1페이지로 가게끔 막아주는 것 끝
 		
-		List<ProductVO> productList = pdao.selectProdByEventCategory(paraMap);
+		List<ProductVO> productList = pdao.selectEventGoodsByCategory(paraMap);
 		
 		// 확인용 시작 ==
 		/*

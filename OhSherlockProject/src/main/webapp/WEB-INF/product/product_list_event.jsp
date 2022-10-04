@@ -62,6 +62,10 @@ a:visited {
   border-color: #1E7F15;
 }
 	
+.order {
+	background-color: transparent; 
+    border-style: none;
+}
 
 </style>
 
@@ -90,6 +94,37 @@ a:visited {
 		
 	}); // end of $(document).ready
 	
+	// 정렬하기 클릭했을 때의 이벤트
+	function order_list(selectid) {
+		let html = "";
+		
+		$.ajax({
+			url: "<%= request.getContextPath()%>/shop/eventOrderListJSON.tea",
+			type: "GET",
+			data: {"selectid":selectid},
+			dataType: "JSON",
+			success: function(json){
+				
+				if( json.length == 0 ) { 
+					html += " "; // 나중에 적어줘야하는데 여기 적어주면 에러나니까 그냥 자주묻는 질문은 무조건 다 나오는 걸로 하는 건 어떤지..?
+	                
+	                $("div#eventProdList").html(html);
+	                
+				} else if( json.length > 0 ) {	
+				
+					
+					
+				} // end of if( json.length == 0 ) - else
+			},
+			error: function(request, status, error){
+	        	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	        }
+		}); // end of $.ajax
+		
+		
+	} // end of function order_list(selectid)
+	
+	
 	
 </script>
 
@@ -101,29 +136,28 @@ a:visited {
 	<div class="row">
       	<%-- 사이드 메뉴 시작 --%>
        	<div class="col-md-2" id="sideinfo" class="sidebar" style="padding-left: 2%;  margin-top: 1.8%;">
-			<div style="text-align: left; padding: 5%;">
+			<div style="text-align: left; padding: 5%; margin-bottom: 20px;" >
             	<span class="h4" style="font-weight:bold;">이벤트상품</span>
          	</div>
-         	<a style="padding: 5%; font-weight:bold;" id="allProd" href="<%= ctxPath %>/shop/productEvent.tea">전체 상품</a>
+         	<div style="padding: 3%; font-weight:bold;"><a id="allProd" href="<%= ctxPath %>/shop/productEvent.tea">전체 상품</a></div>
+         	<div style="padding: 3%; font-weight:bold;"><a id="bestProd" href="<%= ctxPath %>/shop/productEvent_spec.tea?snum=2">베스트</a></div>
+         	<div style="padding: 3%; font-weight:bold;"><a id="newProd" href="<%= ctxPath %>/shop/productEvent_spec.tea?snum=1">신상품</a></div>
          	<hr>
          	<div style="padding: 5%; font-weight:bold;">단품</div>
          	<div style="text-align: left; padding: 4%; margin-left:10%;">
-            	<a id="bestProd" href="<%=ctxPath%>/shop/productEvent_best.tea">베스트</a>
+            	<a id="bestProd" href="<%=ctxPath%>/shop/productEvent_category.tea?cnum=1">녹차/말차</a>
          	</div>
-         	<c:forEach var="map" items="${requestScope.prodCategoryList}">
          	<div style="text-align: left; padding: 4%; margin-left:10%;">
-            	<a id="greenProd" href="<%=ctxPath%>/shop/productEvent_category.tea?cnum=${map.cnum}">
-	            	<c:if test="${map.cname eq 'greentea'}">녹차/말차</c:if>
-	            	<c:if test="${map.cname eq 'blacktea'}">홍차</c:if>
-	            	<c:if test="${map.cname eq 'herbtea'}">허브차</c:if>
-            	</a>
+            	<a id="bestProd" href="<%=ctxPath%>/shop/productEvent_category.tea?cnum=2">홍차</a>
          	</div>
-         	</c:forEach>
-         	
+         	<div style="text-align: left; padding: 4%; margin-left:10%;">
+            	<a id="bestProd" href="<%=ctxPath%>/shop/productEvent_category.tea?cnum=3">허브차</a>
+         	</div>
+
          	<hr>
          	<div style="padding: 5%; font-weight:bold;">세트</div>
          	<div style="text-align: left; padding: 4%; margin-left:10%;">
-            	<a id="herbProd">기프트세트</a>
+            	<a id="herbProd" href="<%=ctxPath%>/shop/productEvent_category.tea?cnum=4">기프트세트</a>
          	</div>
        	</div>
    	    <%-- 사이드 메뉴 끝 --%>
@@ -135,16 +169,16 @@ a:visited {
 				<span class="text-dark h5" style="font-weight:bold;">전체상품</span>
 				
 				<%-- 정렬 선택 창 --%>
-				<span id="order_list">
-					<span id="newProd">신상품순</span>
+				<span id="order_list" >
+					<button id="order_new" class="order" onclick="order_list('order_new')">신상품순</button>
 					<span class="text-dark">&nbsp;|&nbsp;</span>
-					<span id="highPrice">높은가격순</span>
+					<button id="order_highPrice" class="order" onclick="order_list('order_highPrice')">높은가격순</button>
 					<span class="text-dark">&nbsp;|&nbsp;</span>
-					<span id="rowPrice">낮은가격순</span>
+					<button id="order_rowPrice" class="order" onclick="order_list('order_rowPrice')">낮은가격순</button>
+					<span class="text-dark" >&nbsp;|&nbsp;</span>
+					<button id="order_review" class="order" onclick="order_list('order_review')">리뷰많은순</button>
 					<span class="text-dark">&nbsp;|&nbsp;</span>
-					<span id="review">리뷰많은순</span>
-					<span class="text-dark">&nbsp;|&nbsp;</span>
-					<span id="sellList">판매순</span>
+					<button id="order_sell" class="order" onclick="order_list('order_sell')">판매순</button>
 				</span>
 	    	    <%-- 본문 내부 상단 바 끝 --%>
 				

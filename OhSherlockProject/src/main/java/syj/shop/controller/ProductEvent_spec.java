@@ -12,13 +12,12 @@ import common.model.ProductVO;
 import syj.shop.model.InterProductDAO;
 import syj.shop.model.ProductDAO;
 
-public class ProductEvent_best extends AbstractController {
+public class ProductEvent_spec extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		// 카테고리 목록을 조회하기
-		super.getEventCategoryList(request);
+		String snum = request.getParameter("snum");
 		
 		// *** 카테고리 번호에 해당하는 제품들을 페이징처리하여 보여주기 *** //
 		String currentShowPageNo = request.getParameter("currentShowPageNo");
@@ -43,11 +42,12 @@ public class ProductEvent_best extends AbstractController {
 		Map<String,String> paraMap = new HashMap<>();
 		// 한 페이지당 화면상에 보여줄 제품의 개수는 10개로 고정한다. sizePerPage는 ProductDAO에서 상수로 설정해두었음
 		paraMap.put("currentShowPageNo", currentShowPageNo); // 1페이지 볼거냐 2페이지 볼거냐, 뒤의 숫자는 계속 변경 
-
+		paraMap.put("snum",snum);
+		
 		InterProductDAO pdao = new ProductDAO();
 		
 		// 페이지바를 위한 검색이 없는 특정 카테고리 상품에 대한 총 페이지 알아오기
-		int totalPage = pdao.getTotalBestPage(paraMap); 
+		int totalPage = pdao.getEventTotalPage(paraMap); 
 		// System.out.println("확인용totalpage : " + totalPage);
 		
 		// == get 방식이므로 사용자가 웹브라우저 주소창에서 currentShowPageNo 에 토탈페이지수 보다 큰 값을 입력하여 장난친 경우에는 1페이지로 가게끔 막아주는 것 시작
@@ -60,7 +60,7 @@ public class ProductEvent_best extends AbstractController {
 		}
 		// == get 방식이므로 사용자가 웹브라우저 주소창에서 currentShowPageNo 에 토탈페이지수 보다 큰 값을 입력하여 장난친 경우에는 1페이지로 가게끔 막아주는 것 끝
 		
-		List<ProductVO> productList = pdao.selectProdByEventBest(paraMap);
+		List<ProductVO> productList = pdao.selectEventGoodsByCategory(paraMap);
 		
 		// 확인용 시작 ==
 		/*
@@ -88,8 +88,8 @@ public class ProductEvent_best extends AbstractController {
 		// ***** 맨처음/이전 만들기 ***** //
 		if( pageNo != 1 ) {  
 			// 맨처음으로 가기는 pageNo가 1이 아닐 때만 나오면 된다.
-			pageBar += "<li class='page-item'><a class='page-link' href='productEvent_best.tea?currentShowPageNo=1'>[맨처음]</a></li>";
-			pageBar += "<li class='page-item'><a class='page-link' href='productEvent_best.tea?currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+			pageBar += "<li class='page-item'><a class='page-link' href='productEvent_spec.tea?currentShowPageNo=1'>[맨처음]</a></li>";
+			pageBar += "<li class='page-item'><a class='page-link' href='productEvent_spec.tea?currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
 			// 이전으로 가는 페이지넘버는 페이지넘버보다 하나가 작아야하기 때문에 -1 을 해준다.
 		} 
 		
@@ -102,7 +102,7 @@ public class ProductEvent_best extends AbstractController {
 				// active 를 하면 바탕색이 파랗게 깔리게 된다.
 				// 자기자신을 클릭했을 경우에는, 위치이동이 없기 때문에 클릭해도 자기 자신이 있는 페이지가 나온다.
 			} else {
-				pageBar += "<li class='page-item'><a class='page-link' href='productEvent_best.tea?currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
+				pageBar += "<li class='page-item'><a class='page-link' href='productEvent_spec.tea?currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
 			}
 			
 			loop++;   //  1  2  3  4  5  6  7  8  9 10
@@ -123,8 +123,8 @@ public class ProductEvent_best extends AbstractController {
 		
 		if( pageNo <= totalPage ) {  // 계속 다음을 누르면 22페이지가 나오게 되는데 없는 번호를 누르면 1페이지로 보내주기 때문에 마지막 페이지(totalPage 보다 작아질 때)에서는 다음 버튼을 막아주어야 한다.
 			// 제일 마지막 블럭은 페이지넘버가 토탈페이지보다 커버리면 안되고 그 전까지만 다음과 마지막이 나와야 한다.
-			pageBar += "<li class='page-item'><a class='page-link' href='productEvent_best.tea?currentShowPageNo="+pageNo+"'>[다음]</a></li>";
-			pageBar += "<li class='page-item'><a class='page-link' href='productEvent_best.tea?currentShowPageNo="+totalPage+"'>[마지막]</a></li>";
+			pageBar += "<li class='page-item'><a class='page-link' href='productEvent_spec.tea?currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+			pageBar += "<li class='page-item'><a class='page-link' href='productEvent_spec.tea?currentShowPageNo="+totalPage+"'>[마지막]</a></li>";
 			// 다음은 11페이지가 나와야 하고 while 문 빠져나온 다음에 pageNo는 11이 되어 있다. 다음을 클릭하면 currentShowPageNo 가 11이다. 
 			// 글자는 다음이지만 11 페이지를 보여주어야 한다.
 		} 

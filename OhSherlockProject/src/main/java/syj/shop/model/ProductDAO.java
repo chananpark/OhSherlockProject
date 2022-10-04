@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,9 +60,11 @@ public class ProductDAO implements InterProductDAO {
 
 	
 	
-	// 페이지바 처리를 위한 이벤트 상품에 대한 총 페이지 알아오기
+	///////////////////////////////////////////////////////////////////////////////////////////
+	// 이벤트 상품에 대한 총 페이지 알아오기
 	@Override
-	public int getTotalPage() throws SQLException {
+	public int getEventTotalPage(Map<String, String> paraMap) throws SQLException {
+
 		int totalPage = 0; // 기본값이 null 이 나올 수가 없다. 변수에 null 을 넣어주지 않았기 때문에.
 		
 		try {
@@ -74,7 +75,36 @@ public class ProductDAO implements InterProductDAO {
 						 " from tbl_product "+
 						 " where saleprice != price ";
 			
+			String snum = paraMap.get("snum");
+	        String cnum = paraMap.get("cnum");
+	        
+	        if(snum != null) {
+	        	// 스펙(new, best) 가 넘어올 경우
+	        	sql += " and fk_snum = ? ";
+	        } else if(cnum != null) {
+	        	if("1".equals(cnum) || "2".equals(cnum) || "3".equals(cnum)) {
+	        		// 카테고리(홍차,말차,허브차) 가 넘어올 경우 
+	        		sql += " and fk_cnum = ? ";
+	        	} else {
+	        		// 기프트세트는 4
+	        		sql += " and fk_cnum in(4,5,6) ";
+	        	}
+	        } else {
+	        	// 전체 조회할 경우
+	        	sql += " ";
+	        }
+			
 			pstmt = conn.prepareStatement(sql);
+			
+			if(snum != null) {
+	        	// 스펙(new, best) 가 넘어올 경우
+	        	pstmt.setString(1, snum);
+	        } else if(cnum != null) {
+	        	if("1".equals(cnum) || "2".equals(cnum) || "3".equals(cnum)) {
+	        		// 카테고리(홍차,말차,허브차) 가 넘어올 경우 
+	        		pstmt.setString(1, cnum);
+	        	} 
+	        } 
 			
 			rs = pstmt.executeQuery();
 			rs.next();
@@ -86,63 +116,102 @@ public class ProductDAO implements InterProductDAO {
 		}
 		
 		return totalPage;
-	} // end of public int getTotalPage() throws SQLException
+	
+	} // end of public int getTotalPage(Map<String, String> paraMap) throws SQLException
 
 	
-	// 이벤트 상품에 따른 제품들을 페이지바를 사용한 페이징처리 처리하여 조회(select)해오기
+	// 페이징 방식 이벤트 상품 목록 가져오기 메소드
 	@Override
-	public List<ProductVO> selectPagingProdByEvent(Map<String, String> paraMap) throws SQLException {
-		
+	public List<ProductVO> selectEventGoodsByCategory(Map<String, String> paraMap) throws SQLException {
 		List<ProductVO> productList = new ArrayList<>();
-		
-		try {
-			conn = ds.getConnection();
-			
-			String sql = "SELECT cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
-					"    pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,\n"+
-					"    reviewCnt , -- 리뷰수\n"+
-					"    orederCnt -- 판매수\n"+
-					"FROM\n"+
-					"    (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
-					"            pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt\n"+
-					"    FROM\n"+
-					"        (SELECT c.cname, s.sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
-					"                pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,\n"+
-					"                (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
-					"                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt\n"+
-					"        FROM\n"+
-					"            (SELECT\n"+
-					"                pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
-					"                pqty, price, saleprice, pcontent, PSUMMARY, point,\n"+
-					"                to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum\n"+
-					"            FROM tbl_product\n"+
-					"            WHERE saleprice != price \n" +
-					"            ORDER BY pnum DESC) p\n"+
-					"            JOIN tbl_category  c ON p.fk_cnum = c.cnum\n"+
-					"            LEFT OUTER JOIN tbl_spec s\n"+
-					"            ON p.fk_snum = s.snum)V\n"+
-					"    ) t\n"+
-					"WHERE t.rno BETWEEN ? AND ?";
-			
-//			=== 페이징처리의 공식 ===
-//		    where RNO between (조회하고자 하는 페이지 번호 * 한페이지당 보여줄 행의 개수) - (한페이지당 보여줄 행의 개수 -1) 
-//		                  and (조회하고자 하는 페이지 번호 * 한페이지당 보여줄 행의 개수);
 
-			int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));  // 조회하고자 하는 페이지 번호
-			int sizePerPage = 6; // 한페이지당 화면상에 보여줄 제품의 개수는 10으로 고정한다.
-			
-			pstmt = conn.prepareStatement(sql);
-		
-			// 페이징 처리 공식
-			// 검색어가 없는 경우의 위치홀더 값
-			pstmt.setInt(1, (currentShowPageNo*sizePerPage) - (sizePerPage-1) );
-			pstmt.setInt(2, (currentShowPageNo*sizePerPage) );
-			
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				
-				ProductVO pvo = new ProductVO();
+	    try {
+	        conn = ds.getConnection();
+
+	        String sql = "SELECT cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
+	        		"    pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,\n"+
+	        		"    reviewCnt , -- 리뷰수\n"+
+	        		"    orederCnt -- 판매수\n"+
+	        		"FROM\n"+
+	        		"    (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
+	        		"            pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt\n"+
+	        		"    FROM\n"+
+	        		"        (SELECT c.cname, s.sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
+	        		"                pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,\n"+
+	        		"                (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
+	        		"                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt\n"+
+	        		"        FROM\n"+
+	        		"            (SELECT\n"+
+	        		"                pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
+	        		"                pqty, price, saleprice, pcontent, PSUMMARY, point,\n"+
+	        		"                to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum\n"+
+	        		"            FROM tbl_product\n"+
+	        		"            WHERE saleprice != price \n";
+	        		            
+
+	        String snum = paraMap.get("snum");
+	        String cnum = paraMap.get("cnum");
+	        
+	        if(snum != null) {
+	        	// 스펙(new, best) 가 넘어올 경우
+	        	sql += " and fk_snum = ? ";
+	        } else if(cnum != null) {
+	        	if("1".equals(cnum) || "2".equals(cnum) || "3".equals(cnum)) {
+	        		// 카테고리(홍차,말차,허브차) 가 넘어올 경우 
+	        		sql += " and fk_cnum = ? ";
+	        	} else {
+	        		// 기프트세트는 4
+	        		sql += " and fk_cnum in(4,5,6) ";
+	        	}
+	        } else {
+	        	// 전체 조회할 경우
+	        	sql += " ";
+	        }
+	        sql += " ORDER BY pnum DESC) p\n"+
+		    		"            JOIN tbl_category  c ON p.fk_cnum = c.cnum\n"+
+		    		"            LEFT OUTER JOIN tbl_spec s\n"+
+		    		"            ON p.fk_snum = s.snum)V\n"+
+		    		"    ) t\n"+
+		    		"WHERE t.rno BETWEEN ? AND ?";
+	        
+	        /*
+	         === 페이징처리 공식 === 
+	         where RNO between (조회하고자 하는 페이지 번호 * 한페이지당 보여줄 행의 개수) -
+	         (한페이지당 보여줄 행의 개수 - 1) and (조회하고자 하는 페이지 번호 * 한페이지당 보여줄 행의 개수)
+	         */
+	        
+	        int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));
+	        int sizePerPage = 6;
+
+	        pstmt = conn.prepareStatement(sql);
+	        
+	        
+	        if(snum != null) {
+	        	// 스펙(new, best) 가 넘어올 경우
+	        	pstmt.setString(1, snum);
+		        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+		        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
+	        } else if(cnum != null) {
+	        	if("1".equals(cnum) || "2".equals(cnum) || "3".equals(cnum)) {
+	        		// 카테고리(홍차,말차,허브차) 가 넘어올 경우 
+	        		pstmt.setString(1, cnum);
+			        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+			        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
+	        	} else {
+	        		// 기프트세트는 4
+	        		pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+			        pstmt.setInt(2, (currentShowPageNo * sizePerPage));
+	        	}
+	        } else {
+	        	// 전체 조회할 경우
+	        	pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+		        pstmt.setInt(2, (currentShowPageNo * sizePerPage));
+	        }
+	        
+	        rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	        	ProductVO pvo = new ProductVO();
 				
 				CategoryVO categvo = new CategoryVO();
 				categvo.setCname(rs.getString("cname")); // 카테고리명
@@ -168,296 +237,16 @@ public class ProductDAO implements InterProductDAO {
 				pvo.setOrederCnt(rs.getInt("orederCnt"));
 				
 	            productList.add(pvo);
-				
-			} // end of while
-			
-		} finally {
-			close();
-		}
-		
-		return productList;
-	
-	} // end of public List<ProductVO> selectPagingProdByEvent(Map<String, String> paraMap) throws SQLException
+	        }
+
+	    } finally {
+	        close();
+	    }
+
+	    return productList;
+	} // end of public List<ProductVO> selectEventGoodsByCategory(Map<String, String> paraMap) throws SQLException
 
 	
-	// 단품 카테고리 리스트 불러오기
-	@Override
-	public List<HashMap<String, String>> getProdCategoryList() throws SQLException {
-
-		List<HashMap<String, String>> categoryList = new ArrayList<>(); // 기본값이 null 이 나올 수가 없다. 변수에 null 을 넣어주지 않았기 때문에.
-		
-		try {
-
-			conn = ds.getConnection();
-			
-			String sql = "select cnum, code, cname\n"+
-						"from tbl_category\n"+
-						"where cnum between 1 and 3";
-			
-			pstmt = conn.prepareStatement(sql);
-			
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				HashMap<String, String> map = new HashMap<>();
-				map.put("cnum", rs.getString(1));
-				map.put("code", rs.getString(2));
-				map.put("cname", rs.getString(3));
-				
-				categoryList.add(map);
-			}
-			
-		} finally {
-			close();
-		}
-		
-		return categoryList;
-	} // end of public List<HashMap<String, String>> getProdCategoryList()
-
-	
-	// 단품-카테고리 페이지바 처리를 위한 이벤트 상품에 대한 총 페이지 알아오기
-	@Override
-	public int getTotalCategoryPage(Map<String, String> paraMap) throws SQLException {
-
-		int totalPage = 0; // 기본값이 null 이 나올 수가 없다. 변수에 null 을 넣어주지 않았기 때문에.
-		
-		try {
-
-			conn = ds.getConnection();
-			
-			String sql = " select ceil(count(*)/6) "+ // 10이 sizeperpage 이다. ceil로 올림해주기
-						 " from tbl_product "+
-						 " where saleprice != price and fk_cnum = ? ";
-			
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, paraMap.get("cnum"));
-			
-			rs = pstmt.executeQuery();
-			rs.next();
-			
-			totalPage = rs.getInt(1);
-			
-		} finally {
-			close();
-		}
-		
-		return totalPage;
-	
-	} // end of public int getTotalCategoryPage(Map<String, String> paraMap) throws SQLException 
-
-	
-	// 단품-카테고리 이벤트 상품에 따른 제품들을 페이지바를 사용한 페이징처리 처리하여 조회(select)해오기
-	@Override
-	public List<ProductVO> selectProdByEventCategory(Map<String, String> paraMap) throws SQLException {
-
-		List<ProductVO> productList = new ArrayList<>();
-		
-		try {
-			conn = ds.getConnection();
-			
-			String sql = "SELECT cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
-					"    pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,\n"+
-					"    reviewCnt , -- 리뷰수\n"+
-					"    orederCnt -- 판매수\n"+
-					"FROM\n"+
-					"    (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
-					"            pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt\n"+
-					"    FROM\n"+
-					"        (SELECT c.cname, s.sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
-					"                pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,\n"+
-					"                (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
-					"                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt\n"+
-					"        FROM\n"+
-					"            (SELECT\n"+
-					"                pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
-					"                pqty, price, saleprice, pcontent, PSUMMARY, point,\n"+
-					"                to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum\n"+
-					"            FROM tbl_product\n"+
-					"            WHERE saleprice != price and fk_cnum = ? \n" +
-					"            ORDER BY pnum DESC) p\n"+
-					"            JOIN tbl_category  c ON p.fk_cnum = c.cnum\n"+
-					"            LEFT OUTER JOIN tbl_spec s\n"+
-					"            ON p.fk_snum = s.snum)V\n"+
-					"    ) t\n"+
-					"WHERE t.rno BETWEEN ? AND ?";
-			
-//			=== 페이징처리의 공식 ===
-//		    where RNO between (조회하고자 하는 페이지 번호 * 한페이지당 보여줄 행의 개수) - (한페이지당 보여줄 행의 개수 -1) 
-//		                  and (조회하고자 하는 페이지 번호 * 한페이지당 보여줄 행의 개수);
-
-			int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));  // 조회하고자 하는 페이지 번호
-			int sizePerPage = 6; // 한페이지당 화면상에 보여줄 제품의 개수는 10으로 고정한다.
-			
-			pstmt = conn.prepareStatement(sql);
-		
-			// 페이징 처리 공식
-			// 검색어가 없는 경우의 위치홀더 값
-			pstmt.setString(1, paraMap.get("cnum"));
-			pstmt.setInt(2, (currentShowPageNo*sizePerPage) - (sizePerPage-1) );
-			pstmt.setInt(3, (currentShowPageNo*sizePerPage) );
-			
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				
-				ProductVO pvo = new ProductVO();
-				
-				CategoryVO categvo = new CategoryVO();
-				categvo.setCname(rs.getString("cname")); // 카테고리명
-				pvo.setCategvo(categvo);
-				
-				SpecVO spvo = new SpecVO();
-	            spvo.setSname(rs.getString("sname")); // 스펙명
-	            pvo.setSpvo(spvo);
-				
-	            pvo.setPnum(rs.getInt("pnum")); // 상품번호
-				pvo.setPname(rs.getString("pname")); // 제품명
-				pvo.setPimage(rs.getString("pimage"));   // 제품이미지
-				pvo.setPrdmanual_systemfilename(rs.getString("prdmanual_systemfilename"));
-				pvo.setPrdmanual_orginfilename(rs.getString("prdmanual_orginfilename"));
-				pvo.setPqty(rs.getInt("pqty")); // 제품 재고량
-				pvo.setPrice(rs.getInt("price"));        // 제품 정가
-				pvo.setSaleprice(rs.getInt("saleprice"));    // 제품 판매가
-				pvo.setPcontent(rs.getString("pcontent")); // 제품설명
-				pvo.setPsummary(rs.getString("psummary")); // 제품요약
-				pvo.setPoint(rs.getInt("point")); // 포인트 점수
-				pvo.setPinputdate(rs.getString("pinputdate")); // 제품 입고 일자
-				pvo.setReviewCnt(rs.getInt("reviewCnt"));
-				pvo.setOrederCnt(rs.getInt("orederCnt"));
-				
-	            productList.add(pvo);
-				
-			} // end of while
-			
-		} finally {
-			close();
-		}
-		
-		return productList;
-	} // end of public List<ProductVO> selectProdByEventCategory(Map<String, String> paraMap) 
-
-	
-	// 단품-베스트 페이지바 처리를 위한 이벤트 상품에 대한 총 페이지 알아오기
-	@Override
-	public int getTotalBestPage(Map<String, String> paraMap) throws SQLException {
-
-		int totalPage = 0; // 기본값이 null 이 나올 수가 없다. 변수에 null 을 넣어주지 않았기 때문에.
-		
-		try {
-
-			conn = ds.getConnection();
-			
-			String sql = " select ceil(count(*)/6) "+ // 10이 sizeperpage 이다. ceil로 올림해주기
-						 " from tbl_product "+
-						 " where saleprice != price and fk_snum = 2 ";
-			
-			pstmt = conn.prepareStatement(sql);
-			
-			rs = pstmt.executeQuery();
-			rs.next();
-			
-			totalPage = rs.getInt(1);
-			
-		} finally {
-			close();
-		}
-		
-		return totalPage;
-	} // end of public int getTotalBestPage(Map<String, String> paraMap)
-
-	
-	// 단품-베스트 이벤트 상품에 따른 제품들을 페이지바를 사용한 페이징처리 처리하여 조회(select)해오기
-	@Override
-	public List<ProductVO> selectProdByEventBest(Map<String, String> paraMap) throws SQLException {
-
-		List<ProductVO> productList = new ArrayList<>();
-		
-		try {
-			conn = ds.getConnection();
-			
-			String sql = "SELECT cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
-					"    pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,\n"+
-					"    reviewCnt , -- 리뷰수\n"+
-					"    orederCnt -- 판매수\n"+
-					"FROM\n"+
-					"    (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
-					"            pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt\n"+
-					"    FROM\n"+
-					"        (SELECT c.cname, s.sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
-					"                pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,\n"+
-					"                (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
-					"                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt\n"+
-					"        FROM\n"+
-					"            (SELECT\n"+
-					"                pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
-					"                pqty, price, saleprice, pcontent, PSUMMARY, point,\n"+
-					"                to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum\n"+
-					"            FROM tbl_product\n"+
-					"            WHERE saleprice != price and fk_snum = 2 \n" +
-					"            ORDER BY pnum DESC) p\n"+
-					"            JOIN tbl_category  c ON p.fk_cnum = c.cnum\n"+
-					"            LEFT OUTER JOIN tbl_spec s\n"+
-					"            ON p.fk_snum = s.snum)V\n"+
-					"    ) t\n"+
-					"WHERE t.rno BETWEEN ? AND ?";
-			
-//			=== 페이징처리의 공식 ===
-//		    where RNO between (조회하고자 하는 페이지 번호 * 한페이지당 보여줄 행의 개수) - (한페이지당 보여줄 행의 개수 -1) 
-//		                  and (조회하고자 하는 페이지 번호 * 한페이지당 보여줄 행의 개수);
-
-			int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));  // 조회하고자 하는 페이지 번호
-			int sizePerPage = 6; // 한페이지당 화면상에 보여줄 제품의 개수는 10으로 고정한다.
-			
-			pstmt = conn.prepareStatement(sql);
-		
-			// 페이징 처리 공식
-			// 검색어가 없는 경우의 위치홀더 값
-			pstmt.setInt(1, (currentShowPageNo*sizePerPage) - (sizePerPage-1) );
-			pstmt.setInt(2, (currentShowPageNo*sizePerPage) );
-			
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				
-				ProductVO pvo = new ProductVO();
-				
-				CategoryVO categvo = new CategoryVO();
-				categvo.setCname(rs.getString("cname")); // 카테고리명
-				pvo.setCategvo(categvo);
-				
-				SpecVO spvo = new SpecVO();
-	            spvo.setSname(rs.getString("sname")); // 스펙명
-	            pvo.setSpvo(spvo);
-				
-	            pvo.setPnum(rs.getInt("pnum")); // 상품번호
-				pvo.setPname(rs.getString("pname")); // 제품명
-				pvo.setPimage(rs.getString("pimage"));   // 제품이미지
-				pvo.setPrdmanual_systemfilename(rs.getString("prdmanual_systemfilename"));
-				pvo.setPrdmanual_orginfilename(rs.getString("prdmanual_orginfilename"));
-				pvo.setPqty(rs.getInt("pqty")); // 제품 재고량
-				pvo.setPrice(rs.getInt("price"));        // 제품 정가
-				pvo.setSaleprice(rs.getInt("saleprice"));    // 제품 판매가
-				pvo.setPcontent(rs.getString("pcontent")); // 제품설명
-				pvo.setPsummary(rs.getString("psummary")); // 제품요약
-				pvo.setPoint(rs.getInt("point")); // 포인트 점수
-				pvo.setPinputdate(rs.getString("pinputdate")); // 제품 입고 일자
-				pvo.setReviewCnt(rs.getInt("reviewCnt"));
-				pvo.setOrederCnt(rs.getInt("orederCnt"));
-				
-	            productList.add(pvo);
-				
-			} // end of while
-			
-		} finally {
-			close();
-		}
-		
-		return productList;
-	
-	} // end of public List<ProductVO> selectProdByEventBest(Map<String, String> paraMap)
-
-	
-
 	
 	
 	
