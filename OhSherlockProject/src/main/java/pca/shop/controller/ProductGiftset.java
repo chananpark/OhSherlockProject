@@ -20,6 +20,9 @@ public class ProductGiftset extends AbstractController {
 		super.getGiftsetCategoryList(request); // 카테고리 목록
 		
 		String cnum = request.getParameter("cnum");
+		if (cnum == null) {
+			cnum = "";
+		}
 		
 		// 카테고리번호에 해당하는 제품들을 페이징처리하여 보여주기
 		String currentShowPageNo = request.getParameter("currentShowPageNo");
@@ -41,8 +44,8 @@ public class ProductGiftset extends AbstractController {
 		
 		// 한 페이지당 화면상에 보여줄 제품의 개수는 10 => ProductDAO에 상수로 설정
 		paraMap.put("cnum", cnum); // 카테고리번호
-		paraMap.put("order", "pnum"); // 정렬기준
-		paraMap.put("currentShowPageNo", currentShowPageNo);
+		paraMap.put("order", "pnum desc"); // 정렬기준
+		paraMap.put("currentShowPageNo", currentShowPageNo); // 현재페이지
 
 		InterProductDAO pdao = new ProductDAO();
 		
@@ -55,6 +58,7 @@ public class ProductGiftset extends AbstractController {
 		}
 		List<ProductVO> productList = pdao.selectSetGoodsByCategory(paraMap);
 		request.setAttribute("productList", productList);
+		
 		String pageBar = "";
 
 		int blockSize = 10;
@@ -67,8 +71,8 @@ public class ProductGiftset extends AbstractController {
 		
 		// [맨처음][이전] 만들기
 		if (pageNo > 1) {
-			pageBar += "<li class='page-item'><a class='page-link' href='mallByCategory.up?currentShowPageNo=1&cnum="+cnum+">[맨처음]</a></li>";				
-			pageBar += "<li class='page-item'><a class='page-link' href='mallByCategory.up?currentShowPageNo="+ (pageNo - 1) +"&cnum="+cnum+"'>[이전]</a></li>";
+			pageBar += "<li class='page-item'><a class='page-link' href='productGiftset.tea?currentShowPageNo=1&cnum="+cnum+"'> << </a></li>";				
+			pageBar += "<li class='page-item'><a class='page-link' href='productGiftset.tea?currentShowPageNo="+ (pageNo - 1) +"&cnum="+cnum+"'><</a></li>";
 		}
 		
 		//while( !(loop > blockSize || pageNo > totalPage)) {
@@ -79,7 +83,7 @@ public class ProductGiftset extends AbstractController {
 				pageBar += "<li class='page-item active'><a class='page-link' href='#'>" + pageNo + "</a></li>";
 			}
 			else
-				pageBar += "<li class='page-item'><a class='page-link' href='mallByCategory.up?currentShowPageNo=" + pageNo + "&cnum="+cnum+"'>" + pageNo + "</a></li>";
+				pageBar += "<li class='page-item'><a class='page-link' href='productGiftset.tea?currentShowPageNo=" + pageNo + "&cnum="+cnum+"'>" + pageNo + "</a></li>";
 			
 			loop++;
 			pageNo++;
@@ -87,11 +91,14 @@ public class ProductGiftset extends AbstractController {
 		
 		// [다음][마지막] 만들기
 		if (pageNo <= totalPage) {
-			pageBar += "<li class='page-item'><a class='page-link' href='mallByCategory.up?currentShowPageNo=" + pageNo + "&cnum="+cnum+"'>[다음]</a></li>";
-			pageBar += "<li class='page-item'><a class='page-link' href='mallByCategory.up?currentShowPageNo=" + totalPage + "&cnum="+cnum+"'>[마지막]</a></li>";				
+			pageBar += "<li class='page-item'><a class='page-link' href='productGiftset.tea?currentShowPageNo=" + pageNo + "&cnum="+cnum+"'>></a></li>";
+			pageBar += "<li class='page-item'><a class='page-link' href='productGiftset.tea?currentShowPageNo=" + totalPage + "&cnum="+cnum+"'>>></a></li>";				
 		}
 		
 		request.setAttribute("pageBar", pageBar);
+		
+		request.setAttribute("currentShowPageNo", currentShowPageNo);
+		request.setAttribute("cnum", cnum);
 		
 		super.setViewPage("/WEB-INF/product/product_list_giftset.jsp");
 	}

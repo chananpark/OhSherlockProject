@@ -5,6 +5,8 @@
 
 <%@ include file="../header.jsp"%>
 
+<%@ page import="common.model.ProductVO" %>
+
 <script type="text/javascript">
 
 	$(document).ready(function(){
@@ -90,7 +92,177 @@
 .badges {
 	display: inline-block;
 }
+
+a, a:hover, a:link, a:visited {
+	color: black;
+	text-decoration: none;
+}
+
+.page-link {
+  color: #666666; 
+  background-color: #fff;
+  border: 1px solid #ccc; 
+}
+
+.page-item.active .page-link {
+ z-index: 1;
+ color: white;
+ border-color: #1E7F15;
+ background-color: #1E7F15; 
+ 
+}
+
+.page-link:focus, .page-link:hover {
+  color: #1E7F15;
+  background-color: #fafafa; 
+  border-color: #1E7F15;
+}
+
+button.order {
+	background-color: transparent; 
+  	border-style: none;
+}
 </style>
+
+<script>
+
+let cnum;
+let currentShowPageNo;
+let order;
+let jsonPageBar;
+
+$(()=>{
+	cnum = "${cnum}";
+	currentShowPageNo = "${currentShowPageNo}";
+	
+	// 정렬 버튼 클릭시 이벤트
+	 $(".order").click((e)=>{
+		 order = $(e.target).attr('id'); // 정렬기준
+		// 목록 가져오기
+		getOrderedList();
+		
+		// 페이지바 가져오기
+		getPageBar();
+	}); 
+	
+});
+
+// 목록 가져오기
+function getOrderedList() {
+	
+	$.ajax({
+		url:"<%=ctxPath%>/shop/productGiftSetJSON.tea",
+		type:"get",
+		data:{"cnum":cnum, "order":order, "currentShowPageNo":currentShowPageNo},
+		dataType:"JSON",
+		success:function(json){
+	        let html = "";
+	         	
+     		$.each(json, function(index, item){
+   				
+   			html += 
+
+	  		'<div class="card border-0 mb-4 mt-1 col-lg-4 col-md-6 ">'+
+	    	'<a href="">'+
+	    	'<img src="../images/'+item.pimage+'" class="card-img-top"/></a>'+
+    		'<div class="card-body">';
+    			
+    		if(item.sname=='BEST'){
+				html +=
+   				' <div class="badges rounded text-light text-center mb-2 badge-danger" style="width:70px; font-weight:bold;">'+
+   				item.sname+'</div>';
+    		}
+				else if(item.sname=='NEW'){
+					html +=
+   				' <div class="badges rounded text-light text-center mb-2" style="width:70px; font-weight:bold; background-color: #1E7F15;">'+
+   				item.sname+'</div>';
+				}
+				else if(item.sname==null){
+					html += ' <div class="badges mb-2">&nbsp;</div>';
+				}
+				
+				if(item.pqty==0)
+						html +=
+			' <div class="badges rounded text-light text-center mb-2 badge-dark"style="width: 70px; font-weight: bold; ">품절</div>';
+					
+    				
+    				html += ' <h5 class="card-title" style="font-weight:bold;"><a href="#">'+item.pname+'</a></h5>'+
+	      			' <p class="card-text">'+item.price.toLocaleString('en')+'원</p>'+
+	      			
+	      			
+	      			' <a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart"></i></a>'+
+	      			' <a class="card-text text-secondary mr-5">찜하기</a>'+
+	      							      			
+	      			' <a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a>'+
+	      			' <a class="card-text text-secondary">담기</a>'+
+	      			
+	   			'</div> </div>';
+         		}); 
+	         	
+	         	$("#giftSetList").html(html);
+	         	
+	    		$('i.heart').click(function() {
+	    	        $(this).removeClass("text-secondary");
+	    	        $(this).addClass("text-danger");
+	    	    })
+		},
+		error: function(request, status, error){
+            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+        }
+	});
+	
+}
+
+// 페이지바 가져오기
+function getPageBar() {
+	
+	$.ajax({
+		url:"<%=ctxPath%>/shop/pageBarJSON.tea",
+		type:"get",
+		data:{"cnum":cnum, "currentShowPageNo":currentShowPageNo},
+		dataType:"JSON",
+		success:function(json){
+			
+			// 기존 페이지바 숨기기
+			$("nav#nav_pageBar").hide();
+			
+			// json으로 받아온 페이지바
+			jsonPageBar = json.pageBar;
+			let html = '<nav id="nav_pageBar" aria-label="Page navigation example">'+
+			'<ul id="jsonPageBar" class="pagination justify-content-center">'+jsonPageBar+'</ul></nav>';
+			
+			// json 페이지바 표시 
+			$("#div_pageBar").html(html);
+	        
+			// 현재 페이지 active
+			$("button.ajaxPage[id='"+currentShowPageNo+"']").parent().addClass('active');
+			
+	        // 제이슨 페이지바 클릭이벤트
+	    	$("button.ajaxPage").click((e)=>{
+	    		currentShowPageNo = $(e.target).attr('id');
+	    		$("button.ajaxPage").parent().removeClass('active');
+	    		$(e.target).parent().addClass('active');
+	    		
+	    		getOrderedList();
+	    	});
+	        
+	        // 처음,이전,다음,마지막페이지로 버튼 클릭시
+	        $("button.move").click((e)=>{
+	    		currentShowPageNo = $(e.target).attr('id');
+	    		getPageBar();
+	    		getOrderedList();
+	    	});
+	        
+		},
+		error: function(request, status, error){
+            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+        }
+	});
+	
+}
+
+
+</script>
 	
 	<div class="container productListContainer">
 		<div><img src= "../images/tea_header_img.png" width=100%/></div>
@@ -119,29 +291,29 @@
 					<span class="text-dark h5" style="font-weight:bold;">전체상품</span>
 					
 					<%-- 정렬 선택 창 --%>
-					<span id="order_list">
-						<a href="#">신상품순</a>
-						<span class="text-dark">&nbsp;|&nbsp;</span>
-						<a href="#">높은가격순</a>
-						<span class="text-dark">&nbsp;|&nbsp;</span>
-						<a href="#">낮은가격순</a>
-						<span class="text-dark">&nbsp;|&nbsp;</span>
-						<a href="#">리뷰많은순</a>
-						<span class="text-dark">&nbsp;|&nbsp;</span>
-						<a href="#">판매순</a>
-					</span>
+					<div class="text-right" style="float: right;">
+					<button type="button" class="order" id="pnum desc">신상품순</button>
+					<span class="text-dark">&nbsp;|&nbsp;</span>
+					<button type="button" class="order" id="price desc">높은가격순</button>
+					<span class="text-dark">&nbsp;|&nbsp;</span>
+					<button type="button" class="order" id="price asc">낮은가격순</button>
+					<span class="text-dark">&nbsp;|&nbsp;</span>
+					<button type="button" class="order" id="reviewCnt desc">리뷰많은순</button>
+					<span class="text-dark">&nbsp;|&nbsp;</span>
+					<button type="button" class="order" id="orederCnt desc">판매순</button>
+					</div>
 		    	    <%-- 본문 내부 상단 바 끝 --%>
 					
 					<hr>
 					
 					<%-- 상품 목록 시작 --%>
-					<div class="row"> 
+					<div id="giftSetList" class="row"> 
 						
 						<%-- ★ 여기서부터 아래의 별까지 for문으로 반복해서 출력. 별 안쪽이 상품하나. --%>
-						<c:if test="${not empty productList }">
-						<c:forEach var="pvo" items="${productList }">
+						<c:if test="${not empty productList}">
+						<c:forEach var="pvo" items="${productList}">
 				  		<div class="card border-0 mb-4 mt-1 col-lg-4 col-md-6 ">
-				    		<a href="<%= ctxPath %>/product/product_view.jsp"><img src="../images/giftset/${pvo.pimage}" class="card-img-top"/></a>
+				    		<a href="<%= ctxPath %>/product/product_view.jsp"><img src="../images/${pvo.pimage}" class="card-img-top"/></a>
 			    			<div class="card-body">
 			    				
 			    				<c:if test="${not empty pvo.spvo.sname}">
@@ -162,7 +334,7 @@
 									</c:if>
 								
 								<c:if test="${empty pvo.spvo.sname}">
-			    				<div class="mb-2" ></div>
+			    				<div class="badges mb-2" >&nbsp;</div>
 			    				</c:if>
 			    				
 			      				<h5 class="card-title" style="font-weight:bold;"><a href="#">${pvo.pname}</a></h5>
@@ -182,8 +354,6 @@
 				  		상품 준비중입니다.
 				  		</c:if>
 				  		<%-- ★ 여기까지! --%>
-				  		
-						
 					</div>
 					<%-- 상품 목록 끝 --%>					
 					
@@ -193,9 +363,11 @@
 			</div>
     	    
 		</div>
-	<nav aria-label="Page navigation example">
-		<ul class="pagination justify-content-center">${pageBar}</ul>
-	</nav>
+		<div id="div_pageBar">
+			<nav id="nav_pageBar" aria-label="Page navigation example">
+				<ul id = "originPageBar" class="pagination justify-content-center">${pageBar}</ul>
+			</nav>
+		</div>
 	</div>
 	
 <%@ include file="../footer.jsp"%>

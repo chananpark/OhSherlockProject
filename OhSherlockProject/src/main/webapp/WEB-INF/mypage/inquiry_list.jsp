@@ -277,6 +277,9 @@
 		fk_userid = $(event.target).data('fk_userid');
 		
 		$("#iframe_inquiryDetail").prop("src", "<%=ctxPath%>/mypage/myInquiryDetail.tea?inquiry_no="+inquiry_no+"&fk_userid="+fk_userid)
+		// 외부클릭막기
+        $('#inquiryDetailModal').modal({backdrop: 'static', keyboard: false});
+		// 모달창 띄우기
         $('#inquiryDetailModal').modal('show');
     }
 
@@ -345,7 +348,7 @@
 	
 	<%-- **** Modal **** --%>
 	<div class="modal fade" id="inquiryDetailModal">
-		<div class="modal-dialog">
+		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 
 				<div class="modal-header">

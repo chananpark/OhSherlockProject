@@ -60,7 +60,15 @@ public abstract class AbstractController implements InterCommand {
 	}
 	
 	///////////////////////////////////////////////////////////////
-	// 카테고리 조회
+	// 티제품 카테고리 조회
+	public void getTeaCategoryList(HttpServletRequest request) throws SQLException {
+		InterProductDAO pdao = new ProductDAO();
+		List<HashMap<String, String>> categoryList = pdao.getCategoryList(); 
+		
+		request.setAttribute("categoryList", categoryList);
+	}
+	
+	// 기프트세트 카테고리 조회
 	public void getGiftsetCategoryList(HttpServletRequest request) throws SQLException {
 	    InterProductDAO pdao = new ProductDAO();
 	    List<HashMap<String, String>> categoryList = pdao.getCategoryList(); 
