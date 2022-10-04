@@ -174,7 +174,7 @@ FROM
                 pqty, price, saleprice, pcontent, PSUMMARY, point,
                 to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum
             FROM tbl_product
-            WHERE saleprice != price and fk_cnum = '4,5,6'
+            WHERE saleprice != price and fk_cnum in(4,5,6)
             ORDER BY pnum DESC) p
             JOIN tbl_category  c ON p.fk_cnum = c.cnum
             LEFT OUTER JOIN tbl_spec s
