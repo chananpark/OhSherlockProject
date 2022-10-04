@@ -81,7 +81,46 @@ public class ProductDAO implements InterProductDAO {
 
 	    return categoryList;
 	}
+	
+	// 페이징 방식 카테고리별 기프트세트 상품 총 페이지수 가져오기 메소드
+	@Override
+	public int getTotalPage(String cnum) throws SQLException {
+		
+		int totalPage = 0;
 
+		try {
+			conn = ds.getConnection();
+
+			String sql = " select ceil( count(*)/10 ) " // 10 이 sizePerPage 이다.
+					+ " from tbl_product " ;
+			
+			// 특정 카테고리 조회시
+			if (cnum != null) {
+				sql += " where fk_cnum = ? ";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, cnum);
+			}
+			
+			// 전체 조회시
+			else {
+				sql += " where fk_cnum in (4,5,6) ";
+				pstmt = conn.prepareStatement(sql);
+			}
+			rs = pstmt.executeQuery();
+
+			rs.next();
+
+			totalPage = rs.getInt(1);
+
+		} finally {
+			close();
+		}
+
+		return totalPage;
+
+	}
+
+	// 페이징 방식 카테고리별 기프트세트 상품 목록 가져오기 메소드
 	@Override
 	public List<ProductVO> selectSetGoodsByCategory(Map<String, String> paraMap) throws SQLException {
 		List<ProductVO> productList = new ArrayList<>();
@@ -104,9 +143,18 @@ public class ProductDAO implements InterProductDAO {
 	        		"                pnum, pname, pimage, \n"+
 	        		"                pqty, price, saleprice, pcontent, PSUMMARY, point,\n"+
 	        		"                to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum\n"+
-	        		"            FROM tbl_product\n"+
-	        		"            WHERE fk_cnum = ?\n"+
-	        		"            ORDER BY ? DESC) p\n"+
+	        		"            FROM tbl_product\n";
+	        
+	        // 특정 카테고리 조회시
+	        if (paraMap.get("cnum") != null) {
+	        	sql +=	"            WHERE fk_cnum = ?\n";
+	        }
+	        // 전체 조회시
+	        else {
+	        	sql +=	"            WHERE fk_cnum in (4,5,6)\n";
+	        }
+	        
+	        	sql +=	"            ORDER BY ? DESC) p\n"+
 	        		"            JOIN tbl_category  c ON p.fk_cnum = c.cnum\n"+
 	        		"            LEFT OUTER JOIN tbl_spec s\n"+
 	        		"            ON p.fk_snum = s.snum)V\n"+
@@ -122,10 +170,20 @@ public class ProductDAO implements InterProductDAO {
 	        int sizePerPage = 10;
 
 	        pstmt = conn.prepareStatement(sql);
-
+	        
+	        // 특정 카테고리 조회시
+	        if (paraMap.get("cnum") != null) {
 	        pstmt.setString(1, paraMap.get("cnum"));
-	        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
-	        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
+	        pstmt.setString(2, paraMap.get("order"));
+	        pstmt.setInt(3, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+	        pstmt.setInt(4, (currentShowPageNo * sizePerPage));
+	        }
+	        // 전체 조회시
+	        else {
+		        pstmt.setString(1, paraMap.get("order"));
+		        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+		        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
+	        }
 
 	        rs = pstmt.executeQuery();
 
@@ -133,9 +191,10 @@ public class ProductDAO implements InterProductDAO {
 	            ProductVO pvo = new ProductVO();
 	            pvo.setPnum(rs.getInt("pnum")); // 제품번호
 	            pvo.setPname(rs.getString("pname")); // 제품명
+	            //pvo.setFk_cnum(rs.getInt("fk_cnum")); // 카테고리 번호
 
 	            CategoryVO categvo = new CategoryVO();
-	            categvo.setCname(rs.getString("cname")); // 카테고리 코드
+	            categvo.setCname(rs.getString("cname")); // 카테고리 이름
 	            pvo.setCategvo(categvo);
 
 	            pvo.setPimage(rs.getString("pimage")); // 제품이미지1 이미지파일명
@@ -144,7 +203,7 @@ public class ProductDAO implements InterProductDAO {
 	            pvo.setSaleprice(rs.getInt("saleprice")); // 제품 판매가
 
 	            SpecVO spvo = new SpecVO();
-	            spvo.setSname("sname");
+	            spvo.setSname(rs.getString("sname"));
 	            pvo.setSpvo(spvo);
 
 	            pvo.setPcontent(rs.getString("pcontent"));
@@ -163,5 +222,6 @@ public class ProductDAO implements InterProductDAO {
 
 	    return productList;
 	}
+
 
 }
