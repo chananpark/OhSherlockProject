@@ -92,24 +92,73 @@
 
 </style>
 
+<script type="text/javascript">
+
+
+	$(document).ready(function(){
+		
+		
+			$("#dateSearch").on('click',function(e){
+				const dateFrm = document.dateFrm;
+				dateFrm.action="coin_history.tea";
+				dateFrm.method = "get";
+				dateFrm.submit();
+			});
+			
+			
+			
+	});
+	
+		
+	
+
+	
+	function gosizePerPage() {
+		
+		const sizeFrm = document.sizeFrm;
+		sizeFrm.sizePerPage.value = $("#sizePerPage").val();
+		sizeFrm.action="point_history.tea";
+		sizeFrm.method = "get";
+		sizeFrm.submit();
+	}
+
+
+ 
+</script>
+
+
+
 <div class="container mypage">
 	<h2 style="font-weight: bold; margin-bottom: 20px;">적립금내역</h2>
 	
 	<div class="card border-0">   
 	   <div class="card-body" style="border: solid 2px gray; border-radius: 15px; height: 100px;">             
 	      <i class="fab fa-envira" style="font-size: 40px; float: left; padding-right: 10px;"></i>             
-	      <h3 style="padding-top: 5px;">사용 가능한 적립금</h3>           
-	      <h1 style="float: right; font-weight: bold; color: #1E7F15; position: relative; top: -45px;">540p</h1>        
+	      <h3 style="padding-top: 5px;">사용 가능한 찻잎</h3>           
+	      <h1 style="float: right; font-weight: bold; color: #1E7F15; position: relative; top: -45px;"><fmt:formatNumber value="${(sessionScope.loginuser).point}" pattern="###,###찻잎" /></h1>        
 	   </div> 
     </div>
     
-    <div class="money_date" style="float: left; margin-top: 25px;">
-		<input class="fText hasDatepicker" readonly="readonly" size="15" value="2022-08-17" type="text" style="margin-left: 30px; text-align: center;"><button type="button" class="ui-datepicker-trigger" ><img src="//img.echosting.cafe24.com/skin/admin_ko_KR/myshop/ico_cal.gif" alt="..." title="..."></button>
-		<span class="bar">~</span>
-		<input class="fText hasDatepicker" readonly="readonly" size="15" value="2022-09-16" type="text" style="text-align: center;"><button type="button" class="ui-datepicker-trigger" ><img src="//img.echosting.cafe24.com/skin/admin_ko_KR/myshop/ico_cal.gif" alt="..." title="..."></button>				
-		<input type="button" value="조회" style="margin-left: 10px; width: 80px;"/>
-	</div>
+    <form name="dateFrm" style="float: left; margin-top: 25px;">
+	<input type="date" id="date1" name="date1">
+	~
+	<input type="date" id="date2" name="date2"> 
+	<button id="dateSearch" type="submit" >조회</button> 
+	</form>
+	
+	
+	<form name="sizeFrm"><input type="hidden" name="sizePerPage" value=""/></form>
+	
+		<div class="text-right" style="margin-top: 20px;"> 
+			<select id="sizePerPage" name="sizePerPage" onchange="gosizePerPage()"> <%-- 값이 변하면 여기의 name에 담아준다. 여기다 담은 name을 goSearch에서 action 으로 보내준다. --%>
+				<option value="10">페이지당 예치금 내역</option>  
+				<option value="10">10</option> 
+				<option value="5">5</option>  
+				<option value="3">3</option>
+			</select>
+		</div>
 
+	
 	<div class="orderIf">
 		<table class="table mt-4 text-center"> 
 			<thead class="thead-light"> 
@@ -119,67 +168,29 @@
 					<th>적립/사용</th>
 				</tr>
 			</thead> 
-			<tbody>
-				<tr>
-					<td>2022.09.07</td>
-					<td>주문적립 (주문번호: Y220905204715)</td>
-					<td>+140p</td> 
-				</tr>
-				<tr>
-					<td>2022.01.22</td>
-					<td>주문적립 (주문번호: Y220120174219)</td>
-					<td>+100p</td> 
-				</tr>
-				<tr>
-					<td>2021.12.26</td>
-					<td>주문취소/반품으로 인한 사용 취소 (주문번호: Y211224124013)</td>
-					<td>+200p</td> 
-				</tr>
-				<tr>
-					<td>2021.12.24</td>
-					<td>주문시사용 (주문번호: Y211224124013)</td>
-					<td>-200p</td> 
-				</tr>
-				<tr>
-					<td>2021.12.03</td>
-					<td>주문적립 (주문번호: Y211203253012)</td>
-					<td>+150p</td> 
-				</tr>
-				<tr>
-					<td>2021.12.01</td>
-					<td>주문시사용 (주문번호: Y211201253012)</td>
-					<td>-1000p</td> 
-				</tr>
-				<tr>
-					<td>2021.06.28</td>
-					<td>주문적립 (주문번호: Y210626210410)</td>
-					<td>+500p</td> 
-				</tr>
-				<tr>
-					<td>2021.03.28</td>
-					<td>주문적립 (주문번호: Y210326092018)</td>
-					<td>+650p</td> 
-				</tr>
+	  <tbody>
+				<c:forEach var="pvo" items="${requestScope.point_history}"> 
+					<tr class="pointInfo">
+						<td name="name">${pvo.point_date}</td>
+						<td name="mobile">${pvo.point_amount}</td> 
+						<td name="idle"> 
+							<c:choose>
+								<c:when test="${pvo.point_amount < 0}">사용</c:when> 
+								<c:otherwise>적립</c:otherwise>
+							</c:choose>
+						</td>
+					</tr> 
+				</c:forEach>
 			</tbody>
 		</table>
 	</div>
 	
+	
+	
+	
+	
     <nav aria-label="Page navigation example" style="margin-top: 60px;">
-	  <ul class="pagination justify-content-center">
-	    <li class="page-item">
-	      <a class="page-link" href="#" aria-label="Previous">
-	        <span aria-hidden="true">&laquo;</span>
-	      </a>
-	    </li>
-	    <li class="page-item"><a class="page-link" href="#">1</a></li>
-	    <li class="page-item"><a class="page-link" href="#">2</a></li>
-	    <li class="page-item"><a class="page-link" href="#">3</a></li>
-	    <li class="page-item">
-	      <a class="page-link" href="#" aria-label="Next">
-	        <span aria-hidden="true">&raquo;</span>
-	      </a>
-	    </li>
-	  </ul>
+		<ul class="pagination justify-content-center" style="margin:auto;">${requestScope.pageBar}</ul>
 	</nav>
 	
 </div>

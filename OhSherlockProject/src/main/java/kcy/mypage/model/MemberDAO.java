@@ -9,7 +9,9 @@ import java.util.*;
 import javax.naming.*;
 import javax.sql.DataSource;
 
+import common.model.CoinVO;
 import common.model.MemberVO;
+import common.model.PointVO;
 import util.security.AES256;
 import util.security.SecretMyKey;
 import util.security.Sha256;
@@ -113,6 +115,27 @@ public class MemberDAO implements InterMemberDAO {
 				 if(result==1) {
 					 // insert하는 코드
 					 
+					 
+					 sql = " insert all   "+
+						   " into tbl_coin_history(COINNO, FK_USERID, COIN_AMOUNT) values(seq_coin_history.nextval, ?, ? )   "+
+						   " into tbl_point_history(POINTNO, FK_USERID, POINT_AMOUNT) values(seq_point_history.nextval, ?, ? )  "+
+						   " select   "+
+						   " from dual ";
+				 
+					 
+				    pstmt = conn.prepareStatement(sql);
+					
+					pstmt.setString(1, paraMap.get("userid"));
+					pstmt.setInt(2, Integer.parseInt(paraMap.get("coinmoney"))); 
+					pstmt.setString(3, paraMap.get("userid"));
+					pstmt.setInt(4, (int)(Integer.parseInt(paraMap.get("coinmoney")) * 0.01) );  
+					
+					result = pstmt.executeUpdate();	
+				    
+				    
+				    
+					/* 
+					 
 					sql = " insert into tbl_coin_history(COINNO, FK_USERID, COIN_AMOUNT) "
 					    + " values(seq_coin_history.nextval, ?, ? ) ";
 					
@@ -121,11 +144,23 @@ public class MemberDAO implements InterMemberDAO {
 					pstmt.setString(1, paraMap.get("userid"));
 					pstmt.setInt(2, Integer.parseInt(paraMap.get("coinmoney")));
 					
+					
+					sql = " insert into tbl_point_history(POINTNO, FK_USERID, POINT_AMOUNT) "
+						+ " values(seq_point_history.nextval, ?, ? ) ";
+					
+					
+						 
+						 
+					pstmt = conn.prepareStatement(sql);
+					
+					pstmt.setString(1, paraMap.get("userid"));
+					pstmt.setInt(2, Integer.parseInt(paraMap.get("coinmoney"))); 
+					
 					result = pstmt.executeUpdate();
-					 
+					 */
 				 }
 				 
-			} finally {
+			} finally { 
 				close();
 			}
 	        
@@ -133,7 +168,7 @@ public class MemberDAO implements InterMemberDAO {
 		}// end of public int coinUpdate(Map<String, String> paraMap) throws SQLException-------  
 
 
-		// 페이징 처리를 한 모든 예치금 내역 보여주기
+		// 페이징 처리를 한 모든 예치금 내역 보여주기, 특정기간 예치금 보여주기
 		@Override
 		public List<CoinVO> selectPagingCoin(Map<String, String> paraMap) throws SQLException  {
 
@@ -149,24 +184,48 @@ public class MemberDAO implements InterMemberDAO {
 							 "        from "+
 							 "        ( "+
 							 "           select COINNO, FK_USERID,  COIN_DATE, COIN_AMOUNT "+
-							 "           from tbl_coin_history "+
-							 "           order by COIN_DATE desc "+
-							 "        ) V   "+
-							 "    )T "+
-							 "  where RNO between ? and ? ";
+							 "           from tbl_coin_history ";
+							 
+							
+								String date1 = paraMap.get("date1");
+				 				String date2 = paraMap.get("date2");
+								
+								
+							
+							if(date1 != null && date2 != null) {
+								
+								sql += " WHERE COIN_DATE BETWEEN to_date( ?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd')  ";
+								
+							}
+							
+								sql += 	 " order by COIN_DATE desc "+
+										 "        ) V   "+
+										 "    )T "+
+										 "  where RNO between ? and ? ";
+							
+							 
+							 
 				 
 				 int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));  // 조회하고자 하는 페이지 번호
 				 int sizePerPage = Integer.parseInt(paraMap.get("sizePerPage")); // 한페이지당 보여줄 행의 개수
 					
 				 pstmt = conn.prepareStatement(sql);
 				 
-				 pstmt.setInt(1, (currentShowPageNo*sizePerPage) - (sizePerPage-1) );
-				 pstmt.setInt(2, (currentShowPageNo*sizePerPage) );
+				 if( date1 != null && date2 != null ) { 
+					 pstmt.setString(1, paraMap.get("date1"));
+					 pstmt.setString(2, paraMap.get("date2"));
+					 pstmt.setInt(3, (currentShowPageNo*sizePerPage) - (sizePerPage - 1) ); // 공식 
+					 pstmt.setInt(4, (currentShowPageNo*sizePerPage) ); // 공식
+				 }
+				 else {
+					 pstmt.setInt(1, (currentShowPageNo*sizePerPage) - (sizePerPage - 1) ); // 공식 
+					 pstmt.setInt(2, (currentShowPageNo*sizePerPage) ); // 공식
+				 }
+				 
 				 
 				 rs = pstmt.executeQuery();
 				 
 				 while(rs.next()) {
-						
 					 	CoinVO cvo = new CoinVO();
 					 	cvo.setCoinno(rs.getInt(1));
 					 	cvo.setFk_userid(rs.getString(2));
@@ -187,8 +246,8 @@ public class MemberDAO implements InterMemberDAO {
 		}// end of 페이징 처리를 한 모든 예치금 내역 보여주기 --------------------------------
 
 
-		/*
-		// 페이징 처리에 대한 페이지 출력하기
+		
+		// 예치금 페이징 처리에 대한 페이지 출력하기
 		@Override
 		public int getTotalPage(Map<String, String> paraMap) throws SQLException {
 			
@@ -199,57 +258,174 @@ public class MemberDAO implements InterMemberDAO {
 				conn = ds.getConnection();
 				
 				String sql = " select ceil(count(*)/?) "
-							+ " from tbl_member "
-							+ " where userid != 'admin' ";
+						   + " from tbl_coin_history ";
 				
-				String colname = paraMap.get("searchType");
-				String searchWord = paraMap.get("searchWord");
+				String date1 = paraMap.get("date1");
+ 				String date2 = paraMap.get("date2");
 				
-				// 맵에는 서치월드와 서치타입이 있는데 서치타입은 default가 회원명이기 때문에 무조건 여기로 보내준다. 
-				// 디비에서도 검색어가 있는지 없는지에 대해서 알기 위해서는 서치 워드의 유무를 본다.
-				
-				if( "mobile".equals(colname) ) {
-					searchWord = aes.encrypt(searchWord); // db 에는 이메일이 암호화 되어서 나온다.
-				}
-				
-				if( searchWord != null && !searchWord.trim().isEmpty() ) { // 서치워드에 공백을 지우고 동시에 비어있지 않는다면
-					// !searchWord.trim().isEmpty() 이거만 단독으로 주게되면 nullPonitException 이 떨어진다
-					sql += " and "+ colname +" like '%' || ? || '%' "; 
-					// 위치홀더는 컬럼명이나 테이블명이 올 경우에는 에러발생. 검색어만 들어와야 한다. 테이블명 또는 컬럼명이 변수로 들어올 수 없다.
-					// 테이블명 또는 컬럼명이 변수로 들어와야 할 경우에는 변수로 처리해주어야 한다.
-				}
-				
-				pstmt = conn.prepareStatement(sql);
-				pstmt.setInt(1, Integer.parseInt(paraMap.get("sizePerPage")));
-				
-				if( searchWord != null && !searchWord.trim().isEmpty() ) {
-					// 검색이 있다면
-					pstmt.setString(2, searchWord); // 두번째 위치홀더 자리엔 searchWord를 넣어주어야 한다.
+				if(date1 != null && date2 != null) {
+					
+					sql += " WHERE COIN_DATE BETWEEN to_date( ?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd')  ";
 					
 				}
+				
+				
+				pstmt = conn.prepareStatement(sql);
+				 
+				 if( date1 != null && date2 != null ) { 
+					 pstmt.setInt(1, Integer.parseInt(paraMap.get("sizePerPage")));
+					 pstmt.setString(2, paraMap.get("date1"));
+					 pstmt.setString(3, paraMap.get("date2"));
+				 }
+				 else { 
+					 pstmt.setInt(1, Integer.parseInt(paraMap.get("sizePerPage")));
+				 }
 				
 				rs = pstmt.executeQuery();
 				rs.next();
 				totalPage = rs.getInt(1);
 				
-			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (GeneralSecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} finally {
+			}  finally {
 				close();
 			}
 			
 			return totalPage;
 			
 			
-		}
-*/
+		}// end of 페이징 처리에 대한 페이지 출력하기 ---------------------------------------
+
+		
+		// 페이징 처리를 한 모든 포인트 내역 보여주기
+		@Override
+		public List<PointVO> selectPagingPoint(Map<String, String> paraMap) throws SQLException {
+			
+			List<PointVO> point_history = new ArrayList<>(); 
+			
+			try {
+				 conn = ds.getConnection(); 
+				 
+				 String sql = " select POINTNO, FK_USERID,  POINT_DATE, POINT_AMOUNT "+
+							 "  from "+
+							 "    (  "+
+							 "        select rownum AS RNO, POINTNO, FK_USERID,  POINT_DATE, POINT_AMOUNT "+
+							 "        from "+
+							 "        ( "+
+							 "           select POINTNO, FK_USERID,  POINT_DATE, POINT_AMOUNT "+
+							 "           from tbl_point_history ";
+				 
+				 
+				 	String date1 = paraMap.get("date1");
+	 				String date2 = paraMap.get("date2");
+					
+					
+				
+				if(date1 != null && date2 != null) {
+					
+					sql += " WHERE POINT_DATE BETWEEN to_date( ?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd')  ";
+					
+				}
+				
+					sql += 	 " order by POINT_DATE desc "+
+							 "        ) V   "+
+							 "    )T "+
+							 "  where RNO between ? and ? ";
+				
+				  
+				 
+				 
+				 int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));  // 조회하고자 하는 페이지 번호
+				 int sizePerPage = Integer.parseInt(paraMap.get("sizePerPage")); // 한페이지당 보여줄 행의 개수
+					
+				 pstmt = conn.prepareStatement(sql);
+				 
+				 
+				 if( date1 != null && date2 != null ) { 
+					 pstmt.setString(1, paraMap.get("date1"));
+					 pstmt.setString(2, paraMap.get("date2"));
+					 pstmt.setInt(3, (currentShowPageNo*sizePerPage) - (sizePerPage - 1) ); // 공식 
+					 pstmt.setInt(4, (currentShowPageNo*sizePerPage) ); // 공식
+				 }
+				 else {
+					 pstmt.setInt(1, (currentShowPageNo*sizePerPage) - (sizePerPage - 1) ); // 공식 
+					 pstmt.setInt(2, (currentShowPageNo*sizePerPage) ); // 공식
+				 }
+				 
+				 
+				 rs = pstmt.executeQuery();
+				 
+				 while(rs.next()) {
+						
+					 	PointVO pvo = new PointVO();
+					 	pvo.setPointno(rs.getInt(1));
+					 	pvo.setFk_userid(rs.getString(2));
+					 	pvo.setPoint_date(rs.getString(3));
+					 	pvo.setPoint_amount(rs.getInt(4));
+						
+					 	point_history.add(pvo); // 리스트에 담아준다. 
+						
+					} // end of while
+				 
+				 
+			} finally {
+				close();
+			}
+			
+			return point_history;
+			
+		}// end of 페이징 처리를 한 모든 포인트 내역 보여주기 --------------------------------------------------
+
+
+		
+		// 포인트 페이징 처리에 대한 페이지 출력하기
+		@Override
+		public int getPointTotalPage(Map<String, String> paraMap) throws SQLException {
+
+			
+			int point_totalPage = 0;
+			
+			try {
+				conn = ds.getConnection();
+				
+				String sql = " select ceil(count(*)/?) "
+						   + " from tbl_point_history ";
+				
+				
+				String date1 = paraMap.get("date1");
+				String date2 = paraMap.get("date2");
+				
+				if(date1 != null && date2 != null) {
+					
+					sql += " WHERE COIN_DATE BETWEEN to_date( ?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd')  ";
+					
+				}
+				
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				
+				if( date1 != null && date2 != null ) { 
+					 pstmt.setInt(1, Integer.parseInt(paraMap.get("sizePerPage")));
+					 pstmt.setString(2, paraMap.get("date1"));
+					 pstmt.setString(3, paraMap.get("date2"));
+				 }
+				 else { 
+					 pstmt.setInt(1, Integer.parseInt(paraMap.get("sizePerPage")));
+				 }
+				
+				
+				rs = pstmt.executeQuery();
+				rs.next();
+				point_totalPage = rs.getInt(1);
+				
+			}  finally {
+				close();
+			}
+			
+			return point_totalPage;
+			
+			
+		}// end of  포인트 페이징 처리에 대한 페이지 출력하기 --------------------------------------
+
 
 		
 		

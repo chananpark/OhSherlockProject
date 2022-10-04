@@ -95,12 +95,34 @@
 
 <script type="text/javascript">
 
-	$("#dateSearch").click(function(){
+
+	$(document).ready(function(){
 		
 		
-		
+			$("#dateSearch").on('click',function(e){
+				const dateFrm = document.dateFrm;
+				dateFrm.action="coin_history.tea";
+				dateFrm.method = "get";
+				dateFrm.submit(); 
+			});
+			
+			
+			
 	});
 	
+		
+	
+
+	
+	function gosizePerPage() {
+		
+		const sizeFrm = document.sizeFrm;
+		sizeFrm.sizePerPage.value = $("#sizePerPage").val();
+		sizeFrm.action="coin_history.tea";
+		sizeFrm.method = "get";
+		sizeFrm.submit();
+	}
+
 
  
 </script>
@@ -117,33 +139,28 @@
 	   </div> 
     </div>
     
- <!--  
-  	<div class="money_date" style="float: left; margin-top: 25px;">
-		<input class="fText hasDatepicker" readonly="readonly" size="15" value="2022-08-17" type="text" style="margin-left: 30px; text-align: center;"><button type="button" class="ui-datepicker-trigger" ><img src="//img.echosting.cafe24.com/skin/admin_ko_KR/myshop/ico_cal.gif" alt="..." title="..."></button>
-		<span class="bar">~</span>
-		<input class="fText hasDatepicker" readonly="readonly" size="15" value="2022-09-16" type="text" style="text-align: center;"><button type="button" class="ui-datepicker-trigger" ><img src="//img.echosting.cafe24.com/skin/admin_ko_KR/myshop/ico_cal.gif" alt="..." title="..."></button>				
-		<input style="margin-left: 10px; width: 80px;" type="submit" onclick="input()" value="조회" />
-	</div>
- -->
  
  
- 	<form>
-	<input type="date" name="date1">
+ 	<form name="dateFrm" style="float: left; margin-top: 25px;">
+	<input type="date" id="date1" name="date1">
 	~
-	<input type="date" name="date2">
-	<button name="dateSearch" type="submit" onclick="input()">조회</button>
+	<input type="date" id="date2" name="date2"> 
+	<button id="dateSearch" type="submit" >조회</button> 
 	</form>
 	
 	
+	<form name="sizeFrm"><input type="hidden" name="sizePerPage" value=""/></form>
 	
-	<div class="text-right" style="margin-top: 20px;"> 
-		<select id="sizePerPage" name="sizePerPage"> <%-- 값이 변하면 여기의 name에 담아준다. 여기다 담은 name을 goSearch에서 action 으로 보내준다. --%>
-			<option value="10">페이지당 예치금 내역</option>  
-			<option value="10">10</option>
-			<option value="5">5</option> 
-			<option value="3">3</option>
-		</select>
-	</div>
+		<div class="text-right" style="margin-top: 20px;"> 
+			<select id="sizePerPage" name="sizePerPage" onchange="gosizePerPage()"> <%-- 값이 변하면 여기의 name에 담아준다. 여기다 담은 name을 goSearch에서 action 으로 보내준다. --%>
+				<option value="10">페이지당 예치금 내역</option>  
+				<option value="10">10</option> 
+				<option value="5">5</option>  
+				<option value="3">3</option>
+			</select>
+		</div>
+	
+	
 	
 	<div class="orderIf">
 		<table class="table mt-4 text-center"> 

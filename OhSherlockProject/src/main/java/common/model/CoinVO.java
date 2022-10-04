@@ -1,4 +1,4 @@
-package kcy.mypage.model;
+package common.model;
 
 public class CoinVO {
 

@@ -16,6 +16,9 @@ select *
 from tbl_coin_history;
 
 select *
+from tbl_point_history;
+
+select *
 from tbl_login_history;
 
 create sequence seq_coin_history
@@ -27,7 +30,7 @@ nocycle
 nocache;
 
 desc tbl_coin_history;
-
+desc tbl_point_history;
 
 
 insert into tbl_coin_history(COINNO, FK_USERID, COIN_AMOUNT)
@@ -131,5 +134,85 @@ CROSS JOIN
 
 
    
+   select ceil(count(*)/10)
+   from tbl_coin_history;
+   
+   
+    select COIN_DATE
+    from tbl_coin_history
+    where COIN_DATE between date("22/09/24") and date("22/09/28")
+    order by COIN_DATE desc;
 
+
+    SELECT COINNO, FK_USERID,  COIN_DATE, COIN_AMOUNT 
+    FROM tbl_coin_history 
+    WHERE COIN_DATE BETWEEN '22/09/24' AND '22/09/28'
+    order by COIN_DATE desc;
+    
+    
+    
+ drop table TBL_POINT_HISTORY purge;
+ drop table TBL_POINT_HISTORY;   
+    
+    
+create sequence seq_point_history
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;    
+
+
+insert into TBL_POINT_HISTORY(POINTNO, FK_USERID, POINT_AMOUNT)
+values(seq_point_history.nextval, 'codud1158',8000);
+
+
+
+-- 1 페이지 ==> RNO : 1 ~ 10
+    -- [올바른것]
+    select POINTNO, FK_USERID,  POINT_DATE, POINT_AMOUNT
+    from
+    (
+        select rownum AS RNO, POINTNO, FK_USERID,  POINT_DATE, POINT_AMOUNT
+        from
+        (
+           select POINTNO, FK_USERID,  POINT_DATE, POINT_AMOUNT
+           from tbl_POINT_history
+           order by POINT_DATE desc;
+        ) V 
+    )T
+    where RNO between 5 and 7; 
+    
+    
+    
+insert all 
+into tbl_coin_history(COINNO, FK_USERID, COIN_AMOUNT) values(seq_coin_history.nextval, 'codud1158',9000 ) 
+into tbl_point_history(POINTNO, FK_USERID, POINT_AMOUNT) values(seq_point_history.nextval, 'codud1158',9000 )
+select *
+from dual;    
+    
+commit;   
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
