@@ -246,29 +246,8 @@ function getPageBar() {
 	    		getOrderedList();
 	    	});
 	        
-	        // 처음페이지로 버튼 클릭시
-	        $("button.first").click((e)=>{
-	    		currentShowPageNo = $(e.target).attr('id');
-	    		getPageBar();
-	    		getOrderedList();
-	    	});
-	        
-	     	// 이전페이지로 버튼 클릭시
-	        $("button.prev").click((e)=>{
-	    		currentShowPageNo = $(e.target).attr('id');
-	    		getPageBar();
-	    		getOrderedList();
-	    	});
-	        
-	     	// 다음페이지로 버튼 클릭시
-	        $("button.next").click((e)=>{
-	    		currentShowPageNo = $(e.target).attr('id');
-	    		getPageBar();
-	    		getOrderedList();
-	    	});
-	        
-	     	// 마지막페이지로 버튼 클릭시
-	        $("button.last").click((e)=>{
+	        // 처음,이전,다음,마지막페이지로 버튼 클릭시
+	        $("button.move").click((e)=>{
 	    		currentShowPageNo = $(e.target).attr('id');
 	    		getPageBar();
 	    		getOrderedList();
