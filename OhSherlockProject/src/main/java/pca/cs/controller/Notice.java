@@ -27,9 +27,6 @@ public class Notice extends AbstractController {
 		paraMap.put("searchType", searchType);
 		paraMap.put("searchWord", searchWord);
 		
-		// 한 페이지당 글 개수
-		String sizePerPage = "7";
-		
 		// 현재 페이지 번호
 		String currentShowPageNo = request.getParameter("currentShowPageNo");
 		
@@ -46,7 +43,6 @@ public class Notice extends AbstractController {
 			currentShowPageNo = "1";
 		}
 
-		paraMap.put("sizePerPage", sizePerPage);
 		paraMap.put("currentShowPageNo", currentShowPageNo);
 		
 		// 총 페이지 수 알아오기

@@ -5,6 +5,10 @@
 <style>
 
 	* {box-sizing: border-box;}
+		
+	.clickedBtn {
+		background-color: rgb(226, 230, 234) !important;
+	}
 	
 	.page-link {
 	  color: #666666; 
@@ -14,8 +18,9 @@
 	
 	.page-item.active .page-link {
 	 z-index: 1;
-	 color: #1E7F15;
+	 color: white;
 	 border-color: #1E7F15;
+	 background-color: #1E7F15; 
 	 
 	}
 	
@@ -23,12 +28,6 @@
 	  color: #1E7F15;
 	  background-color: #fafafa; 
 	  border-color: #1E7F15;
-	}
-
-	.badge {
-		background-color: #1E7F15; 
-		color: white; 
-		font-weight: bold;
 	}
 	
 	.btn-secondary {
@@ -52,7 +51,6 @@
 		float: left;
 		border: none;
 		outline: none;
-		cursor: pointer;
 		padding: 14px 0px;
 		font-size: 17px;
 		width: 11%;
@@ -62,13 +60,50 @@
 		background-color: #e9ecef;
 		
 	}
+	
+	a, a:hover, a:link, a:visited {
+		color: black;
+		text-decoration: none;
+	}
+
+	
 </style>       
     
+<script>
 
+$(document).ready(()=>{
+	const answered = '${inquiry_answered}';
+	
+	$(".answerBtn[value="+answered+"]").addClass('clickedBtn');
+	
+	let answered_yn;
+	if(answered == 0)
+		answered_yn = '미답변';
+	else
+		answered_yn = '답변완료';
+	
+	$(".answered_yn").text(answered_yn);
+	
+	// 세션스토리지에 goBackURLInquiry 저장
+	const goBackURLInquiry = "${goBackURLInquiry}";
+	sessionStorage.setItem("goBackURLInquiry", goBackURLInquiry);
+	
+	$(".answerBtn").click((e)=>{
+		const answerFrm = document.answerFrm;
+		answerFrm.inquiry_answered.value=$(e.target).val();
+		answerFrm.action = "inquiry.tea";
+		answerFrm.method = "GET";
+		answerFrm.submit();
+	});
+	
+});
+
+	
+</script>
 	<div class="container" id="inquiry">
 
 	<div class="titleZone row">
-		<h2 class="col text-left" style="font-weight: bold">1:1문의</h2>
+		<h2 class="col text-left" style="font-weight: bold">1:1 문의</h2>
 		<br>
 		<div class="col text-right">
 			<span style="font-weight: bold; font-size: 20px;">02-336-8546</span><br>
@@ -81,61 +116,65 @@
 	<hr style="background-color: black; height: 1.2px; margin-bottom: 55px;">
 	
 	
-	
 	<%-- 탭 버튼 --%>
 	 <div class="row bg-light" style="height: 67px; width: 27%; margin: auto; justify-content: center;">
-    <div class="btn-group" role="group" aria-label="Basic example" style="justify-content: center;">
-		  <button type="button" class="btn btn-light" >미답변</button>
-		  <span class="btn btn-light" style="color: gray; margin-top: 20px;">|</span>
-		  <button type="button" class="btn btn-light">답변완료</button>
-		</div>
-   
-		
+		  <button value="0" type="button" class="answerBtn btn btn-light col col-6">미답변</button>
+		  <button value="1" type="button" class="answerBtn btn btn-light col col-6">답변완료</button>
 	</div>
 	
+	<form name="answerFrm">
+		<input type="hidden" name="inquiry_answered" value=""/>
+	</form>
+	
 	<br>
-	<div style="margin-top: 10px;">총 2건의 미답변 상담 내역이 있습니다.</div>
+	<div style="margin-top: 10px;">총 <span id="inquiryCount">${totalInquiries }</span>건의 <span class="answered_yn"></span> 문의 내역이 있습니다.</div>
 <table class="table mt-2 text-center">
 			<thead class="thead-light">
-				<tr>
-					<th>번호</th>
-					<th>제목</th>
-					<th>등록일</th>
+				<tr class="row">
+					<th class="col col-2">문의유형</th>
+					<th class="col col-6">제목</th>
+					<th class="col col-2">글쓴이</th>
+					<th class="col col-2">등록일</th>
 				</tr>
 			</thead>
 			<tbody>
+			<c:if test="${not empty inquiryList}">
+				<c:forEach items="${inquiryList}" var="ivo">
+					<tr class="row">
+						<td class="col col-2">
+						<c:choose>
+							<c:when test="${ivo.inquiry_type == 'product'}">상품문의</c:when>
+							<c:when test="${ivo.inquiry_type == 'delivery'}">배송문의</c:when>
+							<c:when test="${ivo.inquiry_type == 'coin_point'}">예치금/적립금</c:when>
+							<c:when test="${ivo.inquiry_type == 'cancle'}">취소/환불/교환</c:when>
+							<c:when test="${ivo.inquiry_type == 'member'}">회원</c:when>
+							<c:otherwise>기타</c:otherwise>
+						</c:choose>
+						</td>
+						<td class="col col-6">
+							<a href="<%=ctxPath%>/cs/inquiryReply.tea?inquiry_no=${ivo.inquiry_no}">${ivo.inquiry_subject}</a>
+							</td>
+						<td class="col col-2">${ivo.fk_userid}</td>
+						<td class="col col-2">${ivo.inquiry_date}</td>
+					</tr>
+				</c:forEach>
+			</c:if>
+			<c:if test="${empty inquiryList}">
 				<tr>
-					<td style="class=storeNo">4</td>
-					<td>쿠폰 사용 문의</td>
-					<td>2022.09.02</td>
-				</tr>
-				<tr>
-					<td style="class=storeNo">3</td>
-					<td>배송 기간 문의</td>
-					<td>2022.04.12</td>
+					<td class="pt-5" colspan="4">
+						<span class="answered_yn"></span> 문의 내역이 없습니다.
+					</td>
 				</tr>
 				
+			</c:if>
 			</tbody>
 		</table>
 			
 
 	<nav aria-label="Page navigation example" style="margin-top: 60px;">
-		<ul class="pagination justify-content-center">
-			<li class="page-item"><a class="page-link" href="#"
-				aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-			</a></li>
-			<li class="page-item"><a class="page-link" href="#">1</a></li>
-			<li class="page-item"><a class="page-link" href="#">2</a></li>
-			<li class="page-item"><a class="page-link" href="#">3</a></li>
-			<li class="page-item"><a class="page-link" href="#"
-				aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-			</a></li>
-		</ul>
+		<ul class="pagination justify-content-center">${pageBar}</ul>
 	</nav>
 	
-
-	
-
 </div>
 
 <%@ include file="../footer.jsp"%>

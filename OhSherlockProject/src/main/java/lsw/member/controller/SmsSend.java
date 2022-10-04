@@ -14,44 +14,26 @@ import org.json.simple.JSONObject;
 import common.controller.AbstractController;
 import net.nurigo.java_sdk.api.Message;
 
-public class SmsSend extends AbstractController {
-
-	@Override
-	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+public class SmsSend {
+	
+	public void sendSms(String mobile, String certificationCode) throws Exception  {
 		
 		//   >> SMS발송 <<
 	    //   HashMap 에 받는사람번호, 보내는사람번호, 문자내용 등 을 저장한뒤 Coolsms 클래스의 send를 이용해 보냅니다.
 		      
 		//String api_key = "발급받은 본인의 API Key";  // 발급받은 본인 API Key
-		String api_key = "NCSCS9KOV0BLBGD9"; // 임선우
+		String api_key = "NCSIPGIGXWJLRF9D"; // 임선우
 		
-		String api_secret = "KB6TWLFYATXAOHVZAECUHU2A2EB5FYIW";  // 발급받은 본인 API Secret
+		String api_secret = "JXN1PSH32DAQUVSVACFTSTDFSOKYENTW";  // 발급받은 본인 API Secret
 		
 		Message coolsms = new Message(api_key, api_secret);
 		// net.nurigo.java_sdk.api.Message 임. 
 		// 먼저 다운 받은  javaSDK-2.2.jar 를 /MyMVC/src/main/webapp/WEB-INF/lib/ 안에 넣어서  build 시켜야 함.
 		
-		String mobile = request.getParameter("mobile");
-		// 인증키를 랜덤하게 생성하도록 한다. 
-		
-		CreateRandomCode ranCode = new CreateRandomCode();
-		
-		int ranNum = ranCode.ranNum();
-		
-		String certificationCode = "오!셜록 본인확인 인증번호는 [";
-        // 인증키는 숫자 6글자 로 만들겠습니다.
-        // 예 : certificationCode ==> dngrn4745003
-		
-		certificationCode += ranNum;
-        
-        certificationCode += "] 입니다. 정확히 입력해주세요.";
-        
-        System.out.println("인증코드 확인 certificationCode => " + certificationCode);
-		
 		// == 4개 파라미터(to, from, type, text)는 필수사항이다. == 
 	      HashMap<String, String> paraMap = new HashMap<>();
 	      paraMap.put("to", mobile); // 수신번호
-	      paraMap.put("from", "01074474388"); // 발신번호
+	      paraMap.put("from", "01045046756"); // 발신번호
 	      // 2020년 10월 16일 이후로 발신번호 사전등록제로 인해 등록된 발신번호로만 문자를 보내실 수 있습니다
 	      paraMap.put("type", "SMS"); // Message type ( SMS(단문), LMS(장문), MMS, ATA )
 	      paraMap.put("text", certificationCode); // 문자내용
@@ -81,13 +63,10 @@ public class SmsSend extends AbstractController {
 			*/
 	      String json = jsonObj.toString(); 
 			
-		//	System.out.println("~~~~ 확인용 json => " + json);
-			// ~~~~ 확인용 json => {"group_id":"R2G6h2GgdLQJJZay","success_count":1,"error_count":0} 
+	      // System.out.println("~~~~ 확인용 json => " + json);
+		  // ~~~~ 확인용 json => {"group_id":"R2G6h2GgdLQJJZay","success_count":1,"error_count":0} 
 	      
-			request.setAttribute("json", json);
-			
-		//	super.setRedirect(false);
-			super.setViewPage("/WEB-INF/jsonview.jsp");
+	     // return json;
 	}
 
 }

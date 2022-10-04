@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
-import common.model.FaqVO;
 import common.model.MemberVO;
 import syj.cs.model.FaqDAO;
 import syj.cs.model.InterFaqDAO;
@@ -21,23 +20,31 @@ public class FaqDelete extends AbstractController {
 		if( loginuser != null && "admin".equals(loginuser.getUserid()) ) {
 			// 관리자(admin)으로 로그인 했을 경우
 			String faq_num = request.getParameter("faq_num");
-			System.out.println(faq_num);
 			
-			// TODO 여기서부터 삭제 만들기
 			InterFaqDAO fdao = new FaqDAO();
 			
-			// 기존의 faq 내용을 faqEdit_admin.jsp 단에 뿌려주기
-			FaqVO fvo = fdao.faqEditSelect(faq_num);
+			// faq 삭제하기
+			int n = fdao.faqDelete(faq_num);
 			
-			String faq_content = fvo.getFaq_content();
-			faq_content = faq_content.replace("<br>","\r\n");
-			
-			fvo.setFaq_content(faq_content);
-			
-			request.setAttribute("fvo", fvo);
-			
-			super.setRedirect(false);
-			super.setViewPage("/WEB-INF/cs/faq.jsp");
+			if(n==1) {
+				String message = "자주묻는질문이 삭제되었습니다.";
+		        String loc = request.getContextPath() + "/cs/faq.tea";
+		        
+		        request.setAttribute("message", message);
+		        request.setAttribute("loc", loc);
+		        
+		        super.setRedirect(false);
+		        super.setViewPage("/WEB-INF/msg.jsp");
+			} else {
+				String message = "자주묻는질문 삭제에 실패하였습니다.";
+		        String loc = request.getContextPath() + "/cs/faq.tea";
+		        
+		        request.setAttribute("message", message);
+		        request.setAttribute("loc", loc);
+		        
+		        super.setRedirect(false);
+		        super.setViewPage("/WEB-INF/msg.jsp");
+			}
 			
 		} else {
 			// 로그인을 안한 경우 또는 일반 사용자로 로그인 했을 경우

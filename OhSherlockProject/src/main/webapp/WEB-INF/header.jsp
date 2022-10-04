@@ -88,7 +88,7 @@
 }
 
 a:hover, button:hover, input[type='button']:hover, .btn:hover {
-   cursor: url("https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbLcHy8%2FbtrNprKfXky%2F8QmDKvqOmZx19ZPk9Zk1H0%2Fimg.png"), auto;
+   cursor: url("https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbLcHy8%2FbtrNprKfXky%2F8QmDKvqOmZx19ZPk9Zk1H0%2Fimg.png"), auto !important;
 }
 
 .container {
@@ -309,10 +309,10 @@ div#brandStoryText {
 					<a class="nav-link dropdown-toggle menufont_size text-dark" href="" id="navbarDropdown" data-toggle="dropdown">티제품</a> <%-- 여기 클릭시 전체 상품으로 연결 --%>
 						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown" id="teaProducts">
 							<a class="dropdown-item" href="<%= ctxPath %>/shop/productAll.tea">전체상품</a> 
-							<a class="dropdown-item" href="<%= ctxPath %>/shop/productBest.tea">베스트</a> 
-							<a class="dropdown-item" href="<%= ctxPath %>/shop/productGreen.tea">녹차/말차</a> 
-							<a class="dropdown-item" href="<%= ctxPath %>/shop/productBlack.tea">홍차</a> 
-							<a class="dropdown-item" href="<%= ctxPath %>/shop/productHerb.tea">허브차</a>
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productBest.tea?snum=2">베스트</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productCategory.tea?cnum=1">녹차/말차</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productCategory.tea?cnum=2">홍차</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productCategory.tea?cnum=3">허브차</a>
 						</div>
 					</li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%= ctxPath %>/shop/productGiftset.tea">기프트세트</a></li>
@@ -370,7 +370,7 @@ div#brandStoryText {
 						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="<%= ctxPath %>/cs/notice.tea">공지사항</a> 
 							<a class="dropdown-item" href="<%= ctxPath %>/cs/faq.tea">자주 묻는 질문</a> 
-							<a class="dropdown-item" href="<%= ctxPath %>/cs/inquiry.tea">1:1 상담</a>
+							<a class="dropdown-item" href="<%= ctxPath %>/cs/inquiry.tea">1:1 문의</a>
 						</div></li>
 				</ul>
 			</div>

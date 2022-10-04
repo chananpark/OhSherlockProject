@@ -23,6 +23,10 @@ public class Test {
 	      System.out.println(pw);
 	      System.out.println(mail);
 	      System.out.println(mb);
+	   
+	        
+
+	        
 	   }
 
 	}

@@ -1,8 +1,6 @@
 package pca.mypage.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,21 +34,17 @@ public class MyInquiryDetail extends AbstractController {
 			super.setViewPage("/WEB-INF/msg.jsp");
 		}
 		else if(loginuser.getUserid().equals(fk_userid)){
-		// 로그인한사용자가 자신의문의내용을 조회하는 경우
+			// 로그인한 사용자가 자신의 문의내용을 조회하는 경우
 			
-		Map<String, String> paraMap = new HashMap<>();
-		paraMap.put("fk_userid", fk_userid);
-		paraMap.put("inquiry_no", inquiry_no);
-		
-		InterInquiryDAO idao = new InquiryDAO();
-		InquiryVO ivo = idao.showMyInquiryDetail(paraMap);
-		
-		if(ivo != null) {
-			request.setAttribute("ivo", ivo);
-		}
-		
-		super.setRedirect(false);
-		super.setViewPage("/WEB-INF/mypage/my_inquiry_detail.jsp");
+			InterInquiryDAO idao = new InquiryDAO();
+			InquiryVO ivo = idao.showMyInquiryDetail(inquiry_no);
+			
+			if(ivo != null) {
+				request.setAttribute("ivo", ivo);
+			}
+			
+			super.setRedirect(false);
+			super.setViewPage("/WEB-INF/mypage/my_inquiry_detail.jsp");
 		
 		} else {
 			String message = "다른 사용자의 문의내용은 조회할 수 없습니다!";

@@ -50,7 +50,7 @@ public class MemberEditEnd extends AbstractController {
 	        String birthday = birthyyyy+"-"+birthmm+"-"+birthdd;       // 쪼개져있는 생일의 값을 합쳐서 DB 에서의 컬럼 birthday에 넣어준다.
 	        
         	MemberVO member = new MemberVO(userid, passwd, name, postcode, address, detail_address, extra_address, birthday, mobile, email); 
-        	System.out.println("==================확인용" + member.toString());
+     //   	System.out.println("==================확인용" + member.toString());
 			
 			InterMemberDAO mdao = new MemberDAO();  //  MemberDAO 의 기본생성자
 	        int n = mdao.updateMember(member);

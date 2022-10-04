@@ -19,8 +19,9 @@
 	
 	.page-item.active .page-link {
 	 z-index: 1;
-	 color: #1E7F15;
+	 color: white;
 	 border-color: #1E7F15;
+	 background-color: #1E7F15; 
 	 
 	}
 	
@@ -28,6 +29,12 @@
 	  color: #1E7F15;
 	  background-color: #fafafa; 
 	  border-color: #1E7F15;
+	}
+	
+		table > tbody > tr:hover {
+		background-color: #f1f1f1;
+		color: black;
+		cursor: pointer;		
 	}
 	
 </style>
@@ -44,20 +51,22 @@
 		});
     
 
-		// 각 행을 클릭했을 때 해당하는 행의 회원 상세 조회 보여주기
+		// 각 행을 클릭했을 때 해당하는 행의 상품 상세 조회 보여주기
 		// 모든 tr을 잡아와서 그 중 name 이 userid 인 것의 text만 가져오는 이벤트
 		$("tbody > tr").click(function(e){
 			
 			const $target = $(e.target); // <td> 태그 이다. 왜냐하면 tr 속에 td가 있기 때문에
 		//	console.log("확인용 : "+ $target.html());
 			
-			// 클릭한 tr의 p_code 알아오기
-			const p_code = $target.parent().find("td[name='p_code']").text(); 
-		//	console.log("확인용 : "+ userid);
+			// 클릭한 tr의 pnum 알아오기
+			const pnum = $target.parent().find("td[name='pnum']").text(); 
+		//	console.log("확인용 : "+ pnum);
 			 
-			// location.href = "<%= request.getContextPath() %>/product/member_list_detail.tea?userid="+userid;  상세페이지 생성 후 만들자
+			location.href = "<%= request.getContextPath() %>/admin/prod_mgmt_detail.tea?pnum="+pnum+"&goBackURL=${requestScope.goBackURL}";
 		}); // end of $("tbody > tr").click(function()
 		
+				
+				
 		// select 태그에 대한 이벤트는 클릭이 아니라 change 이다
 		// select 를 선택할 때의 이벤트
 		$("select#sizePerPage").bind("change", function(){
@@ -104,8 +113,6 @@
    <h2 class="col text-left" style="font-weight:bold">상품관리</h2><br>
    <hr style="background-color: black; height: 1.2px;"><br>
   
-  
-  
 	<form name="productFrm">
 	
 	  	<div class="text-right">
@@ -123,25 +130,28 @@
 	  	
   	</form>
   	
+  	<div style="overflow-x:auto;">
   	<table class="table mt-4 prodList text-center">
 			<thead class="thead-light">
 				<tr>
 					<th>상품코드</th>
 					<th>상품명</th>
-					<th>가격</th>
-					<th>할인가격</th>
+					<th>정가</th>
+					<th>판매가격</th>
 					<th>재고</th>
+					<th>상품등록일자</th>
 					<th>처리</th>
 				</tr>
 			</thead>
 			<tbody>
 				<c:forEach var="pvo" items="${requestScope.productList}">
 					<tr>
-						<td name="p_code" >${pvo.p_code}</td>
-						<td name="p_name">${pvo.p_name}</td>
-						<td name="p_price">${pvo.p_price}</td>
-						<td name="p_discount_rate">${pvo.p_discount_rate}</td>
-						<td name="p_stock">${pvo.p_stock}</td>
+						<td name="pnum" >${pvo.pnum}</td>
+						<td name="pname">${pvo.pname}</td>
+						<td name="price">${pvo.price}</td>
+						<td name="saleprice">${pvo.saleprice}</td>
+						<td name="pqty">${pvo.pqty}</td>
+						<td name="pinputdate">${pvo.pinputdate}</td>
 						<td>
 						<div class="adminOnlyBtns mb-1">
 							<input type="button" value="수정" /> 
@@ -151,11 +161,14 @@
 				</c:forEach>
 			</tbody>
 		</table>
-	
+	</div>
+    <div class="text-right" style="margin-top: 50px;">
+            <input type="button" id="btn_goProdRegister" class="writeBtns" value="신규 상품 등록" style="margin-left: 5px; background-color: #1E7F15; color:white;" />
+    </div>
   
-	<nav aria-label="Page navigation example" style="margin-top: 60px;">
-		<ul class="pagination justify-content-center" style="margin:auto;">${requestScope.pageBar}</ul>
-	</nav>
+		<nav aria-label="Page navigation example" style="margin-top: 60px;">
+			<ul class="pagination justify-content-center" style="margin:auto;">${requestScope.pageBar}</ul>
+		</nav>
 
 	</div>
 	
