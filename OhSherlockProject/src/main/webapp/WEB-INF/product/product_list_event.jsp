@@ -189,7 +189,7 @@ a:visited {
 					
 					<c:forEach var="pvo" items="${requestScope.productList}" varStatus="status">
 				  		<div class="card border-0 mb-4 mt-1 col-lg-4 col-md-6 ">
-			    		<a href="<%= ctxPath %>/product/product_view.jsp"><img src="<%= ctxPath %>/images/${pvo.pimage}" class="card-img-top"/></a>
+			    		<a href="<%= ctxPath %>/shop/productView.tea?pnum=${pvo.pnum}"><img src="<%= ctxPath %>/images/${pvo.pimage}" class="card-img-top"/></a>
 		    			<div class="card-body">
 		    			
 		    				<%-- 상품 상태 뱃지 --%>
@@ -209,7 +209,7 @@ a:visited {
 	                        <div class="mb-2" >&nbsp;</div>
                          	</c:if>
 		    			
-		      				<h5 class="card-title" style="font-weight:bold;"><a href="#">${pvo.pname}</a></h5>
+		      				<h5 class="card-title" style="font-weight:bold;"><a href="<%= ctxPath %>/shop/productView.tea?pnum=${pvo.pnum}">${pvo.pname}</a></h5>
 			      			
 			      			<%-- 세일 상품 금액 표시 --%>
 			      			<c:choose>
@@ -241,13 +241,7 @@ a:visited {
        		<%-- 본문 끝 --%>
 			
 		</div>
-<<<<<<< HEAD
-   	    
-=======
-		
 
-	      
->>>>>>> branch 'main' of https://github.com/Chanan-Park/OhSherlockProject.git
 	</div>
 	
 </div>
