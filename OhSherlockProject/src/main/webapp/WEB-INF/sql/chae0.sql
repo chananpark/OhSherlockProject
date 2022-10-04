@@ -151,6 +151,7 @@ CROSS JOIN
     
     
     
+    
  drop table TBL_POINT_HISTORY purge;
  drop table TBL_POINT_HISTORY;   
     
@@ -196,7 +197,36 @@ commit;
     
     
     
-    
+   SELECT
+    coinno,
+    fk_userid,
+    coin_date,
+    coin_amount
+FROM
+    (
+        SELECT
+            ROWNUM AS rno,
+            coinno,
+            fk_userid,
+            coin_date,
+            coin_amount
+        FROM
+            (
+                SELECT
+                    coinno,
+                    fk_userid,
+                    coin_date,
+                    coin_amount
+                FROM
+                    tbl_coin_history
+                WHERE
+                    coin_date BETWEEN TO_DATE('2022-10-01', 'yyyy-mm-dd') AND TO_DATE('2022-10-04', 'yyyy-mm-dd')
+                ORDER BY
+                    coin_date DESC
+            ) v
+    ) t
+WHERE
+    rno BETWEEN 1 AND 10;
     
     
     
