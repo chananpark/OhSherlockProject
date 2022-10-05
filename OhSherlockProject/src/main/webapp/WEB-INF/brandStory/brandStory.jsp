@@ -1142,12 +1142,11 @@ $(function(){
 	</div>
 		
 		
-		<div class="card mt-3" style="width:100%; ">
-		  <img class="card-img-top" src="../images/bg.jpg" alt="Card image">
-		  <div class="card-img-overlay">
-		    <h4 class="card-text pt-4 text-center text-white" style="text-shadow: 2px 2px 2px gray;">오셜록의 역사는 <span style="font-style: italic;">2022년 5월, 21B Worldcup Street</span>에서 시작되었습니다.<br><br> 
-						오셜록은 최고의 인재들을 영입하여 부단한 노력과 연구를 통하여 지속적으로 발전하고 있습니다.</h4>
-		  </div>
+	<div class="text-center jumbotron" style="margin-top: 5%; background: rgb(233, 243, 203)">
+			<p style="font-size: 15pt;">
+				오셜록의 역사는 <span style="font-style: italic;">2022년 5월, 21B Worldcup Street</span>에서 시작되었습니다.<br><br> 
+				오셜록은 최고의 인재들을 영입하여 부단한 노력과 연구를 통하여 지속적으로 발전하고 있습니다.
+			</p>
 		</div>
 		
 	</section>
