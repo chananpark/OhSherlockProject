@@ -65,6 +65,7 @@ a:visited {
 .order {
 	background-color: transparent; 
     border-style: none;
+    padding: 0;
 }
 
 </style>
@@ -89,19 +90,28 @@ a:visited {
 	      //  $(e.target).css({'background-color':'blue', 'color':'white'});
 		});
 		
-		
 		$(".productListContainer #allProd").click();  
+
+		let snum = "${snum}";
+		let cnum = "${cnum}";
+		let currentShowPageNo = "${currentShowPageNo}";
+		let jsonPageBar;
+		
+		
 		
 	}); // end of $(document).ready
 	
 	// 정렬하기 클릭했을 때의 이벤트
 	function order_list(selectid) {
 		let html = "";
-
+		snum = "${snum}";
+		cnum = "${cnum}";
+		currentShowPageNo = "${currentShowPageNo}";
+		
 		$.ajax({
 			url: "<%= request.getContextPath()%>/shop/eventOrderListJSON.tea",
 			type: "GET",
-			data: {"selectid":selectid},
+			data: {"selectid":selectid, "cnum":cnum, "snum":snum, "currentShowPageNo":currentShowPageNo},
 			dataType: "JSON",
 			success: function(json){
 				
@@ -179,8 +189,11 @@ a:visited {
 	
 	// 페이지바 만드는 함수
 	function pageBar() {
-		let html = "";
-
+		let html1;
+		snum = "${snum}";
+		cnum = "${cnum}";
+		currentShowPageNo = "${currentShowPageNo}";
+		
 		$.ajax({
 			url: "<%= request.getContextPath()%>/shop/eventPageBarJSON.tea",
 			type: "GET",
@@ -188,20 +201,16 @@ a:visited {
 			dataType: "JSON",
 			success: function(json){
 				
-				if( json.length == 0 ) { 
-					html += " "; 
-	                
-	                $("nav#pagebar").html(html);
-	                
-				} else if( json.length > 0 ) {	
-				
-					$.each(json, function(index, item){ 
+				// 기존 페이지바 숨기기
+				$("#nav_pagebar").hide();
 
-					
-					}); // end of $.each
-					
-					$("nav#pagebar").html(html);
-				} 
+				// json으로 받아온 페이지바
+				html1 += "<nav aria-label='Page navigation example' id='nav_pagebar' style='margin-top : 100px;'>" +
+						 "	<ul class='pagination justify-content-center' style='margin:auto;'>"+json.pageBar+"</ul>" +
+						 "</nav>"; 
+				
+				$("#nav_pagebar").html(html1);
+				
 				
 			}, // end of success
 			error: function(request, status, error){
@@ -256,15 +265,15 @@ a:visited {
 				
 				<%-- 정렬 선택 창 --%>
 				<span id="order_list" >
-					<button id="order_new" class="order" onclick="order_list('order_new')">신상품순</button>
+					<button id="order_new" class="order" onclick="order_list('order_new'); pageBar();">신상품순</button>
 					<span class="text-dark">&nbsp;|&nbsp;</span>
-					<button id="order_highPrice" class="order" onclick="order_list('order_highPrice')">높은가격순</button>
+					<button id="order_highPrice" class="order" onclick="order_list('order_highPrice'); pageBar();">높은가격순</button>
 					<span class="text-dark">&nbsp;|&nbsp;</span>
-					<button id="order_rowPrice" class="order" onclick="order_list('order_rowPrice')">낮은가격순</button>
+					<button id="order_rowPrice" class="order" onclick="order_list('order_rowPrice'); pageBar();">낮은가격순</button>
 					<span class="text-dark" >&nbsp;|&nbsp;</span>
-					<button id="order_review" class="order" onclick="order_list('order_review')">리뷰많은순</button>
+					<button id="order_review" class="order" onclick="order_list('order_review'); pageBar();">리뷰많은순</button>
 					<span class="text-dark">&nbsp;|&nbsp;</span>
-					<button id="order_sell" class="order" onclick="order_list('order_sell')">판매순</button>
+					<button id="order_sell" class="order" onclick="order_list('order_sell'); pageBar();">판매순</button>
 				</span>
 	    	    <%-- 본문 내부 상단 바 끝 --%>
 				
@@ -329,6 +338,12 @@ a:visited {
 				</div>
 				<%-- 상품 목록 끝 --%>					
 				
+				<%-- 페이징 --%>
+				<div id="div_pagebar">
+				 	<nav aria-label="Page navigation example" id="nav_pagebar" style="margin-top : 100px;">
+						<ul class="pagination justify-content-center" style="margin:auto;">${requestScope.pageBar}</ul>
+					</nav>
+				</div>
 			</div>
        		<%-- 본문 끝 --%>
 			
@@ -338,9 +353,6 @@ a:visited {
 	
 </div>
 
-	<%-- 페이징 --%>
- 	<nav aria-label="Page navigation example" id="pagebar">
-		<ul class="pagination justify-content-center" style="margin:auto;">${requestScope.pageBar}</ul>
-	</nav>
+	
 	
 <%@ include file="../footer.jsp"%>

@@ -22,6 +22,9 @@ public class EventOrderListJSON extends AbstractController {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		String selectid = request.getParameter("selectid"); 
+		String cnum = request.getParameter("cnum"); 
+		String snum = request.getParameter("snum"); 
+		String currentShowPageNo = request.getParameter("currentShowPageNo"); 
 		
 		InterProductDAO pdao = new ProductDAO();
 		
@@ -47,6 +50,9 @@ public class EventOrderListJSON extends AbstractController {
 		} 
 		
 		paraMap.put("orderSQL", orderSQL); 
+		paraMap.put("cnum", cnum); 
+		paraMap.put("snum", snum); 
+		paraMap.put("currentShowPageNo", currentShowPageNo); 
 		
 		List<ProductVO> productList = pdao.selectEventGoodsByCategory(paraMap);
 		
@@ -80,6 +86,10 @@ public class EventOrderListJSON extends AbstractController {
 	//		System.out.println("확인용 : " + json);
 
 			request.setAttribute("json", json);
+			request.setAttribute("cnum", cnum);
+			request.setAttribute("snum", snum);
+			request.setAttribute("currentShowPageNo", currentShowPageNo);
+			
 			
 			super.setRedirect(false);
 			super.setViewPage("/WEB-INF/jsonview.jsp"); // key값이 json 인 jsonview.jsp에 뿌러준다.
@@ -93,6 +103,9 @@ public class EventOrderListJSON extends AbstractController {
 			// 배열은 이미 if 문 위에 만들어져 있기 때문에 빈껍데기를 돌려준다. 
 			
 			request.setAttribute("json", json);
+			request.setAttribute("cnum", cnum);
+			request.setAttribute("snum", snum);
+			request.setAttribute("currentShowPageNo", currentShowPageNo);
 			
 			super.setRedirect(false);
 			super.setViewPage("/WEB-INF/jsonview.jsp"); // key값이 json 인 jsonview.jsp에 뿌러준다.
