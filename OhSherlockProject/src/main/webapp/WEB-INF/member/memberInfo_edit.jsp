@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+    
 <%@ include file="../header.jsp"%>
-<%@ page import="javax.servlet.http.HttpServletRequest" %>  
   
 <style type="text/css">
 
@@ -103,76 +102,75 @@
 	$(document).ready(function(){
 		
 		$("span.error").hide();             // 에러메시지를 숨기고 시작한다.
-		$("div#mobileVerify").hide();       // 휴대전화 인증하기 클릭시 인증란을 숨기고 시작한다.
-		$("span#mobileCodeConfirm").hide(); // 휴대전화 인증결과도 숨기고 시작한다.
+		
+		$("button#mobileCheckBtn").hide();   // 휴대전화 인증하기 버튼을 숨기고 시작한다.
+		$("div#mobileVerify").hide();        // 휴대전화 인증하기 클릭시 인증란을 숨기고 시작한다.
+		$("span#mobileCodeConfirm").hide();  // 휴대전화 인증결과도 숨기고 시작한다.
+		
+		$("button#emailCheckBtn").hide();   // 이메일 인증하기 버튼을 숨기고 시작한다.
 		$("div#emailVerify").hide();        // 이메일 인증하기 클릭시 인증란을 숨기고 시작한다.
 		$("span#emailCodeConfirm").hide();  // 이메일 인증결과도 숨기고 시작한다.
+		
 		$("#spinner").hide();               // 휴대전화 스피너 숨기고 시작한다.
 		$("#spinner2").hide();              // 이메일 스피너 숨기고 시작한다.
 	
-		
+	  
 		// 비밀번호
-		$("input#passwd").change( (e)=>{  // 포커스를 잃을 때 발생하는 이벤트
-			if($(e.target).val().trim() !="") {
-				const $target = $(e.target);
+		$("input#passwd").blur( (e)=>{  // 포커스를 잃을 때 발생하는 이벤트
 			
-				const regExp = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);  
-				// 숫자/문자/특수문자 포함 형태의 8~15자리 이내의 암호 정규표현식 객체 생성
+			const $target = $(e.target);
+			
+			const regExp = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);  
+			// 숫자/문자/특수문자 포함 형태의 8~15자리 이내의 암호 정규표현식 객체 생성
+			const bool = regExp.test($target.val());  // 이벤트 발생값을 정규표현식에 맞는지 검사
+			
+			if(!bool) {  
+				// 암호가 정규표현식에 위배된 경우
+
+				$("table#tblMemberRegister :input").prop("disabled", true);  
+				$target.prop("disabled", false);
 				
-				const bool = regExp.test($target.val());  // 이벤트 발생값을 정규표현식에 맞는지 검사
+				$target.parent().find("span.error").show(); 
+				$target.focus(); 
+			}
+			else {  
+				// 암호가 정규표현식에 맞는 경우
 				
-				if(!bool) {  
-					// 암호가 정규표현식에 위배된 경우
-	
-					$("table#tblMemberRegister :input").prop("disabled", true);  
-					$target.prop("disabled", false);
-					
-					$target.parent().find("span.error").show(); 
-					$target.focus(); 
-				}
-				else {  
-					// 암호가 정규표현식에 맞는 경우
-					
-					$("table#tblMemberRegister :input").prop("disabled", false); 
-					$target.parent().find("span.error").hide();  
-				}
-			} else{
-				const $target = $(e.target);
-				$target.parent().find("span.error").hide();
+				$("table#tblMemberRegister :input").prop("disabled", false); 
+				$target.parent().find("span.error").hide();  
 			}
 			
 		} );// 아이디가 passwd 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 		
 		
 		// 비밀번호 확인 
-		$("input#pwdcheck").change( (e)=>{  
-			if($(e.target).val().trim() !="") {
-				const $target = $(e.target); 
+		$("input#pwdcheck").blur( (e)=>{  
+			
+			const $target = $(e.target); 
+			
+			const passwd = $("input#passwd").val();  // 비밀번호의 값
+			const pwdcheck = $target.val();          // 이벤트 발생된 곳의 값
+			
+			if(passwd != pwdcheck) {  
+				// 암호와 암호확인값이 틀린 경우
 				
-				const passwd = $("input#passwd").val();  // 비밀번호의 값
-				const pwdcheck = $target.val();          // 이벤트 발생된 곳의 값
+				$("table#tblMemberRegister :input").prop("disabled", true);  
+				$target.prop("disabled", false);            // 이벤트 발생된 곳의 input태그 활성화시킴.
+				$("input#passwd").prop("disabled", false);  // 비밀번호 입력란의 input태그 활성화시킴.
 				
-				if(passwd != pwdcheck) {  
-					// 암호와 암호확인값이 틀린 경우
-					
-					$("table#tblMemberRegister :input").prop("disabled", true);  
-					$target.prop("disabled", false);            // 이벤트 발생된 곳의 input태그 활성화시킴.
-					$("input#passwd").prop("disabled", false);  // 비밀번호 입력란의 input태그 활성화시킴.
-					
-					
-					$target.parent().find("span.error").show();
-					$("input#passwd").focus(); 
-				}
-				else {  
-					// 암호와 암호확인값이 같은 경우
-					
-					$("table#tblMemberRegister :input").prop("disabled", false);
-					$target.parent().find("span.error").hide();
-				}
-			} else{
-				const $target = $(e.target);
-				$target.parent().find("span.error").hide();
+				
+				$target.parent().find("span.error").show();
+				$("#editCompletion").prop("disabled", true); // 수정버튼 비활성화
+				$("input#pwdcheck").focus(); 
 			}
+			else {  
+				// 암호와 암호확인값이 같은 경우
+				
+				$("table#tblMemberRegister :input").prop("disabled", false);
+				$target.parent().find("span.error").hide();
+				$("#editCompletion").prop("disabled", false); // 수정버튼 활성화
+			}
+			
 		} );// 아이디가 pwdcheck 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 		
 		
@@ -253,9 +251,7 @@
 		
 		// 우편번호, 주소, 추가주소 입력란 클릭시 알림메시지 띄우기
         $("input#postcode, input#address, input#extra_address").bind("click", () => {
-        	
    	        alert("우편번호찾기를 클릭하셔서 주소를 입력하세요.");
-        
         });
    	    
      	// 생년월일 월일란에 날짜 주기
@@ -373,7 +369,20 @@
 			
 		} );// 아이디가 hp3 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 		
-		 
+		
+		// 휴대전화값이 변경되면 인증하기 버튼 활성화 및 수정 버튼을 클릭시 "휴대전화 인증하기" 을 클릭했는지 클릭안했는지를 알아보기위한 용도
+        $("select#hp1, input#hp2, input#hp3").bind("change", () => {  // 휴대전화이 바뀌면 값을 초기화시키고 false 됨.
+        	
+        	$("button#mobileCheckBtn").show(); // 휴대전화 인증하기 버튼 보여준다.
+        	
+        	if(!b_flag_mobileCheckBtn_click) { // 인증하기 버튼 클릭 안했을시
+	   	        alert("휴대전화 인증하기를 클릭하셔야 합니다.");
+	   	   		$("#editCompletion").prop("disabled", true); // 수정버튼 비활성화
+        	}
+        
+        });
+		
+		
 		// 휴대전화 인증하기 클릭했을 경우
 	    $("button#mobileCheckBtn").click(function(e){
 	         
@@ -438,16 +447,6 @@
 	 	    	      
 	    });// end of $("button#mobileCheckBtn").click(function(e){}---------------
 		
-	 	// 휴대전화값이 변경되면 수정 버튼을 클릭시 "휴대전화 인증하기" 을 클릭했는지 클릭안했는지를 알아보기위한 용도 초기화 시키기 
-        $("select#hp1, input#hp2, input#hp3").bind("change", () => {  // 휴대전화이 바뀌면 값을 초기화시키고 false 됨.
-        	
-        	if(!b_flag_mobileCheckBtn_click) { // 인증하기 버튼 클릭 안했을시
-	   	        alert("휴대전화 인증하기를 클릭하셔야 합니다.");
-	   	   		$("#editCompletion").prop("disabled", true); // 수정버튼 비활성화
-        	}
-        
-        });
-	    		
 	    		
 		// 이메일
 		$("input#email").blur( (e)=>{
@@ -475,8 +474,11 @@
 			
 		});// 아이디가 email 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 		
-		// 이메일값이 변경되면 수정 버튼을 클릭시 "이메일 인증하기" 을 클릭했는지 클릭안했는지를 알아보기위한 용도.
+		
+		// 이메일값이 변경되면 인증하기 버튼 활성화 및 수정 버튼을 클릭시 "이메일 인증하기" 을 클릭했는지 클릭안했는지를 알아보기위한 용도
         $("input#email").bind("change", () => {  // 이메일값이 바뀌면 값을 초기화시키고 false 됨. 
+        	
+        	$("button#emailCheckBtn").show();  // 이메일 인증하기 버튼 보여준다.
         	
         	if(!b_flag_emailCheckBtn_click) { // 인증하기 버튼 클릭 안했을시
 	   	   		alert("이메일 인증하기를 클릭하셔야 합니다.");
@@ -486,7 +488,6 @@
         });
 		
 	});// end of $(document).ready(function(){})---------------------------
-	
 	
 	
 	// >>> Function Declaration <<< //
@@ -629,18 +630,21 @@
 	// "수정" 버튼 클릭시 호출되는 함수
 	function goEdit() {
 		
-		// 이름은 필수입력 사항이다.
-		let b_Flag_requiredInfo = false;  // 초기값 false 줌.
+		// 필수입력사항에(비밀번호, 비밀번호확인, 이름) 모두 입력이 되었는지 유효성검사한다.
+		let b_Flag_requiredInfo = false;  // 초기값 false
 		
-		if($("input.requiredInfo").val() == "") {
-			b_Flag_requiredInfo = true;  // 입력란에 값이 비어있으면 true 를 준다.
-			return false;  // break; 라는 뜻이다.
-		}
+		$("input.requiredInfo").each((index, item)=>{  // jQuery 반복문(each)
+			const data = $(item).val().trim();
+			if(data == "") {
+				alert("*표시된 필수입력사항은 모두 입력하셔야 합니다.");
+				b_Flag_requiredInfo = true;  // 하나라도 필수입력사항이 비어있으면 true 를 준다.
+				return false;  // break; 라는 뜻이다.
+			}
+		});
 	 	
-		if(b_Flag_requiredInfo) {  // 입력란에 값이 있으면 false 를 준다.
+		if(b_Flag_requiredInfo) {
 			return; // 종료
 		}
-		
 		
 		
 	 	const frm = document.editFrm;
@@ -667,10 +671,11 @@
     
 	<div id="tblTitle">
 		<h5>회원정보</h5>
+		<div style="font-size: 14px; margin-top: 11px; padding-right: 10px;"><span class="mustIn">* </span>필수입력사항</div>
 	</div>    
   
 	<div class="collapse show">
-		<table class="table table-bordered mt-2 orderInfo">
+		<table id="tblMemberRegister" class="table table-bordered mt-2 orderInfo">
 			<colgroup>
 	          <col width="180px"/>
 	          <col />
@@ -683,21 +688,21 @@
 					</td>
 				</tr>
 				<tr>
-					<th>비밀번호</th>
+					<th>비밀번호&nbsp;<span class="mustIn">*</span></th>
 					<td>
-						<input type="password" name="passwd" id="passwd" size="50" placeholder="(영문자/숫자/특수문자 포함, 8자~15자)" />
+						<input type="password" name="passwd" id="passwd" size="50" placeholder="(영문자/숫자/특수문자 포함, 8자~15자)" class="requiredInfo" required />
 						<span class="error" style="color: red">비밀번호는 영문자/숫자/특수문자 포함 8자~15자로 입력하세요.</span>
 					</td>
 				</tr>
 				<tr>
-					<th>비밀번호 확인</th>
+					<th>비밀번호 확인&nbsp;<span class="mustIn">*</span></th>
 					<td>
-						<input type="password" id="pwdcheck" size="50" placeholder="(영문자/숫자/특수문자 포함, 8자~15자)" />
+						<input type="password" id="pwdcheck" size="50" placeholder="(영문자/숫자/특수문자 포함, 8자~15자)" class="requiredInfo" required />
 						<span class="error" style="color: red">비밀번호가 일치하지 않습니다.</span>
 					</td>
 				</tr>
 				<tr>
-					<th>이름</th>
+					<th>이름&nbsp;<span class="mustIn">*</span></th>
 					<td>
 						<input type="text" name="name" id="name" size="50" value="${sessionScope.loginuser.name}" class="requiredInfo" required /> 		                
 						<span class="error">이름은 필수입력 사항입니다.</span>
@@ -778,11 +783,5 @@
     
   </form>
 </div>
-
- <%-- 인증하기 form  --%>
-<form name="verifyCertificationFrm">
-	<%-- 위의 form 은 get 방식이기 때문에 히든 폼을 post 방식으로 보내준다. --%>
-	<input type="hidden" name="userCertificationCode" /> <%-- 사용자가 입력한 코드 받아오기, 받아서 인증하기 form을 넘겨줄 것이다. --%>
-</form>
 
 <%@ include file="../footer.jsp"%>
