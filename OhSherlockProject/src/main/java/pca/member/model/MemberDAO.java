@@ -122,7 +122,7 @@ public class MemberDAO implements InterMemberDAO {
 				}
 
 				// tbl_login_history(로그인기록) 테이블에 insert
-				if (member.getIdle() != 1 && rs.getInt(16) >= 3) { // 휴면 회원이 아니고 비번 변경 3개월 지나지 않았으면
+				if (member.getIdle() != 1 && rs.getInt(16) < 3) { // 휴면 회원이 아니고 비번 변경 3개월 지나지 않았으면
 					sql = " insert into tbl_login_history(fk_userid, clientip) " + " values(?, ?) ";
 
 					pstmt = conn.prepareStatement(sql);
