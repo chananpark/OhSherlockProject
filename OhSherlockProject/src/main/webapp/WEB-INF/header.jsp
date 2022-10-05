@@ -79,6 +79,7 @@
 	        }
 	    }).resize();
 	}); 
+	
 </script>
 
 <style>
@@ -291,7 +292,7 @@ div#brandStoryText {
 					<i class="fas fa-shopping-basket fa-lg"></i></a></li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="#">
 					<i class="fas fa-heart fa-lg"></i></a></li>
-					<li class="nav-item active"><a class="nav-link menufont_size text-dark" data-toggle="modal" data-target="#btnSearch" data-dismiss="modal" data-backdrop="static">
+					<li class="nav-item active"><a class="nav-link menufont_size text-dark" data-toggle="modal" data-target="#searchModal" data-dismiss="modal">
 					<i class="fas fa-search fa-lg"></i></a></li>
 				</ul>
 			</div>
@@ -382,14 +383,14 @@ div#brandStoryText {
 	
 	
 <%-- *** 검색 모달창 *** --%>
-<div class="modal fade" id="btnSearch" style="font-family: 'Gowun Dodum', sans-serif;">
+<div class="modal fade" id="searchModal" style="font-family: 'Gowun Dodum', sans-serif;">
 	<div class="modal-dialog modal-lg">
     	<div class="modal-content">
     
 	      	<!-- Modal header -->
 	      	<div class="modal-header">
-	        	<h4 class="modal-title" style="font-weight:bold;">검색</h4>
-	        	<button type="button" class="close idFindClose" data-dismiss="modal">&times;</button>
+	        	<h5 class="modal-title" style="font-weight:bold;">검색</h5>
+	        	<button type="button" class="close" data-dismiss="modal">&times;</button>
 	      	</div>
 	      
 	      	<!-- Modal body -->
@@ -399,13 +400,6 @@ div#brandStoryText {
 	        	<%--	<iframe id="iframe_reviewWrite" style="border: none; width: 100%; height: 350px;" src="<%= request.getContextPath()%>/login/idFind.up"> </iframe>---%>
              		<%@ include file="modal_search.jsp" %>
 	        	</div>
-	      	</div>
-	      
-	      	<!-- Modal footer -->
-	      	<div class="modal-footer">
-	        	<button type="button" class="btn btn-light idFindClose" data-dismiss="modal">Close</button>
-	        	<%-- close나 엑스 버튼을 누르면 아이디 찾기에 입력해 놓은 값을 날려주기 
-	        		 close와 엑스버튼을 한번에 잡으려고 클래스를 idFindClose 로 동일하게 부여--%>
 	      	</div>
 	      	
 		</div>

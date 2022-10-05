@@ -82,6 +82,39 @@ public class ProductDAO implements InterProductDAO {
 	    return categoryList;
 	}
 	
+	// 카테고리 조회 메소드
+		@Override
+		public List<HashMap<String, String>> getTeaCategoryList() throws SQLException {
+		    List<HashMap<String, String>> categoryList = new ArrayList<>();
+
+		    try {
+		        conn = ds.getConnection();
+
+		        String sql = "select cnum, code, cname\r\n"
+		                + "from tbl_category\r\n"
+		                + "where cnum between 1 and 3"
+		                + "order by cnum asc";
+
+		        pstmt = conn.prepareStatement(sql);
+
+		        rs = pstmt.executeQuery();
+
+		        while(rs.next()) {
+		            HashMap<String, String> map = new HashMap<>();
+		            map.put("cnum", rs.getString(1));
+		            map.put("code", rs.getString(2));
+		            map.put("cname", rs.getString(3));
+
+		            categoryList.add(map);
+		        }
+
+		    } finally {
+		        close();
+		    }
+
+		    return categoryList;
+		}
+	
 	// 페이징 방식 카테고리별 기프트세트 상품 총 페이지수 가져오기 메소드
 	@Override
 	public int getTotalPage(String cnum) throws SQLException {
@@ -210,6 +243,175 @@ public class ProductDAO implements InterProductDAO {
 		            pvo.setPsummary(rs.getString("psummary"));
 		            pvo.setPoint(rs.getInt("point"));
 		            pvo.setPinputdate(rs.getString("pinputdate"));
+		            pvo.setReviewCnt(rs.getInt("reviewCnt"));
+		            pvo.setOrederCnt(rs.getInt("orederCnt"));
+
+		            productList.add(pvo);
+		        }
+
+		    } finally {
+		        close();
+		    }
+
+		    return productList;
+		}
+
+		// 검색결과 총 페이지수
+		@Override
+		public int getSearchedTotalPage(Map<String, String> paraMap) throws SQLException{
+			int totalPage = 0;
+			String searchWord = paraMap.get("searchWord");
+			String cnum = paraMap.get("cnum");
+
+			try {
+				conn = ds.getConnection();
+
+				String sql = " select ceil( count(*)/6 ) "
+						+ " from tbl_product "
+						+ " where pname like '%' || ? || '%' " ;
+				
+				// 특정 카테고리 조회시
+				if (!"".equals(cnum)) {
+					sql += " and fk_cnum = ? ";
+				}
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, searchWord);
+				
+				// 특정 카테고리 조회시
+				if (!"".equals(cnum)) {
+					pstmt.setString(2, cnum);
+				}
+
+				rs = pstmt.executeQuery();
+				rs.next();
+				totalPage = rs.getInt(1);
+				
+			} finally {
+				close();
+			}
+
+			return totalPage;
+		}
+		
+		// 검색 상품 개수
+		public int countSearchedGoods(Map<String, String> paraMap) throws SQLException{
+			int n = 0;
+			String searchWord = paraMap.get("searchWord");
+			String cnum = paraMap.get("cnum");
+			
+			try {
+				conn = ds.getConnection();
+
+				String sql = " select count(*) "
+						+ " from tbl_product "
+						+ " where pname like '%' || ? || '%' " ;
+				
+				// 특정 카테고리 조회시
+				if (!"".equals(cnum)) {
+					sql += " and fk_cnum = ? ";
+				}
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, searchWord);
+				
+				// 특정 카테고리 조회시
+				if (!"".equals(cnum)) {
+					pstmt.setString(2, cnum);
+				}
+
+				rs = pstmt.executeQuery();
+				rs.next();
+				n = rs.getInt(1);
+				
+			} finally {
+				close();
+			}
+
+			return n;
+		}
+		
+		// 검색어로 상품 목록 가져오기
+		@Override
+		public List<ProductVO> selectSearchedGoods(Map<String, String> paraMap) throws SQLException {
+			List<ProductVO> productList = new ArrayList<>();
+			String searchWord = paraMap.get("searchWord");
+			String cnum = paraMap.get("cnum");
+			String order = paraMap.get("order");
+			int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));
+			
+		    try {
+		        conn = ds.getConnection();
+
+		        String sql = "SELECT cname, sname, pnum, pname, pimage, \n"+
+		        		"    pqty, price, saleprice, reviewCnt, orederCnt\n"+
+		        		"FROM\n"+
+		        		"    (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, \n"+
+		        		"            pqty, price, saleprice, reviewCnt, orederCnt\n"+
+		        		"    FROM\n"+
+		        		"        (SELECT c.cname, s.sname, pnum, pname, pimage, \n"+
+		        		"                pqty, price, saleprice, reviewCnt, orederCnt\n"+
+		        		"        FROM\n"+
+		        		"            (SELECT\n"+
+		        		"                pnum, pname, pimage, \n"+
+		        		"                pqty, price, saleprice, \n"+
+		        		"                fk_cnum, fk_snum,\n"+
+		        		"                (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
+		        		"                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt\n"+
+		        		"            FROM tbl_product\n"+
+		        		"			 WHERE pname like '%' || ? || '%' ";
+		        
+			    // 특정 카테고리 조회시
+		        if (!"".equals(cnum)) {
+		        	sql +=	"            and fk_cnum = ?\n";
+		        }
+	        
+		        sql += "            ) p\n"+
+	        		"            JOIN tbl_category  c ON p.fk_cnum = c.cnum\n"+
+	        		"            LEFT OUTER JOIN tbl_spec s\n"+
+	        		"            ON p.fk_snum = s.snum "+
+	        		"			 ORDER BY " + order +")V\n"+
+	        		"    ) t\n"+
+	        		"WHERE t.rno BETWEEN ? AND ?\n";
+		        
+		        int sizePerPage = 6;
+
+		        pstmt = conn.prepareStatement(sql);
+		        
+		        // 특정 카테고리 조회시
+		        if (!"".equals(cnum)) {
+		        pstmt.setString(1, searchWord);
+		        pstmt.setString(2, cnum);
+		        pstmt.setInt(3, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+		        pstmt.setInt(4, (currentShowPageNo * sizePerPage));
+		        }
+		        // 전체 조회시
+		        else {
+		        	pstmt.setString(1, searchWord);
+			        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+			        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
+		        }
+		        
+		        rs = pstmt.executeQuery();
+
+		        while (rs.next()) {
+		            ProductVO pvo = new ProductVO();
+		            pvo.setPnum(rs.getInt("pnum")); // 제품번호
+		            pvo.setPname(rs.getString("pname")); // 제품명
+
+		            CategoryVO categvo = new CategoryVO();
+		            categvo.setCname(rs.getString("cname")); // 카테고리 이름
+		            pvo.setCategvo(categvo);
+
+		            pvo.setPimage(rs.getString("pimage")); // 제품 이미지 파일명
+		            pvo.setPqty(rs.getInt("pqty")); // 제품 재고량
+		            pvo.setPrice(rs.getInt("price")); // 제품 정가
+		            pvo.setSaleprice(rs.getInt("saleprice")); // 제품 판매가
+
+		            SpecVO spvo = new SpecVO();
+		            spvo.setSname(rs.getString("sname"));
+		            pvo.setSpvo(spvo);
+
 		            pvo.setReviewCnt(rs.getInt("reviewCnt"));
 		            pvo.setOrederCnt(rs.getInt("orederCnt"));
 
