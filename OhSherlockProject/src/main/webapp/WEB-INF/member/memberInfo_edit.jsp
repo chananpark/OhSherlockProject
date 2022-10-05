@@ -68,9 +68,6 @@
 <script type="text/javascript" src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>  <!-- src 경로는 daum에서 준 우편번호찾기 사이트이다. -->
 <script type="text/javascript">
 
-	//타이머 시간
-	let time = 60 * 5; 
-
 	// "우편번호찾기" 를 클릭했는지 클릭을 안했는지 여부를 알아오기 위한 용도.
 	let b_flag_addressBtn_click = false;  // 초기값을 false 로 줌. 
 	
@@ -409,31 +406,36 @@
 	                  alert("인증번호가 문자로 전송되었습니다.");
 	              //  console.log("인증코드 확인 => " + json.certificationCode);
 	                  smsCertificationCode = json.certificationCode;
-	                  
-	                  // 5분 타이머 함수
-	                     const myTimer = () => {
-	                          
-	                          let minutes = parseInt(time / 60);
-	                          let seconds = time % 60;
-
-	                          minutes = minutes < 10 ? "0" + minutes : minutes;
-	                          seconds = seconds < 10 ? "0" + seconds : seconds;
-
-	                          $("#timer").text(minutes + ":" + seconds);
-	                        
-	                          if (time-- < 0) {
-	                              alert("인증 시간이 초과되었습니다. 인증 문자를 다시 요청하세요.");
-	                              clearInterval(setTimer); // 타이머 삭제
-	                              $("#timer").hide();
-	                              return;
-	                          }
-	                     } 
 	                     
-	                     // 5분 타이머 시작
-	                     const setTimer = setInterval(myTimer, 1000);
-	                     
-	                     // 휴대전화 인증코드입력란 및 인증확인버튼 보여주기
+	                  // 휴대전화 인증코드입력란 및 인증확인버튼 보여주기
 	                   $("div#mobileVerify").show();
+	                  
+	                  let time = 60 * 5; // 타이머 시간
+	                  
+	  		    	// 핸드폰 인증 5분 타이머 함수
+	  	    		const myTimer = () => {
+	  	    		 
+	  	    		        let minutes = parseInt(time / 60);
+	  	    		        let seconds = time % 60;
+
+	  	    		        minutes = minutes < 10 ? "0" + minutes : minutes;
+	  	    		        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+	  	    		        $("#timer").text(minutes + ":" + seconds);
+	  	    				
+	  	    		        if (time-- < 0) {
+	  	    		            alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
+	  	    		            time = 60 * 5; // 타이머 시간 초기화
+	  	    		            clearInterval(setTimer); // 타이머 삭제
+	  	    		            $("#timer").empty();
+	  	    			   	    $("div#mobileVerify").hide();// 휴대전화 인증확인란 숨기기
+	  	    		            return;
+	  	    		        }
+	  	    			}
+	  	    		
+	  				   // 5분 타이머 시작
+	      			   myTimer(); // 한번 실행
+	  			       const setTimer = setInterval(myTimer, 1000); // 이후 1초마다 다시 실행
 	                   
 		               } else if(json.error_count != 0) {
 	                  		alert("인증코드 전송을 실패했습니다. 다시 시도해주세요.");
@@ -567,28 +569,34 @@
 					alert("인증코드가 이메일로 발송되었습니다.");
 	    			certificationCode = json.certificationCode;
 	    			
-	    			// 5분 타이머 함수
-	    	         const myTimer = () => {
-	    	             
-	    	             let minutes = parseInt(time / 60);
-	    	             let seconds = time % 60;
-
-	    	             minutes = minutes < 10 ? "0" + minutes : minutes;
-	    	             seconds = seconds < 10 ? "0" + seconds : seconds;
-
-	    	             $("#timer2").text(minutes + ":" + seconds);
-	    	           
-	    	             if (time-- < 0) {
-	    	                 alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
-	    	                 clearInterval(setTimer); // 타이머 삭제
-	    	                 $("#timer2").hide();
-	    	                 return;
-	    	             }
-	    	        }
-	    	         
-	    	         // 5분 타이머 시작
-	    	         const setTimer = setInterval(myTimer, 1000);
 	    			 $("div#emailVerify").show();
+	    			 let time = 60 * 5; // 타이머 시간
+	                  
+		  		    	// 이메일 인증 5분 타이머 함수
+		  	    		const myTimer = () => {
+		  	    		 
+		  	    		        let minutes = parseInt(time / 60);
+		  	    		        let seconds = time % 60;
+
+		  	    		        minutes = minutes < 10 ? "0" + minutes : minutes;
+		  	    		        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+		  	    		        $("#timer2").text(minutes + ":" + seconds);
+		  	    				
+		  	    		        if (time-- < 0) {
+		  	    		            alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
+		  	    		            time = 60 *5; // 타이머 시간 초기화
+		  	    		            clearInterval(setTimer); // 타이머 삭제
+		  	    		            $("#timer2").empty();
+		  	    			   	    $("div#emailVerify").hide();// 이메일 인증확인란 숨기기
+		  	    		            return;
+		  	    		        }
+		  	    			}
+		  	    		
+		  				   // 5분 타이머 시작
+		      			   myTimer(); // 한번 실행
+		  			       const setTimer = setInterval(myTimer, 1000); // 이후 1초마다 다시 실행
+	    			 
     			}
     			else
     				alert("인증코드 발송을 실패했습니다. 다시 시도해주세요.");
