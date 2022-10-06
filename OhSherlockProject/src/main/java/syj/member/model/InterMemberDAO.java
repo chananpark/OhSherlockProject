@@ -22,6 +22,7 @@ public interface InterMemberDAO {
 
 	// 관리자 회원 목록에서 회원 상세조회
 	MemberVO member_list_detail(Map<String, String> paraMap) throws SQLException;
-		
+
+	
 	
 } // end of InterMemberDAO

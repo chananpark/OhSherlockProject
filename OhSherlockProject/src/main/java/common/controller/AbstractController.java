@@ -62,9 +62,9 @@ public abstract class AbstractController implements InterCommand {
 	// 티제품 카테고리 조회
 	public void getTeaCategoryList(HttpServletRequest request) throws SQLException {
 		InterProductDAO pdao = new ProductDAO();
-		List<HashMap<String, String>> categoryList = pdao.getCategoryList(); 
+		List<HashMap<String, String>> categoryList = pdao.getTeaCategoryList(); 
 		
-		request.setAttribute("categoryList", categoryList);
+		request.setAttribute("teaCategoryList", categoryList);
 	}
 	
 	// 기프트세트 카테고리 조회
@@ -77,13 +77,4 @@ public abstract class AbstractController implements InterCommand {
 	    // request 영역에 저장
 	}
 	
-	// 이벤트 단품 카테고리 조회
-	public void getEventCategoryList(HttpServletRequest request) throws SQLException {
-	    syj.shop.model.InterProductDAO pdao = new syj.shop.model.ProductDAO();
-	    List<HashMap<String, String>> prodCategoryList = pdao.getProdCategoryList(); 
-	    //ProductDAO 카테고리 조회 메소드 실행
-
-	    request.setAttribute("prodCategoryList", prodCategoryList);
-	    // request 영역에 저장
-	}
 }

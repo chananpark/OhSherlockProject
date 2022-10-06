@@ -126,6 +126,7 @@ public class ProductEvent extends AbstractController {
 			// 글자는 다음이지만 11 페이지를 보여주어야 한다.
 		} 
 		
+		request.setAttribute("currentShowPageNo", currentShowPageNo);
 		request.setAttribute("pageBar", pageBar);
 		
 		// *** 페이지바 만들기 끝 *** //

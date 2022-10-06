@@ -145,12 +145,13 @@ public class MemberDAO implements InterMemberDAO {
 
 	// 휴면 상태 풀어주기
 	@Override
-	public int activateMember(String userid, String clientip) throws SQLException {
+	public int activateMember(String userid, String clientip){
 		int result = 0;
 		
 		try {
 			conn = ds.getConnection();
-
+			conn.setAutoCommit(false); // 오토커밋 해제
+			
 			String sql = "update tbl_member set idle = 0 where userid = ?";
 
 			pstmt = conn.prepareStatement(sql);
@@ -167,9 +168,21 @@ public class MemberDAO implements InterMemberDAO {
 				pstmt.setString(2, clientip);
 
 				result = pstmt.executeUpdate();
+				conn.commit(); // 커밋
 			
 			}
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace(); // 예외 발생시 롤백
+			}
 		} finally {
+			try {
+				conn.setAutoCommit(true); // 오토커밋 설정
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 			close();
 		}
 		return result;

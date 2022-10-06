@@ -115,12 +115,12 @@ public class MemberDAO implements InterMemberDAO {
 				 if(result==1) {
 					 // insert하는 코드
 					 
-					 
-					 sql = " insert all   "+
-						   " into tbl_coin_history(COINNO, FK_USERID, COIN_AMOUNT) values(seq_coin_history.nextval, ?, ? )   "+
-						   " into tbl_point_history(POINTNO, FK_USERID, POINT_AMOUNT) values(seq_point_history.nextval, ?, ? )  "+
-						   " select   "+
-						   " from dual ";
+				/*	 
+					sql = " insert all   "+
+						  " into tbl_coin_history(COINNO, FK_USERID, COIN_AMOUNT) values(seq_coin_history.nextval, ?, ? )   "+
+						  " into tbl_point_history(POINTNO, FK_USERID, POINT_AMOUNT) values(seq_point_history.nextval, ?, ? )  "+
+						  " select  * "+
+						  " from dual ";
 				 
 					 
 				    pstmt = conn.prepareStatement(sql);
@@ -131,10 +131,10 @@ public class MemberDAO implements InterMemberDAO {
 					pstmt.setInt(4, (int)(Integer.parseInt(paraMap.get("coinmoney")) * 0.01) );  
 					
 					result = pstmt.executeUpdate();	
+				  */  
 				    
 				    
-				    
-					/* 
+					
 					 
 					sql = " insert into tbl_coin_history(COINNO, FK_USERID, COIN_AMOUNT) "
 					    + " values(seq_coin_history.nextval, ?, ? ) ";
@@ -144,20 +144,22 @@ public class MemberDAO implements InterMemberDAO {
 					pstmt.setString(1, paraMap.get("userid"));
 					pstmt.setInt(2, Integer.parseInt(paraMap.get("coinmoney")));
 					
+					result = pstmt.executeUpdate();
+					
+					
 					
 					sql = " insert into tbl_point_history(POINTNO, FK_USERID, POINT_AMOUNT) "
 						+ " values(seq_point_history.nextval, ?, ? ) ";
 					
 					
 						 
-						 
 					pstmt = conn.prepareStatement(sql);
 					
 					pstmt.setString(1, paraMap.get("userid"));
-					pstmt.setInt(2, Integer.parseInt(paraMap.get("coinmoney"))); 
+					pstmt.setInt(2, (int)(Integer.parseInt(paraMap.get("coinmoney")) * 0.01) ); 
 					
 					result = pstmt.executeUpdate();
-					 */
+					 
 				 }
 				 
 			} finally { 
@@ -173,6 +175,8 @@ public class MemberDAO implements InterMemberDAO {
 		public List<CoinVO> selectPagingCoin(Map<String, String> paraMap) throws SQLException  {
 
 			List<CoinVO> coin_history = new ArrayList<>();
+			
+			String userid = paraMap.get("userid");
 			
 			try {
 				 conn = ds.getConnection();
@@ -198,7 +202,8 @@ public class MemberDAO implements InterMemberDAO {
 								
 							}
 							
-								sql += 	 " order by COIN_DATE desc "+
+							sql += 	 " where FK_USERID = ? "+
+							    	 " order by COIN_DATE desc "+
 										 "        ) V   "+
 										 "    )T "+
 										 "  where RNO between ? and ? ";
@@ -214,12 +219,14 @@ public class MemberDAO implements InterMemberDAO {
 				 if( date1 != null && date2 != null ) { 
 					 pstmt.setString(1, paraMap.get("date1"));
 					 pstmt.setString(2, paraMap.get("date2"));
-					 pstmt.setInt(3, (currentShowPageNo*sizePerPage) - (sizePerPage - 1) ); // 공식 
-					 pstmt.setInt(4, (currentShowPageNo*sizePerPage) ); // 공식
+					 pstmt.setString(3, paraMap.get("userid"));
+					 pstmt.setInt(4, (currentShowPageNo*sizePerPage) - (sizePerPage - 1) ); // 공식 
+					 pstmt.setInt(5, (currentShowPageNo*sizePerPage) ); // 공식
 				 }
-				 else {
-					 pstmt.setInt(1, (currentShowPageNo*sizePerPage) - (sizePerPage - 1) ); // 공식 
-					 pstmt.setInt(2, (currentShowPageNo*sizePerPage) ); // 공식
+				 else { 
+					 pstmt.setString(1, paraMap.get("userid"));
+					 pstmt.setInt(2, (currentShowPageNo*sizePerPage) - (sizePerPage - 1) ); // 공식 
+					 pstmt.setInt(3, (currentShowPageNo*sizePerPage) ); // 공식
 				 }
 				 
 				 
@@ -254,11 +261,14 @@ public class MemberDAO implements InterMemberDAO {
 			
 			int totalPage = 0;
 			
+			String userid = paraMap.get("userid");
+			
 			try {
 				conn = ds.getConnection();
 				
 				String sql = " select ceil(count(*)/?) "
-						   + " from tbl_coin_history ";
+						   + " from tbl_coin_history"
+						   + " where FK_USERID = ? ";
 				
 				String date1 = paraMap.get("date1");
  				String date2 = paraMap.get("date2");
@@ -274,16 +284,18 @@ public class MemberDAO implements InterMemberDAO {
 				 
 				 if( date1 != null && date2 != null ) { 
 					 pstmt.setInt(1, Integer.parseInt(paraMap.get("sizePerPage")));
-					 pstmt.setString(2, paraMap.get("date1"));
-					 pstmt.setString(3, paraMap.get("date2"));
+					 pstmt.setString(2, paraMap.get("userid"));
+					 pstmt.setString(3, paraMap.get("date1"));
+					 pstmt.setString(4, paraMap.get("date2"));
 				 }
 				 else { 
 					 pstmt.setInt(1, Integer.parseInt(paraMap.get("sizePerPage")));
+					 pstmt.setString(2, paraMap.get("userid"));
 				 }
 				
 				rs = pstmt.executeQuery();
 				rs.next();
-				totalPage = rs.getInt(1);
+				totalPage = rs.getInt(1); 
 				
 			}  finally {
 				close();
@@ -317,7 +329,7 @@ public class MemberDAO implements InterMemberDAO {
 				 	String date1 = paraMap.get("date1");
 	 				String date2 = paraMap.get("date2");
 					
-					
+			 		
 				
 				if(date1 != null && date2 != null) {
 					
@@ -325,7 +337,7 @@ public class MemberDAO implements InterMemberDAO {
 					
 				}
 				
-					sql += 	 " order by POINT_DATE desc "+
+					sql += 	 " order by POINTNO desc "+
 							 "        ) V   "+
 							 "    )T "+
 							 "  where RNO between ? and ? ";
