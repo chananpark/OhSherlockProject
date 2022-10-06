@@ -164,6 +164,9 @@ $(()=>{
 		 document.getElementById(cnum).classList.add("selected");
 	 }
 	
+	// 소제목 텍스트
+	$("#subtitle").text($(".categories.selected").text());
+	
 	
 });
 
