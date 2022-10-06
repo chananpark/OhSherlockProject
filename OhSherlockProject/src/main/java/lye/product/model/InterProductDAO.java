@@ -19,6 +19,7 @@ public interface InterProductDAO {
 
 	// 전체 및 특정상품들을 페이지바를 사용한 페이징 처리하여 조회(select) 해오기
 	List<ProductVO> selectPagingProduct(Map<String, String> paraMap) throws SQLException;
+
 	
 
 
