@@ -78,32 +78,29 @@ public class ProductDAO implements InterProductDAO {
 			String snum = paraMap.get("snum");
 	        String cnum = paraMap.get("cnum");
 	        
-	        if(snum != null) {
-	        	// 스펙(new, best) 가 넘어올 경우
-	        	sql += " and fk_snum = ? ";
-	        } else if(cnum != null) {
-	        	if("1".equals(cnum) || "2".equals(cnum) || "3".equals(cnum)) {
-	        		// 카테고리(홍차,말차,허브차) 가 넘어올 경우 
-	        		sql += " and fk_cnum = ? ";
-	        	} else {
-	        		// 기프트세트는 4
-	        		sql += " and fk_cnum in(4,5,6) ";
-	        	}
-	        } else {
-	        	// 전체 조회할 경우
+	        if( "".equals(snum) && "".equals(cnum) ) {
+	        	// 전체 상품
 	        	sql += " ";
-	        }
-			
+	        } else if( "".equals(cnum) && !("".equals(snum)) ) {
+	        	// 스펙만 넘어올 때
+	        	sql += " and fk_snum = ? ";
+	        } else if( !("".equals(cnum)) && "".equals(snum) ) {
+	        	// 카테고리만 넘어올 때
+	        	sql += " and fk_cnum = ? ";
+	        } 
+	        
 			pstmt = conn.prepareStatement(sql);
 			
-			if(snum != null) {
-	        	// 스펙(new, best) 가 넘어올 경우
-	        	pstmt.setString(1, snum);
-	        } else if(cnum != null) {
-        		pstmt.setString(1, cnum);
-	        } else {
-	        	
-	        }
+			if( "".equals(snum) && "".equals(cnum) ) {
+	        	// 전체 상품
+
+			} else if( "".equals(cnum) && !("".equals(snum)) ) {
+	        	// 스펙만 넘어올 때
+				pstmt.setString(1, snum);
+	        } else if( !("".equals(cnum)) && "".equals(snum) ) {
+	        	// 카테고리만 넘어올 때
+	        	pstmt.setString(1, cnum);
+	        } 
 			
 			rs = pstmt.executeQuery();
 			rs.next();
@@ -150,36 +147,27 @@ public class ProductDAO implements InterProductDAO {
 
 	        String snum = paraMap.get("snum");
 	        String cnum = paraMap.get("cnum");
-	        String orderSQL = paraMap.get("orderSQL");
-	        
-	        if(snum != null) {
+	        String order = paraMap.get("order");
+
+	        if( "".equals(snum) && "".equals(cnum) ) {
+	        	// 전체 상품
+	        	sql += " ";
+	        } else if( "".equals(cnum) && !("".equals(snum)) ) {
 	        	// 스펙(new, best) 가 넘어올 경우
 	        	sql += " and fk_snum = ? ";
-	        } else if(cnum != null) {
-	        	if("1".equals(cnum) || "2".equals(cnum) || "3".equals(cnum)) {
-	        		// 카테고리(홍차,말차,허브차) 가 넘어올 경우 
-	        		sql += " and fk_cnum = ? ";
-	        	} else {
-	        		// 기프트세트는 4
-	        		sql += " and fk_cnum in(4,5,6) ";
-	        	}
-	        } else {
-	        	// 전체 조회할 경우
-	        	sql += " ";
-	        }
+	        } else if( !("".equals(cnum)) && "".equals(snum) ) {
+	        	// 컬럼이 넘어올 경우
+	        	sql += " and fk_cnum = ? ";
+	        } 
+	        
 	        sql += " )p\n"+
 		    		"            JOIN tbl_category  c ON p.fk_cnum = c.cnum\n"+
 		    		"            LEFT OUTER JOIN tbl_spec s\n"+
-		    		"            ON p.fk_snum = s.snum)V\n"+
+		    		"            ON p.fk_snum = s.snum" +
+		    		"			 ORDER BY " + order +")V\n"+
 		    		"    ) t\n"+
-		    		" WHERE t.rno BETWEEN ? AND ? " +
-		    		" ORDER BY ";
-	        
-	        if(orderSQL == null) {
-	        	sql += " pnum desc ";
-	        } else {
-	        	sql += orderSQL;
-	        }
+		    		" WHERE t.rno BETWEEN ? AND ? ";
+		    		
 	        
 	        /*
 	         === 페이징처리 공식 === 
@@ -192,28 +180,21 @@ public class ProductDAO implements InterProductDAO {
 
 	        pstmt = conn.prepareStatement(sql);
 	        
-	        
-	        if(snum != null && cnum == null) {
+	        if( "".equals(snum) && "".equals(cnum) ) {
+	        	// 전체 상품
+	        	pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+		        pstmt.setInt(2, (currentShowPageNo * sizePerPage));
+	        } else if( "".equals(cnum) && !("".equals(snum)) ) {
 	        	// 스펙(new, best) 가 넘어올 경우
 	        	pstmt.setString(1, snum);
 		        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
 		        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
-	        } else if(cnum != null && snum == null) {
-	        	if("1".equals(cnum) || "2".equals(cnum) || "3".equals(cnum)) {
-	        		// 카테고리(홍차,말차,허브차) 가 넘어올 경우 
-	        		pstmt.setString(1, cnum);
-			        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
-			        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
-	        	} else {
-	        		// 기프트세트는 4
-	        		pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
-			        pstmt.setInt(2, (currentShowPageNo * sizePerPage));
-	        	}
-	        } else {
-	        	// 전체 조회할 경우
-	        	pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
-		        pstmt.setInt(2, (currentShowPageNo * sizePerPage));
-	        }
+	        } else if( !("".equals(cnum)) && "".equals(snum) ) {
+	        	// 컬럼이 넘어올 경우
+	        	pstmt.setString(1, cnum);
+		        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+		        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
+	        } 
 	        
 	        rs = pstmt.executeQuery();
 
