@@ -130,7 +130,8 @@ public class ProductEvent_category extends AbstractController {
 		} 
 		
 		request.setAttribute("pageBar", pageBar);
-		
+		request.setAttribute("currentShowPageNo", currentShowPageNo);
+		request.setAttribute("cnum", cnum);
 		// *** 페이지바 만들기 끝 *** //
 		
 		super.setRedirect(false);

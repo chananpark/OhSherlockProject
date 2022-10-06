@@ -85,7 +85,9 @@ $(document).ready(function(){
 					
 			        if (time-- < 0) {
 			            alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
+			            time = 60 * 5; // 타이머 시간 초기화
 			            clearInterval(setTimer); // 타이머 삭제
+			            $("#timer").empty();
 				   	    $("div#div_activateResult").hide();
 				   	 	$("div#div_activateResult>div.jumbotron").hide();
 			            return;
@@ -93,6 +95,7 @@ $(document).ready(function(){
 				}
 			
 		   // 5분 타이머 시작
+		   myTimer();
 	       const setTimer = setInterval(myTimer, 1000);
 
         }

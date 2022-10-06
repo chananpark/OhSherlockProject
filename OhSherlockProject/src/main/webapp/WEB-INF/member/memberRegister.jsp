@@ -69,12 +69,12 @@
 	
 	let randnum6; // 컨트롤러에서 휴대전화 인증 코드 가져오기용
 	
+	
 	$(document).ready(function () {
 		
 		$("#spinner").hide();
 		
 		let certifiCode; // 컨트롤러에서 이메일인증코드 가져오기용
-		let setTimer; // 셋인터벌 담아주는 변수 (타이머) 
 		
 	  $('span.error').hide();
 	  $('input#userid').focus();
@@ -378,7 +378,7 @@
 			  b_flag_mobileDuplicate_click = true;
 			  // 가입하기 버튼을 클릭시 "휴대폰인증" 을 클릭했는지 클릭안했는지 알아보기위한 용도임.
 
-        $.ajax({
+        	$.ajax({
 						url:"<%= request.getContextPath()%>/member/mobileVerifyCertification.tea",
 						type:"post",
 						data:{ mobile: $('#hp1').val()+$('#hp2').val()+$('#hp3').val() },
@@ -388,7 +388,7 @@
 				 
 			    	  randnum6 = json.randnum; 
 			    	  
-			    	  alert("인증코드가 이메일로 발송되었습니다.");
+			    	  alert("인증코드가 핸드폰으로 발송되었습니다.");
 			    		
 				    	// 휴대전화 박스 readonly 처리
 				  		$("#hp1").attr("disabled",true); 
@@ -397,6 +397,34 @@
 			    	  
 			    	  // 휴대전화 인증확인란 보이기
 			    	  $('div#mobileVerify').show();
+			    	  
+			    	// 5분
+			    	let time =  60 * 5; // 타이머 시간
+			    	
+		    		// 휴대전화 인증 5분 타이머 함수
+		    		const myTimer = () => {
+		    		 
+		    		        let minutes = parseInt(time / 60);
+		    		        let seconds = time % 60;
+
+		    		        minutes = minutes < 10 ? "0" + minutes : minutes;
+		    		        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+		    		        $("#mobileTimer").text(minutes + ":" + seconds);
+		    				
+		    		        if (time-- < 0) {
+		    		            alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
+		    		            time = 60 * 5; // 타이머 시간 초기화
+		    		            clearInterval(setTimer); // 타이머 삭제
+		    		            $("#mobileTimer").empty();
+		    			   	    $("div#mobileVerify").hide();// 휴대전화 인증확인란 숨기기
+		    		            return;
+		    		        }
+		    			}
+		    		
+					   // 5분 타이머 시작
+  	    			   myTimer(); // 한번 실행
+				       const setTimer = setInterval(myTimer, 1000); // 이후 1초마다 다시 실행
 			    		
 						},
 						
@@ -438,7 +466,7 @@
 			    	  $("#spinner").show();
 			    	  
 		    		 // 이메일 인증코드 처리 함수 호출
-		    	   emailVerifyCertification();
+		    	   	 emailVerifyCertification();
 			      }
 			    },
 			    error: function (request, status, error) {
@@ -543,6 +571,32 @@
    				 alert("인증코드가 이메일로 발송되었습니다.");
    			 	
 		    	  $("#spinner").hide(); // 스피너 숨기기
+		  	 	
+		      let time =  60 * 5; // 타이머 시간
+		    	// 이메일 인증 5분 타이머 함수
+	    		const myTimer = () => {
+	    		 
+	    		        let minutes = parseInt(time / 60);
+	    		        let seconds = time % 60;
+
+	    		        minutes = minutes < 10 ? "0" + minutes : minutes;
+	    		        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+	    		        $("#emailTimer").text(minutes + ":" + seconds);
+	    				
+	    		        if (time-- < 0) {
+	    		            alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
+	    		            time = 60 * 5; // 타이머 시간 초기화
+	    		            clearInterval(setTimer); // 타이머 삭제
+	    		            $("#emailTimer").empty();
+	    			   	    $("div#emailVerify").hide();// 이메일 인증확인란 숨기기
+	    		            return;
+	    		        }
+	    			}
+	    		
+				   // 5분 타이머 시작
+    			   myTimer(); // 한번 실행
+			       const setTimer = setInterval(myTimer, 1000); // 이후 1초마다 다시 실행
 		 
    				 certifiCode = json.certificationCode;
    				 
@@ -745,7 +799,7 @@
 				    <div id="mobileVerify">
 							<input id="userMobileVerifyCode" type="text" name="mobileVerifyCode" class="mt-2" size="20"/>
 							<button type="button" id="btn_mobileVerifyCodeCheck" onclick="mobileVerifyCodeCheck();">인증확인</button>
-							<span id="timer" class="text-danger"></span>
+							<span id="mobileTimer" class="text-danger"></span>
 						</div>
 						<div id="mobileVerifyConfirm">휴대전화 인증이 확인되었습니다.</div>
 					</td>
@@ -763,7 +817,7 @@
 						<div id="emailVerify">
 							<input id="userEmailVerifyCode" type="text" name="emailVerifyCode" class="mt-2" size="20"/>
 							<button type="button" id="btn_emailVerifyCodeCheck" onclick="emailVerifyCodeCheck();">인증확인</button>
-							<span id="timer" class="text-danger"></span>
+							<span id="emailTimer" class="text-danger"></span>
 						</div>
 						<div id="emailVerifyConfirm">이메일 인증이 확인되었습니다.</div>
 					</td>

@@ -157,54 +157,61 @@ function getOrderedList() {
 		dataType:"JSON",
 		success:function(json){
 	        let html = "";
-	         	
-     		$.each(json, function(index, item){
-   				
-   			html += 
-
-	  		'<div class="card border-0 mb-4 mt-1 col-lg-4 col-md-6 ">'+
-	    	'<a href="">'+
-	    	'<img src="../images/'+item.pimage+'" class="card-img-top"/></a>'+
-    		'<div class="card-body">';
-    			
-    		if(item.sname=='BEST'){
-				html +=
-   				' <div class="badges rounded text-light text-center mb-2 badge-danger" style="width:70px; font-weight:bold;">'+
-   				item.sname+'</div>';
-    		}
-				else if(item.sname=='NEW'){
+	        
+	        if(json.length != 0) {
+	        
+	     		$.each(json, function(index, item){
+	   				
+	   			html += 
+	
+		  		'<div class="card border-0 mb-4 mt-1 col-lg-4 col-md-6 "> '+
+		    	'<a href="<%= ctxPath %>/shop/productView.tea?pnum=' + item.pnum + '"> '+
+		    	'<img src="../images/'+item.pimage+'" class="card-img-top"/></a> '+
+	    		'<div class="card-body">';
+	    			
+	    		if(item.sname=='BEST'){
 					html +=
-   				' <div class="badges rounded text-light text-center mb-2" style="width:70px; font-weight:bold; background-color: #1E7F15;">'+
-   				item.sname+'</div>';
+	   				'<div class="badges rounded text-light text-center mb-2 badge-danger" style="width:70px; font-weight:bold;"> '+
+	   				item.sname+'</div> ';
+	    		}
+				if(item.sname=='NEW'){
+					html +=
+	  				'<div class="badges rounded text-light text-center mb-2" style="width:70px; font-weight:bold; background-color: #1E7F15;"> '+
+	  				item.sname+'</div> ';
 				}
-				else if(item.sname==null){
-					html += ' <div class="badges mb-2">&nbsp;</div>';
-				}
-				
 				if(item.pqty==0)
-						html +=
-			' <div class="badges rounded text-light text-center mb-2 badge-dark"style="width: 70px; font-weight: bold; ">품절</div>';
+							html +=
+				'<div class="badges rounded text-light text-center mb-2 badge-dark"style="width: 70px; font-weight: bold; ">품절</div> ';
+				
+				if(item.sname==null){
+					html += '<div class="badges mb-2">&nbsp;</div> ';
+				}
 					
-    				
-    				html += ' <h5 class="card-title" style="font-weight:bold;"><a href="#">'+item.pname+'</a></h5>'+
-	      			' <p class="card-text">'+item.price.toLocaleString('en')+'원</p>'+
-	      			
-	      			
-	      			' <a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart"></i></a>'+
-	      			' <a class="card-text text-secondary mr-5">찜하기</a>'+
-	      							      			
-	      			' <a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a>'+
-	      			' <a class="card-text text-secondary">담기</a>'+
-	      			
-	   			'</div> </div>';
-         		}); 
-	         	
-	         	$("#giftSetList").html(html);
-	         	
-	    		$('i.heart').click(function() {
-	    	        $(this).removeClass("text-secondary");
-	    	        $(this).addClass("text-danger");
-	    	    })
+				html += '<h5 class="card-title" style="font-weight:bold;"><a href="<%= ctxPath %>/shop/productView.tea?pnum=' + item.pnum + '"> '+item.pname+'</a></h5> '+
+	   			'<p class="card-text">'+item.price.toLocaleString('en')+'원</p> '+
+	   			
+	   			
+	   			'<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart"></i></a> '+
+	   			'<a class="card-text text-secondary mr-5">찜하기</a> '+
+	   							      			
+	   			'<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a> '+
+	   			'<a class="card-text text-secondary">담기</a> '+
+	    			
+	 			'</div> </div>';
+	      		}); 
+	        	
+	        }
+	        
+	        else {
+	        	html = "상품 준비중입니다.";
+	        }
+        	$("#giftSetList").html(html);
+	        	
+	   		$('i.heart').click(function() {
+	   	        $(this).removeClass("text-secondary");
+	   	        $(this).addClass("text-danger");
+	   	    })
+	        
 		},
 		error: function(request, status, error){
             alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -313,7 +320,7 @@ function getPageBar() {
 						<c:if test="${not empty productList}">
 						<c:forEach var="pvo" items="${productList}">
 				  		<div class="card border-0 mb-4 mt-1 col-lg-4 col-md-6 ">
-				    		<a href="<%= ctxPath %>/product/product_view.jsp"><img src="../images/${pvo.pimage}" class="card-img-top"/></a>
+				    		<a href="<%= ctxPath %>/shop/productView.tea?pnum=${pvo.pnum}"><img src="../images/${pvo.pimage}" class="card-img-top"/></a>
 			    			<div class="card-body">
 			    				
 			    				<c:if test="${not empty pvo.spvo.sname}">
@@ -337,7 +344,7 @@ function getPageBar() {
 			    				<div class="badges mb-2" >&nbsp;</div>
 			    				</c:if>
 			    				
-			      				<h5 class="card-title" style="font-weight:bold;"><a href="#">${pvo.pname}</a></h5>
+			      				<h5 class="card-title" style="font-weight:bold;"><a href="<%= ctxPath %>/shop/productView.tea?pnum=${pvo.pnum}"> ${pvo.pname}</a></h5>
 				      			<p class="card-text"><fmt:formatNumber value="${pvo.price}" pattern="#,###"/>원</p>
 				      			
 				      			<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart"></i></a>

@@ -202,26 +202,16 @@ public class ProductDAO implements InterProductDAO {
 	       else {
 	       	sql +=	"            WHERE fk_cnum in (1,2,3) ";
 	       }
-	       // 낮은 가격순
-	       if(paraMap.get("order").equals("saleprice")) {
-    	    sql +=	"            ORDER BY ? ASC) p "+
+	       
+	        System.out.println("dao order>>>>>>> " + paraMap.get("order"));
+    	    sql +=	"            ) p "+
 		    	    "            JOIN tbl_category  c ON p.fk_cnum = c.cnum "+
 		    	    "            LEFT OUTER JOIN tbl_spec s "+
-		    	    "            ON p.fk_snum = s.snum)V "+
+		    	    "            ON p.fk_snum = s.snum "+
+		    	    "			 ORDER BY " + paraMap.get("order")+") V "+
 		    	    "    ) t "+
 		    	    " WHERE t.rno BETWEEN ? AND ? ";
-	       }
-	       // 그 외의 정렬
-	       else {
-    	    sql +=	"            ORDER BY ? DESC) p "+
-    			    "            JOIN tbl_category  c ON p.fk_cnum = c.cnum "+
-    			    "            LEFT OUTER JOIN tbl_spec s "+
-    			    "            ON p.fk_snum = s.snum)V "+
-    			    "    ) t "+
-    			    " WHERE t.rno BETWEEN ? AND ? ";
-	       }
-			
-			
+    	    
 			int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));  // String 타입이므로 int 타입으로 변환해준다. currentShowPageNo 는 몇번째 페이지를 보여주는지 나타냄.
 			int sizePerPage = 6;         // 한 페이지당 화면상에 보여줄 제품의 개수는 6개씩 보여주는 것으로 한다.     
 			
@@ -230,22 +220,19 @@ public class ProductDAO implements InterProductDAO {
 	        // 특정 카테고리 조회시
 	        if (paraMap.get("cnum") != null) {
 		        pstmt.setString(1, paraMap.get("cnum"));
-		        pstmt.setString(2, paraMap.get("order"));
-		        pstmt.setInt(3, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
-		        pstmt.setInt(4, (currentShowPageNo * sizePerPage));
+		        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+		        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
 	        }
 	        // 베스트 카테고리 조회시
 	        else if(paraMap.get("snum") != null) {
 	        	pstmt.setString(1, paraMap.get("snum"));
-	        	pstmt.setString(2, paraMap.get("order"));
-		        pstmt.setInt(3, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
-		        pstmt.setInt(4, (currentShowPageNo * sizePerPage));
+		        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+		        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
 	        }
 	        // 전체 조회시
 	        else {
-		        pstmt.setString(1, paraMap.get("order"));
-		        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
-		        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
+		        pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+		        pstmt.setInt(2, (currentShowPageNo * sizePerPage));
 	        }
 
 	        rs = pstmt.executeQuery();
