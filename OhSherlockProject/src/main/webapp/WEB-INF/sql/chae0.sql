@@ -188,12 +188,14 @@ values(seq_point_history.nextval, 'codud1158',8000);
     
     
 insert all 
-into tbl_coin_history(COINNO, FK_USERID, COIN_AMOUNT) values(seq_coin_history.nextval, 'codud1158',9000 ) 
-into tbl_point_history(POINTNO, FK_USERID, POINT_AMOUNT) values(seq_point_history.nextval, 'codud1158',9000 )
+into tbl_coin_history(COINNO, FK_USERID, COIN_AMOUNT) values(seq_coin_history.nextval, 'lee0ji',9000 ) 
+into tbl_point_history(POINTNO, FK_USERID, POINT_AMOUNT) values(seq_point_history.nextval, 'lee0ji',9000 )
 select *
 from dual;    
     
 commit;   
+
+update tbl_coin_history set COIN_DATE = to_date('2022-10-01', 'yyyy-mm-dd') where fk_userid='lee0ji';
     
     
     
