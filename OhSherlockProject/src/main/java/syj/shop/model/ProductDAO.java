@@ -193,12 +193,12 @@ public class ProductDAO implements InterProductDAO {
 	        pstmt = conn.prepareStatement(sql);
 	        
 	        
-	        if(snum != null) {
+	        if(snum != null && cnum == null) {
 	        	// 스펙(new, best) 가 넘어올 경우
 	        	pstmt.setString(1, snum);
 		        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
 		        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
-	        } else if(cnum != null) {
+	        } else if(cnum != null && snum == null) {
 	        	if("1".equals(cnum) || "2".equals(cnum) || "3".equals(cnum)) {
 	        		// 카테고리(홍차,말차,허브차) 가 넘어올 경우 
 	        		pstmt.setString(1, cnum);
