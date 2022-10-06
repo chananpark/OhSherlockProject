@@ -93,7 +93,10 @@ $(()=>{
 			<div style="padding: 5%;"><h5 style="font-weight: bold;">
 			<a href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=&order=${order}'>
 			전체상품</a></h5></div>
-			<div style="padding: 5%; font-weight: bold;">티제품</div>
+			<div style="padding: 5%; font-weight: bold;">
+			<a href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=teaAll&order=${order}' id='teaAll'>
+			티제품</a>
+			</div>
 			<c:forEach items="${teaCategoryList }" var="teaCat">
 			<div style="text-align: left; padding: 4%; margin-left: 10%;">
 				<a href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=${teaCat.cnum}&order=${order}' id='${teaCat.cnum}'>
@@ -101,7 +104,10 @@ $(()=>{
 			</div>
 			</c:forEach>
 			<hr>
-			<div style="padding: 5%; font-weight: bold;">기프트세트</div>
+			<div style="padding: 5%; font-weight: bold;">
+			<a href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=setAll&order=${order}' id='setAll'>
+			기프트세트</a>
+			</div>
 			<c:forEach items="${giftsetCategoryList }" var="setCat">
 			<div style="text-align: left; padding: 4%; margin-left: 10%;">
 				<a href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=${setCat.cnum}&order=${order}' id='${setCat.cnum}'>

@@ -136,7 +136,8 @@ public class NoticeDAO implements InterNoticeDAO {
 		try {
 			conn = ds.getConnection();
 
-			String sql = "select noticeSubject, noticeContent, noticeHit, noticeDate, noticeFile from tbl_notice where noticeNo = ?";
+			String sql = "select noticeSubject, noticeContent, noticeHit, noticeDate, "
+					+ " noticeImage, systemFileName, originFileName from tbl_notice where noticeNo = ?";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, paraMap.get("noticeNo"));
@@ -147,7 +148,9 @@ public class NoticeDAO implements InterNoticeDAO {
 				nvo.setNoticeContent(rs.getString(2));
 				nvo.setNoticeHit(rs.getInt(3));
 				nvo.setNoticeDate(rs.getDate(4));
-				nvo.setNoticeFile(rs.getString(5));
+				nvo.setNoticeImage(rs.getString(5));
+				nvo.setSystemFileName(rs.getString(6));
+				nvo.setOriginFileName(rs.getString(7));
 				nvo.setNoticeNo(Integer.parseInt(paraMap.get("noticeNo")));
 				
 				// 조회수 증가시키기

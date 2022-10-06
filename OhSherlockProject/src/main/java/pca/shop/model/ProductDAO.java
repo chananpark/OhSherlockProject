@@ -293,15 +293,21 @@ public class ProductDAO implements InterProductDAO {
 						+ " where pname like '%' || ? || '%' " ;
 				
 				// 특정 카테고리 조회시
-				if (!"".equals(cnum)) {
+				if (!"".equals(cnum) && Character.isDigit(cnum.charAt(0))) {
 					sql += " and fk_cnum = ? ";
+				}
+				else if ("teaAll".equals(cnum)) {
+					sql += " and fk_cnum in (1,2,3) ";
+				}
+				else if ("setAll".equals(cnum)) {
+					sql += " and fk_cnum in (4,5,6) ";
 				}
 				
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, searchWord);
 				
 				// 특정 카테고리 조회시
-				if (!"".equals(cnum)) {
+				if (!"".equals(cnum) && Character.isDigit(cnum.charAt(0))) {
 					pstmt.setString(2, cnum);
 				}
 
@@ -330,15 +336,23 @@ public class ProductDAO implements InterProductDAO {
 						+ " where pname like '%' || ? || '%' " ;
 				
 				// 특정 카테고리 조회시
-				if (!"".equals(cnum)) {
+				if (!"".equals(cnum) && Character.isDigit(cnum.charAt(0))) {
 					sql += " and fk_cnum = ? ";
+				}
+				// 티단품 조회시
+				else if ("teaAll".equals(cnum)) {
+					sql += " and fk_cnum in (1,2,3) ";
+				}
+				// 세트상품 조회시
+				else if ("setAll".equals(cnum)) {
+					sql += " and fk_cnum in (4,5,6) ";
 				}
 				
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, searchWord);
 				
 				// 특정 카테고리 조회시
-				if (!"".equals(cnum)) {
+				if (!"".equals(cnum) && Character.isDigit(cnum.charAt(0))) {
 					pstmt.setString(2, cnum);
 				}
 
@@ -384,9 +398,17 @@ public class ProductDAO implements InterProductDAO {
 		        		"			 WHERE pname like '%' || ? || '%' ";
 		        
 			    // 특정 카테고리 조회시
-		        if (!"".equals(cnum)) {
+		        if (!"".equals(cnum) && Character.isDigit(cnum.charAt(0))) {
 		        	sql +=	"            and fk_cnum = ?\n";
 		        }
+		        // 티단품 조회시
+		        else if ("teaAll".equals(cnum)) {
+					sql += " and fk_cnum in (1,2,3) ";
+				}
+		        // 세트상품 조회시
+				else if ("setAll".equals(cnum)) {
+					sql += " and fk_cnum in (4,5,6) ";
+				}
 	        
 		        sql += "            ) p\n"+
 	        		"            JOIN tbl_category  c ON p.fk_cnum = c.cnum\n"+
@@ -401,7 +423,7 @@ public class ProductDAO implements InterProductDAO {
 		        pstmt = conn.prepareStatement(sql);
 		        
 		        // 특정 카테고리 조회시
-		        if (!"".equals(cnum)) {
+		        if (!"".equals(cnum) && Character.isDigit(cnum.charAt(0))) {
 		        pstmt.setString(1, searchWord);
 		        pstmt.setString(2, cnum);
 		        pstmt.setInt(3, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
