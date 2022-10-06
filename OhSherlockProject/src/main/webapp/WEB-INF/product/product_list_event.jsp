@@ -65,6 +65,7 @@ a:visited {
 .order {
 	background-color: transparent; 
     border-style: none;
+    padding: 0;
 }
 
 </style>
@@ -89,41 +90,135 @@ a:visited {
 	      //  $(e.target).css({'background-color':'blue', 'color':'white'});
 		});
 		
-		
 		$(".productListContainer #allProd").click();  
+
+		let snum = "${snum}";
+		let cnum = "${cnum}";
+		let currentShowPageNo = "${currentShowPageNo}";
+		let jsonPageBar;
+		
+		
 		
 	}); // end of $(document).ready
 	
 	// 정렬하기 클릭했을 때의 이벤트
 	function order_list(selectid) {
 		let html = "";
+		snum = "${snum}";
+		cnum = "${cnum}";
+		currentShowPageNo = "${currentShowPageNo}";
 		
 		$.ajax({
 			url: "<%= request.getContextPath()%>/shop/eventOrderListJSON.tea",
 			type: "GET",
-			data: {"selectid":selectid},
+			data: {"selectid":selectid, "cnum":cnum, "snum":snum, "currentShowPageNo":currentShowPageNo},
 			dataType: "JSON",
 			success: function(json){
 				
 				if( json.length == 0 ) { 
-					html += " "; // 나중에 적어줘야하는데 여기 적어주면 에러나니까 그냥 자주묻는 질문은 무조건 다 나오는 걸로 하는 건 어떤지..?
+					html += " "; 
 	                
 	                $("div#eventProdList").html(html);
 	                
 				} else if( json.length > 0 ) {	
 				
-					 
+					$.each(json, function(index, item){ 
+						html += "<div class='card border-0 mb-4 mt-1 col-lg-4 col-md-6 '>" +
+								"	<a href='#'><img src='<%= ctxPath %>/images/"+item.pimage+"' class='card-img-top'/></a> " +
+								"	<div class='card-body'>";
+								
+						// spec name 이 있을 경우
+						if(item.sname != null) {
+							if(item.sname == 'BEST') {
+								html += "<div class='rounded text-light text-center mb-2 badge-danger' style='width:70px; font-weight:bold; display:inline-block;'>" +
+										"BEST" +
+										"</div>";
+							} else {
+								html += " <div class='rounded text-light text-center mb-2' style='width:70px; font-weight:bold; background-color: #1E7F15; display:inline-block;'>" +
+										"NEW" +
+										"</div>";
+							}
+						// spec name 이 없는 경우
+						} else {
+							html += "<div class='mb-2' >" +
+									"&nbsp;" +
+									"</div>";
+						} 
+						
+						// 재고가 없는 경우
+						if(item.pqty == 0) {
+							html += "<div class='rounded text-light text-center mb-2 badge-dark ml-1' style='width:70px; font-weight:bold; display:inline-block;'>" +
+									"품절"+
+									"</div>";
+						} else {
+							html += "";
+						}
+						
+						html += "<h5 class='card-title' style='font-weight:bold;'><a href='#'>"+item.pname+"</a></h5>";
+						
+						// 정가와  판매가격이 다른 경우
+						if(item.price != item.saleprice) {
+							html += "<p>" +
+									"	<span class='card-text' style='text-decoration-line: line-through;'>"+item.price.toLocaleString()+"원</span>" +
+									"	<span class='card-text' style='color: #1E7F15; font-weight:bold;'>"+item.saleprice.toLocaleString()+"원</span>" +
+									"</p>";
+						} else {
+							html += "<p>" +
+									"	<span class='card-text'>"+item.price.toLocaleString()+"원</span>" +
+									"</p>";
+						}
+						
+						html+= 	"<a class='card-text mr-2'><i class='far fa-heart text-secondary fa-lg heart'></i></a>" +
+								"<a class='card-text text-secondary mr-5'>찜하기</a>" +
+								"<a class='card-text mr-2'><i class='fas fa-shopping-basket text-secondary fa-lg '></i></a>" +
+								"<a class='card-text text-secondary'>담기</a>" +
+								"</div>" +
+								"</div>";
+					}); // end of $.each
 					
-				} // end of if( json.length == 0 ) - else
-			},
+					$("div#eventProdList").html(html);
+				} 
+				
+			}, // end of success
 			error: function(request, status, error){
 	        	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 	        }
 		}); // end of $.ajax
 		
-		
 	} // end of function order_list(selectid)
 	
+	// 페이지바 만드는 함수
+	function pageBar() {
+		let html1;
+		snum = "${snum}";
+		cnum = "${cnum}";
+		currentShowPageNo = "${currentShowPageNo}";
+		
+		$.ajax({
+			url: "<%= request.getContextPath()%>/shop/eventPageBarJSON.tea",
+			type: "GET",
+			data: {"cnum":cnum, "snum":snum, "currentShowPageNo":currentShowPageNo},
+			dataType: "JSON",
+			success: function(json){
+				
+				// 기존 페이지바 숨기기
+				$("#nav_pagebar").hide();
+
+				// json으로 받아온 페이지바
+				html1 += "<nav aria-label='Page navigation example' id='nav_pagebar' style='margin-top : 100px;'>" +
+						 "	<ul class='pagination justify-content-center' style='margin:auto;'>"+json.pageBar+"</ul>" +
+						 "</nav>"; 
+				
+				$("#nav_pagebar").html(html1);
+				
+				
+			}, // end of success
+			error: function(request, status, error){
+	        	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	        }
+		}); // end of $.ajax
+		
+	} // end of function pageBar()
 	
 	
 </script>
@@ -170,15 +265,15 @@ a:visited {
 				
 				<%-- 정렬 선택 창 --%>
 				<span id="order_list" >
-					<button id="order_new" class="order" onclick="order_list('order_new')">신상품순</button>
+					<button id="order_new" class="order" onclick="order_list('order_new'); pageBar();">신상품순</button>
 					<span class="text-dark">&nbsp;|&nbsp;</span>
-					<button id="order_highPrice" class="order" onclick="order_list('order_highPrice')">높은가격순</button>
+					<button id="order_highPrice" class="order" onclick="order_list('order_highPrice'); pageBar();">높은가격순</button>
 					<span class="text-dark">&nbsp;|&nbsp;</span>
-					<button id="order_rowPrice" class="order" onclick="order_list('order_rowPrice')">낮은가격순</button>
+					<button id="order_rowPrice" class="order" onclick="order_list('order_rowPrice'); pageBar();">낮은가격순</button>
 					<span class="text-dark" >&nbsp;|&nbsp;</span>
-					<button id="order_review" class="order" onclick="order_list('order_review')">리뷰많은순</button>
+					<button id="order_review" class="order" onclick="order_list('order_review'); pageBar();">리뷰많은순</button>
 					<span class="text-dark">&nbsp;|&nbsp;</span>
-					<button id="order_sell" class="order" onclick="order_list('order_sell')">판매순</button>
+					<button id="order_sell" class="order" onclick="order_list('order_sell'); pageBar();">판매순</button>
 				</span>
 	    	    <%-- 본문 내부 상단 바 끝 --%>
 				
@@ -189,54 +284,66 @@ a:visited {
 					
 					<c:forEach var="pvo" items="${requestScope.productList}" varStatus="status">
 				  		<div class="card border-0 mb-4 mt-1 col-lg-4 col-md-6 ">
-			    		<a href="<%= ctxPath %>/shop/productView.tea?pnum=${pvo.pnum}"><img src="<%= ctxPath %>/images/${pvo.pimage}" class="card-img-top"/></a>
-		    			<div class="card-body">
-		    			
-		    				<%-- 상품 상태 뱃지 --%>
-		    				<c:if test="${not empty pvo.spvo.sname}">
-	                            <c:if test="${pvo.spvo.sname eq 'BEST'}">
-		                            <div class="rounded text-light text-center mb-2 badge-danger" style="width:70px; font-weight:bold;">
-		                            ${pvo.spvo.sname}
+				    		<a href="<%= ctxPath %>/shop/productView.tea?pnum=${pvo.pnum}"><img src="<%= ctxPath %>/images/${pvo.pimage}" class="card-img-top"/></a>
+			    			<div class="card-body">
+			    			
+			    				<%-- 상품 상태 뱃지 --%>
+			    				<c:if test="${not empty pvo.spvo.sname}">
+		                            <c:if test="${pvo.spvo.sname eq 'BEST'}">
+			                            <div class="rounded text-light text-center mb-2 badge-danger" style="width:70px; font-weight:bold; display:inline-block;">
+			                            ${pvo.spvo.sname}
+			                            </div>
+		                            </c:if>
+		                            <c:if test="${pvo.spvo.sname eq 'NEW'}">
+			                            <div class="rounded text-light text-center mb-2" style="width:70px; font-weight:bold; background-color: #1E7F15; display:inline-block;">
+			                            ${pvo.spvo.sname}
+			                            </div>
+		                            </c:if>
+		                        </c:if>
+		                        <c:if test="${empty pvo.spvo.sname}">
+		                        <div class="mb-2" >&nbsp;</div>
+	                         	</c:if>
+	                         	 <c:if test="${pvo.pqty eq 0}">
+	                            	<div class="rounded text-light text-center mb-2 badge-dark" style="width:70px; font-weight:bold; display:inline-block;">
+		                            품절
 		                            </div>
 	                            </c:if>
-	                            <c:if test="${pvo.spvo.sname eq 'NEW'}">
-		                            <div class="rounded text-light text-center mb-2" style="width:70px; font-weight:bold; background-color: #1E7F15;">
-		                            ${pvo.spvo.sname}
-		                            </div>
-	                            </c:if>
-	                        </c:if>
-	                        <c:if test="${empty pvo.spvo.sname}">
-	                        <div class="mb-2" >&nbsp;</div>
-                         	</c:if>
-		    			
-		      				<h5 class="card-title" style="font-weight:bold;"><a href="<%= ctxPath %>/shop/productView.tea?pnum=${pvo.pnum}">${pvo.pname}</a></h5>
-			      			
-			      			<%-- 세일 상품 금액 표시 --%>
-			      			<c:choose>
-			      				<c:when test="${pvo.price != pvo.saleprice}">
-			      					<p>
-						      			<span class="card-text" style="text-decoration-line: line-through;"><fmt:formatNumber value="${pvo.price}" pattern="###,###"/>원</span>
-					      				<span class="card-text" style="color: #1E7F15; font-weight:bold;"><fmt:formatNumber value="${pvo.saleprice}" pattern="###,###"/>원</span>
-				      				</p>
-			      				</c:when>
-			      				<c:otherwise>
-			      				
-			      				</c:otherwise>
-			      			</c:choose>
-			      			
-			      			<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart"></i></a>
-			      			<a class="card-text text-secondary mr-5">찜하기</a>
-			      							      			
-			      			<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a>
-			      			<a class="card-text text-secondary">담기</a>
-			      			
-			   			</div>
-			  		</div>
+	                         	
+			    			
+			      				<h5 class="card-title" style="font-weight:bold;"><a href="<%= ctxPath %>/shop/productView.tea?pnum=${pvo.pnum}">${pvo.pname}</a></h5>
+				      			
+				      			<%-- 세일 상품 금액 표시 --%>
+				      			<c:choose>
+				      				<c:when test="${pvo.price != pvo.saleprice}">
+				      					<p>
+							      			<span class="card-text" style="text-decoration-line: line-through;"><fmt:formatNumber value="${pvo.price}" pattern="###,###"/>원</span>
+						      				<span class="card-text" style="color: #1E7F15; font-weight:bold;"><fmt:formatNumber value="${pvo.saleprice}" pattern="###,###"/>원</span>
+					      				</p>
+				      				</c:when>
+				      				<c:otherwise>
+				      				
+				      				</c:otherwise>
+				      			</c:choose>
+				      			
+				      			<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart"></i></a>
+				      			<a class="card-text text-secondary mr-5">찜하기</a>
+				      							      			
+				      			<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a>
+				      			<a class="card-text text-secondary">담기</a>
+				      			
+				   			</div>
+			  			</div>
 			  		</c:forEach>
 			  		
 				</div>
 				<%-- 상품 목록 끝 --%>					
 				
+				<%-- 페이징 --%>
+				<div id="div_pagebar">
+				 	<nav aria-label="Page navigation example" id="nav_pagebar" style="margin-top : 100px;">
+						<ul class="pagination justify-content-center" style="margin:auto;">${requestScope.pageBar}</ul>
+					</nav>
+				</div>
 			</div>
        		<%-- 본문 끝 --%>
 			
@@ -246,9 +353,6 @@ a:visited {
 	
 </div>
 
-	<%-- 페이징 --%>
- 	<nav aria-label="Page navigation example" >
-		<ul class="pagination justify-content-center" style="margin:auto;">${requestScope.pageBar}</ul>
-	</nav>
+	
 	
 <%@ include file="../footer.jsp"%>

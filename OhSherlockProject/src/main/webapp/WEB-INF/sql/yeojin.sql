@@ -174,14 +174,13 @@ FROM
                 pqty, price, saleprice, pcontent, PSUMMARY, point,
                 to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum
             FROM tbl_product
-            WHERE saleprice != price and fk_cnum in(4,5,6)
-            ORDER BY pnum DESC) p
+            WHERE saleprice != price)p
             JOIN tbl_category  c ON p.fk_cnum = c.cnum
             LEFT OUTER JOIN tbl_spec s
             ON p.fk_snum = s.snum)V
     ) t
-WHERE t.rno BETWEEN 1 AND 5;
-
+-- WHERE t.rno BETWEEN 1 AND 5
+ORDER BY pnum desc;
 
 select ceil(count(*)/6) 
 from tbl_product 
@@ -194,6 +193,57 @@ where cnum between 1 and 3;
 select ceil(count(*)/6) 
 from tbl_product 
 where saleprice != price and FK_SNUM = 2;
+
+
+
+SELECT cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,
+    pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,
+    reviewCnt , -- 리뷰수
+    orederCnt -- 판매수
+FROM
+    (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,
+            pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt
+    FROM
+        (SELECT c.cname, s.sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,
+                pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,
+                (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,
+                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt
+        FROM
+            (SELECT
+                pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,
+                pqty, price, saleprice, pcontent, PSUMMARY, point,
+                to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum
+            FROM tbl_product
+            WHERE saleprice != price 
+  )p
+            JOIN tbl_category  c ON p.fk_cnum = c.cnum
+            LEFT OUTER JOIN tbl_spec s
+            ON p.fk_snum = s.snum)V
+    ) t
+--    WHERE t.rno BETWEEN 1 AND 5
+ORDER BY  pnum desc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

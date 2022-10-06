@@ -110,8 +110,10 @@
 		}); // end of $("button#btnUpdate").click
 		
 		
+		
 	}); // end of $(document).ready(function()
 
+			
 </script>
     
     
@@ -121,26 +123,25 @@
 	<form name="passwdFind_update_frm">
 		<div id="passwd_box" class="d-flex flex-column m-auto">
 			
-			<%-- 비밀번호 변경 타이틀 --%>
-	    	<div id="passwdFind_title">
-	      	<h2 style="text-align: center; font-size: 30px; line-height: 40px; font-weight: bold; " >
-	        	비밀번호 변경
-	       	</h2>
-	    	</div>
-	
-			<%-- 새 비밀번호 입력창 --%>
-		   	<div id="input_pwd" class="d-flex flex-column">
-		       	<input type="password" name="passwd" id="password" placeholder="새비밀번호" required />
-		       	<input type="password" id="password2" placeholder="비밀번호 확인" required />
-		    </div>
-		
-			<%-- hidden form을 이용해서 userid를 넘겨주기 --%>
-	   		<input type="hidden" name="userid" value="${requestScope.userid}"/> 
-		
-			<%-- 확인 버튼 --%>
-			<%-- 이 버튼은 get 방식일 때만 보이고 post 방식이면 클릭해서 다시 자기 자신에게로 간다. --%>
 	   		<c:if test="${requestScope.method eq 'GET'}">
-			    <div id="btn_update" class="d-flex flex-column">
+	   			<%-- 비밀번호 변경 타이틀 --%>
+		    	<div id="passwdFind_title">
+		      	<h2 style="text-align: center; font-size: 30px; line-height: 40px; font-weight: bold; " >
+		        	비밀번호 변경
+		       	</h2>
+		    	</div>
+	
+				<%-- hidden form을 이용해서 userid를 넘겨주기 --%>
+		   		<input type="hidden" name="userid" value="${requestScope.userid}"/> 
+	   		
+	   			<%-- 새 비밀번호 입력창 --%>
+	   			<div id="input_pwd" class="d-flex flex-column">
+			       	<input type="password" name="passwd" id="password" placeholder="새비밀번호" required />
+			       	<input type="password" id="password2" placeholder="비밀번호 확인" required />
+			    </div>
+			    
+			    <%-- 확인 버튼 --%>
+			    <div id="btn_update" class="d-flex flex-column container">
 			      	<input type="button" class="btn btn-dark" value="암호변경하기" id="btnUpdate"/>
 			    </div>
 	    	</c:if>
