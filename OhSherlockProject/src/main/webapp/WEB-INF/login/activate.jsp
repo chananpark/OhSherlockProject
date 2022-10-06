@@ -108,7 +108,9 @@ $(document).ready(function(){
 	     
 	     if(${verifyFail eq true}) {
 	    	 alert("인증코드가 다릅니다. 인증코드를 다시 발급받으세요.");
-	    	 
+	    	 time = 60 * 5; // 타이머 시간 초기화
+             clearInterval(setTimer); // 타이머 삭제
+             $("#timer").empty();
 	     }
 	 }
 	

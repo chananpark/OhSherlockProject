@@ -18,6 +18,11 @@
 		width: 80%;
 	}
 	
+	.recent:hover{
+		cursor:url("https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbLcHy8%2FbtrNprKfXky%2F8QmDKvqOmZx19ZPk9Zk1H0%2Fimg.png"), auto !important;
+		text-decoration: underline;
+		color: #1E7F15;
+	}
 
 </style>
 
@@ -40,19 +45,32 @@ $(()=>{
 		}
 	});
 	
-	// 최근 검색어 불러오기
+	// 최근 검색어 목록 불러오기
 	localStorage.getItem("key");
 	for(let i = 0; i < window.localStorage.length; i++) {  
 		// key 찾기  
 		const key = window.localStorage.key(i);    
-		// value 찾기  
-		const value = window.localStorage.getItem(key);    
-		// 결과 출력  
-		$("#recentSearchWords").append("<p>"+value+"</p>");
+		if(key.startsWith('sw')) {
+			// value 찾기  
+			const value = window.localStorage.getItem(key);    
+			// 결과 출력  
+			$("#recentSearchWords").append("<p class='recent'>"+value+"</p>");
+			}
 		}
 	
+	// 최근 검색어 클릭시
+	$(".recent").click((e)=>{
+
+		const recentWord = $(e.target).text();
+		$("input[name='searchWord']").val(recentWord);
+		
+		const frm = document.search_form;
+		frm.action="<%=request.getContextPath()%>/shop/productSearch.tea";
+		frm.submit();
+	});
 });
 
+// 검색하기
 function goSearch(){
 	
 	const input = $("input[name='searchWord']").val().trim();
@@ -64,7 +82,7 @@ function goSearch(){
 	
 	// 최근 검색어 저장
 	const searchWord = $(".search_txt").val();
-	localStorage.setItem(searchWord, searchWord);
+	localStorage.setItem("sw"+searchWord, searchWord);
 	
 	const frm = document.search_form;
 	frm.action="<%=request.getContextPath()%>/shop/productSearch.tea";

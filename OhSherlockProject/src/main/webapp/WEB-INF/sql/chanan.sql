@@ -305,5 +305,22 @@ String sql = "SELECT cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME
 "    ) t\n"+
 "WHERE t.rno BETWEEN ? AND ?";
 
+SELECT cname, sname, pnum, pname, pimage, pqty, price, saleprice, reviewCnt, orederCnt
+FROM (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage,
+pqty, price, saleprice, reviewCnt, orederCnt
 
+FROM
 
+    (SELECT c.cname, s.sname, pnum, pname, pimage, pqty, price, saleprice, orederCnt,reviewCnt 
+    FROM
+    (SELECT pnum, pname, pimage, pqty, price, saleprice, fk_cnum, fk_snum,
+    (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,
+    (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt
+    FROM tbl_product
+    WHERE pname like '%차%') p
+    JOIN tbl_category  c ON p.fk_cnum = c.cnum
+    LEFT OUTER JOIN tbl_spec s
+    ON p.fk_snum = s.snum
+    oRDER BY price desc)v
+) t
+WHERE t.rno BETWEEN 7 AND 12;
