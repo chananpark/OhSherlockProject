@@ -65,7 +65,11 @@
 				<tbody>
 					<tr>
 						<td class="col-4">카테고리</td>
-						<td class="col-8"></td>
+						<td class="col-8">${requestScope.product_select_one.categvo.cname}</td>
+					</tr>
+					<tr>
+						<td class="col-4">상품스펙</td>
+						<td class="col-8">${requestScope.product_select_one.spvo.sname}</td>
 					</tr>
 					<tr>
 						<td class="col-4">상품명</td>
@@ -73,31 +77,27 @@
 					</tr>
 					<tr>
 						<td class="col-4">썸네일</td>
-						<td class="col-8"><img src="${requestScope.product_select_one.pimage}" /></td>
+						<td class="col-8"><img src="<%=request.getContextPath() %>/images/${requestScope.product_select_one.pimage}" style="width: 50%;"/></td>
 					</tr>
 					<tr>
 						<td class="col-4" style="vertical-align: middle">상품한줄설명</td>
 						<td class="col-8">${requestScope.product_select_one.psummary}</td>
 					</tr>
 					<tr>
+						<td class="col-4">상품설명</td>
+						<td class="col-8">${requestScope.product_select_one.pcontent}</td>
+					</tr>
+					<tr>
 						<td class="col-4">재고</td>
-						<td class="col-8">${requestScope.product_select_one.pqty}</td>
+						<td class="col-8">${requestScope.product_select_one.pqty} 개</td>
 					</tr>
 					<tr>
 						<td class="col-4">정가</td>
-						<td class="col-8"><fmt:formatNumber value="${requestScope.product_select_one.price}" pattern="###,###"/></td>
+						<td class="col-8"><fmt:formatNumber value="${requestScope.product_select_one.price}" pattern="###,###"/> 원</td>
 					</tr>
 					<tr>
 						<td class="col-4">판매가격</td>
 						<td class="col-8"><fmt:formatNumber value="${requestScope.product_select_one.saleprice}" pattern="###,###"/> 원</td>
-					</tr>
-					<tr>
-						<td class="col-4">상품스펙</td>
-						<td class="col-8"></td>
-					</tr>
-					<tr>
-						<td class="col-4">상품설명</td>
-						<td class="col-8">${requestScope.product_select_one.pcontent}</td>
 					</tr>
 					<tr>
 						<td class="col-4">적립금</td>
@@ -105,7 +105,7 @@
 					</tr>
 					<tr>
 						<td class="col-4">상품이미지</td>
-						<td class="col-8">${requestScope.product_select_one.prdmanual_systemfilename}</td>
+						<td class="col-8"></td>
 					</tr>
 					
 				</tbody>

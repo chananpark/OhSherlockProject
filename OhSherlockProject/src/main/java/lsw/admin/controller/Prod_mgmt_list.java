@@ -13,6 +13,7 @@ import common.model.MemberVO;
 import common.model.ProductVO;
 import lsw.admin.model.InterProductDAO;
 import lsw.admin.model.ProductDAO;
+import my.util.MyUtil;
 
 
 public class Prod_mgmt_list extends AbstractController {
@@ -61,7 +62,6 @@ public class Prod_mgmt_list extends AbstractController {
 					
 					paraMap.put("searchWord", searchWord); // 이거는 검색어, 검색어는 있을 수도 있고 없을수도 있다
 					
-					
 					String sizePerPage = request.getParameter("sizePerPage");
 					// 한 페이지당 화면상에 보여줄 회원의 개수
 			        // 메뉴에서 회원목록 만을 클릭했을 경우에는 sizePerPage 는 null 이 된다.
@@ -100,21 +100,12 @@ public class Prod_mgmt_list extends AbstractController {
 					
 					// 페이징 처리를 위한 검색이 있는 또는 검색이 없는 전체 회원에 대한 총 페이지 알아오기
 					int totalPage = pdao.getTotalPage(paraMap); 
-					// 전체 몇 페이지가 나올지를 알아야하는데, map에 다 담아서 작업해줄 것
-					// 이름에 '유'가 포함된 사람이 152명이라면 페이지바가 또 달라지게 된다.
-					// 모든 회원수가 필요한 게 아니라, 검색해서 알아오는 경우도 필요하기 때문에 map 에 담아주는 것이다.
-					// 따라서 map 에는 검색 컬럼이 뭔지 알고, 검색어도 알아서 보내야 한다. map 에서 보고싶은 것만 꺼내오면 되기 때문이다.
-				//	System.out.println("확인용 totalPage : "+totalPage);
 					
-					// == get 방식이므로 사용자가 웹브라우저 주소창에서 currentShowPageNo 에 토탈페이지수 보다 큰 값을 입력하여 장난친 경우에는 1페이지로 가게끔 막아주는 것 시작
-					// pageBar 가 만일 20,21이 끝일 때 22페이지는 없기 때문에 url에서 장난질을 친 것이다. 
-					// 이렇게 없는 페이지를 url 에서 장난질 쳤을 경우에는 아래와 같이 해준다.
 					if( Integer.parseInt(currentShowPageNo) > totalPage ) {
 						currentShowPageNo = "1"; // 없는 페이지로 장난질 칠 때는 무조건 1을 보여준다.
 						paraMap.put("currentShowPageNo", currentShowPageNo); // url에 장난질 쳤을 경우에는 1로 바뀐 값을 담아 준다.
 						
 					}
-					// == get 방식이므로 사용자가 웹브라우저 주소창에서 currentShowPageNo 에 토탈페이지수 보다 큰 값을 입력하여 장난친 경우에는 1페이지로 가게끔 막아주는 것 끝
 					
 					List<ProductVO> productList = pdao.selectPagingProduct(paraMap);
 					
@@ -193,6 +184,19 @@ public class Prod_mgmt_list extends AbstractController {
 					request.setAttribute("pageBar", pageBar);
 					
 					// *** 페이지바 만들기 끝 *** //
+					
+					// *** 현재 페이지를 돌아갈 페이지(goBackURL) 로 주소 지정하기 *** //
+					// 회원 상세보기에서 회원 목록으로 돌아올 때 돌아올 url 을 기억하고 있어야 한다. 
+					// 회원 조회를 했을 시 현재 그 페이지로 그대로 돌아가기 위한 용도로 쓰인다.
+					String currentURL = MyUtil.getCurrentURL(request);
+			//		System.out.println("확인용 : " + currentURL);
+					// 확인용 : /member/memberList.up?sizePerPage=10&currentShowPageNo=11&searchType=name&searchWord=%EC%A0%95
+					
+					currentURL = currentURL.replaceAll("&", " "); // & 를 공백으로 바꾸어라.
+			//		System.out.println("확인용 : " + currentURL);
+					// 확인용 : /member/memberList.up?sizePerPage=10 currentShowPageNo=11 searchType=name searchWord=%EC%A0%95 
+
+					request.setAttribute("goBackURL", currentURL);
 
 					super.setRedirect(false);
 					super.setViewPage("/WEB-INF/admin/prod_mgmt_list.jsp");

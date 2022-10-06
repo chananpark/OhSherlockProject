@@ -70,6 +70,34 @@
 	let randnum6; // 컨트롤러에서 휴대전화 인증 코드 가져오기용
 	
 	
+	let emailTime = 5 * 60;
+	
+	// 이메일인증타이머반복시켜주는애
+	let setTimer;
+	
+	// 이메일 인증 타이머
+	const emailVeriTimer = () => {
+		 
+        let minutes = parseInt(emailTime / 60);
+        let seconds = emailTime % 60;
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        $("#emailTimer").text(minutes + ":" + seconds);
+		
+        if (emailTime-- < 0) {
+            alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
+            emailTime = 60 * 5; // 타이머 시간 초기화
+            clearInterval(setTimer); // 타이머 삭제
+            $("#emailTimer").empty();
+	   	    $("div#emailVerify").hide();// 이메일 인증확인란 숨기기
+            return;
+        }
+	}
+	
+	
+	
 	$(document).ready(function () {
 		
 		$("#spinner").hide();
@@ -572,31 +600,10 @@
    			 	
 		    	  $("#spinner").hide(); // 스피너 숨기기
 		  	 	
-		      let time =  60 * 5; // 타이머 시간
+		    	emailTime = 60*5;
 		    	// 이메일 인증 5분 타이머 함수
-	    		const myTimer = () => {
-	    		 
-	    		        let minutes = parseInt(time / 60);
-	    		        let seconds = time % 60;
-
-	    		        minutes = minutes < 10 ? "0" + minutes : minutes;
-	    		        seconds = seconds < 10 ? "0" + seconds : seconds;
-
-	    		        $("#emailTimer").text(minutes + ":" + seconds);
-	    				
-	    		        if (time-- < 0) {
-	    		            alert("인증 시간이 초과되었습니다. 인증 메일을 다시 요청하세요.");
-	    		            time = 60 * 5; // 타이머 시간 초기화
-	    		            clearInterval(setTimer); // 타이머 삭제
-	    		            $("#emailTimer").empty();
-	    			   	    $("div#emailVerify").hide();// 이메일 인증확인란 숨기기
-	    		            return;
-	    		        }
-	    			}
-	    		
-				   // 5분 타이머 시작
-    			   myTimer(); // 한번 실행
-			       const setTimer = setInterval(myTimer, 1000); // 이후 1초마다 다시 실행
+		      emailVeriTimer();
+			    setTimer = setInterval(emailVeriTimer, 1000); // 이후 1초마다 다시 실행
 		 
    				 certifiCode = json.certificationCode;
    				 
@@ -625,6 +632,14 @@
 		else{
 			alert("인증번호가 틀렸습니다.");
 			b_flag_emailVerifyCode_click = false;
+						clearInterval(setTimer); // 타이머 삭제
+						//emailTime = 60*5; // 타이머 시간 초기화
+						// input입력내용지우기
+						$("#userEmailVerifyCode").val("");
+            $("#emailTimer").text("");
+            $('div#emailVerifyConfirm').hide();
+	   	      $("div#emailVerify").hide();// 이메일 인증확인란 숨기기
+            return;
 		}
 		
 	}// end of function emailVerifyCodeCheck(){}---------------

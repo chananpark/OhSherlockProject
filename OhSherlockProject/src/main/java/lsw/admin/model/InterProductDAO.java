@@ -1,10 +1,12 @@
 package lsw.admin.model;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import common.model.ProductVO;
+import common.model.SpecVO;
 
 public interface InterProductDAO {
 
@@ -22,7 +24,23 @@ public interface InterProductDAO {
 	List<ProductVO> selectPagingProduct(Map<String, String> paraMap) throws SQLException;
 
 	// 특정 상품 상세 페이지 불러오기 
-	ProductVO product_list_detail(Map<String, String> paraMap) throws SQLException;
+	ProductVO product_list_detail(String pnum) throws SQLException;
+	
+	// spec 목록을 보여주고자 한다.
+	List<SpecVO> selectSpecList() throws SQLException;
+	
+	// 제품번호 채번 해오기
+	int getPnumOfProduct() throws SQLException;
+
+	// tbl_product 테이블에 제품정보 insert 하기
+	int productInsert(ProductVO pvo) throws SQLException;
+
+	// tbl_product_imagefile 테이블에 제품의 추가이미지 파일명
+	int product_imagefile_Insert(int pnum, String attachFileName)throws SQLException;
+	
+	// 카테고리 조회 메소드
+	List<HashMap<String, String>> getCategoryList() throws SQLException;
+		
 	
 
 }
