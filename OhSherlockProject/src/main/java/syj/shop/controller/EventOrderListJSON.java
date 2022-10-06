@@ -49,6 +49,20 @@ public class EventOrderListJSON extends AbstractController {
 			orderSQL = " orederCnt desc ";
 		} 
 		
+		if(currentShowPageNo == null) {
+			currentShowPageNo = "1";
+		}
+		// === GET 방식이므로 사용자가 웹브라우저 주소창에서 currentShowPageNo 에 숫자가 아닌 문자를 입력한 경우 또는 
+        //     int 범위를 초과한 숫자를 입력한 경우라면 currentShowPageNo 는 1 페이지로 만들도록 한다. 
+		// 	   currnetShowPageNO 가 0 이하라면  currentShowPageNo 는 1 페이지로 만들도록 한다. ==== // 
+		try {
+			if(Integer.parseInt(currentShowPageNo) < 1) {
+				currentShowPageNo = "1";  // 0과 음수로 들어온다면 1페이지를 보여준다.
+			}
+		} catch (NumberFormatException e) {
+			currentShowPageNo = "1"; // integer로 바꿨는데 바뀌지 않는다면(url에 문자를 넣었다면), 그냥 1페이지를 보여준다.
+		}
+		
 		paraMap.put("orderSQL", orderSQL); 
 		paraMap.put("cnum", cnum); 
 		paraMap.put("snum", snum); 
