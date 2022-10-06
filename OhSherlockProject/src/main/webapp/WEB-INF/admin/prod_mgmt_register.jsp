@@ -4,7 +4,7 @@
 
 <style>
 
-#pdReg input[type="text"], #pdReg input[type="number"], #pdReg select, #pdReg textarea {
+#pdReg input[type="text"], #pdReg input[type="number"], #pdReg select, #pdReg textarea{
 	width: 100%;
 	padding: 12px;
 	border: 1px solid #ccc;
@@ -15,7 +15,7 @@
 	resize: vertical;
 }
 
-.writeBtns {
+input[type="reset"], input[type="button"] {
 	width: 80px;
 	margin: 15px;
 	border-style: none;
@@ -36,8 +36,59 @@
 
 	$(document).ready(function(){
 		
+		// 재고에 스피너 달아주기
+		$("input#spinnerPqty").spinner({
+			spin:function(event,ui){
+           if(ui.value > 100) {
+              $(this).spinner("value", 100);
+              return false;
+           }
+           else if(ui.value < 1) {
+              $(this).spinner("value", 1);
+              return false;
+           }
+      	}
+		}); // end of $("input#spinnerPqty").spinner--------
+		
+		
+		// 추가이미지파일에 스피너 달아주기
+		$("input#spinnerImgQty").spinner({
+			spin:function(event,ui){
+           if(ui.value > 10) {
+              $(this).spinner("value", 10);
+              return false;
+           }
+           else if(ui.value < 1) {
+              $(this).spinner("value", 0);
+              return false;
+           }
+      	}
+		}); // end of $("input#spinnerImgQty").spinner--------
+		
+		// ### 스피너의 이벤트는 click 도 아니고 change 도 아니고 "spinstop" 이다. ### // 
+		$("input#spinnerImgQty").bind("spinstop", function() {
+			
+			let html = "";
+			const cnt = $(this).val();
+			
+			// console.log("확인용 cnt : " + cnt);
+			// console.log("확인용 typeof cnt : " + typeof cnt);
+			// 확인용 typeof cnt : string
+			
+			for(let i=0; i<Number(cnt); i++) {
+				html += "<br>";
+				html += "<input type='file' name='attach"+i+"' class='btn btn-default'>";
+			}// end of for ---------- 
+			
+			$("div#divfileattach").html(html);
+			
+			$("input#attachCount").val(cnt);
+			
+		});
+		
+		
 		// 등록 버튼을 클릭하면
-		$("input#prodRegister").click(function() {
+		$("input#btnRegister").click(function() {
 			// "등록" 버튼을 클릭시 호출되는 함수 
 			
 				goRegister();
@@ -54,32 +105,22 @@
 		  // **** 필수입력사항에 모두 입력이 되었는지 검사한다. **** //
 		  let b_Flag_required = false;
 		
-		  const required_list = document.querySelectorAll('input.required');
-		  for (let i = 0; i < required_list.length; i++) {
-		    const val = required_list[i].value.trim();
-		    if (val == '') {
-		      alert('*표시된 필수입력사항은 모두 입력하셔야 합니다.');
-		      b_Flag_required = true;
-		      break;
-		    }
-		  } // end of for-----------------------
-		
-		  if (b_Flag_required) {
-			    return; // 종료
-			  }
-		   
-	  // 최종적으로 폼을 보내어 준다.
-	  const frm = document.pdRegFrm;
-	  frm.action = '<%=ctxPath%>/admin/prod_mgmt_register.tea';
-	  frm.method = 'post';
-	  frm.submit();
-	  
-	 	opener.location.reload(true);// 부모창 새로고침
+		  $(".required").each(function(){
+			  const val = $(this).val().trim();
+				if(val == "") {
+					$(this).next().show();
+					b_Flag_required = true;
+					return false; // break 와 똑같은거다.
+				}
+			});
+		  
+		  if(!b_Flag_required) { // 필수 입력을 다 채웠을때
+				const frm = document.pdRegFrm;
+				frm.submit();
+			}
 	}
-	
 	 
 </script>
-
 
 <div class="container prodRegisterContainer">
 
@@ -95,45 +136,72 @@
 	<form name="pdRegFrm" id="pdReg" action="<%=request.getContextPath()%>/admin/prod_mgmt_register.tea"
 		  method="post" 
 		  enctype="multipart/form-data">
-		<label for="qnatype">카테고리<span class="text-danger">*</span></label>
-		 <select id="qnatype" name="p_category">
+		<label for="fk_cnum">카테고리<span class="text-danger">*</span></label> 
+		<select id="fk_cnum" name="fk_cnum" class="required">
 			<option value="">선택하세요</option>
-			<option value="녹차/말차">녹차/말차</option>
-			<option value="홍차">홍차</option>
-			<option value="허브차">허브차</option>
-			<option value="기프트세트">기프트세트</option>
+				<%-- 
+					<option value="녹차/말차">녹차/말차</option>
+					<option value="홍차">홍차</option>
+					<option value="허브차">허브차</option>
+					<option value="기프트세트">기프트세트</option> 
+				--%>
+				<c:forEach var="map" items="${requestScope.categoryList}">
+	       	<option value="${map.cnum}">${map.cname}</option>
+	      </c:forEach>
 		</select> 
 			
-		<label for="title">상품명<span class="text-danger">*</span></label> 
-		<input type="text" id="p_name" name="p_name" placeholder="상품명을 입력하세요." class="required">
 			
-		<label for="title">상품한줄소개<span class="text-danger">*</span></label> 
-		<input type="text" id="p_info" name="p_info" placeholder="상품한줄소개를 입력하세요." class="required">
+		<label for="fk_snum">상품스펙<span class="text-danger">*</span></label> 
+		<select id="fk_snum" name="fk_snum" class="required">
+			<option value="">선택하세요</option>
+		 	<%-- 
+             <option value="1">HIT</option>
+             <option value="2">NEW</option>
+             <option value="3">BEST</option> 
+       --%>
+			<c:forEach var="spvo" items="${requestScope.specList}">
+       	<option value="${spvo.snum}">${spvo.sname}</option>
+      </c:forEach>
+		</select> 	
+		
+		<label for="title">상품명<span class="text-danger">*</span></label> 
+		<input type="text" id="pname" name="pname" placeholder="상품명을 입력하세요." class="required">
+		
+		<label for="psummary">상품한줄소개<span class="text-danger">*</span></label> 
+		<textarea name="psummary" rows="2" cols="60" class="required"></textarea>
+		
+		<label for="pcontent">상품설명<span class="text-danger">*</span></label> 
+		<textarea name="pcontent" rows="5" cols="60" class="required"></textarea>
+		
+		<label for="stock">재고<span class="text-danger">*</span></label><br>
+		<input id="spinnerPqty" name="pqty" value="0" style="width: 80px; "> 개<br>
+		
+		<label for="price" style="margin-top: 16px;">정가<span class="text-danger">*</span></label><br>
+	  <input type="number" style="width: 150px;" name="price" min="0" class="required" > 원<br>
 
-		<label for="price">가격<span class="text-danger">*</span></label>
-		<input type="number" id="p_price" name="p_price" placeholder="숫자만 입력하세요." min="0" class="required"/>
+		<label for="salePrice">판매가격<span class="text-danger">*</span></label><br>
+		<input type="text" style="width: 150px;" name="saleprice" class="required" > 원<br>
 
-		<label for="stock">재고<span class="text-danger">*</span></label>
-		<input type="number" id="p_stock" name="p_stock" placeholder="숫자만 입력하세요." min="0" class="required"/>
+		<label for="point" style="margin: 6px 20px 16px 0;">적립금<span class="text-danger">*</span></label><br>
+		<input type="text" style="width: 150px;" name="point" class="required" > 찻잎<br>
 
-		<label for="salePrice">할인금액</label>
-		<input type="number" id="p_discount_rate" name="p_discount_rate" min="0" placeholder="숫자만 입력하세요."/>
+		<label for="pimage" style="margin: 6px 20px 16px 0;">썸네일<span class="text-danger">*</span></label><br>
+		<input type="file" name="pimage" class="required" /><br>
 
-		<label for="thumbnail" style="margin: 6px 20px 16px 0;">대표이미지<span class="text-danger">*</span></label><br>
-		<input type="file" id="p_thumbnail" name="p_thumbnail" class="required"><br>
-
-		<label class="mt-4" for="content">내용<span class="text-danger">*</span></label><br>
-		<textarea id="p_desc" name="p_desc" placeholder="상품 설명을 입력하세요." style="height:200px" class="required"></textarea>
-		<span>파일첨부</span>&nbsp;<input type="file" id="p_image" name="p_image" > <br>
+		<label for="prdmanual_systemfilename" style="margin: 27px 20px 10px 0;">상품이미지</label>
+		<label for="spinnerImgQty">파일갯수 : </label>
+    <input id="spinnerImgQty" value="0" style="width: 30px; ">
+    <div id="divfileattach"></div>
+    <input type="hidden" name="attachCount" id="attachCount" />
 		
 		<hr>
 
 		<div class="text-right" style="margin-top: 30px;">
-			<input type="button" class="writeBtns" value="취소" 	style="margin-right: 0" />&nbsp; 
-				<input type="button" id="prodRegister" class="btn-secondary writeBtns" value="등록" style="margin-left: 5px;" />
+		 <input type="button" id="btnRegister" class="btn-secondary" value="등록" style="margin-left: 5px;" /> 
+          &nbsp;
+     <input type="reset" value="취소" 	style="margin-right: 0" />&nbsp;
 		</div>
 	</form>
-
 
 </div>
 

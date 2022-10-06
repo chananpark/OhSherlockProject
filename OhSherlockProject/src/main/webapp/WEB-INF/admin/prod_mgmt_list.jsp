@@ -66,6 +66,19 @@
 		}); // end of $("tbody > tr").click(function()
 		
 				
+		// 수정하기 버튼을 클릭하였을때 해당 행의 상품 수정창으로 가기 
+		$("input#btnProdEdit").click(function(e) {
+			const $target = $(e.target); 
+			// console.log("확인용 : "+ $target.html());
+				
+				// 클릭한 btnProdEdit의 pnum 알아오기
+				const pnum = $target.parentsUntil("td").find("td[name='pnum']").text(); 
+				console.log("확인용 : "+ pnum);
+				 
+				//location.href = "<%= request.getContextPath() %>/admin/prod_mgmt_detail.tea?pnum="+pnum+"&goBackURL=${requestScope.goBackURL}";
+			
+		});
+				
 				
 		// select 태그에 대한 이벤트는 클릭이 아니라 change 이다
 		// select 를 선택할 때의 이벤트
@@ -153,9 +166,9 @@
 						<td name="pqty">${pvo.pqty}</td>
 						<td name="pinputdate">${pvo.pinputdate}</td>
 						<td>
-						<div class="adminOnlyBtns mb-1">
-							<input type="button" value="수정" /> 
-						</div>
+							<div class="adminOnlyBtns mb-1">
+								<input type="button" id="btnProdEdit" value="수정" /> 
+							</div>
 						</td>
 					</tr>
 				</c:forEach>

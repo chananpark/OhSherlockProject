@@ -106,7 +106,6 @@ public class ProductDAO implements InterProductDAO {
 	}// end of public List<ProductVO> selectBySpecName(Map<String, String> paraMap) throws SQLException {}-------------------
 
 
-	
 	// 페이지바를 만들기 위해서 전체 상품개수에 대한 총페이지수 알아오기
 	@Override
 	public int getTotalPage() throws SQLException {
@@ -241,7 +240,6 @@ public class ProductDAO implements InterProductDAO {
 	            ProductVO pvo = new ProductVO();
 	            pvo.setPnum(rs.getInt("pnum")); // 제품번호
 	            pvo.setPname(rs.getString("pname")); // 제품명
-	            //pvo.setFk_cnum(rs.getInt("fk_cnum")); // 카테고리 번호
 
 	            CategoryVO categvo = new CategoryVO();
 	            categvo.setCname(rs.getString("cname")); // 카테고리 이름

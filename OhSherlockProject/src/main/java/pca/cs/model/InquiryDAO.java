@@ -412,11 +412,11 @@ public class InquiryDAO implements InterInquiryDAO {
 			}
 		}
 			finally {
-			try {
-				conn.setAutoCommit(true); // 오토커밋 설정
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} 
+				try {
+					conn.setAutoCommit(true); // 오토커밋 설정
+				} catch (SQLException e) {
+					e.printStackTrace();
+				} 
 			close();
 		}	
 		

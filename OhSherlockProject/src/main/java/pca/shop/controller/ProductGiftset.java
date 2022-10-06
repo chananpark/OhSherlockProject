@@ -42,7 +42,6 @@ public class ProductGiftset extends AbstractController {
 		
 		Map<String, String> paraMap = new HashMap<>();
 		
-		// 한 페이지당 화면상에 보여줄 제품의 개수는 10 => ProductDAO에 상수로 설정
 		paraMap.put("cnum", cnum); // 카테고리번호
 		paraMap.put("order", "pnum desc"); // 정렬기준
 		paraMap.put("currentShowPageNo", currentShowPageNo); // 현재페이지
@@ -59,10 +58,11 @@ public class ProductGiftset extends AbstractController {
 		List<ProductVO> productList = pdao.selectSetGoodsByCategory(paraMap);
 		request.setAttribute("productList", productList);
 		
+		// 페이지바 만들기
 		String pageBar = "";
 
+		// 블럭당 페이지 번호 개수
 		int blockSize = 10;
-		// blockSize 블럭당 페이지 번호 개수
 
 		int loop = 1;
 

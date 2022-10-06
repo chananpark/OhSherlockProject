@@ -99,3 +99,52 @@ values ('1', '기프트박스', '벚꽃향 가득한 올레 20입', 23000, 0.3, 
                              
 select pnum, pname, price, saleprice, pqty, (to_char(pinputdate,'yyyy-mm-dd')) pinputdate
 from tbl_product
+
+pnum, pname, fk_cnum, pimage, pqty, price, saleprice, fk_snum, pcontent, psummary, point
+
+
+create table tbl_product_imagefile
+(imgfileno     number         not null   -- 시퀀스로 입력받음.
+,fk_pnum       number(8)      not null   -- 제품번호(foreign key)
+,imgfilename   varchar2(100)  not null   -- 제품이미지파일명
+,constraint PK_tbl_product_imagefile primary key(imgfileno)
+,constraint FK_tbl_product_imagefile foreign key(fk_pnum) references tbl_product(pnum) on delete cascade 
+);
+
+create sequence seqImgfileno
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+commit;
+
+select imgfileno, fk_pnum, imgfilename
+from tbl_product_imagefile
+order by imgfileno desc;
+
+
+select pnum, pname, fk_cnum, pimage, pqty, price, saleprice, fk_snum, pcontent, psummary, point, pinputdate
+(
+select cnum, cname
+from tbl_category
+) c join
+
+select pnum, pname, fk_cnum, pimage, pqty, price, saleprice, fk_snum, pcontent, psummary, point, pinputdate
+from tbl_product
+
+select S.sname, cname, pnum, pname, fk_cnum, pimage, pqty, price, saleprice, fk_snum, pcontent, psummary, point
+    ,pinputdate
+    from
+(
+select C.cname, pnum, pname, fk_cnum, pimage, pqty, price, saleprice, fk_snum, pcontent, psummary, point
+    , to_char(pinputdate, 'yyyy-mm-dd') as pinputdate
+from tbl_category C left join tbl_product P  
+on C.cnum = P.fk_cnum 
+)v left join tbl_spec S
+on V.fk_snum = S.snum
+where pnum = 12
+
+

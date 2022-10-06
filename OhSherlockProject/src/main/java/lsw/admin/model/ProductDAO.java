@@ -1,12 +1,11 @@
 package lsw.admin.model;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,8 +14,9 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import common.model.MemberVO;
+import common.model.CategoryVO;
 import common.model.ProductVO;
+import common.model.SpecVO;
 
 public class ProductDAO implements InterProductDAO {
 
@@ -147,7 +147,7 @@ public class ProductDAO implements InterProductDAO {
 			
 			if( searchWord != null && !searchWord.trim().isEmpty() ) { // 서치워드에 공백을 지우고 동시에 비어있지 않는다면
 				// !searchWord.trim().isEmpty() 이거만 단독으로 주게되면 nullPonitException 이 떨어진다
-				sql += " and p_code like '%' || ? || '%' "; 
+				sql += " and pnum like '%' || ? || '%' "; 
 				// 위치홀더는 컬럼명이나 테이블명이 올 경우에는 에러발생. 검색어만 들어와야 한다. 테이블명 또는 컬럼명이 변수로 들어올 수 없다.
 				// 테이블명 또는 컬럼명이 변수로 들어와야 할 경우에는 변수로 처리해주어야 한다.
 			}
@@ -255,20 +255,29 @@ public class ProductDAO implements InterProductDAO {
 		
 		// 특정 상품 상세 페이지 불러오기 
 		@Override
-		public ProductVO product_list_detail(Map<String, String> paraMap) throws SQLException {
+		public ProductVO product_list_detail(String pnum) throws SQLException {
 			
 			ProductVO product = null;
 			
 			try {
 				conn = ds.getConnection();
 						
-				String sql = "select pnum, pname, fk_cnum, pimage, prdmanual_systemfilename, prdmanual_orginfilename, pqty, price, saleprice, fk_snum, pcontent, psummary, point, pinputdate "+
-						     "from tbl_product "+
-							 "where pnum = ? ";
+				String sql = " select S.sname, cname, pnum, pname, fk_cnum, pimage, pqty, price, saleprice, fk_snum, pcontent, psummary, point\n "+
+							"    ,pinputdate\n "+
+							"    from\n "+
+							" (\n "+
+							" select C.cname, pnum, pname, fk_cnum, pimage, pqty, price, saleprice, fk_snum, pcontent, psummary, point\n "+
+							"    , to_char(pinputdate, 'yyyy-mm-dd') as pinputdate\n "+
+							" from tbl_category C left join tbl_product P  \n "+
+							" on C.cnum = P.fk_cnum \n "+
+							" )v left join tbl_spec S\n "+
+							" on V.fk_snum = S.snum\n "+
+							" where pnum = ?" ;
+
 				
 				pstmt = conn.prepareStatement(sql);
 				
-				pstmt.setString(1, paraMap.get("pnum"));
+				pstmt.setString(1, pnum);
 				
 				rs = pstmt.executeQuery();
 				
@@ -277,12 +286,10 @@ public class ProductDAO implements InterProductDAO {
 					// select 해서 가져올 게 있냐
 					product = new ProductVO();
 					
-					product.setPnum(rs.getInt(1));
-					product.setPname(rs.getString(2));
-					product.setFk_cnum(rs.getInt(3));
-					product.setPimage(rs.getString(4));
-					product.setPrdmanual_systemfilename(rs.getString(5));
-					product.setPrdmanual_orginfilename(rs.getString(6));
+					product.setPnum(rs.getInt(3));
+					product.setPname(rs.getString(4));
+					product.setFk_cnum(rs.getInt(5));
+					product.setPimage(rs.getString(6));
 					product.setPqty(rs.getInt(7));
 					product.setPrice(rs.getInt(8));
 					product.setSaleprice(rs.getInt(9));
@@ -291,7 +298,13 @@ public class ProductDAO implements InterProductDAO {
 					product.setPsummary(rs.getString(12));
 					product.setPoint(rs.getInt(13));
 					product.setPinputdate(rs.getString(14));
-			
+					
+					SpecVO spvo = new SpecVO();
+					spvo.setSname(rs.getString(1));
+					
+					CategoryVO cvo = new CategoryVO();
+					cvo.setCname(rs.getString(2));
+					
 				} // end of if(rs.next())
 				
 			} finally {
@@ -300,8 +313,163 @@ public class ProductDAO implements InterProductDAO {
 		
 			return product;
 		}// end of public ProductVO product_list_detail(Map<String, String> paraMap) throws SQLException			
+
+		
+		// spec 목록을 보여주고자 한다.
+		@Override
+		public List<SpecVO> selectSpecList() throws SQLException {
+			List<SpecVO> specList = new ArrayList<>();
+			
+			try {
+				 conn = ds.getConnection();
+				
+				 String sql = " select snum, sname "
+				 		    + " from tbl_spec "
+				 		    + " order by snum asc "; 
+				 
+				 pstmt = conn.prepareStatement(sql);
+				 
+				 rs = pstmt.executeQuery();
+				 
+				 while(rs.next()) {
+					 
+					 SpecVO spvo = new SpecVO();
+					 spvo.setSnum(rs.getInt(1));
+					 spvo.setSname(rs.getString(2));
+					 
+					 specList.add(spvo);
+					 
+				 }// end of while-------------------
+				
+			} finally {
+				close();
+			}
+			
+			return specList;
+		}// end of public List<SpecVO> selectSpecList() throws SQLException
 		
 		
 		
+		// 제품번호 채번 해오기
+		@Override
+		public int getPnumOfProduct() throws SQLException {
+			
+			int pnum = 0;
+			
+			try {
+				 conn = ds.getConnection();
+				 
+				 String sql = " select seq_product_pnum.nextval AS PNUM " +
+						      " from dual ";
+						   
+				 pstmt = conn.prepareStatement(sql);
+				 rs = pstmt.executeQuery();
+				 			 
+				 rs.next();
+				 pnum = rs.getInt(1);
+			
+			} finally {
+				close();
+			}
+			
+			return pnum;
+		}// end of public int getPnumOfProduct() throws SQLException
 		
+		
+		
+		// tbl_product 테이블에 제품정보 insert 하기
+	   @Override
+	   public int productInsert(ProductVO pvo) throws SQLException {
+	      
+	      int result = 0;
+	      
+	      try {
+	         conn = ds.getConnection();
+	         
+	         String sql = " insert into tbl_product(pnum, pname, fk_cnum, pimage, pqty, price, saleprice, fk_snum, pcontent, psummary, point) " +  
+	                    " values(?,?,?,?,?,?,?,?,?,?,?)";
+	         
+	         pstmt = conn.prepareStatement(sql);
+	         
+	         pstmt.setInt(1, pvo.getPnum());
+	         pstmt.setString(2, pvo.getPname());
+	         pstmt.setInt(3, pvo.getFk_cnum());    
+	         pstmt.setString(4, pvo.getPimage());    
+	         pstmt.setInt(5, pvo.getPqty()); 
+	         pstmt.setInt(6, pvo.getPrice());
+	         pstmt.setInt(7, pvo.getSaleprice());
+	         pstmt.setInt(8, pvo.getFk_snum());
+	         pstmt.setString(9, pvo.getPcontent());
+	         pstmt.setString(10, pvo.getPsummary());
+	         pstmt.setInt(11, pvo.getPoint());
+	            
+	         result = pstmt.executeUpdate();
+	         
+	      } finally {
+	         close();
+	      }
+	      
+	      return result;      
+	      
+	   }// end of public void productInsert(ProductVO pvo) throws SQLException-------
+
+	   
+	   // tbl_product_imagefile 테이블에 제품의 추가이미지 파일명  insert 하기
+		@Override
+		public int product_imagefile_Insert(int pnum, String attachFileName) throws SQLException {
+			int result = 0;
+		      
+		      try {
+		         conn = ds.getConnection();
+		         
+		         String sql = " insert into tbl_product_imagefile(imgfileno, fk_pnum, imgfilename) "+ 
+		                    " values(seqImgfileno.nextval, ?, ?) ";
+		         
+		         pstmt = conn.prepareStatement(sql);
+		         
+		         pstmt.setInt(1, pnum);
+		         pstmt.setString(2, attachFileName);
+		         
+		         result = pstmt.executeUpdate();
+		         
+		      } finally {
+		         close();
+		      }
+		      
+		      return result;   
+			
+		} // end of public void product_imagefile_Insert(int pnum, String attachFileName) 
+		
+	   
+		// 카테고리 조회 메소드
+		@Override
+		public List<HashMap<String, String>> getCategoryList() throws SQLException {
+		    List<HashMap<String, String>> categoryList = new ArrayList<>();
+
+		    try {
+		        conn = ds.getConnection();
+
+		        String sql = "select cnum, code, cname\r\n"
+		                + "from tbl_category\r\n"
+		                + "order by cnum asc";
+
+		        pstmt = conn.prepareStatement(sql);
+
+		        rs = pstmt.executeQuery();
+
+		        while(rs.next()) {
+		            HashMap<String, String> map = new HashMap<>();
+		            map.put("cnum", rs.getString(1));
+		            map.put("code", rs.getString(2));
+		            map.put("cname", rs.getString(3));
+
+		            categoryList.add(map);
+		        }
+
+		    } finally {
+		        close();
+		    }
+
+		    return categoryList;
+		}
 }

@@ -900,28 +900,6 @@
     opacity: 1;
 }
 
-.carousel-inner img {
-	display: block;
-	max-width: 100%;
-	height: auto;
-}
-
-.carousel-caption {
-    position: absolute;
-    top: 30px;
-    left: 8%;
-    right: auto;
-    text-shadow: 2px 2px 2px gray;
-    opacity: 0.8;
-}
-
-#demo{
-	display: inline-block;
-}
-
-body {
-	background: linear-gradient( to right, white 50px, rgb(242, 240, 203));
-}
 </style>
 
 
@@ -1098,7 +1076,6 @@ $(function(){
     
 	// 페이지 로딩되면 자동으로 브랜드스토리 클릭
 	$("a#bsHome").trigger("click");
-	
 });
 </script>
 
@@ -1134,45 +1111,44 @@ $(function(){
 
 	<section id="home">
 	<hr style="padding-top: 90px; border-style:none">
-	<h2 style="font-weight: bold">오셜록 브랜드스토리</h2>
-	<hr>
-	
-	<div class="row">
-		<div id="demo col" class="carousel slide mt-5 mx-3" data-ride="carousel" style="width:700px; height:440px;">
-		  <div class="carousel-inner">
-		    <div class="carousel-item active">
-		      <img src="../images/sherlock1.png" width="700" height="440">
-		      <div class="carousel-caption">
-		        <h1 class=" text-white">OH! Sherlock</h1>
-		        <h5 class=" text-white">오셜록은 향긋합니다</h5>
-		      </div>   
-		    </div>
-		    <div class="carousel-item">
-		      <img src="../images/sherlock2.png" width="700" height="440">
-		      <div class="carousel-caption">
-		        <h1 class=" text-white">OH! Sherlock</h1>
-				<h5 class=" text-white">오셜록은 맛있습니다</h5>
-		      </div>   
-		    </div>
-		    <div class="carousel-item">
-		      <img src="../images/sherlock3.png" width="700" height="440">
-		      <div class="carousel-caption">
-		        <h1 class=" text-white">OH! Sherlock</h1>
-				<h5 class=" text-white">오셜록은 진실합니다</h5>
-		      </div>   
-		    </div>
-		  </div>
-		</div>
+		<h2 style="font-weight: bold">오셜록 브랜드스토리</h2>
+		<hr>
 		
-		<div class="col col-4">
-			<p style="font-size: 13pt; padding-top:85%; padding-left:5%">
-				
-				오!셜록의 역사는 2022년 5월,<br>21B Worldcup Street에서 시작되었습니다.<br><br> 
-				오!셜록은 바쁜 일상 속 차 한잔의 여유를 즐기는 슬로우 라이프를 추구하며,<br>
-				 최고의 인재들을 영입하여 부단한 노력과 연구를 통해 지속적으로 발전하고 있습니다.
+		<div class="d-flex" style="margin-top: 5%" >
+		<div class="card align-self-center" style="width: 500px">
+			<img class="card-img-top" src="../images/sherlock1.png"
+				alt="Card image">
+			<div class="card-img-overlay">
+				<h4 class="card-title text-white-50">OH! Sherlock</h4>
+				<p class="card-text text-white">오셜록은 향긋합니다</p>
+			</div>
+		</div>
+		<div class="card align-self-center" style="width: 500px">
+			<img class="card-img-top" src="../images/sherlock2.png"
+				alt="Card image">
+			<div class="card-img-overlay">
+				<h4 class="card-title text-white-50">OH! Sherlock</h4>
+				<p class="card-text text-white">오셜록은 맛있습니다</p>
+			</div>
+		</div>
+		<div class="card align-self-center" style="width: 500px">
+			<img class="card-img-top" src="../images/sherlock3.png"
+				alt="Card image">
+			<div class="card-img-overlay">
+				<h4 class="card-title text-white-50">OH! Sherlock</h4>
+				<p class="card-text text-white">오셜록은 진실합니다</p>
+			</div>
+		</div>
+	</div>
+		
+		
+	<div class="text-center jumbotron" style="margin-top: 5%; background: rgb(233, 243, 203)">
+			<p style="font-size: 15pt;">
+				오셜록의 역사는 <span style="font-style: italic;">2022년 5월, 21B Worldcup Street</span>에서 시작되었습니다.<br><br> 
+				오셜록은 최고의 인재들을 영입하여 부단한 노력과 연구를 통하여 지속적으로 발전하고 있습니다.
 			</p>
 		</div>
-	</div>	
+		
 	</section>
 
 
