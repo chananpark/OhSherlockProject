@@ -119,7 +119,7 @@ CROSS JOIN
         (
            select COINNO, FK_USERID,  COIN_DATE, COIN_AMOUNT
            from tbl_coin_history
-           order by COIN_DATE desc;
+           order by COINNO desc;
         ) V 
     )T
     where RNO between 1 and 10; 
@@ -180,7 +180,7 @@ values(seq_point_history.nextval, 'codud1158',8000);
         (
            select POINTNO, FK_USERID,  POINT_DATE, POINT_AMOUNT
            from tbl_POINT_history
-           order by POINT_DATE desc;
+           order by POINTNO desc;
         ) V 
     )T
     where RNO between 5 and 7; 
@@ -236,7 +236,12 @@ WHERE
     
     
     
-    
+insert all 
+into tbl_coin_history(COINNO, COIN_AMOUNT) values(seq_coin_history.nextval, 9000 ) 
+into tbl_point_history(POINTNO, POINT_AMOUNT) values(seq_point_history.nextval, 9000 )
+select *
+from dual
+where fk_userid = 'codud1158';      
     
     
     
