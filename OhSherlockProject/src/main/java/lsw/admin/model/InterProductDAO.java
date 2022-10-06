@@ -40,6 +40,9 @@ public interface InterProductDAO {
 	
 	// 카테고리 조회 메소드
 	List<HashMap<String, String>> getCategoryList() throws SQLException;
+
+	// 관리자가 제품정보을 수정하는 메소드
+	int productUpdate(ProductVO pvo)throws SQLException;
 		
 	
 

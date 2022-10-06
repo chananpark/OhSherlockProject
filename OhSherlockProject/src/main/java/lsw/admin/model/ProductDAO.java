@@ -1,5 +1,7 @@
 package lsw.admin.model;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +19,7 @@ import javax.sql.DataSource;
 import common.model.CategoryVO;
 import common.model.ProductVO;
 import common.model.SpecVO;
+import util.security.Sha256;
 
 public class ProductDAO implements InterProductDAO {
 
@@ -301,9 +304,11 @@ public class ProductDAO implements InterProductDAO {
 					
 					SpecVO spvo = new SpecVO();
 					spvo.setSname(rs.getString(1));
+					product.setSpvo(spvo);
 					
 					CategoryVO cvo = new CategoryVO();
 					cvo.setCname(rs.getString(2));
+					product.setCategvo(cvo);
 					
 				} // end of if(rs.next())
 				
@@ -472,4 +477,47 @@ public class ProductDAO implements InterProductDAO {
 
 		    return categoryList;
 		}
+
+		
+		// 관리자가 제품정보을 수정하는 메소드
+		@Override
+		public int productUpdate(ProductVO pvo) throws SQLException {
+			int result = 0;
+			
+			try {
+				conn = ds.getConnection();
+				
+				String sql = " update tbl_product set fk_cnum = ? "
+						   + " 					   , fk_snum = ? "
+						   + " 					   , pname = ? "
+						   + " 					   , psummary = ? "
+						   + " 					   , pqty = ? "
+						   + " 					   , price = ? "
+						   + " 					   , saleprice = ? "
+						   + " 					   , point = ? "
+						   + " 					   , pcontent = ? "
+						   + " 					   , pimage = ? "
+						   + " where pnum = ? "; 
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setInt(1, pvo.getFk_cnum());    
+				pstmt.setInt(2, pvo.getFk_snum());
+				pstmt.setString(3, pvo.getPname());
+				pstmt.setString(4, pvo.getPsummary());
+				pstmt.setInt(5, pvo.getPqty()); 
+				pstmt.setInt(6, pvo.getPrice());
+				pstmt.setInt(7, pvo.getSaleprice());
+				pstmt.setInt(7, pvo.getPoint());
+				pstmt.setString(9, pvo.getPcontent());
+		        pstmt.setString(10, pvo.getPimage());    
+		        pstmt.setInt(11, pvo.getPnum());    
+				
+				result = pstmt.executeUpdate();
+				
+			} finally {
+				close();
+			}
+			return result;
+		}// end of public int productUpdate(ProductVO pvo) throws SQLException {} ------------
 }

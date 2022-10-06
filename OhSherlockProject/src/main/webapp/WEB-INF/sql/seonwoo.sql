@@ -147,4 +147,6 @@ on C.cnum = P.fk_cnum
 on V.fk_snum = S.snum
 where pnum = 12
 
+update tbl_product set fk_snum = null
+where pnum = 4;
 

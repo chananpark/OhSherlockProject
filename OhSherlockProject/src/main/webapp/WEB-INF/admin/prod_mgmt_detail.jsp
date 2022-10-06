@@ -38,12 +38,17 @@
 		
 	}); // end of $(document).ready
 	
-	
+	const pnum = ${requestScope.product_select_one.pnum};
 	// function declaration // 이거 지금 작동안함... gobackurl 원리 이해하기
 	// 상품 상세조회에서 바로 직전에 보던 목록을 보여주기(검색된 목록이라면 검색된 상품목록 보여주기)
 	function goProductList() {
 		location.href = "<%= request.getContextPath() %>" + goBackURL;
 	} // end of function goMemberList()
+	
+	// 관리자 상세페이지에서 해당 상품 상세페이지를 보고 거기서 버튼을 눌렸을 경우
+	function goEdit() {
+		location.href = "<%= request.getContextPath() %>/admin/prod_mgmt_edit.tea?pnum="+pnum+"&goBackURL=${requestScope.goBackURL}";
+	} // end of function goEdit() ----
 	
 </script>
 
@@ -72,6 +77,10 @@
 						<td class="col-8">${requestScope.product_select_one.spvo.sname}</td>
 					</tr>
 					<tr>
+						<td class="col-4">상품번호</td>
+						<td class="col-8">${requestScope.product_select_one.pnum}</td>
+					</tr>
+					<tr>
 						<td class="col-4">상품명</td>
 						<td class="col-8">${requestScope.product_select_one.pname}</td>
 					</tr>
@@ -82,10 +91,6 @@
 					<tr>
 						<td class="col-4" style="vertical-align: middle">상품한줄설명</td>
 						<td class="col-8">${requestScope.product_select_one.psummary}</td>
-					</tr>
-					<tr>
-						<td class="col-4">상품설명</td>
-						<td class="col-8">${requestScope.product_select_one.pcontent}</td>
 					</tr>
 					<tr>
 						<td class="col-4">재고</td>
@@ -104,6 +109,10 @@
 						<td class="col-8"><fmt:formatNumber value="${requestScope.product_select_one.point}" pattern="###,###"/> 찻잎</td>
 					</tr>
 					<tr>
+						<td class="col-4">상품설명</td>
+						<td class="col-8">${requestScope.product_select_one.pcontent}</td>
+					</tr>
+					<tr>
 						<td class="col-4">상품이미지</td>
 						<td class="col-8"></td>
 					</tr>
@@ -112,11 +121,9 @@
 			</table>
 		</div>
   	
-
- 
  
 	<div class="mt-4">
-  		<button class="btn float-left" onclick="" style="background-color: #1E7F15; color:white; font-weight: bold;">
+  		<button class="btn float-left" onclick="goEdit()" style="background-color: #1E7F15; color:white; font-weight: bold;">
   			수정하기
 		</button>
   		<button class="btn float-right" onclick="goProductList()" style="background-color: #1E7F15; color:white; font-weight: bold;">

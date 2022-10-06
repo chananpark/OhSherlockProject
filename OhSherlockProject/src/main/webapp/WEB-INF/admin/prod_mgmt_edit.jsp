@@ -36,19 +36,38 @@ input[type="reset"], input[type="button"] {
 
 	$(document).ready(function(){
 		
-		// 재고에 스피너 달아주기
-		$("input#spinnerPqty").spinner({
-			spin:function(event,ui){
-           if(ui.value > 100) {
-              $(this).spinner("value", 100);
-              return false;
-           }
-           else if(ui.value < 1) {
-              $(this).spinner("value", 1);
-              return false;
-           }
-      	}
-		}); // end of $("input#spinnerPqty").spinner--------
+		// 카테고리 값 불러와서 지정해놓기 
+		let html = ""; 	
+		<c:forEach var="map" items="${requestScope.categoryList}">
+			html += '<option value="${map.cnum}" name="${map.cname}">${map.cname}</option>';
+		</c:forEach>
+		html += '<option value="" selected>선택하세요</option>';
+		$("select#fk_cnum").html(html);
+		
+		$("option[name='${requestScope.product_select_one.categvo.cname}']").prop("selected", true); 
+		
+
+		// 스펙 값 불러와서 지정해놓기 
+		html = ""; 	
+		<c:forEach var="spvo" items="${requestScope.specList}">
+			html += '<option value="${spvo.snum}" name="${spvo.snum}">${spvo.sname}</option>';
+    </c:forEach>
+    html += '<option value="" selected>선택하세요</option>';
+		$("select#fk_snum").html(html);
+		
+		$("option[name='${requestScope.product_select_one.spvo.sname}']").prop("selected", true); 
+		
+		
+		// 판매가격 입력하면 적립금 자동 계산 
+		$("input[name='saleprice']").bind("change", function(){
+			
+			let saleprice = $("input[name='saleprice']").val();
+			
+			$("input[name='point']").val( Math.ceil(saleprice * 0.01));
+		});
+		
+		
+		
 		
 		
 		// 추가이미지파일에 스피너 달아주기
@@ -87,22 +106,21 @@ input[type="reset"], input[type="button"] {
 		});
 		
 		
-		// 등록 버튼을 클릭하면
-		$("input#btnRegister").click(function() {
-			// "등록" 버튼을 클릭시 호출되는 함수 
+		$("input[name='pimage']").bind("change", function() {
 			
-				goRegister();
+			$("div#selectPimage").hide();
 			
-		});
+		}); // $("input[name='pimage']").bind("change", function() {});------------------
+		
 		
 	}); // end of $(document).ready(function(){});-------------------------
 	
 	
 	// "등록" 버튼을 클릭시 호출되는 함수 
-	function goRegister() {
-		
-
-		  // **** 필수입력사항에 모두 입력이 되었는지 검사한다. **** //
+	function goEdit() {
+		const frm = document.pdRegFrm;
+		frm.submit();
+		 /*  // **** 필수입력사항에 모두 입력이 되었는지 검사한다. **** //
 		  let b_Flag_required = false;
 		
 		  $(".required").each(function(){
@@ -115,11 +133,10 @@ input[type="reset"], input[type="button"] {
 			});
 		  
 		  if(!b_Flag_required) { // 필수 입력을 다 채웠을때
-				const frm = document.pdRegFrm;
-				frm.submit();
-			}
+		
+			} */
 	}
-	 
+
 </script>
 
 <div class="container prodRegisterContainer">
@@ -129,64 +146,49 @@ input[type="reset"], input[type="button"] {
 	<hr style="background-color: black; height: 1.2px;">
 	<br>
 
-	<h5 style="font-weight: bold;">신규 상품 등록</h5>
+	<h5 style="font-weight: bold;">상품 정보 수정</h5>
 	<hr>
 
 
-	<form name="pdRegFrm" id="pdReg" action="<%=request.getContextPath()%>/admin/prod_mgmt_register.tea"
+	<form name="pdRegFrm" id="pdReg" action="<%=request.getContextPath()%>/admin/prod_mgmt_editEnd.tea"
 		  method="post" 
 		  enctype="multipart/form-data">
 		<label for="fk_cnum">카테고리<span class="text-danger">*</span></label> 
 		<select id="fk_cnum" name="fk_cnum" class="required">
-			<option value="">선택하세요</option>
-				<%-- 
-					<option value="녹차/말차">녹차/말차</option>
-					<option value="홍차">홍차</option>
-					<option value="허브차">허브차</option>
-					<option value="기프트세트">기프트세트</option> 
-				--%>
-				<c:forEach var="map" items="${requestScope.categoryList}">
-	       	<option value="${map.cnum}">${map.cname}</option>
-	      </c:forEach>
 		</select> 
 			
-			
-		<label for="fk_snum">상품스펙<span class="text-danger">*</span></label> 
-		<select id="fk_snum" name="fk_snum" class="required">
+		<label for="fk_snum">상품스펙</label> 
+		<select id="fk_snum" name="fk_snum" >
 			<option value="">선택하세요</option>
-		 	<%-- 
-             <option value="1">HIT</option>
-             <option value="2">NEW</option>
-             <option value="3">BEST</option> 
-       --%>
 			<c:forEach var="spvo" items="${requestScope.specList}">
        	<option value="${spvo.snum}">${spvo.sname}</option>
       </c:forEach>
 		</select> 	
 		
 		<label for="title">상품명<span class="text-danger">*</span></label> 
-		<input type="text" id="pname" name="pname" placeholder="상품명을 입력하세요." class="required">
+		<input type="text" id="pname" name="pname" value="${requestScope.product_select_one.pname}" placeholder="상품명을 입력하세요." class="required">
 		
 		<label for="psummary">상품한줄소개<span class="text-danger">*</span></label> 
-		<textarea name="psummary" rows="2" cols="60" class="required"></textarea>
+		<textarea name="psummary" rows="2" cols="60" class="required">${requestScope.product_select_one.psummary}</textarea>
 		
-		<label for="pcontent">상품설명<span class="text-danger">*</span></label> 
-		<textarea name="pcontent" rows="5" cols="60" class="required"></textarea>
-		
-		<label for="stock">재고<span class="text-danger">*</span></label><br>
-		<input id="spinnerPqty" name="pqty" value="0" style="width: 80px; "> 개<br>
+		<label for="pqty">재고<span class="text-danger">*</span></label><br>
+		<input type="number" style="width: 150px;" name="pqty" value="${requestScope.product_select_one.pqty}" > 개<br>
 		
 		<label for="price" style="margin-top: 16px;">정가<span class="text-danger">*</span></label><br>
-	  <input type="number" style="width: 150px;" name="price" min="0" class="required" > 원<br>
+	  <input type="number" style="width: 150px;" name="price" value="${requestScope.product_select_one.price}" class="required" > 원<br>
 
 		<label for="salePrice">판매가격<span class="text-danger">*</span></label><br>
-		<input type="text" style="width: 150px;" name="saleprice" class="required" > 원<br>
+		<input type="text" style="width: 150px;" name="saleprice" value="${requestScope.product_select_one.saleprice}" class="required" > 원<br>
 
 		<label for="point" style="margin: 6px 20px 16px 0;">적립금<span class="text-danger">*</span></label><br>
-		<input type="text" style="width: 150px;" name="point" class="required" > 찻잎<br>
+		<input type="text" style="width: 150px;" name="point" value="${requestScope.product_select_one.point}" class="required" > 찻잎<br>
 
+		<label for="pcontent">상품설명<span class="text-danger">*</span></label> 
+		<textarea name="pcontent" rows="5" cols="60">${requestScope.product_select_one.pcontent}</textarea>
+		
 		<label for="pimage" style="margin: 6px 20px 16px 0;">썸네일<span class="text-danger">*</span></label><br>
-		<input type="file" name="pimage" class="required" /><br>
+		<div id="selectPimage">${requestScope.product_select_one.pimage}</div><br>
+		<input type="file" name="pimage" class="required"/><br>
 
 		<label for="prdmanual_systemfilename" style="margin: 27px 20px 10px 0;">상품이미지</label>
 		<label for="spinnerImgQty">파일갯수 : </label>
@@ -197,9 +199,9 @@ input[type="reset"], input[type="button"] {
 		<hr>
 
 		<div class="text-right" style="margin-top: 30px;">
-		 <input type="button" id="btnRegister" class="btn-secondary" value="등록" style="margin-left: 5px;" /> 
+		 <input type="button" id="btnRegister" onClick="goEdit()" class="btn-secondary" value="등록" style="margin-left: 5px;" /> 
           &nbsp;
-     <input type="reset" value="취소" 	style="margin-right: 0" />&nbsp;
+     <input type="reset" value="취소"  	style="margin-right: 0" />&nbsp;
 		</div>
 	</form>
 
