@@ -124,12 +124,12 @@ $(()=>{
 					onclick="location.href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=${cnum}&order=pnum desc'">
 					신상품순</button>
 					<span class="text-dark">|</span>
-					<button type="button" class="order" id="price desc"
-					onclick="location.href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=${cnum}&order=price desc'">
+					<button type="button" class="order" id="saleprice desc"
+					onclick="location.href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=${cnum}&order=saleprice desc'">
 					높은가격순</button>
 					<span class="text-dark">|</span>
-					<button type="button" class="order" id="price asc"
-					onclick="location.href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=${cnum}&order=price asc'">
+					<button type="button" class="order" id="saleprice asc"
+					onclick="location.href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=${cnum}&order=saleprice asc'">
 					낮은가격순</button>
 					<span class="text-dark">|</span>
 					<button type="button" class="order" id="reviewCnt desc"
@@ -195,7 +195,8 @@ $(()=>{
 											</p>
 										</c:when>
 										<c:otherwise>
-
+											<p><span class="card-text">
+											<fmt:formatNumber value="${pvo.price}" pattern="###,###" />원</span></p>
 										</c:otherwise>
 									</c:choose>
 

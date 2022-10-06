@@ -117,10 +117,13 @@ public class ProductDAO implements InterProductDAO {
 	
 	// 페이징 방식 카테고리별 기프트세트 상품 총 페이지수 가져오기 메소드
 	@Override
-	public int getTotalPage(String cnum) throws SQLException {
+	public int getTotalPage(Map<String, String> paraMap) throws SQLException {
 		
 		int totalPage = 0;
 
+		String cnum = paraMap.get("cnum");
+		String snum = paraMap.get("snum");
+		
 		try {
 			conn = ds.getConnection();
 
@@ -132,6 +135,13 @@ public class ProductDAO implements InterProductDAO {
 				sql += " where fk_cnum = ? ";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, cnum);
+			}
+			
+			// 특정 스펙 조회시
+			else if (!"".equals(snum)) {
+				sql += " where fk_snum = ? and fk_cnum in (4,5,6) ";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, snum);
 			}
 			
 			// 전체 조회시
@@ -183,6 +193,12 @@ public class ProductDAO implements InterProductDAO {
 		        if (!"".equals(paraMap.get("cnum"))) {
 		        	sql +=	"            WHERE fk_cnum = ?\n";
 		        }
+		        
+		        // 특정 스펙 조회시
+		        else if (!"".equals(paraMap.get("snum"))) {
+		        	sql +=	"            WHERE fk_snum = ? and fk_cnum in (4,5,6)\n";
+		        }
+		        
 		        // 전체 조회시
 		        else {
 		        	sql +=	"            WHERE fk_cnum in (4,5,6)\n";
@@ -209,9 +225,15 @@ public class ProductDAO implements InterProductDAO {
 		        
 		        // 특정 카테고리 조회시
 		        if (!"".equals(paraMap.get("cnum"))) {
-		        pstmt.setString(1, paraMap.get("cnum"));
-		        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
-		        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
+			        pstmt.setString(1, paraMap.get("cnum"));
+			        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+			        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
+		        }
+		        // 특정 스펙 조회시
+		        else if (!"".equals(paraMap.get("snum"))) {
+		        	pstmt.setString(1, paraMap.get("snum"));
+		        	pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+		        	pstmt.setInt(3, (currentShowPageNo * sizePerPage));
 		        }
 		        // 전체 조회시
 		        else {

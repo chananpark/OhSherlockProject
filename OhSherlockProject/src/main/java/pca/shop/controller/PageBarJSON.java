@@ -1,5 +1,8 @@
 package pca.shop.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,9 +20,15 @@ public class PageBarJSON extends AbstractController {
 		
 		String currentShowPageNo = request.getParameter("currentShowPageNo");
 		String cnum = request.getParameter("cnum");
+		String snum = request.getParameter("snum");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		
+		paraMap.put("cnum", cnum); // 카테고리번호
+		paraMap.put("snum", snum); // 스펙
 		
 		// 페이징처리를 위한 특정 카테고리 총페이지 알아오기
-		int totalPage = pdao.getTotalPage(cnum);
+		int totalPage = pdao.getTotalPage(paraMap);
 		
 		String pageBar = "";
 

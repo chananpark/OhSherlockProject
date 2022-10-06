@@ -35,12 +35,16 @@ public class ProductGiftSetJSON extends AbstractController {
 		// 카테고리 넘버
 		String cnum = request.getParameter("cnum");
 		
+		// 스펙넘버
+		String snum = request.getParameter("snum");
+		
 		String currentShowPageNo = "1";
 		if(!"".equals(request.getParameter("currentShowPageNo")))
 			currentShowPageNo = request.getParameter("currentShowPageNo");
 		
 		paraMap.put("order", order);
 		paraMap.put("cnum", cnum);
+		paraMap.put("snum", snum);
 		paraMap.put("currentShowPageNo", currentShowPageNo);
 		
 		InterProductDAO pdao = new ProductDAO();

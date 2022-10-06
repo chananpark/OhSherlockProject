@@ -135,13 +135,19 @@ button.order {
 <script>
 
 let cnum;
+let snum;
 let currentShowPageNo;
 let order;
 let jsonPageBar;
 
 $(()=>{
 	cnum = "${cnum}";
+	snum = "${snum}";
 	currentShowPageNo = "${currentShowPageNo}";
+	
+	console.log(cnum);
+	console.log(snum);
+	console.log(currentShowPageNo);
 	
 	// 정렬 버튼 클릭시 이벤트
 	 $(".order").click((e)=>{
@@ -158,10 +164,12 @@ $(()=>{
 	}); 
 	 
 	// 선택된 카테고리 글자색, 굵게
-	 if (cnum == "") {
+	 if (cnum == "" && snum == "") {
 		 document.getElementById("allGoods").classList.add("selected");
-	 } else{
+	 } else if (cnum != "" && snum == ""){
 		 document.getElementById(cnum).classList.add("selected");
+	 } else if (cnum == "" && snum != ""){
+		 document.getElementById("bestGoods").classList.add("selected");
 	 }
 	
 	// 소제목 텍스트
@@ -176,7 +184,7 @@ function getOrderedList() {
 	$.ajax({
 		url:"<%=ctxPath%>/shop/productGiftSetJSON.tea",
 		type:"get",
-		data:{"cnum":cnum, "order":order, "currentShowPageNo":currentShowPageNo},
+		data:{"cnum":cnum, "order":order, "currentShowPageNo":currentShowPageNo, "snum":snum},
 		dataType:"JSON",
 		success:function(json){
 	        let html = "";
@@ -249,7 +257,7 @@ function getPageBar() {
 	$.ajax({
 		url:"<%=ctxPath%>/shop/pageBarJSON.tea",
 		type:"get",
-		data:{"cnum":cnum, "currentShowPageNo":currentShowPageNo},
+		data:{"cnum":cnum, "currentShowPageNo":currentShowPageNo, "snum":snum},
 		dataType:"JSON",
 		success:function(json){
 			
@@ -295,7 +303,7 @@ function getPageBar() {
 </script>
 	
 	<div class="container productListContainer">
-		<div><img src= "../images/tea_header_img.png" width=100%/></div>
+		<div><img src= "../images/giftset_header.png" width=100%/></div>
       
 		<div class="row">
 	      	<%-- 사이드 메뉴 시작 --%>
@@ -305,6 +313,9 @@ function getPageBar() {
 	         	</div>
 	         	<div style="text-align: left; padding: 4%; margin-left:10%;">
 	            	<a class="categories" id="allGoods" href="<%= ctxPath %>/shop/productGiftset.tea">전체 상품</a>
+	         	</div>
+	         	<div style="text-align: left; padding: 4%; margin-left:10%;">
+	            	<a class="categories" id="bestGoods" href="<%= ctxPath %>/shop/productGiftset.tea?snum=2">베스트</a>
 	         	</div>
 	         	<c:forEach var="map" items="${giftsetCategoryList}">
 	         	<div style="text-align: left; padding: 4%; margin-left:10%;">
