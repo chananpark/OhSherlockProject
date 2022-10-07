@@ -210,7 +210,6 @@ div.eventContainer {
 
 h4.eventText{
 	font-weight: bold;
-	padding: 60px 0px 10px 0px;
 }
 section#index_sectionBox {
 	position: relative;
@@ -327,12 +326,13 @@ div#brandStoryText {
 				<%-- 로그인 전 상태일 때 --%>
 				<c:if test="${empty sessionScope.loginuser}"> 
 					<li class="nav-item dropdown mr-2"><a class="nav-link dropdown-toggle menufont_size text-secondary"
-						href="<%= ctxPath %>/login/login.tea" id="navbarDropdown" data-toggle="dropdown">로그인</a> 
+						href="<%= ctxPath %>/login/login.tea">로그인</a> 
+						<%-- href="<%= ctxPath %>/login/login.tea" id="navbarDropdown" data-toggle="dropdown">로그인</a>  --%>
 						<%-- 로그인을 누르면 기본은 로그인 창으로 연결 --%>
-						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
+						<%-- <div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="<%= ctxPath %>/login/login.tea">로그인</a> 
 							<a class="dropdown-item" href="<%= ctxPath %>/member/memberRegister.tea">회원가입</a>
-						</div></li>
+						</div></li> --%>
 					<li class="nav-item active mr-2">
 					  <%-- 로그인 전 회원가입 접속가능 --%>
 					  <c:if test="${empty sessionScope.loginuser}">

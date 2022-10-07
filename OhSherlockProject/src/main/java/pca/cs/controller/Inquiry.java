@@ -137,6 +137,8 @@ public class Inquiry extends AbstractController {
 				String inquiry_type = request.getParameter("inquiry_type");
 				String inquiry_subject = request.getParameter("inquiry_subject");
 				String inquiry_content = request.getParameter("inquiry_content");
+				inquiry_content = inquiry_content.replaceAll("<", "&lt;");
+				inquiry_content = inquiry_content.replaceAll(">", "&gt;");
 				inquiry_content = inquiry_content.replace("\r\n","<br>");
 				String inquiry_email = request.getParameter("inquiry_email"); // 체크:on 미체크:null
 				String inquiry_sms = request.getParameter("inquiry_sms"); // 체크:on 미체크:null

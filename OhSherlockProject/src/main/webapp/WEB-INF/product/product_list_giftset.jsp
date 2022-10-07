@@ -329,7 +329,7 @@ function getPageBar() {
 	       		<%-- 본문 시작 --%>
 				<div id="maincontent">
 		    	    <%-- 본문 내부 상단 바 시작 --%>
-					<span id="subtitle" class="text-dark h5" style="font-weight:bold;">전체상품</span>
+					<span id="subtitle" class="text-dark h5" style="font-weight:bold;">전체 상품</span>
 					
 					<%-- 정렬 선택 창 --%>
 					<div class="text-right" style="float: right;">
@@ -394,8 +394,9 @@ function getPageBar() {
 				  		<c:if test="${empty productList }">
 				  		상품 준비중입니다.
 				  		</c:if>
+				  		</div>
 				  		<%-- ★ 여기까지! --%>
-					</div>
+					
 					<%-- 상품 목록 끝 --%>					
 					
 					<div id="div_pageBar" style="margin-top : 100px">

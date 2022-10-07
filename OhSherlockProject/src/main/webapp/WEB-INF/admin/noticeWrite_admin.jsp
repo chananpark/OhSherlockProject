@@ -49,6 +49,7 @@
 		}
 		
 		const frm = document.ntWrite;
+		frm.enctype="multipart/form-data";
     	frm.action="<%=ctxPath%>/cs/noticeWriteEnd.tea";
     	frm.method="POST";
     	frm.submit();
@@ -85,7 +86,8 @@
 		<label for="content">내용<span class="text-danger">*</span></label>
 		<textarea id="content" name="content" placeholder="공지사항 내용을 입력하세요." style="height:200px"></textarea>
 		
-		<%-- <label for="file" style="margin: 6px 20px 16px 0;">파일 첨부</label><input type="file" id="file" name="file"> --%>
+		<label for="file" style="margin: 6px 20px 16px 0;">사진 첨부</label><input type="file" name="noticeImage">
+		<label for="file" style="margin: 6px 20px 16px 0;">파일 첨부</label><input type="file" name="noticeFile">
 		<br>
 		
 		<hr>

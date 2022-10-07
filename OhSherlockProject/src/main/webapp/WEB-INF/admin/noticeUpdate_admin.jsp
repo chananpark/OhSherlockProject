@@ -50,6 +50,7 @@
 			}
 				
 			const frm = document.ntUpdate;
+			frm.enctype="multipart/form-data";
 			frm.action="<%=ctxPath%>/cs/noticeUpdateEnd.tea";
 	    	frm.method="POST";
 	    	frm.submit();
@@ -87,8 +88,9 @@
 		
 		<label for="noticeContent">내용<span class="text-danger">*</span></label>
 		<textarea id="noticeContent" name="noticeContent" style="height:200px">${noticeContent}</textarea>
-		
-		<%--<label for="file" style="margin: 6px 20px 16px 0;">파일 첨부</label><input type="file" id="file" name="file"> --%>
+
+		<label for="file" style="margin: 6px 20px 16px 0;">사진 첨부</label><input type="file" name="noticeImage">
+		<label for="file" style="margin: 6px 20px 16px 0;">파일 첨부</label><input type="file" name="noticeFile">		
 		<br>
 		
 		<hr>

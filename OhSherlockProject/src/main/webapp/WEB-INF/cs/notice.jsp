@@ -116,27 +116,27 @@
   	
 		<table class="table mt-4 text-center mb-5">
 		<thead class="thead-light">
-			<tr>
-				<th>글번호</th>
-				<th>제목</th>
-				<th>등록일</th>
-				<th>조회수</th>
+			<tr class="row">
+				<th class="col col-2">글번호</th>
+				<th class="col col-5">제목</th>
+				<th class="col col-3">등록일</th>
+				<th class="col col-2">조회수</th>
 			</tr>
 		</thead>
 		<tbody>
 			<c:if test="${not empty noticeList}">
 				<c:forEach items="${noticeList}" var="notice">
-					<tr>
-						<td>${notice.noticeNo}</td>
-						<td>
+					<tr class="row">
+						<td class="col col-2">${notice.noticeNo}</td>
+						<td class="col col-5">
 							<c:if test="${notice.fresh == true}">
 								<span class="badge badge-pill">new</span>&nbsp;&nbsp;
 							</c:if> 
 							<a href="<%=ctxPath%>/cs/noticeDetail.tea?noticeNo=${notice.noticeNo}">${notice.noticeSubject}</a>
 							</td>
-						<td><fmt:formatDate pattern="yyyy.MM.dd" value="${notice.noticeDate}"/>
+						<td class="col col-3"><fmt:formatDate pattern="yyyy.MM.dd" value="${notice.noticeDate}"/>
 						</td>
-						<td>${notice.noticeHit}</td>
+						<td class="col col-2">${notice.noticeHit}</td>
 					</tr>
 				</c:forEach>
 			</c:if>
