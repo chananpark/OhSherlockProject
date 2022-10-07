@@ -288,7 +288,7 @@ div#brandStoryText {
 				<ul class="navbar-nav flex-row">
 					<li class="nav-item active mr-2"><span class="nav-link menufont_size text-dark">
 					<i class="fas fa-grip-lines-vertical fa-lg"></i></span></li>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/cart/cart.jsp">
+					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/cart/cart.tea">
 					<i class="fas fa-shopping-basket fa-lg"></i></a></li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="#">
 					<i class="fas fa-heart fa-lg"></i></a></li>
@@ -317,7 +317,7 @@ div#brandStoryText {
 						</div>
 					</li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%= ctxPath %>/shop/productGiftset.tea">기프트세트</a></li>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%= ctxPath %>/shop/productEvent.tea">이벤트상품</a></li>
+					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=${currentShowPageNo}&snum=&cnum=&order=pinputdate desc">이벤트상품</a></li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath %>/storeInfo/storeList.jsp">매장안내</a></li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath %>/brandStory/brandStory.tea">브랜드스토리</a></li>
 				</ul>
