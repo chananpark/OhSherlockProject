@@ -79,9 +79,9 @@
   	justify-content: flex-end;
 }
 
-.productListContainer a:link, .productListContainer a:visited {
+/* .productListContainer a:link, .productListContainer a:visited {
 	color: black;
-}
+} */
 
 .productListContainer a:hover {
 	cursor: pointer;
@@ -93,7 +93,7 @@
 	display: inline-block;
 }
 
-a, a:hover, a:link, a:visited {
+a, a:hover{
 	color: black;
 	text-decoration: none;
 }
@@ -121,7 +121,15 @@ a, a:hover, a:link, a:visited {
 button.order {
 	background-color: transparent; 
   	border-style: none;
+  	padding: 0;
+
 }
+
+.selected {
+	color: #1E7F15 !important;
+	font-weight: bold;
+}
+
 </style>
 
 <script>
@@ -143,7 +151,22 @@ $(()=>{
 		
 		// 페이지바 가져오기
 		getPageBar();
+		
+		// 선택된 정렬 글자색, 굵게
+		$(".order").removeClass("selected");
+		$(e.target).addClass("selected");
 	}); 
+	 
+	// 선택된 카테고리 글자색, 굵게
+	 if (cnum == "") {
+		 document.getElementById("allGoods").classList.add("selected");
+	 } else{
+		 document.getElementById(cnum).classList.add("selected");
+	 }
+	
+	// 소제목 텍스트
+	$("#subtitle").text($(".categories.selected").text());
+	
 	
 });
 
@@ -281,11 +304,11 @@ function getPageBar() {
 	            	<span class="h4" style="font-weight:bold;">기프트세트</span>
 	         	</div>
 	         	<div style="text-align: left; padding: 4%; margin-left:10%;">
-	            	<a href="<%= ctxPath %>/shop/productGiftset.tea">전체 상품</a>
+	            	<a class="categories" id="allGoods" href="<%= ctxPath %>/shop/productGiftset.tea">전체 상품</a>
 	         	</div>
 	         	<c:forEach var="map" items="${giftsetCategoryList}">
 	         	<div style="text-align: left; padding: 4%; margin-left:10%;">
-	            	<a href="<%= ctxPath %>/shop/productGiftset.tea?cnum=${map.cnum}">${map.cname}</a>
+	            	<a class="categories" id="${map.cnum}" href="<%= ctxPath %>/shop/productGiftset.tea?cnum=${map.cnum}">${map.cname}</a>
 	         	</div>
 	         	</c:forEach>
 	       	</div>
@@ -295,18 +318,18 @@ function getPageBar() {
 	       		<%-- 본문 시작 --%>
 				<div id="maincontent">
 		    	    <%-- 본문 내부 상단 바 시작 --%>
-					<span class="text-dark h5" style="font-weight:bold;">전체상품</span>
+					<span id="subtitle" class="text-dark h5" style="font-weight:bold;">전체상품</span>
 					
 					<%-- 정렬 선택 창 --%>
 					<div class="text-right" style="float: right;">
-					<button type="button" class="order" id="pnum desc">신상품순</button>
-					<span class="text-dark">&nbsp;|&nbsp;</span>
+					<button type="button" class="order selected" id="pnum desc">신상품순</button>
+					<span class="text-dark">|</span>
 					<button type="button" class="order" id="price desc">높은가격순</button>
-					<span class="text-dark">&nbsp;|&nbsp;</span>
+					<span class="text-dark">|</span>
 					<button type="button" class="order" id="price asc">낮은가격순</button>
-					<span class="text-dark">&nbsp;|&nbsp;</span>
+					<span class="text-dark">|</span>
 					<button type="button" class="order" id="reviewCnt desc">리뷰많은순</button>
-					<span class="text-dark">&nbsp;|&nbsp;</span>
+					<span class="text-dark">|</span>
 					<button type="button" class="order" id="orederCnt desc">판매순</button>
 					</div>
 		    	    <%-- 본문 내부 상단 바 끝 --%>
@@ -364,18 +387,17 @@ function getPageBar() {
 					</div>
 					<%-- 상품 목록 끝 --%>					
 					
+					<div id="div_pageBar" style="margin-top : 100px">
+						<nav id="nav_pageBar" aria-label="Page navigation example">
+							<ul id = "originPageBar" class="pagination justify-content-center">${pageBar}</ul>
+						</nav>
+					</div>
 				</div>
 	       		<%-- 본문 끝 --%>
 				
 			</div>
     	    
 		</div>
-		<div id="div_pageBar">
-			<nav id="nav_pageBar" aria-label="Page navigation example">
-				<ul id = "originPageBar" class="pagination justify-content-center">${pageBar}</ul>
-			</nav>
-		</div>
 	</div>
 	
 <%@ include file="../footer.jsp"%>
-

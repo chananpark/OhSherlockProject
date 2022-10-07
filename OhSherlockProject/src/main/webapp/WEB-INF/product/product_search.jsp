@@ -182,10 +182,23 @@ $(()=>{
 									<h5 class="card-title" style="font-weight: bold;">
 										<a href="#">${pvo.pname}</a>
 									</h5>
-									<p class="card-text">
-										<fmt:formatNumber value="${pvo.price}" pattern="#,###" />
-										원
-									</p>
+									<%-- 세일 상품 금액 표시 --%>
+									<c:choose>
+										<c:when test="${pvo.price != pvo.saleprice}">
+											<p>
+												<span class="card-text"
+													style="text-decoration-line: line-through;"><fmt:formatNumber
+														value="${pvo.price}" pattern="###,###" />원</span> <span
+													class="card-text"
+													style="color: #1E7F15; font-weight: bold;"><fmt:formatNumber
+														value="${pvo.saleprice}" pattern="###,###" />원</span>
+											</p>
+										</c:when>
+										<c:otherwise>
+
+										</c:otherwise>
+									</c:choose>
+
 
 									<a class="card-text mr-2"><i
 										class="far fa-heart text-secondary fa-lg heart"></i></a> <a
