@@ -45,13 +45,11 @@ public class MemberEdit extends AbstractController {
 			}
 			
 		}
-		
-	/*	
 		else {
 			// 로그인을 안 했으면   => 로그인없이 예전 본인 로그인시 정보수정하기 페이지에 접속했던 url 을 복붙한경우(get방식)
 			
 			String message ="회원정보를 수정 하기 위해서는 먼저 로그인을 하세요!!";
-			String loc = "javascript:history.go(-2)";  // 자동 로그아웃 후 로그인페이지 이동으로 수정하기***
+			String loc = "javascript:history.back()";  // 자동 로그아웃 후 로그인페이지 이동으로 수정하기***
 			
 			request.setAttribute("message", message);
 			request.setAttribute("loc", loc);
@@ -60,7 +58,6 @@ public class MemberEdit extends AbstractController {
 			super.setViewPage("/WEB-INF/msg.jsp");  // view단 페이지(msg.jsp) 로 넘겨준다. - forward 방식  
 	
 		}
-		*/
 	}
 
 }
