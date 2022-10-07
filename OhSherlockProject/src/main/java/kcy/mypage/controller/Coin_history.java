@@ -55,16 +55,7 @@ public class Coin_history extends AbstractController {
 				String date2 = request.getParameter("date2");
 
 				if (sizePerPage == null
-						|| !("10".equals(sizePerPage) || "3".equals(sizePerPage) || "5".equals(sizePerPage))) { // sizePerPage가
-																												// null
-																												// 이거나
-																												// url에서
-																												// 장난질
-																												// 쳤을
-																												// 경우에는
-																												// 기본값인
-																												// 10을
-																												// 준다.
+						|| !("10".equals(sizePerPage) || "3".equals(sizePerPage) || "5".equals(sizePerPage))) { // sizePerPage가 null 이거나 url에서 장난질 쳤을 경우에는 기본값인 10을 준다.
 					sizePerPage = "10";
 				}
 

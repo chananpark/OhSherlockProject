@@ -15,6 +15,7 @@ public interface InterMemberDAO {
 	// 회원의 코인 및 포인트 변경하기
 	int coinUpdate(Map<String, String> paraMap) throws SQLException;
 
+	
 	// 페이징 처리를 한 모든 예치금 내역 보여주기, 특정기간 예치금 보여주기
 	List<CoinVO> selectPagingCoin(Map<String, String> paraMap) throws SQLException;
 
@@ -24,7 +25,7 @@ public interface InterMemberDAO {
 
 	
 	
-	// 페이징 처리를 한 모든 포인트 내역 보여주기
+	// 페이징 처리를 한 모든 포인트 내역 보여주기, 특정기간 포인트 보여주기
 	List<PointVO> selectPagingPoint(Map<String, String> paraMap) throws SQLException;
 
 	
