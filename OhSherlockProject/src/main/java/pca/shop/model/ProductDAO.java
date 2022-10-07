@@ -185,7 +185,7 @@ public class ProductDAO implements InterProductDAO {
 		        		"                pnum, pname, pimage, \n"+
 		        		"                pqty, price, saleprice, pcontent, PSUMMARY, point,\n"+
 		        		"                to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum,\n"+
-		        		"                (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
+		        		"                (select distinct count(fk_odrcode) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
 		        		"                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt\n"+
 		        		"            FROM tbl_product\n";
 		        
@@ -392,7 +392,7 @@ public class ProductDAO implements InterProductDAO {
 		        		"                pnum, pname, pimage, \n"+
 		        		"                pqty, price, saleprice, \n"+
 		        		"                fk_cnum, fk_snum,\n"+
-		        		"                (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
+		        		"                (select distinct count(fk_odrcode) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
 		        		"                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt\n"+
 		        		"            FROM tbl_product\n"+
 		        		"			 WHERE pname like '%' || ? || '%' ";
@@ -467,6 +467,41 @@ public class ProductDAO implements InterProductDAO {
 		    }
 
 		    return productList;
+		}
+
+		// 메인에 표시할 상품 4개
+		@Override
+		public List<ProductVO> selectTodayProducts() {
+
+			List<ProductVO> todayProductList = new ArrayList<>();
+			try {
+				
+				conn = ds.getConnection();
+
+		        String sql = "SELECT rownum pnum, pname, pimage, price, saleprice from "
+		        		+ "(SELECT pnum, pname, pimage, price, saleprice FROM tbl_product ORDER BY pnum desc)"
+		        		+ "where rownum between 1 and 4";
+		        pstmt = conn.prepareStatement(sql);
+		        rs = pstmt.executeQuery();
+		        
+		        while (rs.next()) {
+		            ProductVO pvo = new ProductVO();
+		            pvo.setPnum(rs.getInt("pnum")); // 제품번호
+		            pvo.setPname(rs.getString("pname")); // 제품명
+
+		            pvo.setPimage(rs.getString("pimage")); // 제품 이미지 파일명
+		            pvo.setPrice(rs.getInt("price")); // 제품 정가
+		            pvo.setSaleprice(rs.getInt("saleprice")); // 제품 판매가
+
+		            todayProductList.add(pvo);
+		        }
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}finally {
+		        close();
+		    }
+			
+			return todayProductList;
 		}
 
 }

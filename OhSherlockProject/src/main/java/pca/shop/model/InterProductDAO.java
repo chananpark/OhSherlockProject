@@ -30,4 +30,7 @@ public interface InterProductDAO {
 	// 검색어로 상품 목록 가져오기
 	List<ProductVO> selectSearchedGoods(Map<String, String> paraMap) throws SQLException;
 
+	// 메인에 표시할 상품 4개
+	List<ProductVO> selectTodayProducts();
+
 }

@@ -85,56 +85,42 @@
 	</div>
 </div>
 
-<div class="container" id="todaytea" >
+<div class="container" id="todaytea">
 
-	<h4 id="todaytea_title" style="font-weight: bold;">오늘은 어떤 차를 마셔볼까요?</h4>
-
-	<div class="card"
-		style="width: 250px; margin: 20px 20px 0 0;">
-		<img class="card-img-top" src="images/제주동백꽃.png" alt="Card image"
-			style="width: 100%">
-		<div class="card-body" style="border: none;">
-			<h4 class="card-title">러블리 티 박스</h4>
-			<p class="card-text">20,000원</p>
-			<a href="#" class="btn btn-primary"
-				style="float: right; background-color: #1E7F15; border: none;">DETAIL</a>
+	<h4 id="todaytea_title" style="font-weight: bold;">오늘은 어떤 차를
+		마셔볼까요?</h4>
+	<div class="row" style="width:100%">
+	<c:forEach items="${todayProductList }" var="pvo">
+		<div class="col-6 col-lg-3 my-3">
+			<div class="card ">
+				<img class="card-img-top" src="<%=ctxPath%>/images/${pvo.pimage}"
+					alt="Card image" style="width: 100%">
+				<div class="card-body" style="min-height: 170px">
+					<h5 class="card-title">${pvo.pname}</h5>
+					<c:choose>
+						<c:when test="${pvo.price != pvo.saleprice}">
+							<p>
+								<span class="card-text"
+									style="text-decoration-line: line-through;"><fmt:formatNumber
+										value="${pvo.price}" pattern="###,###" />원</span> <span
+									class="card-text"
+									style="color: #1E7F15; font-weight: bold;"><fmt:formatNumber
+										value="${pvo.saleprice}" pattern="###,###" />원</span>
+							</p>
+						</c:when>
+						<c:otherwise>
+							<p><span class="card-text">
+							<fmt:formatNumber value="${pvo.price}" pattern="###,###" />원</span></p>
+						</c:otherwise>
+					</c:choose>
+					<a href="<%= ctxPath %>/shop/productView.tea?pnum=${pvo.pnum}" class="btn btn-primary mt-3"
+						style="position:relative; left:60%; background-color: #1E7F15; border: none;">DETAIL</a>
+				</div>
+			</div>
 		</div>
-	</div>
-
-	<div class="card"
-		style="width: 250px; margin: 20px 20px 0 0;">
-		<img class="card-img-top" src="images/그린티라떼더블샷.png" alt="Card image"
-			style="width: 100%">
-		<div class="card-body">
-			<h4 class="card-title">그린티 라떼 더블샷</h4>
-			<p class="card-text">12,000원</p>
-			<a href="#" class="btn btn-primary"
-				style="float: right; background-color: #1E7F15; border: none;">DETAIL</a>
-		</div>
-	</div>
-
-	<div class="card"
-		style="width: 250px; margin: 20px 20px 0 0;">
-		<img class="card-img-top" src="images/제주순수녹차.png" alt="Card image"
-			style="width: 100%">
-		<div class="card-body">
-			<h4 class="card-title">제주 순수녹차</h4>
-			<p class="card-text">9,500원</p>
-			<a href="#" class="btn btn-primary"
-				style="float: right; background-color: #1E7F15; border: none;">DETAIL</a>
-		</div>
-	</div>
-
-	<div class="card" style="width: 250px; margin: 20px 20px 0 0;">
-		<img class="card-img-top" src="images/시그니처기프트세트.png" alt="Card image" style="width: 100%">
-		<div class="card-body">
-			<h4 class="card-title">기프트 세트</h4>
-			<p class="card-text">22,500원</p>
-			<a href="#" class="btn btn-primary" style="float: right; background-color: #1E7F15; border: none;">DETAIL</a>
-		</div>
+	</c:forEach>
 	</div>
 </div>
-
 
 <!-- 이벤트 컨테이너 시작 -->
 <div class="container eventContainer">
