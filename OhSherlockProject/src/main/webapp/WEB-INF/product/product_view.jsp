@@ -153,7 +153,7 @@
 		<div id="product_img" class="col-md-6" style="text-align:center;">
 			<img src="../images/${pvo.pimage}" width="90%" />
 			<p class="mt-2">
-				<span class="mr-3"><i class="fab fa-envira mr-1"></i>적립금 280 찻잎 적립</span>
+				<span class="mr-3"><i class="fab fa-envira mr-1"></i>적립금 ${requestScope.pvo.pqty} 찻잎 적립</span>
 				<span class="mr-3"><i class="fas fa-truck-moving mr-1"></i>3만원 이상 무료배송</span>
 				<span><i class="fas fa-shopping-bag mr-1"></i>쇼핑백 동봉</span>
 			</p>
@@ -165,11 +165,11 @@
 				<span>&nbsp;>&nbsp;</span>
 				<span>티세트</span>
 			</p>		
-			<p class="h2" style="font-weight:bold;">프리미엄 티 컬렉션</p>
+			<p class="h2" style="font-weight:bold;">${pvo.pname}</p>
 			<p>취향과 기분에 따라 다채로운 맛과 향을 즐기기 좋은, 알찬 구성의 베스트셀러 티 세트</p>
 			<p class="h5 row mt-5" >
 				<span class="col-9" style="text-align: left;" >상품 가격</span>
-				<span class="col-3" style="font-weight:bold; text-align: center;">28,000원</span>
+				<span class="col-3" style="font-weight:bold; text-align: center;"><fmt:formatNumber value="${pvo.price}" pattern="###,###"/>원</span>
 			</p>
 			
 			<form name="cartOrderFrm">
@@ -185,7 +185,11 @@
           		<tbody>
             		<tr>
               			<td class="col col-9 text-left">상품금액</td>
-              			<td class="col col-3 text-right">28,000</td>
+              			<td class="col col-3 text-right"><fmt:formatNumber value="${pvo.price}" pattern="###,###"/>원</td>
+            		</tr>
+            		<tr>
+              			<td class="col col-9 text-left">할인율</td>
+              			<td class="col col-3 text-right">${requestScope.pvo.discountPercent}% 할인</td>
             		</tr>
             		<tr>
               			<td class="col col-9 text-left">배송비</td>
@@ -193,7 +197,7 @@
             		</tr>
             		<tr>
               			<td class="col col-9" style="color:#1E7F15; font-weight:bolder;"><h4>결제예정금액</h4></td>
-             			<td class="col col-3 text-right" style="color:#1E7F15;"><h4 style="font-weight:bold;">30,500</h4></td>
+             			<td class="col col-3 text-right" style="color:#1E7F15;"><h4 style="font-weight:bold;"><fmt:formatNumber value="${requestScope.pvo.saleprice}" pattern="###,###"/>원</h4></td>
             		</tr>
           		</tbody>
 	       </table>

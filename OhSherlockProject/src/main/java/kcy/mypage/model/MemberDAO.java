@@ -285,12 +285,14 @@ public class MemberDAO implements InterMemberDAO {
 
 	}// end of 페이징 처리에 대한 페이지 출력하기 ---------------------------------------
 
-	// 페이징 처리를 한 모든 포인트 내역 보여주기
+	// 페이징 처리를 한 모든 포인트 내역 보여주기, 특정기간 포인트 보여주기
 	@Override
 	public List<PointVO> selectPagingPoint(Map<String, String> paraMap) throws SQLException {
 
 		List<PointVO> point_history = new ArrayList<>();
 
+		String userid = paraMap.get("userid");
+		
 		try {
 			conn = ds.getConnection();
 
@@ -301,10 +303,12 @@ public class MemberDAO implements InterMemberDAO {
 
 			String date1 = paraMap.get("date1");
 			String date2 = paraMap.get("date2");
+			
+			sql += " where FK_USERID = ? ";
 
 			if (date1 != null && date2 != null) {
 
-				sql += " WHERE POINT_DATE BETWEEN to_date( ?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd')  ";
+				sql += " and POINT_DATE BETWEEN to_date( ?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd')  ";
 
 			}
 
@@ -316,13 +320,15 @@ public class MemberDAO implements InterMemberDAO {
 			pstmt = conn.prepareStatement(sql);
 
 			if (date1 != null && date2 != null) {
-				pstmt.setString(1, paraMap.get("date1"));
-				pstmt.setString(2, paraMap.get("date2"));
-				pstmt.setInt(3, (currentShowPageNo * sizePerPage) - (sizePerPage - 1)); // 공식
-				pstmt.setInt(4, (currentShowPageNo * sizePerPage)); // 공식
+				pstmt.setString(1, paraMap.get("userid"));
+				pstmt.setString(2, paraMap.get("date1"));
+				pstmt.setString(3, paraMap.get("date2"));
+				pstmt.setInt(4, (currentShowPageNo * sizePerPage) - (sizePerPage - 1)); // 공식
+				pstmt.setInt(5, (currentShowPageNo * sizePerPage)); // 공식
 			} else {
-				pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage - 1)); // 공식
-				pstmt.setInt(2, (currentShowPageNo * sizePerPage)); // 공식
+				pstmt.setString(1, paraMap.get("userid"));
+				pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1)); // 공식
+				pstmt.setInt(3, (currentShowPageNo * sizePerPage)); // 공식
 			}
 
 			rs = pstmt.executeQuery();
@@ -345,7 +351,7 @@ public class MemberDAO implements InterMemberDAO {
 
 		return point_history;
 
-	}// end of 페이징 처리를 한 모든 포인트 내역 보여주기
+	}// end of 페이징 처리를 한 모든 포인트 내역 보여주기, 특정기간 포인트 보여주기
 		// --------------------------------------------------
 
 	// 포인트 페이징 처리에 대한 페이지 출력하기
@@ -354,17 +360,19 @@ public class MemberDAO implements InterMemberDAO {
 
 		int point_totalPage = 0;
 
+		String userid = paraMap.get("userid");
+		
 		try {
 			conn = ds.getConnection();
 
-			String sql = " select ceil(count(*)/?) " + " from tbl_point_history ";
+			String sql = " select ceil(count(*)/?) " + " from tbl_point_history" + " where FK_USERID = ? ";
 
 			String date1 = paraMap.get("date1");
 			String date2 = paraMap.get("date2");
 
 			if (date1 != null && date2 != null) {
 
-				sql += " WHERE COIN_DATE BETWEEN to_date( ?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd')  ";
+				sql += " and POINT_DATE BETWEEN to_date( ?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd')  ";
 
 			}
 
@@ -372,10 +380,12 @@ public class MemberDAO implements InterMemberDAO {
 
 			if (date1 != null && date2 != null) {
 				pstmt.setInt(1, Integer.parseInt(paraMap.get("sizePerPage")));
-				pstmt.setString(2, paraMap.get("date1"));
-				pstmt.setString(3, paraMap.get("date2"));
+				pstmt.setString(2, paraMap.get("userid"));
+				pstmt.setString(3, paraMap.get("date1"));
+				pstmt.setString(4, paraMap.get("date2"));
 			} else {
 				pstmt.setInt(1, Integer.parseInt(paraMap.get("sizePerPage")));
+				pstmt.setString(2, paraMap.get("userid"));
 			}
 
 			rs = pstmt.executeQuery();

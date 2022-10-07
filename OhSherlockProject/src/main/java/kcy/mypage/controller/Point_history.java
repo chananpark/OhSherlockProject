@@ -24,7 +24,7 @@ public class Point_history extends AbstractController {
 
 		if( !super.checkLogin(request) ) {
 			// == 로그인을 안한 상태로 들어왔을 때는 접근을 못하게 막는다. == //
-			String message = "포인트 조회를 위해서는 로그인을 해주세요.";
+			String message = "적립금 조회를 위해서는 로그인을 해주세요.";
 	        String loc = "javascript:history.back()";
 	        
 	        request.setAttribute("message", message);
@@ -169,7 +169,7 @@ public class Point_history extends AbstractController {
 			}
 			else {
 				// 로그인한 사람이 다른 경우
-				String message = "예치금조회는 본인만 가능합니다.";
+				String message = "적립금 조회는 본인만 가능합니다.";
 				String loc = "javascript:history.back()";
 
 				request.setAttribute("message", message);
