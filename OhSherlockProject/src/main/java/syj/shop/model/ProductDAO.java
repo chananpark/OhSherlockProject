@@ -134,7 +134,7 @@ public class ProductDAO implements InterProductDAO {
 	        		"    FROM\n"+
 	        		"        (SELECT c.cname, s.sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
 	        		"                pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,\n"+
-	        		"                (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
+	        		"                (select distinct count(FK_ODRCODE) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
 	        		"                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt\n"+
 	        		"        FROM\n"+
 	        		"            (SELECT\n"+
