@@ -24,6 +24,22 @@
 		color: #1E7F15;
 	}
 
+	.deleteOne{
+		border-radius: 5%;
+		margin-left:5%;
+		padding:0% 1%;
+	}
+
+	.deleteOne:hover{
+		cursor:url("https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbLcHy8%2FbtrNprKfXky%2F8QmDKvqOmZx19ZPk9Zk1H0%2Fimg.png"), auto !important;
+		background-color: rgba( 30, 127, 21, 0.3 );
+	}
+	
+	#clearBtn {
+		border-radius: 5%;
+		border-style: none;
+		margin-left: 5%;
+	}
 </style>
 
 <script>
@@ -54,7 +70,7 @@ $(()=>{
 			// value 찾기  
 			const value = window.localStorage.getItem(key);    
 			// 결과 출력  
-			$("#recentSearchWords").append("<p class='recent'>"+value+"</p>");
+			$("#recentSearchWords").append("<p><span class='recent'>"+value+"</span><span class='deleteOne'>&times</span></p>");
 			}
 		}
 	
@@ -67,6 +83,14 @@ $(()=>{
 		const frm = document.search_form;
 		frm.action="<%=request.getContextPath()%>/shop/productSearch.tea";
 		frm.submit();
+	});
+	
+	// 검색어 개별 삭제
+	$(".deleteOne").click((e)=>{
+		
+		const deleteWord = $(e.target).prev().text();
+		$(e.target).parent().hide();
+		localStorage.removeItem("sw"+deleteWord);
 	});
 });
 
@@ -104,9 +128,9 @@ function clearSearchWords(){
 	   	<button class="search_btn" type="button" form="todo-form"><i class="fas fa-search"></i></button>
   	</form>
 	
-	<div style="width: 90%; margin: 2% auto">
-		<span >최근 검색어</span>
-		<button class="text-right" type="button" onclick="clearSearchWords()">검색어 비우기</button>
+	<div style="width: 85%; margin: 3% auto auto auto">
+		<span>최근 검색어</span>
+		<button id="clearBtn" class="text-right" type="button" onclick="clearSearchWords()">검색어 비우기</button>
 		<div id="recentSearchWords" class="mt-4">
 		</div>
 	</div>

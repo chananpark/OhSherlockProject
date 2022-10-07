@@ -18,6 +18,8 @@ public class ProductEvent extends AbstractController {
 		
 		// *** 카테고리 번호에 해당하는 제품들을 페이징처리하여 보여주기 *** //
 		String currentShowPageNo = request.getParameter("currentShowPageNo");
+		String cnum = request.getParameter("cnum"); 
+		String snum = request.getParameter("snum"); 
 		// currentShowPageNo 은 사용자가 보고자하는 페이지바의 페이지번호 이다.
         // 카테고리 메뉴에서 카테고리 명만 클릭했을 경우에는 currentShowPageNo 은 null 이 된다.
         // currentShowPageNo 이 null 이라면 currentShowPageNo 을 1 페이지로 바꾸어야 한다.
@@ -35,12 +37,14 @@ public class ProductEvent extends AbstractController {
 		} catch (NumberFormatException e) {
 			currentShowPageNo = "1"; // integer로 바꿨는데 바뀌지 않는다면(url에 문자를 넣었다면), 그냥 1페이지를 보여준다.
 		}
-				
+		
+		InterProductDAO pdao = new ProductDAO();
 		Map<String,String> paraMap = new HashMap<>();
 		// 한 페이지당 화면상에 보여줄 제품의 개수는 10개로 고정한다. sizePerPage는 ProductDAO에서 상수로 설정해두었음
 		paraMap.put("currentShowPageNo", currentShowPageNo); // 1페이지 볼거냐 2페이지 볼거냐, 뒤의 숫자는 계속 변경 
+		paraMap.put("cnum", cnum); 
+		paraMap.put("snum", snum); 
 		
-		InterProductDAO pdao = new ProductDAO();
 		
 		// 페이지바를 위한 검색이 없는 특정 카테고리 상품에 대한 총 페이지 알아오기
 		int totalPage = pdao.getEventTotalPage(paraMap); 

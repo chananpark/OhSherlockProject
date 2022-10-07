@@ -24,6 +24,11 @@ public class ProductGiftset extends AbstractController {
 			cnum = "";
 		}
 		
+		String snum = request.getParameter("snum");
+		if (snum == null) {
+			snum = "";
+		}
+		
 		// 카테고리번호에 해당하는 제품들을 페이징처리하여 보여주기
 		String currentShowPageNo = request.getParameter("currentShowPageNo");
 		// 현재 페이지바의 페이지번호
@@ -43,13 +48,14 @@ public class ProductGiftset extends AbstractController {
 		Map<String, String> paraMap = new HashMap<>();
 		
 		paraMap.put("cnum", cnum); // 카테고리번호
+		paraMap.put("snum", snum); // 스펙
 		paraMap.put("order", "pnum desc"); // 정렬기준
 		paraMap.put("currentShowPageNo", currentShowPageNo); // 현재페이지
 
 		InterProductDAO pdao = new ProductDAO();
 		
-		// 페이징처리를 위한 특정 카테고리 총페이지 알아오기
-		int totalPage = pdao.getTotalPage(cnum);
+		// 페이징처리를 위한 특정 카테고리/스펙의 총페이지 알아오기
+		int totalPage = pdao.getTotalPage(paraMap);
 
 		if (Integer.parseInt(currentShowPageNo) > totalPage) {
 			currentShowPageNo = "1";
@@ -99,6 +105,7 @@ public class ProductGiftset extends AbstractController {
 		
 		request.setAttribute("currentShowPageNo", currentShowPageNo);
 		request.setAttribute("cnum", cnum);
+		request.setAttribute("snum", snum);
 		
 		super.setViewPage("/WEB-INF/product/product_list_giftset.jsp");
 	}

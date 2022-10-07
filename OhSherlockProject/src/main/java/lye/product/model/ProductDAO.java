@@ -142,7 +142,7 @@ public class ProductDAO implements InterProductDAO {
 		try {
 			conn = ds.getConnection();  // 커넥션풀 방식
 			
-			String sql = " select ceil( count(*)/6 ) "  // 6 이 sizePerPage 이다. 한페이지당 보여주는 제품목록
+			String sql = " select ceil( count(*)/6 ) "  // 6 이 sizePerPage 이다. 한페이지당 보여주는 상품목록
 					   + " from tbl_product "
 					   + " where fk_cnum = ? ";
 			
@@ -173,21 +173,21 @@ public class ProductDAO implements InterProductDAO {
 			conn = ds.getConnection();  // 커넥션풀 방식 연결
 			
 			String sql = " SELECT cname, sname, pnum, pname, pimage, "+
-	        		 "     pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt "+
-	        		 " FROM "+
-	        		 "    (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, "+
-	        		 "            pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt "+
-	        		 "    FROM "+
-	        		 "        (SELECT c.cname, s.sname, pnum, pname, pimage, "+
-	        		 "                pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, "+
-	        		 "                (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt, "+
-	        		 "                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt "+
-	        		 "        FROM "+
-	        		 "            (SELECT\n"+
-	        		 "                pnum, pname, pimage, "+
-	        		 "                pqty, price, saleprice, pcontent, PSUMMARY, point, "+
-	        		 "                to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum "+
-	        		 "            FROM tbl_product ";
+		        		 "        pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt "+
+		        		 " FROM "+
+		        		 "    (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, "+
+		        		 "            pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt "+
+		        		 "     FROM "+
+		        		 "        (SELECT c.cname, s.sname, pnum, pname, pimage, "+
+		        		 "                pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, "+
+		        		 "                (select distinct count(FK_ODRCODE) from tbl_order_detail where FK_PNUM=pnum) as orederCnt, "+
+		        		 "                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt "+
+		        		 "         FROM "+
+		        		 "            (SELECT\n"+
+		        		 "                pnum, pname, pimage, "+
+		        		 "                pqty, price, saleprice, pcontent, PSUMMARY, point, "+
+		        		 "                to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum "+
+		        		 "             FROM tbl_product ";
        
 	       // 특정 카테고리 조회시
 	       if (paraMap.get("cnum") != null) {

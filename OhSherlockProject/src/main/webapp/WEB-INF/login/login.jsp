@@ -169,7 +169,7 @@
 			<div id="input_login" class="d-flex flex-column">
 				<input type="text" name="userid" id="loginUserid" placeholder="아이디"
 					required> <input type="password" name="passwd"
-					id="loginPwd" placeholder="비밀번호" required>
+					id="loginPwd" placeholder="8자리 이상 15자리 이하의 영문, 숫자, 특수문자" required>
 			</div>
 
 			<div id="id_save_find" class="w-98 d-flex justify-content-between">
