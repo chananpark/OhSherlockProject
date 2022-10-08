@@ -189,7 +189,10 @@
 					</tr> 
 				</c:forEach>
 				
-				<c:if test="${empty requestScope.coin_history}">예치금 내역이 없습니다.</c:if>
+				<div style="position: absolute; bottom: 5px; left: 450px;"> 
+					<c:if test="${empty requestScope.coin_history}" >예치금 내역이 없습니다.</c:if>
+				</div>
+				
 			</tbody>
 		</table>
 	</div>

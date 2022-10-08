@@ -247,9 +247,18 @@ where fk_userid = 'codud1158';
     
     
     
+select S.sname, pnum, pname, price, saleprice, point, pqty, pcontent, pimage, prdmanual_systemFileName, nvl(prdmanual_orginFileName, '없음') AS prdmanual_orginFileName
+from 
+(
+select fk_snum, pnum, pname, price, saleprice, point, pqty, pcontent, pimage, prdmanual_systemFileName, prdmanual_orginFileName
+from tbl_product
+where pnum = 16
+) P JOIN tbl_spec S
+ON P.fk_snum = S.SNUM;    
     
     
-    
-    
+select imgfilename
+from tbl_product_imagefile
+where fk_pnum = 16;
     
 

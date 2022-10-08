@@ -20,6 +20,15 @@
 	    color: white;
 	}
 	
+	a {
+		color: black;
+	}
+	
+	a:hover{
+		text-decoration: none;
+		color: #1E7F15;
+	}
+	
 </style>     
 
 <script>
@@ -74,11 +83,19 @@
 	    	</div>
 	    </div>
 	
-	    <hr style="border-top: solid 1.2px black">
-	    
-	    <div class="col text-left">
+    <hr style="border-top: solid 1.2px black">
+	<c:if test="${not empty nvo.originFileName}">
+		<p class="mt-1 mb-3 text-right">
+			<span>첨부파일: </span><a href="<%= ctxPath%>/cs/fileDownload.tea?noticeNo=${nvo.noticeNo}">${nvo.originFileName}</a>
+		</p>
+	</c:if>
+
+	<div class="col text-left">
+	<c:if test="${not empty nvo.noticeImage}">
+	<img src="../images/${nvo.noticeImage}" class="img-fluid" style="width:100%"/>
+	</c:if>
 	      <div style="font-size: 17px; padding: 15px 0;">${nvo.noticeContent}</div>
-	    </div>
+    </div>
 	    
    <form name="noticeFrm" >
 	    <input type="hidden" name="noticeNo" value="${nvo.noticeNo}"/>

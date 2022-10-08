@@ -8,7 +8,7 @@
 		      <div><a class="nav-link" href="#">주문조회</a></div>
 		      <div><a class="nav-link" href="#">취소/반품/교환 내역</a></div>
 		      <div><a class="nav-link" href="#">장바구니</a></div>
-		      <div><a class="nav-link" href="<%= request.getContextPath() %>/mypage/likeList.tea?userid=${(sessionScope.loginuser).userid}">찜목록</a></div>
+		      <div><a class="nav-link" href="<%= request.getContextPath() %>/shop/likeList.tea?userid=${(sessionScope.loginuser).userid}">찜목록</a></div>
 		  </div>
 		  
 		  <div class="nav flex-column" id="nav02">
