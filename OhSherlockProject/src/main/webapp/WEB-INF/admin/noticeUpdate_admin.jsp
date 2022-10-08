@@ -34,6 +34,7 @@
 
 <script>
 	$(document).ready(()=>{
+		
 		$("#updateBtn").click(()=>{
 			
 			const noticeSubject = $("#noticeSubject").val().trim();
@@ -90,6 +91,8 @@
 		<textarea id="noticeContent" name="noticeContent" style="height:200px">${noticeContent}</textarea>
 
 		<label for="file" style="margin: 6px 20px 16px 0;">사진 첨부</label><input type="file" name="noticeImage">
+		<br>
+		
 		<label for="file" style="margin: 6px 20px 16px 0;">파일 첨부</label><input type="file" name="noticeFile">		
 		<br>
 		

@@ -49,6 +49,7 @@ public class NoticeUpdateEnd extends AbstractController {
 
 	        // 글번호
 			String noticeNo = mtrequest.getParameter("noticeNo");
+			
 			// 사진파일 서버상 파일명
 	        String noticeImage = mtrequest.getFilesystemName("noticeImage");
 	        

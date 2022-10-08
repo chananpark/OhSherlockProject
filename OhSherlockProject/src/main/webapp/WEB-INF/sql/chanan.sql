@@ -205,13 +205,15 @@ odrcode                  not null varchar2(20) -- 주문코드 형식 : o+날짜
 ,recipient_extra_address  not null varchar2(100) 
 ,odrtotalprice            not null number(38)    
 ,odrtotalpoint            not null number 
-,delivery_cost            not null number(4)     
-,payment_method           not null varchar2(10)  
-,delivery_status          not null number(1)     
+,delivery_cost            not null number(4)    
+,delivery_status          not null number(1)  -- 배송상태( 1 : 주문만 받음,  2 : 배송중,  3 : 배송완료)   
 ,delivery_date                     varchar2(20) 
 ,constraint PK_tbl_order_onum primary key(onum)
 ,constraint FK_tbl_order_fk_userid foreign key(fk_userid) references tbl_member(userid)
+,constraint CK_tbl_order_delivery_status CHECK delivery_cost in (1,2,3)
 );
+
+desc tbl_order;
 
 -- 주문코드 시퀀스 --
 create sequence seq_tbl_order
@@ -257,3 +259,4 @@ constraint FK_tbl_review_fk_userid foreign key(fk_userid) references tbl_member(
 );
 
 --------------------------------------------------------------------------------
+commit;

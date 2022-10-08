@@ -58,9 +58,7 @@
 <script>
 
 	$(document).ready(()=>{
-		const goBackURL = "${goBackURL}";
-		sessionStorage.setItem("goBackURL", goBackURL);
-		// 세션스토리지에 goBackURL 저장
+		
 		
 		$("#btnWriteNotice").click(()=>{
 			location.href="<%=ctxPath%>/cs/noticeWrite.tea";

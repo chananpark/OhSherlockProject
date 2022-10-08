@@ -357,6 +357,7 @@ div#brandStoryText {
 						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="<%= ctxPath %>/member/member_list.tea">회원조회</a> 
 							<a class="dropdown-item" href="<%= ctxPath %>/admin/prod_mgmt_list.tea">상품관리</a>
+							<a class="dropdown-item" href="<%= ctxPath %>/admin/orderList.tea">주문관리</a>
 						</div></li>
 					</c:if>
 									
