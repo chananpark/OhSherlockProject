@@ -20,10 +20,10 @@ public interface InterProductDAO {
 	int addCart(String userid, String pnum, String oqty)  throws SQLException;
 
 	// 로그인한 사용자의 장바구니 목록을 조회하기 
-//	List<CartVO> selectProductCart(String userid) throws SQLException;
+	List<CartVO> selectProductCart(String userid) throws SQLException;
 
 	// 로그인한 사용자의 장바구니에 담긴 주문 총액 합계 및 총 포인트 합계
-//	HashMap<String, String> selectCartSumPricePoint(String userid) throws SQLException;
+	HashMap<String, String> selectCartSumPricePoint(String userid) throws SQLException;
 
 	
 	

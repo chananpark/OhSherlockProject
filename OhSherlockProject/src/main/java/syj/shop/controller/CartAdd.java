@@ -17,9 +17,6 @@ public class CartAdd extends AbstractController {
 		// == 로그인 유무 검사하기 == //
 		boolean isLogin = super.checkLogin(request);
 		
-		// 로그인 또는 로그아웃을 하면 시작페이지로 가는 것이 아니라 방금 보았던 그 페이지로 그대로 가기 위한 것임. 
-		super.goBackURL(request);
-		
 		if(!isLogin) { // 로그인이 되어져 있지 않다면
 			
 			request.setAttribute("message", "장바구니는 로그인 후 이용 가능합니다.");
@@ -38,10 +35,12 @@ public class CartAdd extends AbstractController {
 			
 			if("POST".equalsIgnoreCase(method)) {
 				// post 방식이라면
-				String pnum = request.getParameter("hidden_pnum");
+				String pnum = request.getParameter("pnum");
 				String oqty = request.getParameter("oqty"); // 주문량
+				
 				System.out.println(pnum);
 				
+				// 상품 목록에서 넘겨준 경우
 				if(oqty == null) {
 					oqty = "1";
 				}

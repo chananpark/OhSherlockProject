@@ -40,12 +40,12 @@ public class CartList extends AbstractController {
 			InterProductDAO pdao = new ProductDAO();
 			
 			// 로그인한 사용자의 장바구니 목록을 조회하기 
-	//		List<CartVO> cartList = pdao.selectProductCart(loginuser.getUserid()); 
+			List<CartVO> cartList = pdao.selectProductCart(loginuser.getUserid()); 
 			// 로그인한 사용자의 장바구니에 담긴 주문 총액 합계 및 총 포인트 합계
-	//		HashMap<String,String> sumMap= pdao.selectCartSumPricePoint(loginuser.getUserid());
+			HashMap<String,String> sumMap= pdao.selectCartSumPricePoint(loginuser.getUserid());
 			
-	//		request.setAttribute("cartList", cartList);
-	//		request.setAttribute("sumMap", sumMap);
+			request.setAttribute("cartList", cartList);
+			request.setAttribute("sumMap", sumMap);
 			
 			super.setRedirect(false);
 			super.setViewPage("/WEB-INF/cart/cart.jsp");

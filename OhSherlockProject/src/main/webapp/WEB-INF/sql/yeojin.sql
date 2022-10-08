@@ -294,7 +294,7 @@ select nvl(sum(B.saleprice*A.oqty),0) as sumtotalprice,
        nvl(sum(B.point*A.oqty),0) as sumtotalpoint 
 from tbl_cart A join tbl_product B
 on A.fk_pnum = B.pnum
-where A.fk_userid = 'syj1234'
+where A.fk_userid = 'shonyj1'
 order by A.cartno desc;
 
 -- 장바구니에 없을 경우 null 이 아니라 0 값을 넘겨준다.
@@ -312,7 +312,8 @@ select *
 from tbl_cart
 
 
-
+select *
+from tbl_like
 
 
 

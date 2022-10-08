@@ -74,6 +74,16 @@ a:visited {
 	font-weight: bold;
 }
 
+input.like {
+   background-color: transparent; 
+     border-style: none;
+}
+
+input.cart { <%-- 여기 --%> 
+   background-color: transparent; 
+     border-style: none;
+}
+
 </style>
 
 
@@ -85,8 +95,6 @@ a:visited {
 	        $(this).removeClass("text-secondary");
 	        $(this).addClass("text-danger");
 	    });
-	    
-
 		
 		snum = "${snum}";
 		cnum = "${cnum}";
@@ -139,14 +147,15 @@ a:visited {
 		
 	}); // end of $(document).ready
 	
+	
+	
+	//Function Declaration
 	// 장바구니 담기
-	function clickCart(obj) {
+	function clickCart(pnum) { <%-- 여기 --%> 
 		
-		let $target = $(event.target);
-		let pnum = $target.next().val();
+		const frm = document.eventClickFrm;
 		
-		let frm = document.eventClickFrm;
-		let hidden = frm.hidden_pnum${pvo.pnum}.value;
+		$("#hidden_pnum").val(pnum);
 		
 		frm.method = "POST"; 
 		frm.action = "<%=request.getContextPath()%>/cart/cartAdd.tea";
@@ -154,6 +163,17 @@ a:visited {
 		
 	} // end of function goCart()
 	
+   	// 찜하기버튼 클릭시
+   	function goLike() {
+         
+        const frm = document.eventClickFrm;
+        
+        
+        frm.method = "POST";
+        frm.action = "<%= request.getContextPath()%>/shop/likeAdd.tea";
+        frm.submit();
+        
+   	}// end of function goLike()------------------------------
 	
 </script>
 
@@ -263,10 +283,13 @@ a:visited {
 				      			</c:choose>
 				      			
 				      			<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart"></i></a>
-				      			<a class="card-text text-secondary mr-5">찜하기</a>
-				      			<a class="card-text mr-2 clickCart" onClick="clickCart(this);"><i class="fas fa-shopping-basket text-secondary " ></i></a>
-				      			<a class="card-text text-secondary clickCart" onClick="clickCart(this);">담기</a>
-				      			<input type="text" name="hidden_pnum" id="hidden_pnum${pvo.pnum}" value="${pvo.pnum}" />
+                           		<input class="card-text text-secondary mr-5 like" type="button" onclick="goLike();" value="찜하기" style="padding-left: 0; margin-left: 0;" />
+                                                  
+                                <%-- 여기 --%>                      
+                           		<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg " onClick="clickCart(${pvo.pnum});"></i></a>
+                           		<input class="card-text text-secondary cart" type="button" onClick="clickCart(${pvo.pnum});" value="담기" style="padding-left: 0; margin-left: 0;"/>
+                           		<input type="hidden" name="pnum" id="hidden_pnum" value="${pvo.pnum}" /> <%-- 제품번호--%>
+                           		
 				   			</div>
 			  			</div>
 			  		</c:forEach>

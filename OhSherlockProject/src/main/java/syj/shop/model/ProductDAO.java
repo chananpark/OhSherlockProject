@@ -245,7 +245,7 @@ public class ProductDAO implements InterProductDAO {
 	      try {
 	         conn = ds.getConnection();
 	         
-	         String sql = " select cartno"
+	         String sql = " select cartno "
 	         			+ " from tbl_cart "
 	         			+ " where fk_userid = ? and fk_pnum = ? ";
 	         
@@ -290,7 +290,7 @@ public class ProductDAO implements InterProductDAO {
 	      return result;   
 	} // end of  public int addCart(String userid, String pnum, String oqty) throws SQLException
 
-/*	
+	
 	// 로그인한 사용자의 장바구니 목록을 조회하기 
 	@Override
 	public List<CartVO> selectProductCart(String userid) throws SQLException {
@@ -299,12 +299,12 @@ public class ProductDAO implements InterProductDAO {
 		try {
 			conn = ds.getConnection();
 			
-			String sql = " select A.cartno, A.fk_userid, A.fk_pnum, "
-					   + "        B.pname, B.pimage1, B.price, B.saleprice, B.point, A.oqty "
-					   + " from tbl_cart A join tbl_product B "
-					   + " on A.fk_pnum = B.pnum "
-					   + " where A.fk_userid = ? "
-					   + " order by A.cartno desc ";
+			String sql = "select A.cartno, A.fk_userid, A.fk_pnum, \n"+
+						"       B.pname, B.pimage, B.price, B.saleprice, B.point, A.oqty\n"+
+						"from tbl_cart A join tbl_product B\n"+
+						"on A.fk_pnum = B.pnum\n"+
+						"where A.fk_userid = ? \n"+
+						"order by A.cartno desc\n";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, userid);
@@ -317,7 +317,7 @@ public class ProductDAO implements InterProductDAO {
 				String fk_userid = rs.getString("fk_userid");
 				int fk_pnum = rs.getInt("fk_pnum");
 				String pname = rs.getString("pname");
-				String pimage1 = rs.getString("pimage1");
+				String pimage = rs.getString("pimage");
 				int price = rs.getInt("price");
 				int saleprice = rs.getInt("saleprice");
 				int point = rs.getInt("point");
@@ -326,19 +326,12 @@ public class ProductDAO implements InterProductDAO {
 				ProductVO prodvo = new ProductVO();
 				prodvo.setPnum(fk_pnum);
 				prodvo.setPname(pname);
-				prodvo.setPimage1(pimage1);
+				prodvo.setPimage(pimage);
 				prodvo.setPrice(price);
 				prodvo.setSaleprice(saleprice);
 				prodvo.setPoint(point);
 				
-				// *** !!! 중요함 !!! *** //
-	            // ProductVO 에 필드를 만들어 주었다.
-	            // prodvo 에 넣어준 것은 단가인데, 이 단가와 수량을 계산해서 총 결제 금액을 알아오는 메소드가 ProductVO 에 있어서 이것을 이용한다.
-				prodvo.setTotalPriceTotalPoint(oqty);
-				// setTotalPriceTotalPoint 메소드를 통해서 주문량만 알면 자동으로 saleprice 와 oqty 를 곱해서 pvo 속에 넣어준다. 
-	            // 총 계산 금액과 적립 포인트를 동시에 알아올 수 있다.
-	            // *** !!! 중요함 !!! *** //
-	            
+				prodvo.setTotalPriceTotalPoint(oqty); // 총 결제금액, 포인트
 				
 				CartVO cvo = new CartVO();
 				cvo.setCartno(cartno);
@@ -356,7 +349,7 @@ public class ProductDAO implements InterProductDAO {
 		}
 		
 		return cartList;  // 이때 리스트가 비어있더라도 null 이 아니라 size 가 0 이다.
-	} // end of 
+	} // end of public List<CartVO> selectProductCart(String userid) throws SQLException
 
 	
 	// 로그인한 사용자의 장바구니에 담긴 주문 총액 합계 및 총 포인트 합계
@@ -367,12 +360,12 @@ public class ProductDAO implements InterProductDAO {
 		
 		try {
 			conn = ds.getConnection();
-
-			String sql = "select nvl(sum(B.saleprice*A.oqty),0) as SUMTOTALPRICE, \n"+
-						"       nvl(sum(B.point*A.oqty),0) as SUMTOTALPOINT \n"+
+			String sql = "select nvl(sum(B.saleprice*A.oqty),0) as sumtotalprice, \n"+
+						"       nvl(sum(B.point*A.oqty),0) as sumtotalpoint \n"+
 						"from tbl_cart A join tbl_product B\n"+
 						"on A.fk_pnum = B.pnum\n"+
-						"where A.fk_userid = ? \n";
+						"where A.fk_userid = ? \n"+
+						" order by A.cartno desc ";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, userid);
@@ -393,7 +386,7 @@ public class ProductDAO implements InterProductDAO {
 	} // end of public HashMap<String, String> selectCartSumPricePoint(String userid) throws SQLException 
 
 	
-	*/
+	
 	
 	
 
