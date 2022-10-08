@@ -202,7 +202,7 @@ public class ProductDAO implements InterProductDAO {
 	       	sql +=	"            WHERE fk_cnum in (1,2,3) ";
 	       }
 	       
-	        System.out.println("dao order>>>>>>> " + paraMap.get("order"));
+	        //System.out.println("dao order>>>>>>> " + paraMap.get("order"));
     	    sql +=	"            ) p "+
 		    	    "            JOIN tbl_category  c ON p.fk_cnum = c.cnum "+
 		    	    "            LEFT OUTER JOIN tbl_spec s "+
@@ -271,9 +271,298 @@ public class ProductDAO implements InterProductDAO {
 		return productList;
 	}// end of public List<ProductVO> selectPagingProductByCategory(Map<String, String> paraMap) throws SQLException {}-------------------
 
-	
+
 
 	
+	
+/*	
+	// 제품번호 채번 해오기
+	@Override
+	public int getPnumOfProduct() throws SQLException {
+		
+		int pnum = 0;
+		
+		try {
+			 conn = ds.getConnection();
+			 
+			 String sql = " select seq_tbl_product_pnum.nextval AS PNUM " +
+					      " from dual ";
+					   
+			 pstmt = conn.prepareStatement(sql);
+			 rs = pstmt.executeQuery();
+			 			 
+			 rs.next();
+			 pnum = rs.getInt(1);
+		
+		} finally {
+			close();
+		}
+		
+		return pnum;
+
+	}// end of public int getPnumOfProduct() throws SQLException {}-------------------
+
+
+	// tbl_product 테이블에 제품정보 insert 하기
+	@Override
+	public int productInsert(ProductVO pvo) throws SQLException {
+
+		int result = 0;
+	      
+	      try {
+	         conn = ds.getConnection();
+	         
+	         String sql = " insert into tbl_product(pnum, pname, fk_cnum, pimage, pqty, price, saleprice, fk_snum, pcontent, point) " +  
+	                    " values(?,?,?,?,?,?,?,?,?,?)";
+	         
+	         pstmt = conn.prepareStatement(sql);
+	         
+	         pstmt.setInt(1, pvo.getPnum());
+	         pstmt.setString(2, pvo.getPname());
+	         pstmt.setInt(3, pvo.getFk_cnum());    
+	         pstmt.setString(4, pvo.getPimage());    
+	         pstmt.setInt(5, pvo.getPqty()); 
+	         pstmt.setInt(6, pvo.getPrice());
+	         pstmt.setInt(7, pvo.getSaleprice());
+	         pstmt.setInt(8, pvo.getFk_snum());
+	         pstmt.setString(9, pvo.getPcontent());
+	         pstmt.setInt(10, pvo.getPoint());
+	            
+	         result = pstmt.executeUpdate();
+	         
+	      } finally {
+	         close();
+	      }
+	      
+	      return result;   
+	      
+	}// end of public void productInsert(ProductVO pvo) throws SQLException {}-------------------
+
+	// 제품번호를 가지고서 해당 제품의 정보를 조회해오기
+	@Override
+	public ProductVO selectOneProductByPnum(String pnum) throws SQLException {
+		
+		ProductVO pvo = null;  // get 방식일때 사용자가 url 에 장난칠 수 있으므로 null 값을 주었음.
+		
+		try {
+			 conn = ds.getConnection(); // 커넥션풀 방식
+			
+			 String sql = " select S.sname, pnum, pname, price, saleprice, point, pqty, pcontent, pimage "+
+						  " from "+
+						  " ( "+
+						  "     select fk_snum, pnum, pname, price, saleprice, point, pqty, pcontent, pimage "+
+						  "     from tbl_product "+
+						  "     where pnum = ? "+
+						  " )P JOIN tbl_spec S "+
+						  " ON P.fk_snum  = S.snum "; 
+			 
+			 pstmt = conn.prepareStatement(sql);
+			 pstmt.setString(1, pnum);  // 첫번째 위치홀더 제품번호
+			 
+			 rs = pstmt.executeQuery();
+			 
+			 if(rs.next()) {   // 값이 존재한다면 (get 방식이므로 사용자가 장난쳐서 존재하지 않는 제품번호를 입력한 경우를 판별하기 위해 if문 사용함. 만약 장난친 경우 null 값을 리턴, 장난친 것이 아니라면 pvo 리턴함.)
+				 
+				 String sname = rs.getString(1);     // "NEW", "BEST"
+	             int    npnum = rs.getInt(2);        // 제품번호
+	             String pname = rs.getString(3);     // 제품명
+	             int    price = rs.getInt(4);        // 제품 정가
+	             int    saleprice = rs.getInt(5);    // 제품 판매가
+	             int    point = rs.getInt(6);        // 포인트 점수
+	             int    pqty = rs.getInt(7);         // 제품 재고량
+	             String pcontent = rs.getString(8);  // 제품설명
+	             String pimage = rs.getString(9);    // 제품이미지
+	             
+	             pvo = new ProductVO(); // ProductVO 객체생성
+	             
+	             SpecVO spvo = new SpecVO();  // SpecVO 객체생성
+	             spvo.setSname(sname);        // Sname(스펙명)을 spvo(스펙VO)를 통해 담아옴.
+	             
+	             pvo.setSpvo(spvo);
+	             pvo.setPnum(npnum);
+	             pvo.setPname(pname);
+	             pvo.setPrice(price);
+	             pvo.setSaleprice(saleprice);
+	             pvo.setPoint(point);
+	             pvo.setPqty(pqty);
+	             pvo.setPcontent(pcontent);
+	             pvo.setPimage(pimage);
+				 
+			 }// end of while-----------------------------
+			 
+		} finally {
+			close();
+		}
+		
+		return pvo;
+		
+	}// end of public ProductVO selectOneProductByPnum(String pnum) throws SQLException {}-------------------
+*/
+	
+	
+	
+	// 찜목록 담기 
+    // 찜목록 테이블(tbl_Like)에 해당 제품을 담아야 한다.
+    // 찜목록 테이블에 해당 제품이 존재하지 않는 경우에는 tbl_Like 테이블에 insert 를 해야하고, 
+    // 찜목록 테이블에 해당 제품이 존재하는 경우에 또 찜목록을 누르는 경우 tbl_Like 테이블에 delete 를 해야한다.
+	@Override
+	public int addLike(String userid, String pnum) throws SQLException {
+		int result = 0;
+	      
+	      try {
+	         conn = ds.getConnection();
+	         
+       /*
+           먼저 찜목록 테이블(tbl_like)에 어떤 회원이 새로운 제품을 넣는 것인지,
+           아니면 기존에 찜함 제품을 삭제하는 것인지 알아야 한다.
+           이것을 알기위해서 어떤 회원이 어떤 제품을 찜하기 할때
+           그 제품이 이미 존재하는지 select 를 통해서 알아와야 한다.
+           
+         --------------------------------
+          likeno   fk_userid   fk_pnum  
+         --------------------------------
+            1      leeye05        7            
+            2      leeye05        6             
+            3      leess          7            
+        */   
+	         
+	         String sql = " select likeno "+
+	                      " from tbl_like "+
+	                      " where fk_userid = ? and fk_pnum = ? ";
+
+	         
+	         pstmt = conn.prepareStatement(sql);
+	         pstmt.setString(1, userid);
+	         pstmt.setString(2, pnum);
+
+	         rs = pstmt.executeQuery();  // 조회하면 한개만 나온다.
+	         
+	         if(rs.next()) {  // 있다라면
+	        	 // 기존 찜하기한 제품을 삭제한다.
+	        	 
+	        	 int likeno = rs.getInt("likeno");  // 조회된 찜하기가 있다라면 찜제품번호를 알아온다. 찜목록번호는 시퀀스.
+	        	 
+	        	 sql = " delete from tbl_like "+
+	        		   " where likeno = ? ";
+	        	 
+	        	 pstmt = conn.prepareStatement(sql);
+		         pstmt.setInt(1, likeno);  // 위에서 조회해온 찜목록번호
+	        	
+		         result = pstmt.executeUpdate();
+	         }
+	         else { // 없다라면
+	        	 // 찜목록에 존재하지 않는 새로운 제품을 넣고자 하는 경우
+	        	 
+	        	 sql = " insert into tbl_like(likeno, fk_userid, fk_pnum, registerday) "+
+	        		   " values(seq_tbl_like_likeno.nextval, ?, ?, default) ";
+	                  
+               pstmt = conn.prepareStatement(sql);
+               pstmt.setString(1, userid);
+               pstmt.setInt(2, Integer.parseInt(pnum));  // 제품번호
+                
+               result = pstmt.executeUpdate();
+               System.out.println("확인용 ==> " + result);
+	         }
+	         
+	      } finally {
+	         close();
+	      }
+	      
+	      return result; 
+	}// end of public int addLike(String userid, String pnum) throws SQLException {}-------------------
+
+
+	// 로그인한 사용자의 찜목록을 조회하기
+	@Override
+	public List<LikeVO> selectProductLike(String userid) throws SQLException {
+		List<LikeVO> likeList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection(); // 커넥션풀 방식
+			
+			String sql = " select likeno, fk_userid, fk_pnum, pname, pimage, saleprice "+
+						 " from tbl_like A join tbl_product B "+
+						 " on A.fk_pnum = B.pnum "+
+						 " where A.fk_userid = ? "+
+						 " order by likeno desc ";
+			
+			pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, userid);
+			
+            rs = pstmt.executeQuery();
+            
+            while(rs.next()) {  // 조회한 찜목록이 있다라면
+            	
+            	int likeno = rs.getInt("likeno");
+                String fk_userid = rs.getString("fk_userid");
+                int fk_pnum = rs.getInt("fk_pnum");
+                String pname = rs.getString("pname");
+                String pimage = rs.getString("pimage");
+                int saleprice = rs.getInt("saleprice");
+                
+                ProductVO prodvo = new ProductVO();  // join한 제품테이블
+                prodvo.setPnum(fk_pnum);
+                prodvo.setPname(pname);
+                prodvo.setPimage(pimage);
+                prodvo.setSaleprice(saleprice);
+                
+                LikeVO lvo = new LikeVO(); // 찜목록 테이블
+                lvo.setLikeno(likeno);     // 찜목록번호
+                lvo.setUserid(fk_userid);  // 사용자아이디
+                lvo.setPnum(fk_pnum);      // 제품번호
+                lvo.setProd(prodvo);       // join 한 제품테이블 정보(위에서 set한 정보들을 넣어준다.)
+                
+                likeList.add(lvo);
+            }// end of while---------------------
+            
+		} finally {
+			close();
+		}
+		
+		//System.out.println("확인용 :::::::::: " + likeList);
+		return likeList;  // 리턴할 값이 없으면 0 이 들어온다.
+	}// end of public List<LikeVO> selectProductLike(String userid) throws SQLException {}-------------------
+
+
+	// 찜목록 테이블에서 특정제품을 찜목록에서 비우기
+	@Override
+	public int delLike(String[] likeno) throws SQLException {
+		
+		int n = 0;
+		
+		String params = "";
+		for (int i = 0; i < likeno.length; i++) {
+			params += likeno[i];
+			if(i<likeno.length-1) {
+				params += ",";
+			}
+		}
+		
+		try {
+			 conn = ds.getConnection();  // 커넥션풀 방식
+			 
+			 String sql = " delete from tbl_like " +
+					      " where likeno in ("+params+") ";
+					   
+			 pstmt = conn.prepareStatement(sql);
+			 
+			 n = pstmt.executeUpdate();
+			 
+			 if(n > 0) {
+				 n = 1;
+			 }
+			 else {
+				 n = 0;
+			 }
+			 
+		} finally {
+			close();
+		}
+		
+		return n;
+	}// end of public int delLike(String likeno) throws SQLException {}-------------------
+
+
 	
 
 }

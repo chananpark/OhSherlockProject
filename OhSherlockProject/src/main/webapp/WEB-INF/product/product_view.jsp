@@ -105,42 +105,54 @@
 	
 	   
 	// Function Declaration
-		function goCart(){
-		    	  
-//		    === 주문량에 대한 유효성 검사하기 ===
-			
-			const frm = document.cartOrderFrm;
-			
-			const regExp = /^[0-9]+$/; // 숫자만 체크하는 정규표현식
-			const oqty = frm.oqty.value;
-			const bool = regExp.test(oqty);
-			
-			if(!bool){
-				// 숫자 이외의 값이 들어온 경우
-				alert("주문개수는 1개 이상이어야 합니다.");
-				frm.oqty.value = "1";
-				frm.oqty.focus();
-				return; // 종료 
-			}
-			
-			
-			// 문자형태로 숫자로만 들어온 경우
-			if(Number(oqty) < 1){
-				alert("주문개수는 1개 이상이어야 합니다.");
-				frm.oqty.value = "1";
-				frm.oqty.focus();
-				return; // 종료 
-			}
-			
-			// 주문개수가 1개 이상인 경우
-			frm.method = "POST";
-			frm.action = "<%= request.getContextPath() %>/shop/cartAdd.up";
-			frm.submit();
-			
-		    	  
-		}// end of goCart() -----------------------------------------	
+	// 찜하기버튼 클릭시
+	function goLike() {
+	      
+      const frm = document.prodStorageFrm;
+      
+      frm.method = "POST";
+      frm.action = "<%= request.getContextPath()%>/shop/likeAdd.tea";
+      frm.submit();
+      
+	}// end of function goLike()------------------------------
+	   
+	   
+	   
+	   function goCart(){
+	            
+	      // === 주문량에 대한 유효성 검사하기 ===
+	      const frm = document.cartOrderFrm;
+	      
+	      const regExp = /^[0-9]+$/; // 숫자만 체크하는 정규표현식
+	      const oqty = frm.oqty.value;
+	      const bool = regExp.test(oqty);
+	      
+	      if(!bool){
+	         // 숫자 이외의 값이 들어온 경우
+	         alert("주문개수는 1개 이상이어야 합니다.");
+	         frm.oqty.value = "1";
+	         frm.oqty.focus();
+	         return; // 종료 
+	      }
+	      
+	      
+	      // 문자형태로 숫자로만 들어온 경우
+	      if(Number(oqty) < 1){
+	         alert("주문개수는 1개 이상이어야 합니다.");
+	         frm.oqty.value = "1";
+	         frm.oqty.focus();
+	         return; // 종료 
+	      }
+	      
+	      // 주문개수가 1개 이상인 경우
+	      frm.method = "POST";
+	      frm.action = "<%= request.getContextPath() %>/shop/cartAdd.up";
+	      frm.submit();
+	      
+	            
+	   }// end of goCart() -----------------------------------------         
 	
-	
+	   
 </script>
 
 
@@ -202,14 +214,12 @@
           		</tbody>
 	       </table>
 	       
-	       
 	       <%-- ==== 장바구니담기 또는 바로주문하기 폼 ==== --%>
-	       
-	       <form name="cartOrderFrm">
+	       <form name="prodStorageFrm">
 		       <div class="row">
-				   <a class="col-4" href="<%=ctxPath%>/cart/like.jsp"><input class="productbtn" type="button" onclick="goLike();" value="찜하기" /></a>
-				   <a class="col-4" href="<%=ctxPath%>/cart/cart.jsp"><input class="productbtn" type="button" onclick="goCart();" value="장바구니" /></a>
-				   <a class="col-4" href="<%=ctxPath%>/product/payment.jsp"><input class="productbtn" type="button"  onclick="goOrder();" value="바로구매" style="background-color: #1E7F15; color:white;"/></a>
+				   <input class="productbtn" type="button" onclick="goLike();" value="찜하기" />
+	               <input class="productbtn" type="button" onclick="goCart();" value="장바구니" />
+	               <input class="productbtn" type="button"  onclick="goOrder();" value="바로구매" style="background-color: #1E7F15; color:white;"/>
 			   </div>
 			   <input type="hidden" name="pnum" value="${requestScope.pvo.pnum}" />
 		   </form>
@@ -249,12 +259,6 @@
 	</div>
 	<%-- 상품 상세 페이지 끝--%>
 </div>
-
-
-
-
-
-
 
 
 <%@ include file="../footer.jsp"%>

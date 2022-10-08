@@ -289,7 +289,7 @@ div#brandStoryText {
 					<i class="fas fa-grip-lines-vertical fa-lg"></i></span></li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/cart/cart.tea">
 					<i class="fas fa-shopping-basket fa-lg"></i></a></li>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="#">
+					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/shop/likeList.tea">
 					<i class="fas fa-heart fa-lg"></i></a></li>
 					<li class="nav-item active"><a class="nav-link menufont_size text-dark" data-toggle="modal" data-target="#searchModal" data-dismiss="modal">
 					<i class="fas fa-search fa-lg"></i></a></li>
