@@ -42,8 +42,11 @@ public interface InterProductDAO {
 	// 로그인한 사용자의 찜목록을 조회하기
 	List<LikeVO> selectProductLike(String userid) throws SQLException;
 	
-	// 찜목록 테이블에서 특정제품을 찜목록에서 비우기
-	int delLike(String[] likeno) throws SQLException;
+	// 찜목록 테이블에서 특정제품 1개행을 찜목록에서 비우기
+	int delLike(String likeno) throws SQLException;
+	
+	// 찜목록 테이블에서 특정제품 선택행들을 찜목록에서 비우기
+	int delSelectLike(String[] likenoArr) throws SQLException;
 
 
 		

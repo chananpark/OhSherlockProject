@@ -461,7 +461,7 @@ public class ProductDAO implements InterProductDAO {
                pstmt.setInt(2, Integer.parseInt(pnum));  // 제품번호
                 
                result = pstmt.executeUpdate();
-               System.out.println("확인용 ==> " + result);
+               //System.out.println("확인용 ==> " + result);
 	         }
 	         
 	      } finally {
@@ -519,21 +519,47 @@ public class ProductDAO implements InterProductDAO {
 			close();
 		}
 		
-		//System.out.println("확인용 :::::::::: " + likeList);
 		return likeList;  // 리턴할 값이 없으면 0 이 들어온다.
 	}// end of public List<LikeVO> selectProductLike(String userid) throws SQLException {}-------------------
 
-
-	// 찜목록 테이블에서 특정제품을 찜목록에서 비우기
+	
+	// 찜목록 테이블에서 특정제품 1개행을 찜목록에서 비우기
 	@Override
-	public int delLike(String[] likeno) throws SQLException {
+	public int delLike(String likeno) throws SQLException {
+		
+		int n = 0;
+		
+		try {
+			 conn = ds.getConnection();  // 커넥션풀 방식
+			 
+			 String sql = " delete from tbl_like " +
+					      " where likeno = ? ";
+					   
+			 pstmt = conn.prepareStatement(sql);
+			 pstmt.setString(1, likeno);
+			 			 
+			 n = pstmt.executeUpdate();
+			 
+		} finally {
+			close();
+		}
+		
+		return n;
+	}// end of public int delLike(String likeno) throws SQLException {}-------------------
+	
+	
+	
+
+	// 찜목록 테이블에서 특정제품 선택행들을 찜목록에서 비우기
+	@Override
+	public int delSelectLike(String[] likenoArr) throws SQLException {
 		
 		int n = 0;
 		
 		String params = "";
-		for (int i = 0; i < likeno.length; i++) {
-			params += likeno[i];
-			if(i<likeno.length-1) {
+		for (int i = 0; i < likenoArr.length; i++) {
+			params += likenoArr[i];
+			if(i<likenoArr.length-1) {
 				params += ",";
 			}
 		}
@@ -561,6 +587,7 @@ public class ProductDAO implements InterProductDAO {
 		
 		return n;
 	}// end of public int delLike(String likeno) throws SQLException {}-------------------
+
 
 
 	

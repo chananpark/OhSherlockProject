@@ -217,9 +217,9 @@
 	       <%-- ==== 장바구니담기 또는 바로주문하기 폼 ==== --%>
 	       <form name="prodStorageFrm">
 		       <div class="row">
-				   <input class="productbtn" type="button" onclick="goLike();" value="찜하기" />
-	               <input class="productbtn" type="button" onclick="goCart();" value="장바구니" />
-	               <input class="productbtn" type="button"  onclick="goOrder();" value="바로구매" style="background-color: #1E7F15; color:white;"/>
+				   <input class="productbtn" type="button" onclick="goLike();" value="찜하기" style="width: 30%; margin-left: 16px; margin-right: 12.5px;" />
+	               <input class="productbtn" type="button" onclick="goCart();" value="장바구니" style="width: 30%; margin-right: 12.5px;" />
+	               <input class="productbtn" type="button"  onclick="goOrder();" value="바로구매" style="width: 30%; background-color: #1E7F15; color:white;"/>
 			   </div>
 			   <input type="hidden" name="pnum" value="${requestScope.pvo.pnum}" />
 		   </form>
