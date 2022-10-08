@@ -24,7 +24,7 @@ public class Point_history extends AbstractController {
 
 		if( !super.checkLogin(request) ) {
 			// == 로그인을 안한 상태로 들어왔을 때는 접근을 못하게 막는다. == //
-			String message = "예치금내역 조회를 위해서는 로그인을 해주세요.";
+			String message = "적립금 조회를 위해서는 로그인을 해주세요.";
 	        String loc = "javascript:history.back()";
 	        
 	        request.setAttribute("message", message);
@@ -34,11 +34,21 @@ public class Point_history extends AbstractController {
 	        super.setViewPage("/WEB-INF/msg.jsp");
 	        
 		} else {
-				// == 본인이 로그인 했을 때만 조회가 가능하도록 한다. == //
-				
-				InterMemberDAO mdao = new MemberDAO(); 
-				Map<String, String> paraMap = new HashMap<>();
-				
+			
+			String userid = request.getParameter("userid"); // url끝에 달린 아이디
+
+			// == 본인이 로그인 했을 때만 조회가 가능하도록 한다. == //
+			HttpSession session = request.getSession();
+			MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+
+			String login_userid = loginuser.getUserid(); // 지금 로그인한 인간의 아이디
+
+			InterMemberDAO mdao = new MemberDAO();
+			Map<String, String> paraMap = new HashMap<>();
+
+			paraMap.put("userid", userid);
+			
+			if (login_userid.equals(userid)) { // 본인이 로그인했을때
 				// *** 페이징 처리한 목록 보여주기 *** //
 				
 				String sizePerPage = request.getParameter("sizePerPage");
@@ -109,8 +119,8 @@ public class Point_history extends AbstractController {
 				// ***** 맨처음/이전 만들기 ***** //
 				if( pageNo != 1 ) {  
 					// 맨처음으로 가기는 pageNo가 1이 아닐 때만 나오면 된다.
-					pageBar += "<li class='page-item'><a class='page-link' href='point_history.tea?sizePerPage="+sizePerPage+"&currentShowPageNo=1'></a></li>";
-					pageBar += "<li class='page-item'><a class='page-link' href='point_history.tea?sizePerPage="+sizePerPage+"&currentShowPageNo="+(pageNo-1)+"'></a></li>";
+					pageBar += "<li class='page-item'><a class='page-link' href='point_history.tea?sizePerPage="+ sizePerPage + "&currentShowPageNo=1&userid=" + login_userid+"' ><<</a></li>";
+					pageBar += "<li class='page-item'><a class='page-link' href='point_history.tea?sizePerPage="+ sizePerPage + "&currentShowPageNo=" + (pageNo - 1) + "&userid=" + login_userid+"' ><</a></li>";
 					// 이전으로 가는 페이지넘버는 페이지넘버보다 하나가 작아야하기 때문에 -1 을 해준다.
 				} 
 				
@@ -123,7 +133,9 @@ public class Point_history extends AbstractController {
 						// active 를 하면 바탕색이 파랗게 깔리게 된다.
 						// 자기자신을 클릭했을 경우에는, 위치이동이 없기 때문에 클릭해도 자기 자신이 있는 페이지가 나온다.
 					} else {
-						pageBar += "<li class='page-item'><a class='page-link' href='point_history.tea?sizePerPage="+sizePerPage+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
+						
+						pageBar += "<li class='page-item'><a class='page-link' href='point_history.tea?sizePerPage="+ sizePerPage + "&currentShowPageNo=" + pageNo + "&userid=" + login_userid+"'>"+pageNo+" </a></li>";
+						
 					}
 					
 					loop++;   //  1  2  3  4  5  6  7  8  9 10
@@ -137,11 +149,15 @@ public class Point_history extends AbstractController {
 					
 				} // end of while( loop > blockSize )
 				
-				// ***** 다음/마지막 만들기 ***** //
-				// 첫번째 블럭(1  2  3  4  5  6  7  8  9 10)인 경우 pageNo 10까지 찍어주고 11되는 순간 빠져나온다.
-				// 두번째 블럭(11 12 13 14 15 16 17 18 19 20)인 경우 pageNo 20까지 찍어주고 21되는 순간 빠져나온다.
-				// 세번째 블럭(21) 인 경우 pageNo 22가 된다.(while문 빠져나오는 순간의 값)
-				
+				// ***** 맨끝/다음 만들기 ***** //
+				if (pageNo <= point_totalPage) {
+					pageBar += "<li class='page-item'><a class='page-link' href='point_history.tea?sizePerPage="+ sizePerPage + "&currentShowPageNo="+(pageNo+1)+"&userid=" + login_userid+"'>></a></li>";
+					pageBar += "<li class='page-item'><a class='page-link' href='point_history.tea?sizePerPage="+ sizePerPage + "&currentShowPageNo=" + point_totalPage+ "&userid=" + login_userid+"'>>></a></li>";
+					// 이전으로 가는 페이지넘버는 페이지넘버보다 하나가 작아야하기 때문에 -1 을 해준다.
+				}
+
+				request.setAttribute("date1", date1);
+				request.setAttribute("date2", date2);
 				
 				
 				request.setAttribute("pageBar", pageBar);
@@ -150,7 +166,18 @@ public class Point_history extends AbstractController {
 				
 //				super.setRedirect(false);
 				super.setViewPage("/WEB-INF/mypage/point_history.jsp");
-				
+			}
+			else {
+				// 로그인한 사람이 다른 경우
+				String message = "적립금 조회는 본인만 가능합니다.";
+				String loc = "javascript:history.back()";
+
+				request.setAttribute("message", message);
+				request.setAttribute("loc", loc);
+
+				// super.setRedirect(false);
+				super.setViewPage("/WEB-INF/msg.jsp");
+			}
 		  }
 		
 		

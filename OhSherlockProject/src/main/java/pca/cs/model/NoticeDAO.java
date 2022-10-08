@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -136,7 +137,8 @@ public class NoticeDAO implements InterNoticeDAO {
 		try {
 			conn = ds.getConnection();
 
-			String sql = "select noticeSubject, noticeContent, noticeHit, noticeDate, noticeFile from tbl_notice where noticeNo = ?";
+			String sql = "select noticeSubject, noticeContent, noticeHit, noticeDate, "
+					+ " noticeImage, systemFileName, originFileName from tbl_notice where noticeNo = ?";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, paraMap.get("noticeNo"));
@@ -147,7 +149,9 @@ public class NoticeDAO implements InterNoticeDAO {
 				nvo.setNoticeContent(rs.getString(2));
 				nvo.setNoticeHit(rs.getInt(3));
 				nvo.setNoticeDate(rs.getDate(4));
-				nvo.setNoticeFile(rs.getString(5));
+				nvo.setNoticeImage(rs.getString(5));
+				nvo.setSystemFileName(rs.getString(6));
+				nvo.setOriginFileName(rs.getString(7));
 				nvo.setNoticeNo(Integer.parseInt(paraMap.get("noticeNo")));
 				
 				// 조회수 증가시키기
@@ -200,13 +204,16 @@ public class NoticeDAO implements InterNoticeDAO {
 		try {
 			conn = ds.getConnection();
 
-			String sql = "insert into tbl_notice(noticeNo, noticeSubject, noticeContent)\n"+
-					"values(?, ?, ?)";
+			String sql = "insert into tbl_notice(noticeNo, noticeSubject, noticeContent, noticeimage, systemfilename, originfilename )\n"+
+						 " values(?, ?, ?, ?, ?, ?)";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, paraMap.get("seq"));
 			pstmt.setString(2, paraMap.get("subject"));
 			pstmt.setString(3, paraMap.get("content"));
+			pstmt.setString(4, paraMap.get("noticeImage"));
+			pstmt.setString(5, paraMap.get("systemFileName"));
+			pstmt.setString(6, paraMap.get("originFileName"));
 			n = pstmt.executeUpdate();
 
 		} finally {
@@ -240,19 +247,20 @@ public class NoticeDAO implements InterNoticeDAO {
 	public int noticeUpdate(Map<String, String> paraMap) throws SQLException {
 		int n = 0;
 
-		String noticeNo = paraMap.get("noticeNo");
-		String noticeSubject = paraMap.get("noticeSubject");
-		String noticeContent = paraMap.get("noticeContent");
 		
 		try {
 			conn = ds.getConnection();
 
-			String sql = "update tbl_notice set noticeSubject = ?, noticeContent = ? where noticeNo = ?";
+			String sql = "update tbl_notice set noticeSubject = ?, noticeContent = ?, "
+					+ " noticeImage = ?, systemFileName = ?, originFileName = ? where noticeNo = ?";
 
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, noticeSubject);
-			pstmt.setString(2, noticeContent);
-			pstmt.setString(3, noticeNo);
+			pstmt.setString(1, paraMap.get("noticeSubject"));
+			pstmt.setString(2, paraMap.get("noticeContent"));
+			pstmt.setString(3, paraMap.get("noticeImage"));
+			pstmt.setString(4, paraMap.get("systemFileName"));
+			pstmt.setString(5, paraMap.get("originFileName"));
+			pstmt.setString(6, paraMap.get("noticeNo"));
 			n = pstmt.executeUpdate();
 
 		} finally {
@@ -304,6 +312,35 @@ public class NoticeDAO implements InterNoticeDAO {
 		}
 
 		return totalPage;
+	}
+
+	@Override
+	public Map<String, String> getFileName(String noticeNo) throws SQLException{
+		Map<String, String> map = new HashMap<>();
+		try {
+			
+			conn = ds.getConnection();
+
+			String sql = "select systemFileName, originFileName\n"+
+						"from tbl_notice\n"+
+						"where noticeNo=?";
+			
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, noticeNo);
+			
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				// 파일서버상 업로드된 파일명
+				map.put("systemFileName", rs.getString(1));
+				// 브라우저에서 파일 업로드 당시 파일명
+				map.put("originFileName", rs.getString(2));
+			}
+			
+		}finally {
+			close();
+		}
+		return map;
 	}
 
 }

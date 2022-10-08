@@ -145,11 +145,15 @@
 	<input type="date" id="date1" name="date1">
 	~
 	<input type="date" id="date2" name="date2"> 
+	<input type="hidden" name="userid" value="${sessionScope.loginuser.userid }"/>
 	<button id="dateSearch" type="submit" >조회</button> 
 	</form>
 	
 	
-	<form name="sizeFrm"><input type="hidden" name="sizePerPage" value=""/></form>
+	<form name="sizeFrm">
+	<input type="hidden" name="sizePerPage" value=""/>
+	<input type="hidden" name="userid" value="${sessionScope.loginuser.userid }"/>
+	</form>
 	
 		<div class="text-right" style="margin-top: 20px;"> 
 			<select id="sizePerPage" name="sizePerPage" onchange="gosizePerPage()"> <%-- 값이 변하면 여기의 name에 담아준다. 여기다 담은 name을 goSearch에서 action 으로 보내준다. --%>
@@ -184,6 +188,11 @@
 						</td>
 					</tr> 
 				</c:forEach>
+				
+				<div style="position: absolute; bottom: 5px; left: 450px;"> 
+					<c:if test="${empty requestScope.coin_history}" >예치금 내역이 없습니다.</c:if>
+				</div>
+				
 			</tbody>
 		</table>
 	</div>

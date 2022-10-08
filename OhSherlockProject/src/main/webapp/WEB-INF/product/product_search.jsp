@@ -93,7 +93,10 @@ $(()=>{
 			<div style="padding: 5%;"><h5 style="font-weight: bold;">
 			<a href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=&order=${order}'>
 			전체상품</a></h5></div>
-			<div style="padding: 5%; font-weight: bold;">티제품</div>
+			<div style="padding: 5%; font-weight: bold;">
+			<a href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=teaAll&order=${order}' id='teaAll'>
+			티제품</a>
+			</div>
 			<c:forEach items="${teaCategoryList }" var="teaCat">
 			<div style="text-align: left; padding: 4%; margin-left: 10%;">
 				<a href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=${teaCat.cnum}&order=${order}' id='${teaCat.cnum}'>
@@ -101,7 +104,10 @@ $(()=>{
 			</div>
 			</c:forEach>
 			<hr>
-			<div style="padding: 5%; font-weight: bold;">기프트세트</div>
+			<div style="padding: 5%; font-weight: bold;">
+			<a href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=setAll&order=${order}' id='setAll'>
+			기프트세트</a>
+			</div>
 			<c:forEach items="${giftsetCategoryList }" var="setCat">
 			<div style="text-align: left; padding: 4%; margin-left: 10%;">
 				<a href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=${setCat.cnum}&order=${order}' id='${setCat.cnum}'>
@@ -124,12 +130,12 @@ $(()=>{
 					onclick="location.href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=${cnum}&order=pnum desc'">
 					신상품순</button>
 					<span class="text-dark">|</span>
-					<button type="button" class="order" id="price desc"
-					onclick="location.href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=${cnum}&order=price desc'">
+					<button type="button" class="order" id="saleprice desc"
+					onclick="location.href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=${cnum}&order=saleprice desc'">
 					높은가격순</button>
 					<span class="text-dark">|</span>
-					<button type="button" class="order" id="price asc"
-					onclick="location.href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=${cnum}&order=price asc'">
+					<button type="button" class="order" id="saleprice asc"
+					onclick="location.href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=${cnum}&order=saleprice asc'">
 					낮은가격순</button>
 					<span class="text-dark">|</span>
 					<button type="button" class="order" id="reviewCnt desc"
@@ -182,10 +188,24 @@ $(()=>{
 									<h5 class="card-title" style="font-weight: bold;">
 										<a href="#">${pvo.pname}</a>
 									</h5>
-									<p class="card-text">
-										<fmt:formatNumber value="${pvo.price}" pattern="#,###" />
-										원
-									</p>
+									<%-- 세일 상품 금액 표시 --%>
+									<c:choose>
+										<c:when test="${pvo.price != pvo.saleprice}">
+											<p>
+												<span class="card-text"
+													style="text-decoration-line: line-through;"><fmt:formatNumber
+														value="${pvo.price}" pattern="###,###" />원</span> <span
+													class="card-text"
+													style="color: #1E7F15; font-weight: bold;"><fmt:formatNumber
+														value="${pvo.saleprice}" pattern="###,###" />원</span>
+											</p>
+										</c:when>
+										<c:otherwise>
+											<p><span class="card-text">
+											<fmt:formatNumber value="${pvo.price}" pattern="###,###" />원</span></p>
+										</c:otherwise>
+									</c:choose>
+
 
 									<a class="card-text mr-2"><i
 										class="far fa-heart text-secondary fa-lg heart"></i></a> <a

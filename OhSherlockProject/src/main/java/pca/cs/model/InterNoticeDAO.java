@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import common.model.MemberVO;
 import common.model.NoticeVO;
 
 public interface InterNoticeDAO {
@@ -29,5 +28,8 @@ public interface InterNoticeDAO {
 
 	// 공지사항 전체 페이지 수 알아오기
 	int getTotalPage(Map<String, String> paraMap) throws SQLException;
+
+	// 공지사항 첨부파일명 알아오기
+	Map<String, String> getFileName(String noticeNo) throws SQLException;
 
 }

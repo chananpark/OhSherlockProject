@@ -40,7 +40,7 @@
 	color: white
 }
 
-.btn-secondary {
+.btn {
 	border-style: none;
 }
 
@@ -56,6 +56,14 @@
 	let mobile;
 
 	$(()=>{
+		
+		$("#cancleBtn").click(()=>{
+			const doCancle = confirm("1:1 문의 답변 작성을 취소하시겠습니까?");
+			if(doCancle){
+				alert("답변 작성을 취소하셨습니다.");
+				location.href="javascript:history.back()";
+			}
+		});
 
 		
 		$("#replyBtn").click(()=>{
@@ -199,7 +207,8 @@
 		<textarea id="inquiry_reply_content" name="inquiry_reply_content" placeholder="답변은 한 번 작성하면 수정/삭제가 불가하니 신중하게 작성하시기 바랍니다." style="height:200px; width:100%; padding:2%;"></textarea>
 	
 		<div class="text-right" style="display: block; margin-top: 30px;">
-			<input type="button" id="replyBtn" class="btn-secondary writeReply py-2 px-3 rounded" value="답변작성" />
+			<input type="button" id="cancleBtn" class="btn btn-secondary writeReply rounded" value="취소" />&nbsp;
+			<input type="button" id="replyBtn" class="btn writeReply rounded" style="background-color: #1E7F15; color: white;" value="답변작성" />
 		</div>
 	</c:if>
 	

@@ -1,10 +1,16 @@
 package pca.cs.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.oreilly.servlet.MultipartRequest;
+import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
 import common.controller.AbstractController;
 import pca.cs.model.InterNoticeDAO;
@@ -16,15 +22,48 @@ public class NoticeWriteEnd extends AbstractController {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		String method = request.getMethod();
+		
 		String message;
 		String loc;
 		
-		String subject = request.getParameter("subject");
-		String content = request.getParameter("content");
-		content = content.replace("\r\n","<br>");
-//		String file = request.getParameter("file");
-		
 		if ("post".equalsIgnoreCase(method)) {
+			
+	    	// MultipartRequest 객체 생성
+	        MultipartRequest mtrequest = null;
+	        
+	        // 첨부파일 저장경로 설정
+	        HttpSession session = request.getSession();
+	        ServletContext svlCtx = session.getServletContext();
+	        String uploadFileDir = svlCtx.getRealPath("/images");
+	        
+	        // 파일 업로드
+	        try {
+	            mtrequest = new MultipartRequest(request, uploadFileDir, 10*1024*1024, "UTF-8", new DefaultFileRenamePolicy());
+	        } catch(IOException e) {
+	            request.setAttribute("message", "업로드 경로 오류 또는 최대용량 10MB 초과로 파일업로드 실패하였습니다.");
+	            request.setAttribute("loc", request.getContextPath()+"/cs/noticeWrite.tea"); 
+
+	            super.setViewPage("/WEB-INF/msg.jsp");
+	            return;
+	        }
+	        
+	        // 사진파일 서버상 파일명
+	        String noticeImage = mtrequest.getFilesystemName("noticeImage");
+	        
+	        // 첨부파일 서버상 파일명
+	        String systemFileName = mtrequest.getFilesystemName("noticeFile");
+
+			// 첨부파일 업로드 당시 파일명
+	        String originFileName = mtrequest.getOriginalFileName("noticeFile");
+	        
+	        // 제목
+			String subject = mtrequest.getParameter("subject");
+			
+			// 내용
+			String content = mtrequest.getParameter("content");
+			content = content.replaceAll("<", "&lt;");
+			content = content.replaceAll(">", "&gt;");
+			content = content.replace("\r\n","<br>");
 			
 			InterNoticeDAO ndao = new NoticeDAO();
 			
@@ -35,6 +74,9 @@ public class NoticeWriteEnd extends AbstractController {
 			paraMap.put("seq", seq);
 			paraMap.put("subject", subject);
 			paraMap.put("content", content);
+			paraMap.put("noticeImage", noticeImage);
+			paraMap.put("systemFileName", systemFileName);
+			paraMap.put("originFileName", originFileName);
 			
 			// 공지사항 글작성
 			int n = ndao.registerNotice(paraMap);

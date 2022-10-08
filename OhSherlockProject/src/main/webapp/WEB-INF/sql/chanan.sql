@@ -194,33 +194,45 @@ nocache;
 
 -- 주문 테이블 --
 create table tbl_order (
-onum number(8) not null, -- 주문번호
-fk_userid varchar2(15), -- 주문자 아이디
-odate date default sysdate, -- 주문일자
-recipient_name varchar2(30) not null, -- 수령자 이름
-recipient_mobile varchar2(200) not null, -- 수령자 핸드폰번호
-recipient_postcode varchar2(5) not null, -- 수령자 우편번호
-recipient_address varchar2(100) not null, -- 수령자 주소
-recipient_detail_address varchar2(100) not null, -- 수령자 상세주소
-recipient_extra_address varchar2(100) not null, -- 수령자 추가주소
-osum number(8) not null, -- 총주문금액
-delivery_cost number(4) not null, -- 배송비
-payment_method varchar2(10) not null, -- 결제수단
-constraint PK_tbl_order_onum primary key(onum),
-constraint FK_tbl_order_fk_userid foreign key(fk_userid) references tbl_member(userid)
+odrcode                  not null varchar2(20) -- 주문코드 형식 : o+날짜+sequence
+,fk_userid                not null varchar2(15)  
+,odrdate                  not null date          
+,recipient_name           not null varchar2(30)  
+,recipient_mobile         not null varchar2(200) 
+,recipient_postcode       not null varchar2(5)   
+,recipient_address        not null varchar2(100) 
+,recipient_detail_address not null varchar2(100) 
+,recipient_extra_address  not null varchar2(100) 
+,odrtotalprice            not null number(38)    
+,odrtotalpoint            not null number 
+,delivery_cost            not null number(4)     
+,payment_method           not null varchar2(10)  
+,delivery_status          not null number(1)     
+,delivery_date                     varchar2(20) 
+,constraint PK_tbl_order_onum primary key(onum)
+,constraint FK_tbl_order_fk_userid foreign key(fk_userid) references tbl_member(userid)
 );
+
+-- 주문코드 시퀀스 --
+create sequence seq_tbl_order
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
 
 -- 주문상세 테이블 --
 create table tbl_order_detail (
-odnum number(8) not null, -- 주문상세번호
-fk_onum number(8) not null, -- 주문번호
-fk_pnum number(8) not null, -- 상품번호
-oqty NUMBER(8) not null, -- 주문수량
-oprice NUMBER(8) not null, -- 주문금액: 판매가격(할인율반영)*주문수량
-refund number(1) default 0, -- 환불여부. 여:1, 부:0
-exchange number(1) default 0, -- 교환여부. 여:1, 부:0
+odnum      not null number(8),    
+fk_odrcode not null varchar2(20),
+fk_pnum    not null number(8),    
+oqty       not null number(8),    
+oprice     not null number(8),    
+refund              number(1),    
+exchange            number(1), 
 constraint PK_tbl_order_detail_odnum primary key(odnum),
-constraint FK_tbl_order_detail_fk_onum foreign key(fk_onum) references tbl_order(onum),
+constraint FK_TBL_ORDER_DETAIL_FK_ODRCODE foreign key(FK_ODRCODE) references TBL_ORDER(ODRCODE),
 constraint FK_tbl_order_detail_fk_pnum foreign key(fk_pnum) references tbl_product(pnum),
 constraint CK_tbl_order_detail_refund check (refund in (0,1)),
 constraint CK_tbl_order_detail_exchange check (exchange in (0,1))
@@ -228,99 +240,20 @@ constraint CK_tbl_order_detail_exchange check (exchange in (0,1))
 
 -- 리뷰 테이블 --
 create table tbl_review (
-rnum number(8) not null, -- 리뷰번호
-fk_onum number(8) not null, -- 주문번호
-fk_odnum number(8) not null, -- 주문상세번호
-fk_pnum number(8) not null, -- 상품번호
-fk_userid varchar2(15), -- 주문자 아이디
-score NUMBER(1) not null, -- 별점(1~5)
-rsubject Nvarchar2(100) not null, -- 리뷰제목
-rcontent Nvarchar2(500) not null, -- 리뷰내용
-rimage VARCHAR2(100), -- 리뷰이미지
+rnum       not null number(8),   
+fk_odrcode not null varchar2(20),  
+fk_odnum   not null number(8),     
+fk_pnum    not null number(8),     
+fk_userid  not null varchar2(15),  
+score      not null number(1),     
+rsubject   not null varchar2(100), 
+rcontent   not null varchar2(500), 
+rimage              varchar2(100),
 constraint PK_tbl_review_rnum primary key(rnum),
-constraint FK_tbl_review_fk_onum foreign key(fk_onum) references tbl_order(onum),
+constraint fk_tbl_review_fk_odrcode foreign key(fk_odrcode) references tbl_order(odrcode),
 constraint FK_tbl_review_fk_odnum foreign key(fk_odnum) references tbl_order_detail(odnum),
 constraint FK_tbl_review_fk_pnum foreign key(fk_pnum) references tbl_product(pnum),
 constraint FK_tbl_review_fk_userid foreign key(fk_userid) references tbl_member(userid)
 );
 
-
-
-
--- 카테고리별 상품 가져오기 --
-SELECT cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,
-    pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt
-FROM
-    (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,
-            pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt
-    FROM
-        (SELECT c.cname, s.sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,
-                pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,
-                (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,
-                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt
-        FROM
-            (SELECT
-                pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,
-                pqty, price, saleprice, pcontent, PSUMMARY, point,
-                to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum
-            FROM tbl_product
-            WHERE fk_cnum in (4, 5, 6)
-            ORDER BY pnum DESC) p
-            JOIN tbl_category  c ON p.fk_cnum = c.cnum
-            LEFT OUTER JOIN tbl_spec s
-            ON p.fk_snum = s.snum)V
-    ) t
-WHERE t.rno BETWEEN 1 AND 5;
-
-select ceil( count(*)/10 )  from tbl_product  where fk_cnum in (4,5,6);
-    
-INSERT INTO tbl_product(PNUM, PNAME, PIMAGE, PQTY, PRICE, SALEPRICE, PSUMMARY, POINT, PINPUTDATE, FK_CNUM)
-VALUES (SEQ_PRODUCT_PNUM.nextval, '프리미엄 티 컬렉션', '프리미엄 티 컬렉션.png', 1000, 28000, 28000, 
-'취향과 기분에 따라 다채로운 맛과 향을 즐기기 좋은, 알찬 구성의 베스트셀러 티 세트', 
-280, sysdate, 4);
-COMMIT;
-
-
-String sql = "SELECT cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
-"    pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt\n"+
-"FROM\n"+
-"    (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
-"            pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt\n"+
-"    FROM\n"+
-"        (SELECT c.cname, s.sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
-"                pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,\n"+
-"                (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
-"                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt\n"+
-"        FROM\n"+
-"            (SELECT\n"+
-"                pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
-"                pqty, price, saleprice, pcontent, PSUMMARY, point,\n"+
-"                to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum\n"+
-"            FROM tbl_product\n"+
-"            WHERE fk_cnum = ?\n"+
-"            ORDER BY ? DESC) p\n"+
-"            JOIN tbl_category  c ON p.fk_cnum = c.cnum\n"+
-"            LEFT OUTER JOIN tbl_spec s\n"+
-"            ON p.fk_snum = s.snum)V\n"+
-"    ) t\n"+
-"WHERE t.rno BETWEEN ? AND ?";
-
-SELECT cname, sname, pnum, pname, pimage, pqty, price, saleprice, reviewCnt, orederCnt
-FROM (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage,
-pqty, price, saleprice, reviewCnt, orederCnt
-
-FROM
-
-    (SELECT c.cname, s.sname, pnum, pname, pimage, pqty, price, saleprice, orederCnt,reviewCnt 
-    FROM
-    (SELECT pnum, pname, pimage, pqty, price, saleprice, fk_cnum, fk_snum,
-    (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,
-    (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt
-    FROM tbl_product
-    WHERE pname like '%차%') p
-    JOIN tbl_category  c ON p.fk_cnum = c.cnum
-    LEFT OUTER JOIN tbl_spec s
-    ON p.fk_snum = s.snum
-    oRDER BY price desc)v
-) t
-WHERE t.rno BETWEEN 7 AND 12;
+--------------------------------------------------------------------------------

@@ -117,10 +117,13 @@ public class ProductDAO implements InterProductDAO {
 	
 	// 페이징 방식 카테고리별 기프트세트 상품 총 페이지수 가져오기 메소드
 	@Override
-	public int getTotalPage(String cnum) throws SQLException {
+	public int getTotalPage(Map<String, String> paraMap) throws SQLException {
 		
 		int totalPage = 0;
 
+		String cnum = paraMap.get("cnum");
+		String snum = paraMap.get("snum");
+		
 		try {
 			conn = ds.getConnection();
 
@@ -132,6 +135,13 @@ public class ProductDAO implements InterProductDAO {
 				sql += " where fk_cnum = ? ";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, cnum);
+			}
+			
+			// 특정 스펙 조회시
+			else if (!"".equals(snum)) {
+				sql += " where fk_snum = ? and fk_cnum in (4,5,6) ";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, snum);
 			}
 			
 			// 전체 조회시
@@ -175,7 +185,7 @@ public class ProductDAO implements InterProductDAO {
 		        		"                pnum, pname, pimage, \n"+
 		        		"                pqty, price, saleprice, pcontent, PSUMMARY, point,\n"+
 		        		"                to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum,\n"+
-		        		"                (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
+		        		"                (select distinct count(fk_odrcode) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
 		        		"                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt\n"+
 		        		"            FROM tbl_product\n";
 		        
@@ -183,6 +193,12 @@ public class ProductDAO implements InterProductDAO {
 		        if (!"".equals(paraMap.get("cnum"))) {
 		        	sql +=	"            WHERE fk_cnum = ?\n";
 		        }
+		        
+		        // 특정 스펙 조회시
+		        else if (!"".equals(paraMap.get("snum"))) {
+		        	sql +=	"            WHERE fk_snum = ? and fk_cnum in (4,5,6)\n";
+		        }
+		        
 		        // 전체 조회시
 		        else {
 		        	sql +=	"            WHERE fk_cnum in (4,5,6)\n";
@@ -209,9 +225,15 @@ public class ProductDAO implements InterProductDAO {
 		        
 		        // 특정 카테고리 조회시
 		        if (!"".equals(paraMap.get("cnum"))) {
-		        pstmt.setString(1, paraMap.get("cnum"));
-		        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
-		        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
+			        pstmt.setString(1, paraMap.get("cnum"));
+			        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+			        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
+		        }
+		        // 특정 스펙 조회시
+		        else if (!"".equals(paraMap.get("snum"))) {
+		        	pstmt.setString(1, paraMap.get("snum"));
+		        	pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+		        	pstmt.setInt(3, (currentShowPageNo * sizePerPage));
 		        }
 		        // 전체 조회시
 		        else {
@@ -271,15 +293,21 @@ public class ProductDAO implements InterProductDAO {
 						+ " where pname like '%' || ? || '%' " ;
 				
 				// 특정 카테고리 조회시
-				if (!"".equals(cnum)) {
+				if (!"".equals(cnum) && Character.isDigit(cnum.charAt(0))) {
 					sql += " and fk_cnum = ? ";
+				}
+				else if ("teaAll".equals(cnum)) {
+					sql += " and fk_cnum in (1,2,3) ";
+				}
+				else if ("setAll".equals(cnum)) {
+					sql += " and fk_cnum in (4,5,6) ";
 				}
 				
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, searchWord);
 				
 				// 특정 카테고리 조회시
-				if (!"".equals(cnum)) {
+				if (!"".equals(cnum) && Character.isDigit(cnum.charAt(0))) {
 					pstmt.setString(2, cnum);
 				}
 
@@ -308,15 +336,23 @@ public class ProductDAO implements InterProductDAO {
 						+ " where pname like '%' || ? || '%' " ;
 				
 				// 특정 카테고리 조회시
-				if (!"".equals(cnum)) {
+				if (!"".equals(cnum) && Character.isDigit(cnum.charAt(0))) {
 					sql += " and fk_cnum = ? ";
+				}
+				// 티단품 조회시
+				else if ("teaAll".equals(cnum)) {
+					sql += " and fk_cnum in (1,2,3) ";
+				}
+				// 세트상품 조회시
+				else if ("setAll".equals(cnum)) {
+					sql += " and fk_cnum in (4,5,6) ";
 				}
 				
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, searchWord);
 				
 				// 특정 카테고리 조회시
-				if (!"".equals(cnum)) {
+				if (!"".equals(cnum) && Character.isDigit(cnum.charAt(0))) {
 					pstmt.setString(2, cnum);
 				}
 
@@ -356,15 +392,23 @@ public class ProductDAO implements InterProductDAO {
 		        		"                pnum, pname, pimage, \n"+
 		        		"                pqty, price, saleprice, \n"+
 		        		"                fk_cnum, fk_snum,\n"+
-		        		"                (select distinct count(FK_ONUM) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
+		        		"                (select distinct count(fk_odrcode) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
 		        		"                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt\n"+
 		        		"            FROM tbl_product\n"+
 		        		"			 WHERE pname like '%' || ? || '%' ";
 		        
 			    // 특정 카테고리 조회시
-		        if (!"".equals(cnum)) {
+		        if (!"".equals(cnum) && Character.isDigit(cnum.charAt(0))) {
 		        	sql +=	"            and fk_cnum = ?\n";
 		        }
+		        // 티단품 조회시
+		        else if ("teaAll".equals(cnum)) {
+					sql += " and fk_cnum in (1,2,3) ";
+				}
+		        // 세트상품 조회시
+				else if ("setAll".equals(cnum)) {
+					sql += " and fk_cnum in (4,5,6) ";
+				}
 	        
 		        sql += "            ) p\n"+
 	        		"            JOIN tbl_category  c ON p.fk_cnum = c.cnum\n"+
@@ -379,7 +423,7 @@ public class ProductDAO implements InterProductDAO {
 		        pstmt = conn.prepareStatement(sql);
 		        
 		        // 특정 카테고리 조회시
-		        if (!"".equals(cnum)) {
+		        if (!"".equals(cnum) && Character.isDigit(cnum.charAt(0))) {
 		        pstmt.setString(1, searchWord);
 		        pstmt.setString(2, cnum);
 		        pstmt.setInt(3, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
@@ -423,6 +467,41 @@ public class ProductDAO implements InterProductDAO {
 		    }
 
 		    return productList;
+		}
+
+		// 메인에 표시할 상품 4개
+		@Override
+		public List<ProductVO> selectTodayProducts() {
+
+			List<ProductVO> todayProductList = new ArrayList<>();
+			try {
+				
+				conn = ds.getConnection();
+
+		        String sql = "SELECT rownum pnum, pname, pimage, price, saleprice from "
+		        		+ "(SELECT pnum, pname, pimage, price, saleprice FROM tbl_product ORDER BY pnum desc)"
+		        		+ "where rownum between 1 and 4";
+		        pstmt = conn.prepareStatement(sql);
+		        rs = pstmt.executeQuery();
+		        
+		        while (rs.next()) {
+		            ProductVO pvo = new ProductVO();
+		            pvo.setPnum(rs.getInt("pnum")); // 제품번호
+		            pvo.setPname(rs.getString("pname")); // 제품명
+
+		            pvo.setPimage(rs.getString("pimage")); // 제품 이미지 파일명
+		            pvo.setPrice(rs.getInt("price")); // 제품 정가
+		            pvo.setSaleprice(rs.getInt("saleprice")); // 제품 판매가
+
+		            todayProductList.add(pvo);
+		        }
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}finally {
+		        close();
+		    }
+			
+			return todayProductList;
 		}
 
 }

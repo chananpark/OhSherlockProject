@@ -16,7 +16,7 @@ public interface InterProductDAO {
 	List<HashMap<String, String>> getTeaCategoryList() throws SQLException;
 	
 	// 페이징 방식 카테고리별 기프트세트 상품 총 페이지수 가져오기 메소드
-	int getTotalPage(String cnum) throws SQLException;
+	int getTotalPage(Map<String, String> paraMap) throws SQLException;
 	
 	// 페이징 방식 카테고리별 기프트세트 상품 목록 가져오기 메소드
 	public List<ProductVO> selectSetGoodsByCategory(Map<String, String> paraMap) throws SQLException;
@@ -29,5 +29,8 @@ public interface InterProductDAO {
 	
 	// 검색어로 상품 목록 가져오기
 	List<ProductVO> selectSearchedGoods(Map<String, String> paraMap) throws SQLException;
+
+	// 메인에 표시할 상품 4개
+	List<ProductVO> selectTodayProducts();
 
 }

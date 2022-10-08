@@ -11,10 +11,7 @@
 
 	$(document).ready(function(){
 		
-		$('i.heart').click(function() {
-	        $(this).removeClass("text-secondary");
-	        $(this).addClass("text-danger");
-	    })
+		
 		
 		
 	}); // end of $(document).ready
@@ -79,9 +76,9 @@
   	justify-content: flex-end;
 }
 
-.productListContainer a:link, .productListContainer a:visited {
+/* .productListContainer a:link, .productListContainer a:visited {
 	color: black;
-}
+} */
 
 .productListContainer a:hover {
 	cursor: pointer;
@@ -93,7 +90,7 @@
 	display: inline-block;
 }
 
-a, a:hover, a:link, a:visited {
+a, a:hover{
 	color: black;
 	text-decoration: none;
 }
@@ -121,19 +118,38 @@ a, a:hover, a:link, a:visited {
 button.order {
 	background-color: transparent; 
   	border-style: none;
+  	padding: 0;
+
 }
+
+.selected {
+	color: #1E7F15 !important;
+	font-weight: bold;
+}
+
+input.like {
+	background-color: transparent; 
+  	border-style: none;
+}
+
 </style>
 
 <script>
 
 let cnum;
+let snum;
 let currentShowPageNo;
 let order;
 let jsonPageBar;
 
 $(()=>{
 	cnum = "${cnum}";
+	snum = "${snum}";
 	currentShowPageNo = "${currentShowPageNo}";
+	
+	console.log(cnum);
+	console.log(snum);
+	console.log(currentShowPageNo);
 	
 	// 정렬 버튼 클릭시 이벤트
 	 $(".order").click((e)=>{
@@ -143,7 +159,24 @@ $(()=>{
 		
 		// 페이지바 가져오기
 		getPageBar();
+		
+		// 선택된 정렬 글자색, 굵게
+		$(".order").removeClass("selected");
+		$(e.target).addClass("selected");
 	}); 
+	 
+	// 선택된 카테고리 글자색, 굵게
+	 if (cnum == "" && snum == "") {
+		 document.getElementById("allGoods").classList.add("selected");
+	 } else if (cnum != "" && snum == ""){
+		 document.getElementById(cnum).classList.add("selected");
+	 } else if (cnum == "" && snum != ""){
+		 document.getElementById("bestGoods").classList.add("selected");
+	 }
+	
+	// 소제목 텍스트
+	$("#subtitle").text($(".categories.selected").text());
+	
 	
 });
 
@@ -153,7 +186,7 @@ function getOrderedList() {
 	$.ajax({
 		url:"<%=ctxPath%>/shop/productGiftSetJSON.tea",
 		type:"get",
-		data:{"cnum":cnum, "order":order, "currentShowPageNo":currentShowPageNo},
+		data:{"cnum":cnum, "order":order, "currentShowPageNo":currentShowPageNo, "snum":snum},
 		dataType:"JSON",
 		success:function(json){
 	        let html = "";
@@ -226,7 +259,7 @@ function getPageBar() {
 	$.ajax({
 		url:"<%=ctxPath%>/shop/pageBarJSON.tea",
 		type:"get",
-		data:{"cnum":cnum, "currentShowPageNo":currentShowPageNo},
+		data:{"cnum":cnum, "currentShowPageNo":currentShowPageNo, "snum":snum},
 		dataType:"JSON",
 		success:function(json){
 			
@@ -269,10 +302,50 @@ function getPageBar() {
 }
 
 
-</script>
+
+//Function Declaration
+// 찜하기버튼 클릭시
+function goLike(obj) {
+<%-- 	
+	 const index = $("input.like").index(obj); 
+	 const pnum = $("input.pnum").eq(index).val();  // eq() 는 여러 찜하기 배열중에서 선택한 한개를 끄집어오는 것.
+	 
+	 $.ajax({
+		  url:"<%= request.getContextPath()%>/shop/likeAdd.tea",
+		  type:"POST",
+		  data:{"pnum":pnum},
+		  dataType:"JSON",
+		  success:function(json) {
+			  // {n:1}
+			  if(json.n == 1) {  // json.n 객체는 넘겨받은 {n:1} 을 의미함.
+				  alert("찜하기 성공!");
+				  location.href = "likeList.up"; // 삭제가 반영된 장바구니 목록을 보여준다. 장바구니 보기는 페이징처리를 안함.
+			  }
+		  },
+		  error: function(request, status, error){
+			  alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+       }
+	  }); 
+    --%>
+	 
 	
+     const frm = document.prodStorageFrm;
+     
+     frm.method = "POST";
+     frm.action = "<%= request.getContextPath()%>/shop/likeAdd.tea";
+     frm.submit();
+     
+}// end of function goLike()------------------------------
+
+
+
+
+
+</script>
+
+<form name="prodStorageFrm">
 	<div class="container productListContainer">
-		<div><img src= "../images/tea_header_img.png" width=100%/></div>
+		<div><img src= "../images/giftset_header.png" width=100%/></div>
       
 		<div class="row">
 	      	<%-- 사이드 메뉴 시작 --%>
@@ -281,11 +354,14 @@ function getPageBar() {
 	            	<span class="h4" style="font-weight:bold;">기프트세트</span>
 	         	</div>
 	         	<div style="text-align: left; padding: 4%; margin-left:10%;">
-	            	<a href="<%= ctxPath %>/shop/productGiftset.tea">전체 상품</a>
+	            	<a class="categories" id="allGoods" href="<%= ctxPath %>/shop/productGiftset.tea">전체 상품</a>
+	         	</div>
+	         	<div style="text-align: left; padding: 4%; margin-left:10%;">
+	            	<a class="categories" id="bestGoods" href="<%= ctxPath %>/shop/productGiftset.tea?snum=2">베스트</a>
 	         	</div>
 	         	<c:forEach var="map" items="${giftsetCategoryList}">
 	         	<div style="text-align: left; padding: 4%; margin-left:10%;">
-	            	<a href="<%= ctxPath %>/shop/productGiftset.tea?cnum=${map.cnum}">${map.cname}</a>
+	            	<a class="categories" id="${map.cnum}" href="<%= ctxPath %>/shop/productGiftset.tea?cnum=${map.cnum}">${map.cname}</a>
 	         	</div>
 	         	</c:forEach>
 	       	</div>
@@ -295,18 +371,18 @@ function getPageBar() {
 	       		<%-- 본문 시작 --%>
 				<div id="maincontent">
 		    	    <%-- 본문 내부 상단 바 시작 --%>
-					<span class="text-dark h5" style="font-weight:bold;">전체상품</span>
+					<span id="subtitle" class="text-dark h5" style="font-weight:bold;">전체 상품</span>
 					
 					<%-- 정렬 선택 창 --%>
 					<div class="text-right" style="float: right;">
-					<button type="button" class="order" id="pnum desc">신상품순</button>
-					<span class="text-dark">&nbsp;|&nbsp;</span>
+					<button type="button" class="order selected" id="pnum desc">신상품순</button>
+					<span class="text-dark">|</span>
 					<button type="button" class="order" id="price desc">높은가격순</button>
-					<span class="text-dark">&nbsp;|&nbsp;</span>
+					<span class="text-dark">|</span>
 					<button type="button" class="order" id="price asc">낮은가격순</button>
-					<span class="text-dark">&nbsp;|&nbsp;</span>
+					<span class="text-dark">|</span>
 					<button type="button" class="order" id="reviewCnt desc">리뷰많은순</button>
-					<span class="text-dark">&nbsp;|&nbsp;</span>
+					<span class="text-dark">|</span>
 					<button type="button" class="order" id="orederCnt desc">판매순</button>
 					</div>
 		    	    <%-- 본문 내부 상단 바 끝 --%>
@@ -346,36 +422,37 @@ function getPageBar() {
 			    				
 			      				<h5 class="card-title" style="font-weight:bold;"><a href="<%= ctxPath %>/shop/productView.tea?pnum=${pvo.pnum}"> ${pvo.pname}</a></h5>
 				      			<p class="card-text"><fmt:formatNumber value="${pvo.price}" pattern="#,###"/>원</p>
-				      			
+				      		
 				      			<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart"></i></a>
-				      			<a class="card-text text-secondary mr-5">찜하기</a>
+				      			<input class="card-text text-secondary mr-5 like" type="button" onclick="goLike(this);" value="찜하기" style="padding-left: 0; margin-left: 0;" />
 				      							      			
 				      			<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a>
 				      			<a class="card-text text-secondary">담기</a>
-				      			
+			      				<input type="hidden" name="pnum" value="${pvo.pnum}" />  <%-- 제품번호--%>
 				   			</div>
 				  		</div>
 				  		</c:forEach>
 				  		</c:if>
-				  		<c:if test="${empty productList }">
+				  		<c:if test="${empty productList}">
 				  		상품 준비중입니다.
 				  		</c:if>
+				  		</div>
 				  		<%-- ★ 여기까지! --%>
-					</div>
+					
 					<%-- 상품 목록 끝 --%>					
 					
+					<div id="div_pageBar" style="margin-top : 100px">
+						<nav id="nav_pageBar" aria-label="Page navigation example">
+							<ul id = "originPageBar" class="pagination justify-content-center">${pageBar}</ul>
+						</nav>
+					</div>
 				</div>
 	       		<%-- 본문 끝 --%>
 				
 			</div>
     	    
 		</div>
-		<div id="div_pageBar">
-			<nav id="nav_pageBar" aria-label="Page navigation example">
-				<ul id = "originPageBar" class="pagination justify-content-center">${pageBar}</ul>
-			</nav>
-		</div>
 	</div>
+</form>
 	
 <%@ include file="../footer.jsp"%>
-

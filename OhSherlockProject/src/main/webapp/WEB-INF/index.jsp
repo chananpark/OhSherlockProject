@@ -17,17 +17,19 @@
 			</ol>
 			<div class="carousel-inner">
 				<div class="carousel-item active">
-					<img src="<%=ctxPath%>/images/오설록배너2.png" class="d-block w-100"
+					<img src="<%=ctxPath%>/images/포토리뷰이벤트배너.png" class="d-block w-100"
 						alt="...">
 					<!-- d-block 은 display: block; 이고  w-100 은 width 의 크기는 <div class="carousel-item active">의 width 100% 로 잡으라는 것이다. -->
 					<div class="carousel-caption d-none d-md-block">
 						<!-- d-none 은 display : none; 이므로 화면에 보이지 않다가, d-md-block 이므로 d-md-block 은 width 가 768px이상인 것에서만 display: block; 으로 보여라는 말이다.  -->
-						<h4 class="bannerTitle">
-							데일리 식습관 메이트<br>콤부차 리치피치 출시!
+						<h4 class="bannerTitle pb-4">
+							10월 포토 리뷰 이벤트<br>
 						</h4>
 						<p>
-							칼로리 부담없이 건강관리에 즐거움을 더하는 콤부차<br>새로운 맛 리치피치를 만나보세요.<br>
-							<br>09.15 - 09.30
+							완연한 가을에 마시는 따뜻한 차 한잔<br>지금 여러분의 티타임을 보여주세요!<br>
+							<br>10.07 - 10.31
+							<button type="button" style="border:solid 1px gray" class="btn ml-4"
+							onclick="location.href='<%=ctxPath%>/cs/noticeDetail.tea?noticeNo=6'">이벤트 보기</button>
 						</p>
 					</div>
 				</div>
@@ -85,56 +87,42 @@
 	</div>
 </div>
 
-<div class="container" id="todaytea" >
+<div class="container" id="todaytea">
 
-	<h4 id="todaytea_title" style="font-weight: bold;">오늘은 어떤 차를 마셔볼까요?</h4>
-
-	<div class="card"
-		style="width: 250px; margin: 20px 20px 0 0;">
-		<img class="card-img-top" src="images/제주동백꽃.png" alt="Card image"
-			style="width: 100%">
-		<div class="card-body" style="border: none;">
-			<h4 class="card-title">러블리 티 박스</h4>
-			<p class="card-text">20,000원</p>
-			<a href="#" class="btn btn-primary"
-				style="float: right; background-color: #1E7F15; border: none;">DETAIL</a>
+	<h4 id="todaytea_title" style="font-weight: bold;">오늘은 어떤 차를
+		마셔볼까요?</h4>
+	<div class="row" style="width:100%">
+	<c:forEach items="${todayProductList }" var="pvo">
+		<div class="col-6 col-lg-3 my-3">
+			<div class="card ">
+				<img class="card-img-top" src="<%=ctxPath%>/images/${pvo.pimage}"
+					alt="Card image" style="width: 100%">
+				<div class="card-body" style="min-height: 170px">
+					<h5 class="card-title">${pvo.pname}</h5>
+					<c:choose>
+						<c:when test="${pvo.price != pvo.saleprice}">
+							<p>
+								<span class="card-text"
+									style="text-decoration-line: line-through;"><fmt:formatNumber
+										value="${pvo.price}" pattern="###,###" />원</span> <span
+									class="card-text"
+									style="color: #1E7F15; font-weight: bold;"><fmt:formatNumber
+										value="${pvo.saleprice}" pattern="###,###" />원</span>
+							</p>
+						</c:when>
+						<c:otherwise>
+							<p><span class="card-text">
+							<fmt:formatNumber value="${pvo.price}" pattern="###,###" />원</span></p>
+						</c:otherwise>
+					</c:choose>
+					<a href="<%= ctxPath %>/shop/productView.tea?pnum=${pvo.pnum}" class="btn btn-primary mt-3"
+						style="position:relative; left:60%; background-color: #1E7F15; border: none;">DETAIL</a>
+				</div>
+			</div>
 		</div>
-	</div>
-
-	<div class="card"
-		style="width: 250px; margin: 20px 20px 0 0;">
-		<img class="card-img-top" src="images/그린티라떼더블샷.png" alt="Card image"
-			style="width: 100%">
-		<div class="card-body">
-			<h4 class="card-title">그린티 라떼 더블샷</h4>
-			<p class="card-text">12,000원</p>
-			<a href="#" class="btn btn-primary"
-				style="float: right; background-color: #1E7F15; border: none;">DETAIL</a>
-		</div>
-	</div>
-
-	<div class="card"
-		style="width: 250px; margin: 20px 20px 0 0;">
-		<img class="card-img-top" src="images/제주순수녹차.png" alt="Card image"
-			style="width: 100%">
-		<div class="card-body">
-			<h4 class="card-title">제주 순수녹차</h4>
-			<p class="card-text">9,500원</p>
-			<a href="#" class="btn btn-primary"
-				style="float: right; background-color: #1E7F15; border: none;">DETAIL</a>
-		</div>
-	</div>
-
-	<div class="card" style="width: 250px; margin: 20px 20px 0 0;">
-		<img class="card-img-top" src="images/시그니처기프트세트.png" alt="Card image" style="width: 100%">
-		<div class="card-body">
-			<h4 class="card-title">기프트 세트</h4>
-			<p class="card-text">22,500원</p>
-			<a href="#" class="btn btn-primary" style="float: right; background-color: #1E7F15; border: none;">DETAIL</a>
-		</div>
+	</c:forEach>
 	</div>
 </div>
-
 
 <!-- 이벤트 컨테이너 시작 -->
 <div class="container eventContainer">

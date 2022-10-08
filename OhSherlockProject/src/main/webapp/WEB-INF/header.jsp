@@ -210,7 +210,6 @@ div.eventContainer {
 
 h4.eventText{
 	font-weight: bold;
-	padding: 60px 0px 10px 0px;
 }
 section#index_sectionBox {
 	position: relative;
@@ -288,9 +287,9 @@ div#brandStoryText {
 				<ul class="navbar-nav flex-row">
 					<li class="nav-item active mr-2"><span class="nav-link menufont_size text-dark">
 					<i class="fas fa-grip-lines-vertical fa-lg"></i></span></li>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/cart/cart.jsp">
+					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/cart/cart.tea">
 					<i class="fas fa-shopping-basket fa-lg"></i></a></li>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="#">
+					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/shop/likeList.tea">
 					<i class="fas fa-heart fa-lg"></i></a></li>
 					<li class="nav-item active"><a class="nav-link menufont_size text-dark" data-toggle="modal" data-target="#searchModal" data-dismiss="modal">
 					<i class="fas fa-search fa-lg"></i></a></li>
@@ -317,7 +316,7 @@ div#brandStoryText {
 						</div>
 					</li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%= ctxPath %>/shop/productGiftset.tea">기프트세트</a></li>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%= ctxPath %>/shop/productEvent.tea">이벤트상품</a></li>
+					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=${currentShowPageNo}&snum=&cnum=&order=pinputdate desc">이벤트상품</a></li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath %>/storeInfo/storeList.jsp">매장안내</a></li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath %>/brandStory/brandStory.tea">브랜드스토리</a></li>
 				</ul>
@@ -327,12 +326,13 @@ div#brandStoryText {
 				<%-- 로그인 전 상태일 때 --%>
 				<c:if test="${empty sessionScope.loginuser}"> 
 					<li class="nav-item dropdown mr-2"><a class="nav-link dropdown-toggle menufont_size text-secondary"
-						href="<%= ctxPath %>/login/login.tea" id="navbarDropdown" data-toggle="dropdown">로그인</a> 
+						href="<%= ctxPath %>/login/login.tea">로그인</a> 
+						<%-- href="<%= ctxPath %>/login/login.tea" id="navbarDropdown" data-toggle="dropdown">로그인</a>  --%>
 						<%-- 로그인을 누르면 기본은 로그인 창으로 연결 --%>
-						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
+						<%-- <div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="<%= ctxPath %>/login/login.tea">로그인</a> 
 							<a class="dropdown-item" href="<%= ctxPath %>/member/memberRegister.tea">회원가입</a>
-						</div></li>
+						</div></li> --%>
 					<li class="nav-item active mr-2">
 					  <%-- 로그인 전 회원가입 접속가능 --%>
 					  <c:if test="${empty sessionScope.loginuser}">
