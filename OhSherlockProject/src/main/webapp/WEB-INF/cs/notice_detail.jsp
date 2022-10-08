@@ -57,8 +57,7 @@
 		});
 		
 		$("#showList").click(()=>{
-			const goBackURL = sessionStorage.getItem("goBackURL");
-			location.href="<%=ctxPath%>"+goBackURL;
+			location.href="<%=ctxPath%>/cs/notice.tea";
 		});
 	});
 	
