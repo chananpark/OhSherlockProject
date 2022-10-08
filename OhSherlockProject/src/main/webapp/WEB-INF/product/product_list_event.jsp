@@ -139,11 +139,24 @@ a:visited {
 		
 	}); // end of $(document).ready
 	
-	
-	
+	// 장바구니 담기
+	function clickCart(obj) {
+		
+		let $target = $(event.target);
+		let pnum = $target.next().val();
+		
+		let frm = document.eventClickFrm;
+		let hidden = frm.hidden_pnum${pvo.pnum}.value;
+		
+		frm.method = "POST"; 
+		frm.action = "<%=request.getContextPath()%>/cart/cartAdd.tea";
+		frm.submit();
+		
+	} // end of function goCart()
 	
 	
 </script>
+
 
 
 <form name="eventClickFrm">
@@ -154,30 +167,29 @@ a:visited {
 	<div class="row">
       	<%-- 사이드 메뉴 시작 --%>
        	<div class="col-md-2" id="sideinfo" class="sidebar" style="padding-left: 2%;  margin-top: 1.8%;">
-			<div style="text-align: left; padding: 5%; margin-bottom: 20px;" >
+			<div style="text-align: left; padding: 5%;" >
             	<span class="h4" style="font-weight:bold;">이벤트상품</span>
          	</div>
          	
-         	<div style="padding: 3%; font-weight:bold;">
+         	<div style="padding: 4%; margin-left:10%; ">
         		<a id="allProd" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=${currentShowPageNo}&snum=&cnum=&order=pinputdate desc">전체 상품</a>
        		</div>
-         	<div style="padding: 3%; font-weight:bold;">
+         	<div style="padding: 4%; margin-left:10%;">
          		<a id="bestProd" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=${currentShowPageNo}&snum=2&cnum=&order=pinputdate desc" >베스트</a>
        		</div>
-         	<div style="padding: 3%; font-weight:bold;">
+         	<div style="padding: 4%; margin-left:10%;">
          		<a id="newProd" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=${currentShowPageNo}&snum=1&cnum=&order=pinputdate desc">신상품</a>
     		</div>
-         	<hr>
-         	<div style="padding: 5%; font-weight:bold;">단품</div>
-         	<div style="text-align: left; padding: 4%; margin-left:10%;">
-            	<a id="greentea" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=${currentShowPageNo}&snum=&cnum=1&order=pinputdate desc">녹차/말차</a>
-         	</div>
-         	<div style="text-align: left; padding: 4%; margin-left:10%;">
-            	<a id="blacktea" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=${currentShowPageNo}&snum=&cnum=2&order=pinputdate desc">홍차</a>
-         	</div>
-         	<div style="text-align: left; padding: 4%; margin-left:10%;">
-            	<a id="herbtea" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=${currentShowPageNo}&snum=&cnum=3&order=pinputdate desc">허브차</a>
-         	</div>
+    		<div style="padding: 4%; margin-left:10%;">
+         		<a id="greentea" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=${currentShowPageNo}&snum=&cnum=1&order=pinputdate desc">녹차/말차</a>
+    		</div>
+    		<div style="padding: 4%; margin-left:10%;">
+         		<a id="blacktea" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=${currentShowPageNo}&snum=&cnum=2&order=pinputdate desc">홍차</a>
+    		</div>
+    		<div style="padding: 4%; margin-left:10%;">
+         		<a id="herbtea" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=${currentShowPageNo}&snum=&cnum=3&order=pinputdate desc">허브차</a>
+    		</div>
+         	
 
        	</div>
    	    <%-- 사이드 메뉴 끝 --%>
@@ -252,10 +264,9 @@ a:visited {
 				      			
 				      			<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart"></i></a>
 				      			<a class="card-text text-secondary mr-5">찜하기</a>
-				      							      			
-				      			<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a>
-				      			<a class="card-text text-secondary">담기</a>
-				      			
+				      			<a class="card-text mr-2 clickCart" onClick="clickCart(this);"><i class="fas fa-shopping-basket text-secondary " ></i></a>
+				      			<a class="card-text text-secondary clickCart" onClick="clickCart(this);">담기</a>
+				      			<input type="text" name="hidden_pnum" id="hidden_pnum${pvo.pnum}" value="${pvo.pnum}" />
 				   			</div>
 			  			</div>
 			  		</c:forEach>

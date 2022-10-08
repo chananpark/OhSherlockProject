@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import common.model.CartVO;
 import common.model.CategoryVO;
 import common.model.ProductVO;
 import common.model.SpecVO;
@@ -235,7 +237,163 @@ public class ProductDAO implements InterProductDAO {
 	} // end of public List<ProductVO> selectEventGoodsByCategory(Map<String, String> paraMap) throws SQLException
 
 	
+	// 장바구니에 추가하기
+	@Override
+	public int addCart(String userid, String pnum, String oqty) throws SQLException {
+		int result = 0;
+	      
+	      try {
+	         conn = ds.getConnection();
+	         
+	         String sql = " select cartno"
+	         			+ " from tbl_cart "
+	         			+ " where fk_userid = ? and fk_pnum = ? ";
+	         
+	         // 장바구니 번호가 userid 에 존재한다면 장바구니 번호만 알아와서 update 해주고, 없다면 insert 해준다. 
+	         pstmt = conn.prepareStatement(sql);
+	         pstmt.setString(1, userid);
+	         pstmt.setString(2, pnum);
+	         rs = pstmt.executeQuery();
+	         
+	         if(rs.next()) {
+	        	 // 장바구니에 존재하는 상품을 추가로 장바구니에 넣고자 하는 경우
+	        	 
+	        	 int cartno = rs.getInt("cartno"); // 위에서 셀렉트되어진 게 있다면 rs 에서 cartno 를 알아온다.
+	        	 
+	        	 sql = " update tbl_cart set oqty = oqty + ? "
+	        	 	 + " where cartno = ?";
+	        	 
+	        	 pstmt = conn.prepareStatement(sql);
+	        	 pstmt.setInt(1, Integer.parseInt(oqty)); // 문자면 문자열 결합이 되기 때문에 숫자로 바꾸어 주어야 한다. 
+	        	 pstmt.setInt(2, cartno);
+	        	 
+	        	 result = pstmt.executeUpdate(); // 정상이라면 1
+
+	         } else {
+	        	 // 장바구니에 존재하지 않는 새로운 제품을 장바구니에 넣고자 하는 경우
+	        	 sql = " insert into tbl_cart(cartno, fk_userid, fk_pnum, oqty, registerday) "
+	        			 + " values(seq_tbl_cart_cartno.nextval, ?, ?, ?, default) ";
+	        	 
+	        	 pstmt = conn.prepareStatement(sql);
+	        	 pstmt.setString(1, userid); // 문자면 문자열 결합이 되기 때문에 숫자로 바꾸어 주어야 한다. 
+	        	 pstmt.setInt(2, Integer.parseInt(pnum));
+	        	 pstmt.setInt(3, Integer.parseInt(oqty));
+	        	 
+	        	 result = pstmt.executeUpdate(); // 정상이라면 1
+
+	         }
+	         
+	      } finally {
+	         close();
+	      }
+	      
+	      return result;   
+	} // end of  public int addCart(String userid, String pnum, String oqty) throws SQLException
+
+/*	
+	// 로그인한 사용자의 장바구니 목록을 조회하기 
+	@Override
+	public List<CartVO> selectProductCart(String userid) throws SQLException {
+		List<CartVO> cartList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select A.cartno, A.fk_userid, A.fk_pnum, "
+					   + "        B.pname, B.pimage1, B.price, B.saleprice, B.point, A.oqty "
+					   + " from tbl_cart A join tbl_product B "
+					   + " on A.fk_pnum = B.pnum "
+					   + " where A.fk_userid = ? "
+					   + " order by A.cartno desc ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				int cartno = rs.getInt("cartno"); // 컬럼명에는 A.cartno 이런 식으로 쓰면 안된다!!!
+				String fk_userid = rs.getString("fk_userid");
+				int fk_pnum = rs.getInt("fk_pnum");
+				String pname = rs.getString("pname");
+				String pimage1 = rs.getString("pimage1");
+				int price = rs.getInt("price");
+				int saleprice = rs.getInt("saleprice");
+				int point = rs.getInt("point");
+				int oqty = rs.getInt("oqty");  // 주문량
+				
+				ProductVO prodvo = new ProductVO();
+				prodvo.setPnum(fk_pnum);
+				prodvo.setPname(pname);
+				prodvo.setPimage1(pimage1);
+				prodvo.setPrice(price);
+				prodvo.setSaleprice(saleprice);
+				prodvo.setPoint(point);
+				
+				// *** !!! 중요함 !!! *** //
+	            // ProductVO 에 필드를 만들어 주었다.
+	            // prodvo 에 넣어준 것은 단가인데, 이 단가와 수량을 계산해서 총 결제 금액을 알아오는 메소드가 ProductVO 에 있어서 이것을 이용한다.
+				prodvo.setTotalPriceTotalPoint(oqty);
+				// setTotalPriceTotalPoint 메소드를 통해서 주문량만 알면 자동으로 saleprice 와 oqty 를 곱해서 pvo 속에 넣어준다. 
+	            // 총 계산 금액과 적립 포인트를 동시에 알아올 수 있다.
+	            // *** !!! 중요함 !!! *** //
+	            
+				
+				CartVO cvo = new CartVO();
+				cvo.setCartno(cartno);
+				cvo.setUserid(fk_userid);
+				cvo.setPnum(fk_pnum);
+				cvo.setOqty(oqty);
+				cvo.setProd(prodvo);
+				
+				cartList.add(cvo); // 이거는 이미 insert 되어진 목록을 장바구니 보기로 리스트를 select 해오는 것이다.
+	            
+			}// end of while--------------------------------------
+			
+		} finally {
+			close();
+		}
+		
+		return cartList;  // 이때 리스트가 비어있더라도 null 이 아니라 size 가 0 이다.
+	} // end of 
+
 	
+	// 로그인한 사용자의 장바구니에 담긴 주문 총액 합계 및 총 포인트 합계
+	@Override
+	public HashMap<String, String> selectCartSumPricePoint(String userid) throws SQLException {
+
+		HashMap<String, String> sumMap = new HashMap<String, String>();
+		
+		try {
+			conn = ds.getConnection();
+
+			String sql = "select nvl(sum(B.saleprice*A.oqty),0) as SUMTOTALPRICE, \n"+
+						"       nvl(sum(B.point*A.oqty),0) as SUMTOTALPOINT \n"+
+						"from tbl_cart A join tbl_product B\n"+
+						"on A.fk_pnum = B.pnum\n"+
+						"where A.fk_userid = ? \n";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+
+			rs = pstmt.executeQuery();
+			
+			rs.next();// 없더라도 0 이 나오도록 찍어줘야 한다.
+				
+			sumMap.put("SUMTOTALPRICE", rs.getString("SUMTOTALPRICE"));
+			sumMap.put("SUMTOTALPOINT", rs.getString("SUMTOTALPOINT"));
+			
+		} finally {
+			close();
+		}
+	
+		return sumMap;
+	
+	} // end of public HashMap<String, String> selectCartSumPricePoint(String userid) throws SQLException 
+
+	
+	*/
 	
 	
 

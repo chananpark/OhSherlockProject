@@ -26,6 +26,12 @@
 	}
 </style>
 
+
+<script>
+
+
+</script>
+
 <div class="container" id="cartContainer">
 	<div class="mb-4">
 		<h2 style="font-weight: bold">장바구니</h2><br>
@@ -35,42 +41,48 @@
 		<table class="table mt-4">
 			<thead class="thead-light">
 				<tr>
-					<th><input type="checkbox" id="cartSelectAll" name="cartSelectAll" value="cartSelectAll" />
-						<label for="cartSelectAll">&nbsp;전체선택</label></th>
-					<th colspan="2">제품정보</th>
+					<th>
+						<input type="checkbox" id="cartSelectAll" name="cartSelectAll" value="cartSelectAll" />
+						<label for="cartSelectAll">전체선택</label>
+					</th>
+					<th colspan="2">상품정보</th>
 					<th>수량</th>
 					<th>가격</th>
 					<th>처리</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td><input type="checkbox" id="cartSelectOne" name="cartSelectOne" value="cartSelectOne"/></td>
-					<td><img src="https://www.osulloc.com/upload/kr/ko/adminImage/GL/SU/304_20211015203853590OP.png?quality=80" width="100"/></td>
-					<td>스윗 베리 루이보스티</td>
-					<td><input style="width:100px" type="number" value="1" min="1" max="50" required/></td>
-					<td>9,500원</td>
-					<td><p><input class="paymentBtn" type="button" value="바로구매"/></p>
-					<p><input type="button" value="상품삭제"/></p></td>
-				</tr>
-				<tr>
-					<td><input type="checkbox" id="cartSelectOne" name="cartSelectOne" value="cartSelectOne"/></td>
-					<td ><img src="https://www.osulloc.com/upload/kr/ko/adminImage/HB/XA/304_20211026141423508CU.png?quality=80" width="100"/></td>
-					<td>러블리 티 박스</td>
-					<td><input style="width:100px" type="number" value="1" min="1" max="50" required/></td>
-					<td>20,000원</td>
-					<td><p><input class="paymentBtn" type="button" value="바로구매"/></p>
-					<p><input type="button" value="상품삭제"/></p></td>
-				</tr>
-				<tr>
-					<td><input type="checkbox" id="cartSelectOne" name="cartSelectOne" value="cartSelectOne"/></td>
-					<td><img src="https://www.osulloc.com/upload/kr/ko/adminImage/KR/TP/304_20191213162107079MN.png?quality=80" width="100"/></td>
-					<td>웨딩 그린티 20입</td>
-					<td><input style="width:100px" type="number" value="1" min="1" max="50" required/></td>
-					<td>18,400원</td>
-					<td><p><input class="paymentBtn" type="button" value="바로구매"/></p>
-					<p><input type="button" value="상품삭제"/></p></td>
-				</tr>
+				<c:if test="${empty requestScope.cartList}">
+	            	<tr>
+	                	<td colspan="6" align="center">
+	                    	<span style="font-weight: bold;" class="text-secondary mt-1">
+	                        	장바구니에 담긴 상품이 없습니다.
+	                      	</span>
+	                    </td>   
+	               	</tr>
+	            </c:if>
+	               
+	            <c:if test="${not empty requestScope.cartList}">
+               		<c:forEach var="cartvo" items="${requestScope.cartList}" varStatus="status"> 
+						<tr>
+							<td><input type="checkbox" id="pnum${status.index}" name="pnum" value="${cartvo.pnum}"/></td>
+							<td>
+								<a href="<%=ctxPath%>/shop/productView.tea?pnum=${cartvo.pnum}">
+									<img src="<%=ctxPath%>/images/${cartvo.prod.pimage}" width="100"/>
+								</a>
+							</td>
+							<td>${cartvo.prod.pname}</td>
+							<td><input style="width:100px" type="number" value="1" min="1" max="${cartvo.prod.pqty}" required/></td>
+							<td>
+								<fmt:formatNumber value="${cartvo.prod.saleprice}" pattern="###,###" /> 원
+								<input type="hidden" name="price" value="${cartvo.prod.price}"/>
+								<input type="hidden" name="saleprice" value="${cartvo.prod.saleprice}"/>
+							</td>
+							<td><p><input class="paymentBtn" type="button" value="바로구매" onclick="goOrder();"/></p>
+							<p><input type="button" value="상품삭제" onclick="goDel('${cartvo.cartno}')"/></p></td>
+						</tr>
+					</c:forEach>
+				</c:if>
 			</tbody>
 		</table>
 	</div>

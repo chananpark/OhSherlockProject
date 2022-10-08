@@ -225,6 +225,91 @@ ORDER BY  pnum desc
 
 
 
+----------------------장바구니 테이블 생성하기----------------------
+-- 로그인 한 회원만 장바구니 가능
+
+desc tbl_member;
+desc tbl_product;
+
+create table tbl_cart
+ (cartno        number               not null   --  장바구니 번호             
+ ,fk_userid     varchar2(20)         not null   --  사용자ID            
+ ,fk_pnum       number(8)            not null   --  제품번호                
+ ,oqty          number(8) default 0  not null   --  주문량                   
+ ,registerday   date default sysdate            --  장바구니 입력날짜
+ ,constraint PK_tbl_cart_cartno primary key(cartno)
+ ,constraint FK_tbl_cart_fk_userid foreign key(fk_userid) references tbl_member(userid) 
+ ,constraint FK_tbl_cart_fk_pnum foreign key(fk_pnum) references tbl_product(pnum)
+);
+
+ create sequence seq_tbl_cart_cartno
+ start with 1
+ increment by 1
+ nomaxvalue
+ nominvalue
+ nocycle
+ nocache;
+
+ comment on table tbl_cart
+ is '장바구니 테이블';
+
+ comment on column tbl_cart.cartno
+ is '장바구니번호(시퀀스명 : seq_tbl_cart_cartno)';
+
+ comment on column tbl_cart.fk_userid
+ is '회원ID  tbl_member 테이블의 userid 컬럼을 참조한다.';
+
+ comment on column tbl_cart.fk_pnum
+ is '제품번호 tbl_product 테이블의 pnum 컬럼을 참조한다.';
+
+ comment on column tbl_cart.oqty
+ is '장바구니에 담을 제품의 주문량';
+
+ comment on column tbl_cart.registerday
+ is '장바구니에 담은 날짜. 기본값 sysdate';
+
+
+select *
+from user_tab_comments;
+
+select column_name, comments
+from user_col_comments
+where table_name = 'TBL_CART';
+
+select cartno, fk_userid, fk_pnum, oqty, registerday 
+from tbl_cart
+order by cartno asc;
+-- 1 syj1234 60 2 2022-10-06 11:00
+-- 장바구니에 해당 상품이 존재한다면, 장바구니에 추가하더라도 update를 해야한다. 무조건 insert 가 아니다. 
+
+
+select A.cartno, A.fk_userid, A.fk_pnum, 
+       B.pname, B.pimage, B.price, B.saleprice, B.point, A.oqty
+from tbl_cart A join tbl_product B
+on A.fk_pnum = B.pnum
+where A.fk_userid = 'shonyj1'
+order by A.cartno desc;
+
+select nvl(sum(B.saleprice*A.oqty),0) as sumtotalprice, 
+       nvl(sum(B.point*A.oqty),0) as sumtotalpoint 
+from tbl_cart A join tbl_product B
+on A.fk_pnum = B.pnum
+where A.fk_userid = 'syj1234'
+order by A.cartno desc;
+
+-- 장바구니에 없을 경우 null 이 아니라 0 값을 넘겨준다.
+select nvl(sum(B.saleprice*A.oqty),0) as sumtotalprice, 
+       nvl(sum(B.point*A.oqty),0) as sumtotalpoint 
+from tbl_cart A join tbl_product B
+on A.fk_pnum = B.pnum
+where A.fk_userid = 'kangkc'
+order by A.cartno desc;
+
+update tbl_cart set oqty = 1
+where cartno = 5;
+
+select *
+from tbl_cart
 
 
 
