@@ -92,7 +92,6 @@ public class OrderList extends AbstractController {
 			// 주문 목록 select
 			List<OrderVO> orderList = idao.showOrderList(paraMap);
 			
-			
 			// 페이지바
 			String pageBar = "";
 

@@ -1,5 +1,7 @@
 package pca.shop.model;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +15,12 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import common.model.MemberVO;
+import common.model.OrderDetailVO;
 import common.model.OrderVO;
+import common.model.ProductVO;
+import util.security.AES256;
+import util.security.SecretMyKey;
 
 public class OrderDAO implements InterOrderDAO {
 
@@ -22,6 +29,7 @@ public class OrderDAO implements InterOrderDAO {
 	private PreparedStatement pstmt;
 	private ResultSet rs;
 	
+	private AES256 aes;
 	
 	// 생성자
 	public OrderDAO() {
@@ -31,7 +39,12 @@ public class OrderDAO implements InterOrderDAO {
 		    Context envContext  = (Context)initContext.lookup("java:/comp/env");
 		    ds = (DataSource)envContext.lookup("jdbc/myprjoracle");
 		    
+		    aes = new AES256(SecretMyKey.KEY);
+		    
 		} catch(NamingException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -56,7 +69,7 @@ public class OrderDAO implements InterOrderDAO {
 		try {
 			conn = ds.getConnection();
 
-			String sql = "select ceil(count(*)/?) from tbl_order where odrstatus = ? ";
+			String sql = "select ceil(count(*)/?) from tbl_order where odrstatus in ("+paraMap.get("odrstatus")+") ";
 			
 			String colname = paraMap.get("searchType");
 			String searchWord = paraMap.get("searchWord");
@@ -69,11 +82,11 @@ public class OrderDAO implements InterOrderDAO {
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1,Integer.parseInt(paraMap.get("sizePerPage")));
-			pstmt.setString(2,paraMap.get("odrstatus"));
+			//pstmt.setString(2,paraMap.get("odrstatus"));
 			
 			// 검색어가 있다면
 			if(!searchWord.trim().isEmpty()) {
-				pstmt.setString(3, searchWord);
+				pstmt.setString(2, searchWord);
 			}
 			
 			rs = pstmt.executeQuery();
@@ -103,7 +116,7 @@ public class OrderDAO implements InterOrderDAO {
 						 "from \n"+
 						 "    (select odrcode, fk_userid, odrdate, odrtotalprice, odrstatus \n"+
 						 "    from tbl_order\n"+
-						 "    where odrstatus = ? ";
+						 "    where odrstatus in ("+paraMap.get("odrstatus")+") ";
 			
 			String colname = paraMap.get("searchType");
 			String searchWord = paraMap.get("searchWord");
@@ -128,14 +141,12 @@ public class OrderDAO implements InterOrderDAO {
 			
 			// 검색어가 있다면 
 			if(!searchWord.trim().isEmpty()) {
-				pstmt.setString(1, paraMap.get("odrstatus"));
-				pstmt.setString(2, searchWord);
-				pstmt.setInt(3, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
-				pstmt.setInt(4, (currentShowPageNo * sizePerPage));
-			} else { // 검색어가 없다면
-				pstmt.setString(1, paraMap.get("odrstatus"));
+				pstmt.setString(1, searchWord);
 				pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
 				pstmt.setInt(3, (currentShowPageNo * sizePerPage));
+			} else { // 검색어가 없다면
+				pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+				pstmt.setInt(2, (currentShowPageNo * sizePerPage));
 			}
 			
 			rs = pstmt.executeQuery();
@@ -152,6 +163,88 @@ public class OrderDAO implements InterOrderDAO {
 		
 		return orderList;
 		
+	}
+
+	// 주문 상세정보 가져오기
+	@Override
+	public OrderVO getOrderDetail(String odrcode) throws SQLException {
+		
+		OrderVO ovo = null;
+		
+		try {
+			conn = ds.getConnection();
+			
+			// 주문정보 가져오기
+			String sql = "select odrcode, fk_userid, odrdate, recipient_name, recipient_mobile, recipient_postcode, "
+					+ "recipient_address, recipient_detail_address, recipient_extra_address, "
+					+ "odrtotalprice, odrtotalpoint, delivery_cost, odrstatus, delivery_date, "
+					+ "name, mobile, email "
+					+ "from tbl_order join tbl_member "
+					+ "on fk_userid = userid "
+					+ "where odrcode = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, odrcode);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				ovo = new OrderVO(rs.getString(1), rs.getString(2), rs.getString(3).substring(0, 10), 
+						rs.getString(4), aes.decrypt(rs.getString(5)), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9)
+						, rs.getInt(10), rs.getInt(11), rs.getInt(12), rs.getInt(13), rs.getString(14));
+				
+				MemberVO mvo = new MemberVO();
+				mvo.setName(rs.getString(15));
+				mvo.setMobile(aes.decrypt(rs.getString(16)));
+				mvo.setEmail(aes.decrypt(rs.getString(16)));
+				
+				ovo.setMvo(mvo);
+			}
+			
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return ovo;
+	}
+
+	// 주문 상품 목록 가져오기
+	@Override
+	public List<OrderDetailVO> getOrderPrdDetail(String odrcode) throws SQLException {
+		List<OrderDetailVO> orderPrdList = new ArrayList<>();
+
+		try {
+			conn = ds.getConnection();
+
+			String sql = "select odnum, fk_odrcode, fk_pnum, oqty, oprice, opoint, refund, cancel,\n"+
+					"pname\n"+
+					"from tbl_order_detail join tbl_product\n"+
+					"on fk_pnum = pnum\n"+
+					"where fk_odrcode = ?";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, odrcode);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				OrderDetailVO odvo = new OrderDetailVO();
+				odvo = new OrderDetailVO(rs.getInt(1), rs.getString(2), rs.getInt(3), 
+						rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7), rs.getInt(8));
+				
+				ProductVO pvo = new ProductVO();
+				pvo.setPname(rs.getString(9));
+				odvo.setPvo(pvo);
+				
+				orderPrdList.add(odvo);
+			}
+
+		} finally {
+			close();
+		}
+
+		return orderPrdList;
 	}
 
 }

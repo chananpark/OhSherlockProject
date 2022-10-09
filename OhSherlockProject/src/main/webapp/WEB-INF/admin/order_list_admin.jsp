@@ -57,7 +57,7 @@ const searchWord = '${searchWord}';
 	   $("input#odrstatus").val(odrstatus);
 
 		// 처리상태 버튼 표시
-		$(".orderStatus[value="+odrstatus+"]").addClass('clickedBtn');
+		$(".orderStatus[value='"+odrstatus+"']").addClass('clickedBtn');
 		
 		// sizePerPage 값 넣어주기
 	    if(sizePerPage != "") {
@@ -141,7 +141,7 @@ const searchWord = '${searchWord}';
 	 <div class="row bg-light mb-4" style="height: 67px; width: 40%; margin: auto; justify-content: center;">
 		  <button value="1" type="button" class="orderStatus btn btn-light col col-4">배송대기</button>
 		  <button value="2" type="button" class="orderStatus btn btn-light col col-4">배송중</button>
-		  <button value="3" type="button" class="orderStatus btn btn-light col col-4">처리완료</button>
+		  <button value="3,4,5" type="button" class="orderStatus btn btn-light col col-4">처리완료</button>
 	</div>
 	
 	<form name="orderFrm">
@@ -165,12 +165,12 @@ const searchWord = '${searchWord}';
 	  	
 	  	<div class="mt-4" style="display: inline-block; float: right;">
 	  	<%-- 배송대기 상태일 경우 --%>
-	  	<c:if test="${odrstatus == 1 }">
+	  	<c:if test="${odrstatus == '1' }">
 			<input type="checkbox" id="deliverAll"/>&nbsp;<label for="deliverAll">전체선택</label>&nbsp;
 			<input type="button" class="rounded" value="배송하기"/>
 		</c:if>
 		<%-- 배송중 상태일 경우 --%>
-		<c:if test="${odrstatus == 2 }">
+		<c:if test="${odrstatus == '2' }">
 			<input type="checkbox" class="ml-3" id="completeAll"/>&nbsp;<label for="completeAll">전체선택</label>&nbsp;
 			<input type="button" class="rounded" value="배송완료"/>
 		</c:if>
@@ -198,29 +198,38 @@ const searchWord = '${searchWord}';
 					<td class="col"><fmt:formatNumber value="${ovo.odrtotalprice}" pattern="#,###"/>원</td>
 					<td class="col">${ovo.fk_userid}</td>
 					<td class="col col-1">
-						<input type="button" class="rounded" id="orderDetailBtn" onclick="location.href='<%=ctxPath  %>/admin/orderDetail.tea'" value="조회"/>
+						<input type="button" class="rounded" id="orderDetailBtn" 
+						onclick="location.href='<%=ctxPath%>/admin/orderDetail.tea?odrcode=${ovo.odrcode}'" value="조회"/>
 					</td>
 					<td class="col">
 						<%-- 배송대기 상태일 경우 --%>
-						<c:if test="${odrstatus == 1 }">
+						<c:if test="${ovo.odrstatus == '1' }">
 							<input type="checkbox" id="deliver${status.index}" class="deliverChk" onChange="check($(this).attr('class'))"/>&nbsp;
 							<label for="deliver${status.index}">배송하기</label>
 						</c:if>
 						<%-- 배송중 상태일 경우 --%>
-						<c:if test="${odrstatus == 2 }">
+						<c:if test="${ovo.odrstatus == '2' }">
 							<input type="checkbox" id="complete${status.index}" class="completeChk" onChange="check($(this).attr('class'))"/>&nbsp;
 							<label for="complete${status.index}">배송완료</label>
 						</c:if>
-						<c:if test="${odrstatus == 3 }">
+						<c:if test="${ovo.odrstatus == '3' || ovo.odrstatus == '4' || ovo.odrstatus == '5'}">
 							<c:choose>
-								<c:when test="${isCancled }">
-									<span>주문취소</span>
+								<c:when test="${ovo.odrstatus == '4' }">
+									<span class="text-muted">
+									주문취소
+									</span>
 								</c:when>
-								<c:when test="${isReturned }">
-									<span>반품</span>
+								<c:when test="${ovo.odrstatus == '5' }">
+									<span class="text-danger">
+									반품
+									</span>
 								</c:when>
+								<c:otherwise>
+									<span class="text-success">
+									배송완료
+									</span>
+								</c:otherwise>
 							</c:choose>
-							<span>배송완료</span>
 						</c:if>
 					</td>
 				</tr>
