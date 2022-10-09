@@ -404,7 +404,66 @@ public class ProductDAO implements InterProductDAO {
 	// 찜목록 담기 
     // 찜목록 테이블(tbl_Like)에 해당 제품을 담아야 한다.
     // 찜목록 테이블에 해당 제품이 존재하지 않는 경우에는 tbl_Like 테이블에 insert 를 해야하고, 
-    // 찜목록 테이블에 해당 제품이 존재하는 경우에 또 찜목록을 누르는 경우 tbl_Like 테이블에 delete 를 해야한다.
+    // 찜목록 테이블에 해당 제품이 존재하는 경우에 또 찜목록을 누르는 경우 tbl_Like 테이블에 delete 를 한다.
+/*	
+	@Override
+	public int addLike(String userid, String pnum) throws SQLException {
+		int result = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select likeno "+
+					" from tbl_like "+
+					" where fk_userid = ? and fk_pnum = ? ";
+			
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			pstmt.setString(2, pnum);
+			
+			rs = pstmt.executeQuery();  // 조회하면 한개만 나온다.
+			
+			if(rs.next()) {  // 있다라면
+				// 기존 찜하기한 제품을 삭제한다.
+				
+				int likeno = rs.getInt("likeno");  // 조회된 찜하기가 있다라면 찜제품번호를 알아온다. 찜목록번호는 시퀀스.
+				
+				sql = " delete from tbl_like "+
+						" where likeno = ? ";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, likeno);  // 위에서 조회해온 찜목록번호
+				
+				result = pstmt.executeUpdate();
+			}
+			else { // 없다라면
+				// 찜목록에 존재하지 않는 새로운 제품을 넣고자 하는 경우
+				
+				sql = " insert into tbl_like(likeno, fk_userid, fk_pnum, registerday) "+
+					  " values(seq_tbl_like_likeno.nextval, ?, ?, default) ";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, userid);
+				pstmt.setInt(2, Integer.parseInt(pnum));  // 제품번호
+				
+				result = pstmt.executeUpdate();
+				//System.out.println("확인용 ==> " + result);
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return result; 
+	}// end of public int addLike(String userid, String pnum) throws SQLException {}-------------------
+*/	
+	
+	
+	// 찜목록 담기 
+    // 찜목록 테이블(tbl_Like)에 해당 제품을 담아야 한다.
+    // 찜목록 테이블에 해당 제품이 존재하지 않는 경우에는 tbl_Like 테이블에 insert 를 해야하고, 
+    // 찜목록 테이블에 해당 제품이 존재하는 경우에 또 찜목록을 누르는 경우 tbl_Like 테이블에 해당상품을 덮어씌워 update를 한다.
 	@Override
 	public int addLike(String userid, String pnum) throws SQLException {
 		int result = 0;
@@ -438,11 +497,11 @@ public class ProductDAO implements InterProductDAO {
 	         rs = pstmt.executeQuery();  // 조회하면 한개만 나온다.
 	         
 	         if(rs.next()) {  // 있다라면
-	        	 // 기존 찜하기한 제품을 삭제한다.
+	        	 // 기존 찜하기한 제품을 업데이트한다.
 	        	 
 	        	 int likeno = rs.getInt("likeno");  // 조회된 찜하기가 있다라면 찜제품번호를 알아온다. 찜목록번호는 시퀀스.
 	        	 
-	        	 sql = " delete from tbl_like "+
+	        	 sql = " update tbl_like set likeno = likeno "+
 	        		   " where likeno = ? ";
 	        	 
 	        	 pstmt = conn.prepareStatement(sql);
@@ -471,7 +530,7 @@ public class ProductDAO implements InterProductDAO {
 	      return result; 
 	}// end of public int addLike(String userid, String pnum) throws SQLException {}-------------------
 
-
+/*
 	// 로그인한 사용자의 찜목록을 조회하기
 	@Override
 	public List<LikeVO> selectProductLike(String userid) throws SQLException {
@@ -521,6 +580,67 @@ public class ProductDAO implements InterProductDAO {
 		
 		return likeList;  // 리턴할 값이 없으면 0 이 들어온다.
 	}// end of public List<LikeVO> selectProductLike(String userid) throws SQLException {}-------------------
+*/
+	
+	// 로그인한 사용자의 찜목록을 조회하기
+	@Override
+	public List<LikeVO> selectProductLike(String userid) throws SQLException {
+		List<LikeVO> likeList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection(); // 커넥션풀 방식
+			
+			String sql = " select likeno, fk_userid, fk_pnum, pname, pimage, price, saleprice, point, oqty "+
+						 " from tbl_like A join tbl_product B "+
+						 " on A.fk_pnum = B.pnum "+
+						 " where A.fk_userid = ? "+
+						 " order by likeno desc ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {  // 조회한 찜목록이 있다라면
+				
+				int likeno = rs.getInt("likeno");
+				String fk_userid = rs.getString("fk_userid");
+				int fk_pnum = rs.getInt("fk_pnum");
+				String pname = rs.getString("pname");
+				String pimage = rs.getString("pimage");
+				int price = rs.getInt("price");
+				int saleprice = rs.getInt("saleprice");
+				int point = rs.getInt("point");
+				int oqty = rs.getInt("oqty");  // 주문량
+				
+				ProductVO prodvo = new ProductVO();  // join한 제품테이블
+				prodvo.setPnum(fk_pnum);
+				prodvo.setPname(pname);
+				prodvo.setPimage(pimage);
+				prodvo.setPrice(price);
+				prodvo.setSaleprice(saleprice);
+				prodvo.setPoint(point);
+				
+				prodvo.setTotalPriceTotalPoint(oqty); // 총 결제금액, 포인트
+				
+				LikeVO lvo = new LikeVO(); // 찜목록 테이블
+				lvo.setLikeno(likeno);     // 찜목록번호
+				lvo.setUserid(fk_userid);  // 사용자아이디
+				lvo.setPnum(fk_pnum);      // 제품번호
+				lvo.setOqty(oqty);
+				lvo.setProd(prodvo);       // join 한 제품테이블 정보(위에서 set한 정보들을 넣어준다.)
+				
+				likeList.add(lvo);
+			}// end of while---------------------
+			
+		} finally {
+			close();
+		}
+		
+		return likeList;  // 리턴할 값이 없으면 0 이 들어온다.
+	}// end of public List<LikeVO> selectProductLike(String userid) throws SQLException {}-------------------
+	
+	
 
 	
 	// 찜목록 테이블에서 특정제품 1개행을 찜목록에서 비우기
@@ -560,7 +680,7 @@ public class ProductDAO implements InterProductDAO {
 		for (int i = 0; i < likenoArr.length; i++) {
 			params += likenoArr[i];
 			if(i<likenoArr.length-1) {
-				params += ",";
+				params += ",";  // ["1,2"]
 			}
 		}
 		

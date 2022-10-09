@@ -7,18 +7,6 @@
 
 <%@ page import="common.model.ProductVO" %>
 
-<script type="text/javascript">
-
-	$(document).ready(function(){
-		
-		
-		
-		
-	}); // end of $(document).ready
-	
-	
-</script>
-
 <style>
 
 .productListContainer .sidebar {
@@ -134,7 +122,8 @@ input.like {
 
 </style>
 
-<script>
+<script type="text/javascript">
+
 
 let cnum;
 let snum;
@@ -143,6 +132,12 @@ let order;
 let jsonPageBar;
 
 $(()=>{
+	
+	$('i.heart').click(function() {
+		$(this).removeClass("text-secondary");
+		$(this).addClass("text-danger");
+    })
+	
 	cnum = "${cnum}";
 	snum = "${snum}";
 	currentShowPageNo = "${currentShowPageNo}";
@@ -305,38 +300,17 @@ function getPageBar() {
 
 //Function Declaration
 // 찜하기버튼 클릭시
-function goLike(obj) {
-<%-- 	
-	 const index = $("input.like").index(obj); 
-	 const pnum = $("input.pnum").eq(index).val();  // eq() 는 여러 찜하기 배열중에서 선택한 한개를 끄집어오는 것.
-	 
-	 $.ajax({
-		  url:"<%= request.getContextPath()%>/shop/likeAdd.tea",
-		  type:"POST",
-		  data:{"pnum":pnum},
-		  dataType:"JSON",
-		  success:function(json) {
-			  // {n:1}
-			  if(json.n == 1) {  // json.n 객체는 넘겨받은 {n:1} 을 의미함.
-				  alert("찜하기 성공!");
-				  location.href = "likeList.up"; // 삭제가 반영된 장바구니 목록을 보여준다. 장바구니 보기는 페이징처리를 안함.
-			  }
-		  },
-		  error: function(request, status, error){
-			  alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-       }
-	  }); 
-    --%>
-	 
+function goLike(pnum) {
+         
+	const frm = document.prodStorageFrm;
 	
-     const frm = document.prodStorageFrm;
-     
-     frm.method = "POST";
-     frm.action = "<%= request.getContextPath()%>/shop/likeAdd.tea";
-     frm.submit();
-     
-}// end of function goLike()------------------------------
-
+	$("#hidden_pnum").val(pnum);
+	
+	frm.method = "POST";
+	frm.action = "<%= request.getContextPath()%>/shop/likeAdd.tea";
+	frm.submit();
+        
+}// end of function goLike(pnum)------------------------------
 
 
 
@@ -423,12 +397,12 @@ function goLike(obj) {
 			      				<h5 class="card-title" style="font-weight:bold;"><a href="<%= ctxPath %>/shop/productView.tea?pnum=${pvo.pnum}"> ${pvo.pname}</a></h5>
 				      			<p class="card-text"><fmt:formatNumber value="${pvo.price}" pattern="#,###"/>원</p>
 				      		
-				      			<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart"></i></a>
-				      			<input class="card-text text-secondary mr-5 like" type="button" onclick="goLike(this);" value="찜하기" style="padding-left: 0; margin-left: 0;" />
+				      			<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart" onclick="goLike(${pvo.pnum});"></i></a>
+				      			<input class="card-text text-secondary mr-5 like" type="button" onclick="goLike(${pvo.pnum});" value="찜하기" style="padding-left: 0; margin-left: 0;" />
 				      							      			
 				      			<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a>
 				      			<a class="card-text text-secondary">담기</a>
-			      				<input type="hidden" name="pnum" value="${pvo.pnum}" />  <%-- 제품번호--%>
+			      				<input type="hidden" name="pnum" id="hidden_pnum" value="${pvo.pnum}" /> <%-- 제품번호--%>
 				   			</div>
 				  		</div>
 				  		</c:forEach>

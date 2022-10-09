@@ -32,9 +32,9 @@ public class LikeSelectDel extends AbstractController {
 		else if("POST".equalsIgnoreCase(method) && super.checkLogin(request)) {  
 			// POST 방식이면서 로그인을 했을 경우 (올바른경우)
 			
-			String likenojoin = request.getParameter("likenojoin");
+			String likenojoin = request.getParameter("likenojoin");  //  ["1,2"]
 			
-			String[] likenoArr = likenojoin.split("\\,");  // 배열로 만들어줌.
+			String[] likenoArr = likenojoin.split("\\,");  // 배열로 만들어줌.  // ["1","2"]
 			
 			InterProductDAO pdao = new ProductDAO();  // ProductDAO 객체생성
 			
