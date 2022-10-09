@@ -45,15 +45,8 @@ public class PageBarJSON extends AbstractController {
 			pageBar += "<li class='page-item'><button id='1' class='page-link ajaxPage move'><<</button></li>";				
 			pageBar += "<li class='page-item'><button id='"+(pageNo - 1)+"' class='page-link ajaxPage move'><</button></li>";
 		}
-		
-		//while( !(loop > blockSize || pageNo > totalPage)) {
+
 		while(loop <= blockSize && pageNo <= totalPage) {
-			
-			/*
-			 * // 현재 페이지에 active 클래스 넣기 if (pageNo == Integer.parseInt(currentShowPageNo)) {
-			 * pageBar += "<li class='page-item active'><button id='"
-			 * +pageNo+"'class='page-link ajaxPage'>" + pageNo + "</button></li>"; } else
-			 */
 				pageBar += "<li class='page-item'><button id='"+pageNo+"' class='page-link ajaxPage'>" + pageNo + "</button></li>";
 			
 			loop++;
