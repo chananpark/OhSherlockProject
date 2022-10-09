@@ -150,6 +150,20 @@ input.cart { <%-- 여기 --%>
 	
 	
 	//Function Declaration
+	// 찜하기버튼 클릭시
+   	function goLike(pnum) {
+         
+        const frm = document.eventClickFrm;
+        
+        $("#hidden_pnum").val(pnum);
+        
+        frm.method = "POST";
+        frm.action = "<%= request.getContextPath()%>/shop/likeAdd.tea";
+        frm.submit();
+        
+   	}// end of function goLike(pnum)------------------------------
+	
+   	
 	// 장바구니 담기
 	function clickCart(pnum) { <%-- 여기 --%> 
 		
@@ -163,17 +177,7 @@ input.cart { <%-- 여기 --%>
 		
 	} // end of function goCart()
 	
-   	// 찜하기버튼 클릭시
-   	function goLike() {
-         
-        const frm = document.eventClickFrm;
-        
-        
-        frm.method = "POST";
-        frm.action = "<%= request.getContextPath()%>/shop/likeAdd.tea";
-        frm.submit();
-        
-   	}// end of function goLike()------------------------------
+   	
 	
 </script>
 
@@ -282,8 +286,8 @@ input.cart { <%-- 여기 --%>
 				      				</c:otherwise>
 				      			</c:choose>
 				      			
-				      			<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart"></i></a>
-                           		<input class="card-text text-secondary mr-5 like" type="button" onclick="goLike();" value="찜하기" style="padding-left: 0; margin-left: 0;" />
+				      			<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart" onclick="goLike(${pvo.pnum});"></i></a>
+                           		<input class="card-text text-secondary mr-5 like" type="button" onclick="goLike(${pvo.pnum});" value="찜하기" style="padding-left: 0; margin-left: 0;" />
                                                   
                                 <%-- 여기 --%>                      
                            		<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg " onClick="clickCart(${pvo.pnum});"></i></a>

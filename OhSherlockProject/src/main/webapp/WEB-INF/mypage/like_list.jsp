@@ -141,7 +141,7 @@
       }// end of for------------------------------------
       
       console.log("likenoArr 확인용: "+likenoArr);
-      const likenojoin =  likenoArr.join(); // 배열을 문자열로 합쳐주는 것.
+      const likenojoin =  likenoArr.join(); // 배열을 문자열로 합쳐주는 것. ["1","2"] -> ["1,2"]
       const bool = confirm("선택한 상품을 삭제하시겠습니까?");
        
       if(bool) {
@@ -169,15 +169,20 @@
    
    
    // 장바구니 클릭시
-   function goCart() {
-      
-      const frm = document.prodStorageFrm;
-      // 장바구니담기 url 로 수정하기★ oqty 는 없으므로 장바구니 조회에서 oqty 초기값 1로 지정해주어야 함 ★
-      frm.method = "POST";
-      frm.action = "<%= request.getContextPath() %>/cart/cart.tea";
-      frm.submit();
-      
-   }// end of function goCart()------------------------------
+   function clickCart(pnum, likeno) { <%-- 여기 --%> 
+		
+		const frm = document.prodStorageFrm;
+		// 찜목록에서 oqty(수량) 선택은 불가능하므로 DAO(여진) 장바구니조회 메소드에서 oqty 초기값 1로 지정해주어야 함 ★
+		// pnum 와 likeno 값을 넘겨주어 찜목록에서 장바구니 버튼 클릭시 해당상품은 삭제된다.
+		$("#hidden_pnum").val(pnum);
+		$("#hidden_likeno").val(likeno);
+		
+		frm.method = "POST"; 
+		frm.action = "<%=request.getContextPath()%>/cart/cartAdd.tea";
+		frm.submit();
+		
+	} // end of function clickCart(pnum)--------------------
+   
    
    
    
@@ -242,7 +247,9 @@
                      </td>
                      <td>
 							<%-- 장바구니에 추가해주기★ --%>
-							<p><input class="paymentBtn" type="button" value="장바구니"/></p>  
+							<p><input class="paymentBtn" type="button" onClick="clickCart(${likevo.pnum}, ${likevo.likeno});" value="장바구니"/></p>  
+							<input type="hidden" name="pnum" id="hidden_pnum" value="${likevo.pnum}" /> <%-- 제품번호--%>
+							<input type="hidden" name="likeno" id="hidden_likeno" value="${likevo.pnum}" /> <%-- 찜목록번호--%>
 							<%-- 찜목록에서 해당 특정 제품 비우기 --%> 
 							<p><input type="button" onclick="goDel('${likevo.likeno}')" value="상품삭제"/></p> <%-- 찜목록번호(시퀀스)로 구별하여 삭제해준다. ${likevo.likeno} 은 숫자이든 문자이든 적용될 수 있도록 '' 를 꼭 감싸준다. 예: 찜목록번호 234-567 도 인식할 수 있음. --%>
 						</td> 
