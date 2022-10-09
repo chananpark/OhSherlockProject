@@ -205,13 +205,15 @@ odrcode                  not null varchar2(20) -- 주문코드 형식 : o+날짜
 ,recipient_extra_address  not null varchar2(100) 
 ,odrtotalprice            not null number(38)    
 ,odrtotalpoint            not null number 
-,delivery_cost            not null number(4)     
-,payment_method           not null varchar2(10)  
-,delivery_status          not null number(1)     
+,delivery_cost            not null number(4)    
+,delivery_status          not null number(1)  -- 배송상태( 1 : 주문만 받음,  2 : 배송중,  3 : 배송완료)   
 ,delivery_date                     varchar2(20) 
 ,constraint PK_tbl_order_onum primary key(onum)
 ,constraint FK_tbl_order_fk_userid foreign key(fk_userid) references tbl_member(userid)
+,constraint CK_tbl_order_delivery_status CHECK delivery_cost in (1,2,3)
 );
+
+desc tbl_order;
 
 -- 주문코드 시퀀스 --
 create sequence seq_tbl_order
@@ -229,14 +231,33 @@ fk_odrcode not null varchar2(20),
 fk_pnum    not null number(8),    
 oqty       not null number(8),    
 oprice     not null number(8),    
-refund              number(1),    
-exchange            number(1), 
+refund     not null number(1),    
+exchange   not null number(1), 
 constraint PK_tbl_order_detail_odnum primary key(odnum),
 constraint FK_TBL_ORDER_DETAIL_FK_ODRCODE foreign key(FK_ODRCODE) references TBL_ORDER(ODRCODE),
 constraint FK_tbl_order_detail_fk_pnum foreign key(fk_pnum) references tbl_product(pnum),
 constraint CK_tbl_order_detail_refund check (refund in (0,1)),
 constraint CK_tbl_order_detail_exchange check (exchange in (0,1))
 );
+
+-- 주문상세번호 시퀀스 --
+create sequence seq_tbl_order_detail
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+insert into tbl_order_detail(odnum, fk_odrcode, fk_pnum, oqty, Oprice)
+values(seq_tbl_order_detail.nextval, 'O20221014-1', 32, 1, 22000);
+commit;
+
+String sql = "select odnum, fk_pnum, oqty, Oprice, refund, cancel,\n"+
+"pname, pimage\n"+
+"from tbl_order_detail join tbl_product\n"+
+"on fk_pnum = pnum\n"+
+"where fk_odrcode = ?";
 
 -- 리뷰 테이블 --
 create table tbl_review (
@@ -257,3 +278,4 @@ constraint FK_tbl_review_fk_userid foreign key(fk_userid) references tbl_member(
 );
 
 --------------------------------------------------------------------------------
+commit;
