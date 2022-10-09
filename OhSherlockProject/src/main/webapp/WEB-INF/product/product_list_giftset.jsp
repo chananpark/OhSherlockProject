@@ -409,8 +409,8 @@ function goLike(pnum){
 	       		<%-- 본문 끝 --%>
 				
 				<form name="prodStorageFrm">
-				<%-- 제품번호--%>
-				<input type="hidden" name="pnum" id="hidden_pnum" />
+					<%-- 제품번호--%>
+					<input type="hidden" name="pnum" id="hidden_pnum" />
 				</form>
 			</div>
     	    
