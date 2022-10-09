@@ -308,11 +308,11 @@ div#brandStoryText {
 					<li class="nav-item dropdown mr-2">
 					<a class="nav-link dropdown-toggle menufont_size text-dark" href="" id="navbarDropdown" data-toggle="dropdown">티제품</a> <%-- 여기 클릭시 전체 상품으로 연결 --%>
 						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown" id="teaProducts">
-							<a class="dropdown-item" href="<%= ctxPath %>/shop/productAll.tea">전체상품</a> 
-							<a class="dropdown-item" href="<%= ctxPath %>/shop/productBest.tea?snum=2">베스트</a> 
-							<a class="dropdown-item" href="<%= ctxPath %>/shop/productCategory.tea?cnum=1">녹차/말차</a> 
-							<a class="dropdown-item" href="<%= ctxPath %>/shop/productCategory.tea?cnum=2">홍차</a> 
-							<a class="dropdown-item" href="<%= ctxPath %>/shop/productCategory.tea?cnum=3">허브차</a>
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productTea.tea">전체상품</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productTea.tea?snum=2">베스트</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productTea.tea?cnum=1">녹차/말차</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productTea.tea?cnum=2">홍차</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productTea.tea?cnum=3">허브차</a>
 						</div>
 					</li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%= ctxPath %>/shop/productGiftset.tea">기프트세트</a></li>

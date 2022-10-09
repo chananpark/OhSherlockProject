@@ -68,7 +68,7 @@
       const allCnt = $("input:checkbox[name='pnum']").length;  // 체크여부 상관없는 모든 체크박스개수
       document.getElementById("likeCnt").textContent = allCnt;
       
-   }); // end of $(document).ready()--------------------------
+   });// end of $(document).ready()--------------------------
    
       
    // Function declaration
@@ -140,29 +140,36 @@
 
       }// end of for------------------------------------
       
-      console.log("likenoArr 확인용: "+likenoArr);
       const likenojoin =  likenoArr.join(); // 배열을 문자열로 합쳐주는 것. ["1","2"] -> ["1,2"]
-      const bool = confirm("선택한 상품을 삭제하시겠습니까?");
-       
-      if(bool) {
-         
-         $.ajax({
-            url:"<%= request.getContextPath()%>/shop/likeSelectDel.tea",
-            type:"POST",
-            data:{"likenojoin":likenojoin},
-            dataType:"JSON",
-            success:function(json) {
-                // {n:1}
-                console.log("확인: "+json.n);
-               if(json.n == 1) { 
-                  location.href = "likeList.tea"; // 삭제가 반영된 찜목록을 보여준다. 찜목록은 페이징처리를 안함.
-               }
-             },
-            error: function(request, status, error){
-               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-             }
-         });
-         
+      
+      if(likenojoin != "") {
+    	  
+	      const bool = confirm("선택한 상품을 삭제하시겠습니까?");
+	      
+	      if(bool) {
+	         
+	         $.ajax({
+	            url:"<%= request.getContextPath()%>/shop/likeSelectDel.tea",
+	            type:"POST",
+	            data:{"likenojoin":likenojoin},
+	            dataType:"JSON",
+	            success:function(json) {
+	                // {n:1}
+	                console.log("확인: "+json.n);
+	               if(json.n == 1) { 
+	                  location.href = "likeList.tea"; // 삭제가 반영된 찜목록을 보여준다. 찜목록은 페이징처리를 안함.
+	               }
+	             },
+	            error: function(request, status, error){
+	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	             }
+	         });
+	         
+	      }
+    	  
+      }
+      else {
+    	  alert("선택한 상품이 없습니다.");
       }
       
     }// end of function goSelectDel() {}------------------- 

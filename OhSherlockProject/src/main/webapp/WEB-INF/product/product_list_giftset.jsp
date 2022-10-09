@@ -7,7 +7,7 @@
 
 <%@ page import="common.model.ProductVO" %>
 
-<style>
+<style type="text/css">
 
 .productListContainer .sidebar {
   margin: 0;
@@ -124,7 +124,6 @@ input.like {
 
 <script type="text/javascript">
 
-
 let cnum;
 let snum;
 let currentShowPageNo;
@@ -159,7 +158,8 @@ $(()=>{
 		$(".order").removeClass("selected");
 		$(e.target).addClass("selected");
 	}); 
-	 
+	 console.log("cnum: "+cnum);
+	 console.log("snum: "+snum);
 	// 선택된 카테고리 글자색, 굵게
 	 if (cnum == "" && snum == "") {
 		 document.getElementById("allGoods").classList.add("selected");
@@ -218,13 +218,13 @@ function getOrderedList() {
 				html += '<h5 class="card-title" style="font-weight:bold;"><a href="<%= ctxPath %>/shop/productView.tea?pnum=' + item.pnum + '"> '+item.pname+'</a></h5> '+
 	   			'<p class="card-text">'+item.price.toLocaleString('en')+'원</p> '+
 	   			
-	   			
-	   			'<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart"></i></a> '+
-	   			'<a class="card-text text-secondary mr-5">찜하기</a> '+
+	   			' <a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart" onclick="goLike(' + item.pnum + ');"></i></a> '+
+	   			' <input class="card-text text-secondary mr-5 like" type="button" onclick="goLike(' + item.pnum + ');" value="찜하기" style="padding-left: 0; margin-left: 0;" /> '+
 	   							      			
 	   			'<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a> '+
 	   			'<a class="card-text text-secondary">담기</a> '+
-	    			
+	   			'<input type="hidden" name="pnum" id="hidden_pnum" value="' + item.pnum + '" /> '+	
+	   			
 	 			'</div> </div>';
 	      		}); 
 	        	
