@@ -102,11 +102,6 @@ const searchWord = '${searchWord}';
 		   goSearch();
 	   });
 	   
-	   // 배송하기 전체선택/해제
-	   $("#deliverAll").click((e)=>{
-		   const isChecked = $(e.target).prop('checked');
-		   $(".deliverChk").prop('checked', isChecked);
-	   });
 	    
 	}); // end of $(document).ready
 	
@@ -121,15 +116,20 @@ const searchWord = '${searchWord}';
 		
 	// 체크박스 한개 선택시
 	function check(thisClass) {
-
-		if($('input[class='+thisClass+']:checked').length == $('.'+thisClass+'').length){         
-			   $('#deliverAll').prop('checked',true);     
+		if($('input[class='+thisClass+']:checked').length == $('.'+thisClass).length){   
+			$('.all').prop('checked',true);     
 		}
 		else{
-				$('#deliverAll').prop('checked',false);     
+			$('.all').prop('checked',false);     
 		}
-
 	}
+	
+	// 전체선택/해제
+	function checkAll(className, obj){
+	   const isChecked = obj.prop('checked');
+	   $('.'+className).prop('checked', isChecked);
+	}
+
 </script>
 
 <div class="container" id="order_list">
@@ -166,12 +166,12 @@ const searchWord = '${searchWord}';
 	  	<div class="mt-4" style="display: inline-block; float: right;">
 	  	<%-- 배송대기 상태일 경우 --%>
 	  	<c:if test="${odrstatus == '1' }">
-			<input type="checkbox" id="deliverAll"/>&nbsp;<label for="deliverAll">전체선택</label>&nbsp;
+			<input type="checkbox" id="deliverAll" class="all" onChange="checkAll('deliverChk',$(this))"/>&nbsp;<label for="deliverAll">전체선택</label>&nbsp;
 			<input type="button" class="rounded" value="배송하기"/>
 		</c:if>
 		<%-- 배송중 상태일 경우 --%>
 		<c:if test="${odrstatus == '2' }">
-			<input type="checkbox" class="ml-3" id="completeAll"/>&nbsp;<label for="completeAll">전체선택</label>&nbsp;
+			<input type="checkbox" id="completeAll" class="all ml-3" onChange="checkAll('completeChk',$(this))"/>&nbsp;<label for="completeAll">전체선택</label>&nbsp;
 			<input type="button" class="rounded" value="배송완료"/>
 		</c:if>
 		</div>
@@ -199,7 +199,7 @@ const searchWord = '${searchWord}';
 					<td class="col">${ovo.fk_userid}</td>
 					<td class="col col-1">
 						<input type="button" class="rounded" id="orderDetailBtn" 
-						onclick="location.href='<%=ctxPath%>/admin/orderDetail.tea?odrcode=${ovo.odrcode}'" value="조회"/>
+						onclick="location.href='<%=ctxPath%>/admin/orderDetail.tea?odrcode=${ovo.odrcode}&goBackURL=${goBackURL}'" value="조회"/>
 					</td>
 					<td class="col">
 						<%-- 배송대기 상태일 경우 --%>
@@ -221,7 +221,7 @@ const searchWord = '${searchWord}';
 								</c:when>
 								<c:when test="${ovo.odrstatus == '5' }">
 									<span class="text-danger">
-									반품
+									환불
 									</span>
 								</c:when>
 								<c:otherwise>

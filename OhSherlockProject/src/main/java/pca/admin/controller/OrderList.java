@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import common.controller.AbstractController;
 import common.model.MemberVO;
 import common.model.OrderVO;
+import my.util.MyUtil;
 import pca.shop.model.InterOrderDAO;
 import pca.shop.model.OrderDAO;
 
@@ -137,6 +138,10 @@ public class OrderList extends AbstractController {
 			request.setAttribute("searchType", searchType);
 			request.setAttribute("searchWord", searchWord);
 			request.setAttribute("orderList", orderList);
+			
+			String currentURL = MyUtil.getCurrentURL(request);
+			currentURL = currentURL.replaceAll("&", " ");
+			request.setAttribute("goBackURL", currentURL);
 			
 			super.setViewPage("/WEB-INF/admin/order_list_admin.jsp");
 		

@@ -41,6 +41,9 @@ public class OrderDetail extends AbstractController {
 			request.setAttribute("ovo", ovo);
 			request.setAttribute("orderPrdList", orderPrdList);
 			request.setAttribute("refundSum", refundSum);
+			
+			String goBackURL = request.getParameter("goBackURL");
+			request.setAttribute("goBackURL", goBackURL);
 
 			super.setViewPage("/WEB-INF/admin/order_detail_admin.jsp");
 		}

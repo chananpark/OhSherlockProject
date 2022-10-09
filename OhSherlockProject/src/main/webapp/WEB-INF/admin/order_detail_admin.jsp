@@ -26,6 +26,8 @@ $(()=>{
 		$("#sum").text(sum);
 	}
 
+	goBackURL = "${requestScope.goBackURL}";
+	goBackURL = goBackURL.replace(/ /gi,"&");
 });
 </script>
 
@@ -113,7 +115,7 @@ $(()=>{
 						주문취소
 					</c:when>
 					<c:when test="${ovo.odrstatus == '5' }">
-						반품
+						환불
 					</c:when>
 				</c:choose>
 				</td>
@@ -147,7 +149,7 @@ $(()=>{
 				<c:choose>
 					<c:when test="${odvo.refund == 1}">
 						<span class="text-danger">
-						반품
+						환불
 						</span>
 					</c:when>
 					<c:when test="${odvo.cancel == 1}">
@@ -193,7 +195,7 @@ $(()=>{
 	</c:if>
 	<c:if test="${empty ovo }">해당 주문 내역이 없습니다.</c:if>
 	<div class="text-right" style="width:90%; margin: 0 auto;">	
-		<button type="button" class="btn rounded" onclick="location.href='<%= ctxPath %>/admin/orderList.tea'">목록보기</button>
+		<button type="button" class="btn rounded" onclick="location.href='<%= ctxPath %>'+goBackURL">목록보기</button>
 	</div>
 </div>
 <%@ include file="../footer.jsp"%>
