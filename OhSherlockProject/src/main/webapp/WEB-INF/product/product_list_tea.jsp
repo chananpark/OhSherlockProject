@@ -121,14 +121,15 @@ let jsonPageBar;
 
 $(document).ready(function(){
 	
-	$('i.heart').click(function() {
-		$(this).removeClass("text-secondary");
-		$(this).addClass("text-danger");
-    })
-	
 	cnum = "${cnum}";  // 카테고리번호
 	snum = "${snum}";  // 스펙번호(best)
 	currentShowPageNo = "${currentShowPageNo}";
+	
+	// 찜하기 클릭시 색깔 변경
+	$('i.heart').click(function() {
+		$(this).removeClass("text-secondary");
+		$(this).addClass("text-danger");
+    });
 	
 	// 정렬 버튼 클릭시 이벤트
 	 $(".order").click((e)=>{
@@ -163,7 +164,6 @@ $(document).ready(function(){
 
 //상품 목록 가져오기
 function getOrderedList() {
-	 //console.log("${requestScope.currentCatePage}");
 	
 	 $.ajax({
            url: "<%= ctxPath%>/shop/productTeaJSON.tea",
@@ -211,11 +211,10 @@ function getOrderedList() {
     				}
     				
     				html += ' <a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart" onclick="goLike(' + item.pnum + ');"></i></a> '+
-		    	   			' <input class="card-text text-secondary mr-5 like" type="button" onclick="goLike(' + item.pnum + ');" value="찜하기" style="padding-left: 0; margin-left: 0;" /> '+
+    	   					' <a class="card-text text-secondary mr-5 like" onclick="goLike(' + item.pnum + ');">찜하기</a> '+
 		    	   							      			
 		    	   			' <a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a> '+
 		    	   			' <a class="card-text text-secondary">담기</a> '+
-		    	   			' <input type="hidden" name="pnum" id="hidden_pnum" value="' + item.pnum + '" /> '+
 		    	    			
 		    	 			' </div> </div>';
     	      		}); 
@@ -224,7 +223,7 @@ function getOrderedList() {
 		        else {
 		        	html = "상품 준비중입니다.";
 		        }
-		        //페이지 구간 하나 정해주고 $("#페이지").html(pageinfo);
+           	
    	         	$("#teaProductList").html(html); 
    	         	
    	    		$('i.heart').click(function() {
@@ -302,40 +301,39 @@ function goLike(pnum) {
 
 </script>
 
-<form name="prodStorageFrm">
-	<div class="container productListContainer">
-	   <div><img src= "../images/tea_header_img.png" width=100%/></div>
-	    
-	   <div class="row">
-	     	<%-- 사이드 메뉴 시작 --%>
-	      	<div class="col-md-2" id="sideinfo" style="padding-left: 2%;  margin-top: 1.8%;">
-			<div style="text-align: left; padding: 5%;">
-	           	<span class="h4" style="font-weight:bold;">티 제품</span>
-	        	</div>
-	        	<div style="text-align: left; padding: 4%; margin-left:10%;">
-	           	<a id="allGoods" href="<%= ctxPath %>/shop/productTea.tea">전체 상품</a>
-	        	</div>
-	        	<div style="text-align: left; padding: 4%; margin-left:10%;">
-	           	<a id="bestGoods" href="<%= ctxPath %>/shop/productTea.tea?snum=2">베스트</a>
-	        	</div>
-	        	<div style="text-align: left; padding: 4%; margin-left:10%;">
-	           	<a id="categoryGoods1" href="<%= ctxPath %>/shop/productTea.tea?cnum=1">녹차/말차</a>
-	        	</div>
-	        	<div style="text-align: left; padding: 4%; margin-left:10%;">
-	           	<a id="categoryGoods2" href="<%= ctxPath %>/shop/productTea.tea?cnum=2">홍차</a>
-	        	</div>
-	        	<div style="text-align: left; padding: 4%; margin-left:10%;">
-	           	<a id="categoryGoods3" href="<%= ctxPath %>/shop/productTea.tea?cnum=3">허브차</a>
-	        	</div>
-	      	</div>
-	  	    <%-- 사이드 메뉴 끝 --%>
-	  	    
-	      	<div class="col-md-10" id="maininfo" style="padding: 2.5%;">
-	      		<%-- 본문 시작 --%>
+<div class="container productListContainer">
+   <div><img src= "../images/tea_header_img.png" width=100%/></div>
+    
+   <div class="row">
+     	<%-- 사이드 메뉴 시작 --%>
+      	<div class="col-md-2" id="sideinfo" style="padding-left: 2%;  margin-top: 1.8%;">
+		<div style="text-align: left; padding: 5%;">
+           	<span class="h4" style="font-weight:bold;">티 제품</span>
+        	</div>
+        	<div style="text-align: left; padding: 4%; margin-left:10%;">
+           	<a id="allGoods" href="<%= ctxPath %>/shop/productTea.tea">전체 상품</a>
+        	</div>
+        	<div style="text-align: left; padding: 4%; margin-left:10%;">
+           	<a id="bestGoods" href="<%= ctxPath %>/shop/productTea.tea?snum=2">베스트</a>
+        	</div>
+        	<div style="text-align: left; padding: 4%; margin-left:10%;">
+           	<a id="categoryGoods1" href="<%= ctxPath %>/shop/productTea.tea?cnum=1">녹차/말차</a>
+        	</div>
+        	<div style="text-align: left; padding: 4%; margin-left:10%;">
+           	<a id="categoryGoods2" href="<%= ctxPath %>/shop/productTea.tea?cnum=2">홍차</a>
+        	</div>
+        	<div style="text-align: left; padding: 4%; margin-left:10%;">
+           	<a id="categoryGoods3" href="<%= ctxPath %>/shop/productTea.tea?cnum=3">허브차</a>
+        	</div>
+      	</div>
+  	    <%-- 사이드 메뉴 끝 --%>
+  	    
+      	<div class="col-md-10" id="maininfo" style="padding: 2.5%;">
+      		<%-- 본문 시작 --%>
 			<div id="maincontent">
-	    	    <%-- 본문 내부 상단 바 시작 --%>
-					<span class="text-dark h5 subject" style="font-weight:bold;">${requestScope.name}</span> <%-- 소제목 --%>
-				
+    	    	<%-- 본문 내부 상단 바 시작 --%>
+				<span class="text-dark h5 subject" style="font-weight:bold;">${requestScope.name}</span> <%-- 소제목 --%>
+			
 				<%-- 정렬 선택 창 --%>
 				<span id="order_list">
 					<button type="button" class="order selected" id="pnum desc"">신상품순</button>
@@ -349,9 +347,9 @@ function goLike(pnum) {
 					<button type="button" class="order" id="orederCnt desc">판매순</button>
 				</span>
 	    	    <%-- 본문 내부 상단 바 끝 --%>
-				
+			
 				<hr>
-	
+
 				<%-- === 특정 카테고리에 속하는 제품들을 페이지바를 사용한 페이징 처리하여 조회(select) 해온 결과 === --%>
 				<div>
 				  <c:if test="${not empty requestScope.productList}">  <%-- productList 비어있지 않을경우 --%>
@@ -399,12 +397,12 @@ function goLike(pnum) {
 				      				</c:otherwise>
 				      			</c:choose>
 				      			
-				      			<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart" onclick="goLike(${pvo.pnum});"></i></a>
-				      			<input class="card-text text-secondary mr-5 like" type="button" onclick="goLike(${pvo.pnum});" value="찜하기" style="padding-left: 0; margin-left: 0;" />
+				      			<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart" onclick="goLike(${pvo.pnum})"></i></a>
+				      			<a class="card-text text-secondary mr-5 like" onclick="goLike(${pvo.pnum})">찜하기</a>
 				      							      			
 				      			<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a>
 				      			<a class="card-text text-secondary">담기</a>
-			      				<input type="hidden" name="pnum" id="hidden_pnum" value="${pvo.pnum}" /> <%-- 제품번호--%>
+				      			
 				   			</div>
 				  		</div>
 				  		</c:forEach>
@@ -418,20 +416,24 @@ function goLike(pnum) {
 				  	 <%-- ★ 여기까지! --%>
 				</div>
 				<%-- 상품 목록 끝 --%>	
-				
+			
 				<%-- 페이징 --%>
 				<div id="div_pageBar">
 					<nav id="nav_pageBar" aria-label="Page navigation example">
 				    	<ul class="pagination justify-content-center" style="margin: auto; margin-top: 100px;">${pageBar}</ul>  <%-- 하단에 페이지바 생성함. MallByCategory.java 클래스로 부터 받아옴. --%>
 					</nav>
 				</div>
-			</div>
-	      	<%-- 본문 끝 --%>
+				</div>
+		      	<%-- 본문 끝 --%>
+				
+				<form name="prodStorageFrm">
+					<%-- 제품번호--%>
+					<input type="hidden" name="pnum" id="hidden_pnum" />
+				</form>
 			
-		    </div>  
-	   </div>
-	</div>
-</form>
+      	</div>  
+   </div>
+</div>
 
 <%@ include file="../footer.jsp"%>
 
