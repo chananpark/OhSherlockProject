@@ -46,6 +46,7 @@ public class Prod_mgmt_editEnd extends AbstractController {
 				
 			// === 첨부 이미지 파일, 제품설명서 파일을 올렸으니 그 다음으로 제품정보를 (제품명, 정가, 제품수량,...) DB의 tbl_product 테이블에 insert 를 해주어야 한다.  ===
 			// 새로운 제품 등록시 form 태그에서 입력한 값들을 얻어오기
+			int pnum = Integer.parseInt(mtrequest.getParameter("pnum")) ;
 			String fk_cnum = mtrequest.getParameter("fk_cnum");
 			String pname = mtrequest.getParameter("pname");
 			
@@ -55,7 +56,7 @@ public class Prod_mgmt_editEnd extends AbstractController {
             String price = mtrequest.getParameter("price");
             String saleprice = mtrequest.getParameter("saleprice");
             String fk_snum = mtrequest.getParameter("fk_snum");
-			
+            
            // !!!! 크로스 사이트 스크립트 공격에 대응하는 안전한 코드(시큐어코드) 작성하기 !!!! // 
            String psummary = mtrequest.getParameter("psummary");
            psummary = psummary.replaceAll("<", "&lt;");
@@ -74,16 +75,9 @@ public class Prod_mgmt_editEnd extends AbstractController {
            
            ProductVO pvo = new ProductVO(); 
            pvo.setFk_cnum(Integer.parseInt(fk_cnum));
-           
-           if(fk_snum != null) {
-        	   pvo.setFk_snum(Integer.parseInt(fk_snum));
-           }
-           
+    	   pvo.setFk_snum(Integer.parseInt(fk_snum));
            pvo.setPname(pname);
-           
-           if(psummary != null) {
-        	   pvo.setPsummary(psummary);
-           } 
+    	   pvo.setPsummary(psummary);
            pvo.setPcontent(pcontent);
            pvo.setPqty(Integer.parseInt(pqty));
            pvo.setPrice(Integer.parseInt(price));
@@ -112,13 +106,19 @@ public class Prod_mgmt_editEnd extends AbstractController {
 	           for(int i=0; i<attachCount; i++) {
 	        	   String attachFileName = mtrequest.getFilesystemName("attach"+i);
 	        	   
-	        	   //pdao.product_imagefile_Insert(pnum, attachFileName);
+	        	   pdao.product_imagefile_Insert(pnum, attachFileName);
 	        	   							  // pnum 은 위에서 채번해온 제품번호이다.
 
 	           }// end of for -----------
 	           
+	       //  *** 현재 페이지를 돌아갈 페이지(goBackURL)로 주소 지정하기 *** //
+				String goBackURL = request.getParameter("goBackURL");
+		//		System.out.println("확인용 : " + goBackURL); 
+
+			   request.setAttribute("goBackURL", goBackURL); // 공백이 있는 상태 그대로 전달해준다.
+			   
 	           message = "제품수정 성공!!";
-	           loc = request.getContextPath()+"/admin/prod_mgmt_edit.tea";
+	           loc = request.getContextPath()+"/admin/prod_mgmt_list.tea";
 	           
            }catch(SQLException e) {
         	   e.printStackTrace();

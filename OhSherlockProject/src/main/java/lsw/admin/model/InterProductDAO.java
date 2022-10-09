@@ -43,7 +43,16 @@ public interface InterProductDAO {
 
 	// 관리자가 제품정보을 수정하는 메소드
 	int productUpdate(ProductVO pvo)throws SQLException;
-		
+
+	// 관리자가 제품삭제하는 메소드
+	int prod_mgmt_delete(String pnum)throws SQLException;
+	
+	// 제품번호를 가지고서 해당 제품의 추가된 이미지 정보를 조회해오기
+	List<HashMap<String, String>> getImagesByPnum(String pnum)throws SQLException;
+	
+	// 추가이미지테이블에서 특정 이미지 삭제
+	int prod_imgfile_delete(String imgfileno)throws SQLException;
+
 	
 
 }

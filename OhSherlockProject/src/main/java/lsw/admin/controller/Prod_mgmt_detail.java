@@ -1,5 +1,9 @@
 package lsw.admin.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -53,7 +57,11 @@ public class Prod_mgmt_detail extends AbstractController {
 				InterProductDAO pdao = new ProductDAO();
 				ProductVO product_select_one = pdao.product_list_detail(pnum);
 				
+				// 제품번호를 가지고서 해당 제품의 추가된 이미지 정보를 조회해오기
+				List<HashMap<String, String>> imgList = pdao.getImagesByPnum(pnum);
+				
 				request.setAttribute("product_select_one", product_select_one);
+				request.setAttribute("imgList", imgList);
 				
 			//  *** 현재 페이지를 돌아갈 페이지(goBackURL)로 주소 지정하기 *** //
 				String goBackURL = request.getParameter("goBackURL");

@@ -150,3 +150,5 @@ where pnum = 12
 update tbl_product set fk_snum = null
 where pnum = 4;
 
+delete from tbl_product
+where pnum = 101;
