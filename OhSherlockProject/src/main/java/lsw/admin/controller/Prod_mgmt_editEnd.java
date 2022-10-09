@@ -74,8 +74,9 @@ public class Prod_mgmt_editEnd extends AbstractController {
            InterProductDAO pdao = new ProductDAO();
            
            ProductVO pvo = new ProductVO(); 
+           pvo.setPnum(pnum);
            pvo.setFk_cnum(Integer.parseInt(fk_cnum));
-    	   pvo.setFk_snum(Integer.parseInt(fk_snum));
+    	   // pvo.setFk_snum(Integer.parseInt(fk_snum));
            pvo.setPname(pname);
     	   pvo.setPsummary(psummary);
            pvo.setPcontent(pcontent);
