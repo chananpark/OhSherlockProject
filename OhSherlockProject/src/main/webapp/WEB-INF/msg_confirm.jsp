@@ -5,9 +5,9 @@
 
    if (confirm("${requestScope.message}") == true){    //확인
 		location.href="${requestScope.loc}"; // 페이지 이동
-	}else{   //취소
+   } else{   //취소
 		location.href="javascript:history.back();";
-	}
+   }
    
    opener.location.reload(true); // 부모창(opener) 을 새로고침
    self.close();  // 나의정보수정하기 페이지 닫기

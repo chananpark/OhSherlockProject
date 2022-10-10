@@ -1,10 +1,13 @@
 package syj.shop.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
+import common.model.LikeVO;
 import common.model.MemberVO;
 import syj.shop.model.InterProductDAO;
 import syj.shop.model.ProductDAO;
@@ -39,9 +42,13 @@ public class CartAdd extends AbstractController {
 				String oqty = request.getParameter("oqty"); // 주문량
 				
 				// 상품 목록에서 넘겨준 경우
+				//System.out.println("확인용 pnum => "+ pnum);
+				
+				// 상품목록에서 넘겨준 경우
 				if(oqty == null) {
 					oqty = "1";
 				}
+				//System.out.println("확인용 oqty => "+ oqty);
 				
 				HttpSession session = request.getSession();
 				MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
@@ -53,16 +60,38 @@ public class CartAdd extends AbstractController {
 				
 				if( n == 1 ) {
 					// 장바구니에 insert/update 가 정상적으로 되었을 경우
-					request.setAttribute("message", "장바구니에 상품을 담았습니다. 장바구니로 이동하시겠습니까?");
-					request.setAttribute("loc", request.getContextPath() + "/cart/cart.tea");
-					// 장바구니 목록 보여주기 페이지로 이동
+					
+					String likeno = request.getParameter("likeno");
+					if(likeno != null) {
+						
+						// 찜목록 테이블에서 장바구니 담기 성공시 특정제품 1개행을 찜목록에서 비우기(예은)
+						n = pdao.delLike(likeno);  // 성공시 n==1
+						
+						request.setAttribute("message", "장바구니에 상품을 담았습니다. 장바구니로 이동하시겠습니까?");
+						request.setAttribute("loc", request.getContextPath() + "/cart/cart.tea");
+						// 장바구니 목록 보여주기 페이지로 이동
+						
+						super.setRedirect(false);
+						super.setViewPage("/WEB-INF/msg_confirm_likeList.jsp");
+					}
+					else {
+						request.setAttribute("message", "장바구니에 상품을 담았습니다. 장바구니로 이동하시겠습니까?");
+						request.setAttribute("loc", request.getContextPath() + "/cart/cart.tea");
+						// 장바구니 목록 보여주기 페이지로 이동
+						
+						super.setRedirect(false);
+						super.setViewPage("/WEB-INF/msg_confirm.jsp");
+					}
+					
+					
 				} else {
 					request.setAttribute("message", "장바구니에 상품 담기를 실패하였습니다.");
 					request.setAttribute("loc", "javascript:history.back()");
+					
+					super.setRedirect(false);
+					super.setViewPage("/WEB-INF/msg_confirm.jsp");
 				}
 				
-				super.setRedirect(false);
-		        super.setViewPage("/WEB-INF/msg_confirm.jsp");
 				
 			} else {
 				// get 방식이라면

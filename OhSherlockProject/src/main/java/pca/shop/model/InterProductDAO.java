@@ -33,4 +33,5 @@ public interface InterProductDAO {
 	// 메인에 표시할 상품 4개
 	List<ProductVO> selectTodayProducts();
 
+
 }

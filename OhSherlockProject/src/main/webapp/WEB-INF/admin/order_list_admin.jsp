@@ -57,7 +57,7 @@ const searchWord = '${searchWord}';
 	   $("input#odrstatus").val(odrstatus);
 
 		// 처리상태 버튼 표시
-		$(".orderStatus[value="+odrstatus+"]").addClass('clickedBtn');
+		$(".orderStatus[value='"+odrstatus+"']").addClass('clickedBtn');
 		
 		// sizePerPage 값 넣어주기
 	    if(sizePerPage != "") {
@@ -102,11 +102,6 @@ const searchWord = '${searchWord}';
 		   goSearch();
 	   });
 	   
-	   // 배송하기 전체선택/해제
-	   $("#deliverAll").click((e)=>{
-		   const isChecked = $(e.target).prop('checked');
-		   $(".deliverChk").prop('checked', isChecked);
-	   });
 	    
 	}); // end of $(document).ready
 	
@@ -121,15 +116,20 @@ const searchWord = '${searchWord}';
 		
 	// 체크박스 한개 선택시
 	function check(thisClass) {
-
-		if($('input[class='+thisClass+']:checked').length == $('.'+thisClass+'').length){         
-			   $('#deliverAll').prop('checked',true);     
+		if($('input[class='+thisClass+']:checked').length == $('.'+thisClass).length){   
+			$('.all').prop('checked',true);     
 		}
 		else{
-				$('#deliverAll').prop('checked',false);     
+			$('.all').prop('checked',false);     
 		}
-
 	}
+	
+	// 전체선택/해제
+	function checkAll(className, obj){
+	   const isChecked = obj.prop('checked');
+	   $('.'+className).prop('checked', isChecked);
+	}
+
 </script>
 
 <div class="container" id="order_list">
@@ -139,9 +139,10 @@ const searchWord = '${searchWord}';
 	
 	<%-- 탭 버튼 --%>
 	 <div class="row bg-light mb-4" style="height: 67px; width: 40%; margin: auto; justify-content: center;">
-		  <button value="1" type="button" class="orderStatus btn btn-light col col-4">배송대기</button>
-		  <button value="2" type="button" class="orderStatus btn btn-light col col-4">배송중</button>
-		  <button value="3" type="button" class="orderStatus btn btn-light col col-4">처리완료</button>
+		  <button value="1" type="button" class="orderStatus btn btn-light col col-3">배송대기</button>
+		  <button value="2" type="button" class="orderStatus btn btn-light col col-3">배송중</button>
+		  <button value="refundRequest" type="button" class="orderStatus btn btn-light col col-3">환불요청</button>
+		  <button value="3" type="button" class="orderStatus btn btn-light col col-3">처리완료</button>
 	</div>
 	
 	<form name="orderFrm">
@@ -165,14 +166,19 @@ const searchWord = '${searchWord}';
 	  	
 	  	<div class="mt-4" style="display: inline-block; float: right;">
 	  	<%-- 배송대기 상태일 경우 --%>
-	  	<c:if test="${odrstatus == 1 }">
-			<input type="checkbox" id="deliverAll"/>&nbsp;<label for="deliverAll">전체선택</label>&nbsp;
-			<input type="button" class="rounded" value="배송하기"/>
+	  	<c:if test="${odrstatus == '1' }">
+			<input type="checkbox" id="deliverAll" class="all" onChange="checkAll('deliverChk',$(this))"/>&nbsp;<label for="deliverAll">전체선택</label>&nbsp;
+			<input type="button" class="rounded" value="발송처리"/>
 		</c:if>
 		<%-- 배송중 상태일 경우 --%>
-		<c:if test="${odrstatus == 2 }">
-			<input type="checkbox" class="ml-3" id="completeAll"/>&nbsp;<label for="completeAll">전체선택</label>&nbsp;
+		<c:if test="${odrstatus == '2' }">
+			<input type="checkbox" id="completeAll" class="all ml-3" onChange="checkAll('completeChk',$(this))"/>&nbsp;<label for="completeAll">전체선택</label>&nbsp;
 			<input type="button" class="rounded" value="배송완료"/>
+		</c:if>
+		<%-- 환불요청 상태일 경우 --%>
+		<c:if test="${odrstatus == 'refundRequest' }">
+			<input type="checkbox" id="refundAll" class="all ml-3" onChange="checkAll('refundChk',$(this))"/>&nbsp;<label for="refundAll">전체선택</label>&nbsp;
+			<input type="button" class="rounded" value="환불처리"/>
 		</c:if>
 		</div>
   	</form>		
@@ -182,10 +188,11 @@ const searchWord = '${searchWord}';
 			<thead class="thead-light">
 				<tr class="row">
 					<th class="col">주문일자</th>
-					<th class="col col-3">주문번호</th>
+					<th class="col">주문번호</th>
+					<th class="col">상품명</th>
 					<th class="col">주문금액</th>
 					<th class="col">주문자</th>
-					<th class="col col-1">주문상세</th>
+					<th class="col">주문상세</th>
 					<th class="col">주문처리</th>
 				</tr>
 			</thead>
@@ -194,41 +201,45 @@ const searchWord = '${searchWord}';
 			<c:forEach items="${orderList }" var="ovo" varStatus="status">
 				<tr class="row">
 					<td class="col">${ovo.odrdate}</td>
-					<td class="col col-3">${ovo.odrcode}</td>
-					<td class="col"><fmt:formatNumber value="${ovo.odrtotalprice}" pattern="#,###"/>원</td>
+					<td class="col">${ovo.odrcode}</td>
+					<td class="col">${ovo.odvo.pvo.pname}</td>
+					<td class="col"><fmt:formatNumber value="${ovo.odvo.oprice}" pattern="#,###"/>원</td>
 					<td class="col">${ovo.fk_userid}</td>
-					<td class="col col-1">
-						<input type="button" class="rounded" id="orderDetailBtn" onclick="location.href='<%=ctxPath  %>/admin/orderDetail.tea'" value="조회"/>
+					<td class="col">
+						<input type="button" class="rounded" id="orderDetailBtn" 
+						onclick="location.href='<%=ctxPath%>/admin/orderDetail.tea?odrcode=${ovo.odrcode}&goBackURL=${goBackURL}'" value="조회"/>
 					</td>
 					<td class="col">
-						<%-- 배송대기 상태일 경우 --%>
-						<c:if test="${odrstatus == 1 }">
+						<c:choose>
+						<c:when test="${ovo.odrstatus == '1' }">
 							<input type="checkbox" id="deliver${status.index}" class="deliverChk" onChange="check($(this).attr('class'))"/>&nbsp;
-							<label for="deliver${status.index}">배송하기</label>
-						</c:if>
-						<%-- 배송중 상태일 경우 --%>
-						<c:if test="${odrstatus == 2 }">
+							<label for="deliver${status.index}">발송처리</label>
+						</c:when>
+						<c:when test="${ovo.odrstatus == '2' }">
 							<input type="checkbox" id="complete${status.index}" class="completeChk" onChange="check($(this).attr('class'))"/>&nbsp;
 							<label for="complete${status.index}">배송완료</label>
-						</c:if>
-						<c:if test="${odrstatus == 3 }">
-							<c:choose>
-								<c:when test="${isCancled }">
-									<span>주문취소</span>
-								</c:when>
-								<c:when test="${isReturned }">
-									<span>반품</span>
-								</c:when>
-							</c:choose>
+						</c:when>
+						<c:when test="${odrstatus == 'refundRequest' }">
+							<input type="checkbox" id="refund${status.index}" class="refundChk" onChange="check($(this).attr('class'))"/>&nbsp;
+							<label for="refund${status.index}">환불처리</label>
+						</c:when>
+						<c:when test="${ovo.odvo.refund == 1}">
+							<span class="text-danger">환불완료</span>
+						</c:when>
+						<c:when test="${ovo.odvo.cancel == 1}">
+							<span class="text-info">주문취소</span>
+						</c:when>
+						<c:otherwise>
 							<span>배송완료</span>
-						</c:if>
+						</c:otherwise>
+						</c:choose>
 					</td>
 				</tr>
 			</c:forEach>	
 			</c:if>
 			<c:if test="${empty orderList }">
 			<tr>
-			<td colspan="6">주문 목록이 없습니다.</td>
+			<td colspan="6" class="pt-4">주문 목록이 없습니다.</td>
 			</tr>
 			</c:if>
 			</tbody>

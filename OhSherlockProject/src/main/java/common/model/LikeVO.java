@@ -1,4 +1,4 @@
-package lye.product.model;
+package common.model;
 
 import common.model.ProductVO;
 
@@ -7,10 +7,12 @@ public class LikeVO {  // (오라클로 말하면 제품테이블의 자식테�
 	private int likeno;      //  찜목록 번호        
     private String userid;   //  사용자ID            
     private int pnum;        //  제품번호                
+    private int oqty;        //  주문량 
     
     private ProductVO prod;  // 제품정보객체 (오라클로 말하면 부모테이블인 제품테이블)
 
-    public LikeVO() {} // 기본생성자
+
+	public LikeVO() {} // 기본생성자
     
 	public LikeVO(int likeno, String userid, int pnum, ProductVO prod) { // 파라미터 있는 생성자
 		this.likeno = likeno;
@@ -50,6 +52,14 @@ public class LikeVO {  // (오라클로 말하면 제품테이블의 자식테�
 	public void setProd(ProductVO prod) {
 		this.prod = prod;
 	}
+	
+	public int getOqty() {
+		return oqty;
+	}
+
+	public void setOqty(int oqty) {
+		this.oqty = oqty;
+	} 
 
 	@Override
 	public String toString() {

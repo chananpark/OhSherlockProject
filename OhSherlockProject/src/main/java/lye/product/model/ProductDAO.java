@@ -105,138 +105,138 @@ public class ProductDAO implements InterProductDAO {
 		return prodList;
 	}// end of public List<ProductVO> selectBySpecName(Map<String, String> paraMap) throws SQLException {}-------------------
 
-
-	// 페이지바를 만들기 위해서 전체 상품개수에 대한 총페이지수 알아오기
+	
+	// 페이징 방식 카테고리별 티 상품 총 페이지수 알아오기
 	@Override
-	public int getTotalPage() throws SQLException {
+	public int getTotalPage(Map<String, String> paraMap) throws SQLException {
 		
-		int totalPage = 0;  // 초기값
+		int totalPage = 0;
+
+		String cnum = paraMap.get("cnum");
+		String snum = paraMap.get("snum");
 		
 		try {
-			conn = ds.getConnection();  // 커넥션풀 방식
-			String sql = " select ceil( count(*)/6 ) "+
-						 " from tbl_product "+
-						 " where fk_cnum between 1 and 3 ";
+			conn = ds.getConnection();
+
+			String sql = " select ceil( count(*)/6 ) " // 6 이 sizePerPage 이다.
+					+ " from tbl_product " ;
 			
-			pstmt = conn.prepareStatement(sql);
+			// 특정 카테고리 조회시
+			if (!"".equals(cnum)) {
+				sql += " where fk_cnum = ? ";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, cnum);
+			}
+			
+			// 특정 스펙 조회시
+			else if (!"".equals(snum)) {
+				sql += " where fk_snum = ? and fk_cnum in (1,2,3) ";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, snum);
+			}
+			
+			// 전체 조회시
+			else {
+				sql += " where fk_cnum in (1,2,3) ";
+				pstmt = conn.prepareStatement(sql);
+			}
 			rs = pstmt.executeQuery();
-			
+
 			rs.next();
+
 			totalPage = rs.getInt(1);
-			
-		} catch (Exception e) {
+
+		} finally {
 			close();
 		}
-		
+
 		return totalPage;
-	}// end of public int getTotalPage() throws SQLException {}-------------------
 
+	}// end of	public int getTotalPage(Map<String, String> paraMap) throws SQLException {}-------------------
 	
-	
-	// 페이지바를 만들기 위해서 특정 카테고리의 상품개수에 대한 총페이지수 알아오기
-	@Override
-	public int getTotalPageByCategory(String cnum) throws SQLException {
-
-		int totalPageByCategory = 0;  // 초기값
-		
-		try {
-			conn = ds.getConnection();  // 커넥션풀 방식
-			
-			String sql = " select ceil( count(*)/6 ) "  // 6 이 sizePerPage 이다. 한페이지당 보여주는 상품목록
-					   + " from tbl_product "
-					   + " where fk_cnum = ? ";
-			
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, cnum);  // 'NEW', 'BEST' 에 대한 스펙번호인 시퀀스번호를 참조한 것
-			
-			rs = pstmt.executeQuery();
-			
-			rs.next();
-				
-			totalPageByCategory = rs.getInt(1);
-			
-		} catch (Exception e) {
-			close();
-		}
-		
-		return totalPageByCategory;
-	}// end of public int getTotalPage(String cnum) throws SQLException {}-------------------
-
 	
 	// 전체 및 특정상품들을 페이지바를 사용한 페이징 처리하여 조회(select) 해오기
 	@Override
-	public List<ProductVO> selectPagingProduct(Map<String, String> paraMap) throws SQLException {
+	public List<ProductVO> selectGoodsByCategory(Map<String, String> paraMap) throws SQLException {
 
-		List<ProductVO> productList = new ArrayList<>();  // ArrayList 객체생성
-		
-		try {
-			conn = ds.getConnection();  // 커넥션풀 방식 연결
-			
-			String sql = " SELECT cname, sname, pnum, pname, pimage, "+
-		        		 "        pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt "+
+		List<ProductVO> productList = new ArrayList<>();
+
+	    try {
+	        conn = ds.getConnection();
+
+	        String sql = " SELECT cname, sname, pnum, pname, pimage, "+
+		        		 "     pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt "+
 		        		 " FROM "+
-		        		 "    (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, "+
-		        		 "            pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt "+
+		        		 "     (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, "+
+		        		 "             pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt "+
 		        		 "     FROM "+
-		        		 "        (SELECT c.cname, s.sname, pnum, pname, pimage, "+
-		        		 "                pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, "+
-		        		 "                (select distinct count(FK_ODRCODE) from tbl_order_detail where FK_PNUM=pnum) as orederCnt, "+
-		        		 "                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt "+
-		        		 "         FROM "+
-		        		 "            (SELECT\n"+
-		        		 "                pnum, pname, pimage, "+
-		        		 "                pqty, price, saleprice, pcontent, PSUMMARY, point, "+
-		        		 "                to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum "+
-		        		 "             FROM tbl_product ";
-       
-	       // 특정 카테고리 조회시
-	       if (paraMap.get("cnum") != null) {
-	       	sql +=	"            WHERE fk_cnum = ? ";
-	       }
-	       // 베스트 카테고리 조회시
-	       else if(paraMap.get("snum") != null) {
-    	    sql +=	"            WHERE fk_snum = ? and fk_cnum in (1,2,3) ";
-	       }
-	       // 전체 조회시
-	       else {
-	       	sql +=	"            WHERE fk_cnum in (1,2,3) ";
-	       }
-	       
-	        //System.out.println("dao order>>>>>>> " + paraMap.get("order"));
-    	    sql +=	"            ) p "+
-		    	    "            JOIN tbl_category  c ON p.fk_cnum = c.cnum "+
-		    	    "            LEFT OUTER JOIN tbl_spec s "+
-		    	    "            ON p.fk_snum = s.snum "+
-		    	    "			 ORDER BY " + paraMap.get("order")+") V "+
-		    	    "    ) t "+
-		    	    " WHERE t.rno BETWEEN ? AND ? ";
-    	    
-			int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));  // String 타입이므로 int 타입으로 변환해준다. currentShowPageNo 는 몇번째 페이지를 보여주는지 나타냄.
-			int sizePerPage = 6;         // 한 페이지당 화면상에 보여줄 제품의 개수는 6개씩 보여주는 것으로 한다.     
-			
+		        		 "         (SELECT c.cname, s.sname, pnum, pname, pimage, "+
+		        		 "                 pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, "+
+		        		 "                 orederCnt,reviewCnt "+
+		        		 "          FROM "+
+		        		 "             (SELECT "+
+		        		 "                 pnum, pname, pimage, "+
+		        		 "                 pqty, price, saleprice, pcontent, PSUMMARY, point, "+
+		        		 "                 to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum, "+
+		        		 "                 (select distinct count(fk_odrcode) from tbl_order_detail where FK_PNUM=pnum) as orederCnt, "+
+		        		 "                 (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt "+
+		        		 "              FROM tbl_product\n";
+	        
+		    // 특정 카테고리 조회시
+	        if (!"".equals(paraMap.get("cnum"))) {
+	        	sql +=	"            WHERE fk_cnum = ?\n";
+	        }
+	        
+	        // 특정 스펙 조회시
+	        else if (!"".equals(paraMap.get("snum"))) {
+	        	sql +=	"            WHERE fk_snum = ? and fk_cnum in (1,2,3)\n";
+	        }
+	        
+	        // 전체 조회시
+	        else {
+	        	sql +=	"            WHERE fk_cnum in (1,2,3)\n";
+	        }
+        
+	        sql += "            ) p\n"+
+        		"            JOIN tbl_category  c ON p.fk_cnum = c.cnum\n"+
+        		"            LEFT OUTER JOIN tbl_spec s\n"+
+        		"            ON p.fk_snum = s.snum "+
+        		"			 ORDER BY " + paraMap.get("order")+")V\n"+
+        		"    ) t\n"+
+        		"WHERE t.rno BETWEEN ? AND ?\n";
+	        	
+	        /*
+	         === 페이징처리 공식 === 
+	         where RNO between (조회하고자 하는 페이지 번호 * 한페이지당 보여줄 행의 개수) -
+	         (한페이지당 보여줄 행의 개수 - 1) and (조회하고자 하는 페이지 번호 * 한페이지당 보여줄 행의 개수)
+	         */
+	        
+	        int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));
+	        int sizePerPage = 6;
+
 	        pstmt = conn.prepareStatement(sql);
 	        
 	        // 특정 카테고리 조회시
-	        if (paraMap.get("cnum") != null) {
+	        if (!"".equals(paraMap.get("cnum"))) {
 		        pstmt.setString(1, paraMap.get("cnum"));
 		        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
 		        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
 	        }
-	        // 베스트 카테고리 조회시
-	        else if(paraMap.get("snum") != null) {
+	        // 특정 스펙 조회시
+	        else if (!"".equals(paraMap.get("snum"))) {
 	        	pstmt.setString(1, paraMap.get("snum"));
-		        pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
-		        pstmt.setInt(3, (currentShowPageNo * sizePerPage));
+	        	pstmt.setInt(2, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+	        	pstmt.setInt(3, (currentShowPageNo * sizePerPage));
 	        }
 	        // 전체 조회시
 	        else {
 		        pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
 		        pstmt.setInt(2, (currentShowPageNo * sizePerPage));
 	        }
-
+	        
 	        rs = pstmt.executeQuery();
-			
-			while (rs.next()) {
+
+	        while (rs.next()) {
 	            ProductVO pvo = new ProductVO();
 	            pvo.setPnum(rs.getInt("pnum")); // 제품번호
 	            pvo.setPname(rs.getString("pname")); // 제품명
@@ -262,14 +262,14 @@ public class ProductDAO implements InterProductDAO {
 	            pvo.setOrederCnt(rs.getInt("orederCnt"));
 
 	            productList.add(pvo);
-			}// end of while--------------------
-			
-		} finally {
-			close();
-		}
-		
-		return productList;
-	}// end of public List<ProductVO> selectPagingProductByCategory(Map<String, String> paraMap) throws SQLException {}-------------------
+	        }
+
+	    } finally {
+	        close();
+	    }
+
+	    return productList;
+	}// end of public List<ProductVO> selectGoodsByCategory(Map<String, String> paraMap) throws SQLException {}-------------------
 
 
 
@@ -404,7 +404,7 @@ public class ProductDAO implements InterProductDAO {
 	// 찜목록 담기 
     // 찜목록 테이블(tbl_Like)에 해당 제품을 담아야 한다.
     // 찜목록 테이블에 해당 제품이 존재하지 않는 경우에는 tbl_Like 테이블에 insert 를 해야하고, 
-    // 찜목록 테이블에 해당 제품이 존재하는 경우에 또 찜목록을 누르는 경우 tbl_Like 테이블에 delete 를 해야한다.
+    // 찜목록 테이블에 해당 제품이 존재하는 경우에 또 찜목록을 누르는 경우 tbl_Like 테이블에 해당상품을 덮어씌워 update를 한다.
 	@Override
 	public int addLike(String userid, String pnum) throws SQLException {
 		int result = 0;
@@ -438,11 +438,11 @@ public class ProductDAO implements InterProductDAO {
 	         rs = pstmt.executeQuery();  // 조회하면 한개만 나온다.
 	         
 	         if(rs.next()) {  // 있다라면
-	        	 // 기존 찜하기한 제품을 삭제한다.
+	        	 // 기존 찜하기한 제품을 업데이트한다.
 	        	 
 	        	 int likeno = rs.getInt("likeno");  // 조회된 찜하기가 있다라면 찜제품번호를 알아온다. 찜목록번호는 시퀀스.
 	        	 
-	        	 sql = " delete from tbl_like "+
+	        	 sql = " update tbl_like set likeno = likeno "+
 	        		   " where likeno = ? ";
 	        	 
 	        	 pstmt = conn.prepareStatement(sql);
@@ -471,7 +471,7 @@ public class ProductDAO implements InterProductDAO {
 	      return result; 
 	}// end of public int addLike(String userid, String pnum) throws SQLException {}-------------------
 
-
+	
 	// 로그인한 사용자의 찜목록을 조회하기
 	@Override
 	public List<LikeVO> selectProductLike(String userid) throws SQLException {
@@ -480,48 +480,56 @@ public class ProductDAO implements InterProductDAO {
 		try {
 			conn = ds.getConnection(); // 커넥션풀 방식
 			
-			String sql = " select likeno, fk_userid, fk_pnum, pname, pimage, saleprice "+
+			String sql = " select likeno, fk_userid, fk_pnum, pname, pimage, price, saleprice, point, oqty "+
 						 " from tbl_like A join tbl_product B "+
 						 " on A.fk_pnum = B.pnum "+
 						 " where A.fk_userid = ? "+
 						 " order by likeno desc ";
 			
 			pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, userid);
+			pstmt.setString(1, userid);
 			
-            rs = pstmt.executeQuery();
-            
-            while(rs.next()) {  // 조회한 찜목록이 있다라면
-            	
-            	int likeno = rs.getInt("likeno");
-                String fk_userid = rs.getString("fk_userid");
-                int fk_pnum = rs.getInt("fk_pnum");
-                String pname = rs.getString("pname");
-                String pimage = rs.getString("pimage");
-                int saleprice = rs.getInt("saleprice");
-                
-                ProductVO prodvo = new ProductVO();  // join한 제품테이블
-                prodvo.setPnum(fk_pnum);
-                prodvo.setPname(pname);
-                prodvo.setPimage(pimage);
-                prodvo.setSaleprice(saleprice);
-                
-                LikeVO lvo = new LikeVO(); // 찜목록 테이블
-                lvo.setLikeno(likeno);     // 찜목록번호
-                lvo.setUserid(fk_userid);  // 사용자아이디
-                lvo.setPnum(fk_pnum);      // 제품번호
-                lvo.setProd(prodvo);       // join 한 제품테이블 정보(위에서 set한 정보들을 넣어준다.)
-                
-                likeList.add(lvo);
-            }// end of while---------------------
-            
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {  // 조회한 찜목록이 있다라면
+				
+				int likeno = rs.getInt("likeno");
+				String fk_userid = rs.getString("fk_userid");
+				int fk_pnum = rs.getInt("fk_pnum");
+				String pname = rs.getString("pname");
+				String pimage = rs.getString("pimage");
+				int price = rs.getInt("price");
+				int saleprice = rs.getInt("saleprice");
+				int point = rs.getInt("point");
+				int oqty = rs.getInt("oqty");  // 주문량
+				
+				ProductVO prodvo = new ProductVO();  // join한 제품테이블
+				prodvo.setPnum(fk_pnum);
+				prodvo.setPname(pname);
+				prodvo.setPimage(pimage);
+				prodvo.setPrice(price);
+				prodvo.setSaleprice(saleprice);
+				prodvo.setPoint(point);
+				
+				prodvo.setTotalPriceTotalPoint(oqty); // 총 결제금액, 포인트
+				
+				LikeVO lvo = new LikeVO(); // 찜목록 테이블
+				lvo.setLikeno(likeno);     // 찜목록번호
+				lvo.setUserid(fk_userid);  // 사용자아이디
+				lvo.setPnum(fk_pnum);      // 제품번호
+				lvo.setOqty(oqty);
+				lvo.setProd(prodvo);       // join 한 제품테이블 정보(위에서 set한 정보들을 넣어준다.)
+				
+				likeList.add(lvo);
+			}// end of while---------------------
+			
 		} finally {
 			close();
 		}
 		
 		return likeList;  // 리턴할 값이 없으면 0 이 들어온다.
 	}// end of public List<LikeVO> selectProductLike(String userid) throws SQLException {}-------------------
-
+	
 	
 	// 찜목록 테이블에서 특정제품 1개행을 찜목록에서 비우기
 	@Override
@@ -547,8 +555,6 @@ public class ProductDAO implements InterProductDAO {
 		return n;
 	}// end of public int delLike(String likeno) throws SQLException {}-------------------
 	
-	
-	
 
 	// 찜목록 테이블에서 특정제품 선택행들을 찜목록에서 비우기
 	@Override
@@ -560,7 +566,7 @@ public class ProductDAO implements InterProductDAO {
 		for (int i = 0; i < likenoArr.length; i++) {
 			params += likenoArr[i];
 			if(i<likenoArr.length-1) {
-				params += ",";
+				params += ",";  // ["1,2"]
 			}
 		}
 		

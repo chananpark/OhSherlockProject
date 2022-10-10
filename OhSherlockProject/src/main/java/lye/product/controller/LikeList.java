@@ -7,9 +7,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
+import common.model.LikeVO;
 import common.model.MemberVO;
 import lye.product.model.InterProductDAO;
-import lye.product.model.LikeVO;
 import lye.product.model.ProductDAO;
 
 public class LikeList extends AbstractController {
@@ -25,8 +25,8 @@ public class LikeList extends AbstractController {
 		
 		if(!isLogin) { // 로그인을 하지 않은 상태이라면
 			
-			request.setAttribute("message", "로그인 후 접속가능합니다.");
-	        request.setAttribute("loc", "login.tea");
+			request.setAttribute("message", "찜목록은 로그인 후 이용 가능합니다.");
+			request.setAttribute("loc", request.getContextPath() + "/login/login.tea");
 			
 			// super.setRedirect(false);
 	        super.setViewPage("/WEB-INF/msg.jsp");

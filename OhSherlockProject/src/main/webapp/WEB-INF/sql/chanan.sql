@@ -231,14 +231,33 @@ fk_odrcode not null varchar2(20),
 fk_pnum    not null number(8),    
 oqty       not null number(8),    
 oprice     not null number(8),    
-refund              number(1),    
-exchange            number(1), 
+refund     not null number(1),    
+exchange   not null number(1), 
 constraint PK_tbl_order_detail_odnum primary key(odnum),
 constraint FK_TBL_ORDER_DETAIL_FK_ODRCODE foreign key(FK_ODRCODE) references TBL_ORDER(ODRCODE),
 constraint FK_tbl_order_detail_fk_pnum foreign key(fk_pnum) references tbl_product(pnum),
 constraint CK_tbl_order_detail_refund check (refund in (0,1)),
 constraint CK_tbl_order_detail_exchange check (exchange in (0,1))
 );
+
+-- 주문상세번호 시퀀스 --
+create sequence seq_tbl_order_detail
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+insert into tbl_order_detail(odnum, fk_odrcode, fk_pnum, oqty, Oprice, opoint)
+values(seq_tbl_order_detail.nextval, 'O20221007-2', 32, 1, 22000, 220);
+commit;
+
+String sql = "select odnum, fk_pnum, oqty, Oprice, refund, cancel,\n"+
+"pname, pimage\n"+
+"from tbl_order_detail join tbl_product\n"+
+"on fk_pnum = pnum\n"+
+"where fk_odrcode = ?";
 
 -- 리뷰 테이블 --
 create table tbl_review (
@@ -259,4 +278,35 @@ constraint FK_tbl_review_fk_userid foreign key(fk_userid) references tbl_member(
 );
 
 --------------------------------------------------------------------------------
-commit;
+SELECT odrcode, fk_userid, odrdate, odrtotalprice, odrstatus
+FROM( SELECT
+    ROWNUM AS rno,
+    odrcode,
+    fk_userid,
+    odrdate,
+    odrtotalprice,
+    odrstatus
+FROM     ( SELECT
+    odrcode,
+    fk_userid,
+    odrdate,
+    odrtotalprice,
+    odrstatus
+FROM
+    tbl_order a 
+    where not exists 
+    (select '1' from tbl_order_detail b where a.odrcode = b.fk_odrcode and refund = -1)  
+    and odrstatus in  
+    order by odrdate desc )V
+    )T
+    where rno BETWEEN 1 AND 10;
+    
+    select ceil(count(*)/10) from tbl_order a where not exists (select '1' from tbl_order_detail b where a.odrcode = b.fk_odrcode and refund = -1)  and odrstatus in (1) ;
+
+select odrcode, fk_userid, odrdate, odrtotalprice, odrstatus, fk_pnum, oqty, pname
+from
+(select odrcode, fk_userid, odrdate, odrtotalprice, odrstatus, fk_pnum, oqty
+from tbl_order join tbl_order_detail
+on odrcode = fk_odrcode 
+where odrstatus = 2)
+join tbl_product on pnum = fk_pnum;
