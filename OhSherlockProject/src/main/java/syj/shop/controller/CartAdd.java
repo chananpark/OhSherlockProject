@@ -38,8 +38,6 @@ public class CartAdd extends AbstractController {
 				String pnum = request.getParameter("pnum");
 				String oqty = request.getParameter("oqty"); // 주문량
 				
-				System.out.println(pnum);
-				
 				// 상품 목록에서 넘겨준 경우
 				if(oqty == null) {
 					oqty = "1";

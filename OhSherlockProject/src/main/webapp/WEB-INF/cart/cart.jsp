@@ -15,14 +15,10 @@
 	
 	#cartContainer .cartList input[type=button] {
 		border: none;
-		border-radius: 5%;
-		height: 30px;
 	}
 	
 	#cartContainer .cartButtons input[type=button] {
 		border: none;
-		border-radius: 5%;
-		height: 35px;
 	}
 </style>
 
@@ -33,6 +29,8 @@
 		
 		// 상품 재고의 최대 수량을 스피너에 넣어주는 것 부터 시작		
 		const pqty = $("#hidden_pqty").val(); // 상품재고
+		
+		// 클릭한 스피너의 index 번호를 알아와서 해당 상품의 pnum을 알아온 후 그 pnum의 재고 수를 알아야 한다.
 		
 		// 스피너
 		$(".spinner").spinner({
@@ -129,15 +127,15 @@
 							</td>
 							<td>${cartvo.prod.pname}</td>
 							<td>
-								<input class="spinner oqty" style="width:100px" value="${cartvo.oqty}" min="1" max="${cartvo.prod.pqty}" required/>
+								<input class="spinner oqty" style="width:100px" value="${cartvo.oqty}"  required/>
 							</td>
 							<td>
 								<fmt:formatNumber value="${cartvo.prod.saleprice}" pattern="###,###" /> 원
 								<input type="hidden" name="price" value="${cartvo.prod.price}"/>
 								<input type="hidden" name="saleprice" value="${cartvo.prod.saleprice}"/>
 							</td>
-							<td><p><input class="paymentBtn" type="button" value="바로구매" onclick="goOrder();"/></p>
-							<p><input type="button" value="상품삭제" onclick="goDel('${cartvo.cartno}')"/></p></td>
+							<td><p><input class="paymentBtn btn" type="button" value="바로구매" onclick="goOrder();"/></p>
+							<p><input class="btn bg-light text-dark" type="button" value="상품삭제" onclick="goDel('${cartvo.cartno}')"/></p></td>
 						</tr>
 						
 						<%-- 재고 알아오는 hidden 태그 --%>
@@ -176,9 +174,9 @@
 	</div>
 	
 	<div class="cartButtons mt-5">
-		<span class="float-right"><input class="paymentBtn" type="button" value="전체상품 주문"/></span>
-		<span class="float-right mr-3"><input type="button" value="선택상품 주문"/></span>
-		<span class="float-right mr-3"><input type="button" value="장바구니 비우기"/></span>
+		<span class="float-right"><input class="paymentBtn btn" type="button" value="전체상품 주문"/></span>
+		<span class="float-right mr-3"><input type="button" class="btn bg-light text-dark" value="선택상품 주문"/></span>
+		<span class="float-right mr-3"><input type="button" class="btn bg-light text-dark" value="장바구니 비우기"/></span>
 	</div>
 </div>
 <%@ include file="../footer.jsp"%>
