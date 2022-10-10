@@ -77,11 +77,11 @@ public class Prod_mgmt_editEnd extends AbstractController {
            pvo.setFk_cnum(Integer.parseInt(fk_cnum));
 
            if(!fk_snum.trim().isEmpty()) {
-        	   pvo.setFk_snum(Integer.parseInt(fk_snum));
+              pvo.setFk_snum(Integer.parseInt(fk_snum));
            }
            pvo.setPnum(pnum);
            pvo.setPname(pname);
-    	   pvo.setPsummary(psummary);
+           pvo.setPsummary(psummary);
            pvo.setPcontent(pcontent);
            pvo.setPqty(Integer.parseInt(pqty));
            pvo.setPrice(Integer.parseInt(price));

@@ -482,7 +482,7 @@ public class ProductDAO implements InterProductDAO {
 		@Override
 		public int productUpdate(ProductVO pvo) throws SQLException {
 			int result = 0;
-			
+			String pimage = pvo.getPimage();
 			try {
 				conn = ds.getConnection();
 				
@@ -494,29 +494,39 @@ public class ProductDAO implements InterProductDAO {
 						   + " 					   , price = ? "
 						   + " 					   , saleprice = ? "
 						   + " 					   , point = ? "
-						   + " 					   , pcontent = ? "
-						   + " 					   , pimage = ? "
-						   + " where pnum = ? "; 
+						   + " 					   , pcontent = ? ";
+				
+						   if(pimage != null) { // 썸네일이 변경 되었을 경우 업데이트를 하고, 썸네일이 변경되지 않았을 경우 업데이트를 하지 않는다.
+							   sql  += " 					   , pimage = ? ";
+						   }
+						   
+						   sql  += " where pnum = ? "; 
 				
 				pstmt = conn.prepareStatement(sql);
 				
 				pstmt.setInt(1, pvo.getFk_cnum());
 				
-				if(pvo.getFk_snum() > 0) {
-					pstmt.setInt(2, pvo.getFk_snum());
-				}else {
-					pstmt.setObject(2, null);
+	            if(pvo.getFk_snum() > 0) {
+	               pstmt.setInt(2, pvo.getFk_snum());
+	            }else {
+	               pstmt.setObject(2, null);
+	            }
+	            
+				pstmt.setString(3, pvo.getPname());
+				pstmt.setString(4, pvo.getPsummary());
+				pstmt.setInt(5, pvo.getPqty()); 
+				pstmt.setInt(6, pvo.getPrice());
+				pstmt.setInt(7, pvo.getSaleprice());
+				pstmt.setInt(8, pvo.getPoint());
+				pstmt.setString(9, pvo.getPcontent());
+				 
+				if(pimage != null) {
+					 pstmt.setString(10, pvo.getPimage());    
+					 pstmt.setInt(11, pvo.getPnum());  
+				 }
+				else {
+					pstmt.setInt(10, pvo.getPnum());
 				}
-					pstmt.setString(3, pvo.getPname());
-					pstmt.setString(4, pvo.getPsummary());
-					pstmt.setInt(5, pvo.getPqty()); 
-					pstmt.setInt(6, pvo.getPrice());
-					pstmt.setInt(7, pvo.getSaleprice());
-					pstmt.setInt(8, pvo.getPoint());
-					pstmt.setString(9, pvo.getPcontent());
-					pstmt.setString(10, pvo.getPimage());    
-					pstmt.setInt(11, pvo.getPnum());    
-				
 				
 				result = pstmt.executeUpdate();
 				

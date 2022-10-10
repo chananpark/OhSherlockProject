@@ -35,8 +35,6 @@ input[type="reset"], input[type="button"] {
 
 <script type="text/javascript">
 
-	let goBackURL = ""; // 전역변수
-
 	$(document).ready(function(){
 		
 		// 판매가격 입력하면 적립금 자동 계산 
@@ -108,8 +106,12 @@ input[type="reset"], input[type="button"] {
 			
 		});
 		
+
 	}); // end of $(document).ready(function(){});-------------------------
 	
+	function goListPage() {
+		location.href = "<%= request.getContextPath() %>/admin/prod_mgmt_list.tea";
+	} // end of function goMemberList()
 	
 	// "등록" 버튼을 클릭시 호출되는 함수 
 	function goRegister() {
@@ -210,7 +212,7 @@ input[type="reset"], input[type="button"] {
 		<div class="text-right" style="margin-top: 30px;">
 		 <input type="button" id="btnRegister" class="btn-secondary" value="등록" style="margin-left: 5px;" /> 
           &nbsp;
-     <input type="reset" value="취소" onclick="goProductList()"	style="margin-right: 0" />&nbsp;
+     <input type="reset" value="취소" onclick="goListPage()"	style="margin-right: 0" />&nbsp;
 		</div>
 	</form>
 

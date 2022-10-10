@@ -118,7 +118,7 @@
 					</tr>
 					<tr>
 						<td class="col-4">썸네일</td>
-						<td class="col-8"><img src="<%=request.getContextPath() %>/images/${requestScope.product_select_one.pimage}" style="width: 50%;"/></td>
+						<td class="col-8"><img src="<%=request.getContextPath() %>/images/${requestScope.product_select_one.pimage}" onerror="this.src='<%=request.getContextPath() %>/images/noImage.png'" style="width: 50%;"/></td>
 					</tr>
 					<tr>
 						<td class="col-4" style="vertical-align: middle">상품한줄설명</td>
