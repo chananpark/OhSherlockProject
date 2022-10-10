@@ -33,7 +33,7 @@ public class OrderList extends AbstractController {
 			InterOrderDAO idao = new OrderDAO();
 			Map<String, String> paraMap = new HashMap<>();
 
-			// 배송상태
+			// 주문 처리 상태
 			String odrstatus = "1"; 
 			
 			// odrstatus가 null이 아니고 공백도 아니라면
@@ -149,7 +149,7 @@ public class OrderList extends AbstractController {
 		// 로그인 안 되었거나 일반사용자인 경우
 		else {
 			message = "관리자만 접근 가능한 메뉴입니다.";
-			loc = request.getContextPath() + "/index.tea";
+			loc = request.getContextPath() + "/login/login.tea";
 
 			request.setAttribute("message", message);
 			request.setAttribute("loc", loc);
