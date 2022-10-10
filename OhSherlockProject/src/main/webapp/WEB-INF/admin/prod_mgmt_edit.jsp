@@ -115,7 +115,7 @@ input[type="reset"], input[type="button"] {
 
 		
 		// 등록된 이미지 사진 삭제하기
-		$("input#btnImgFile").click(function (e) {
+		$("input#btnImgFileDelete").click(function (e) {
 			
 			const imgfileno = e.target.name;
 			// console.log(imgfileno);
@@ -240,7 +240,7 @@ input[type="reset"], input[type="button"] {
     <input id="spinnerImgQty" value="0" style="width: 30px; "><br>
      <c:if test="${not empty requestScope.imgList }">
 				<c:forEach var="map" items="${requestScope.imgList }">
-					<span>${map.imgfilename}<input type="button" id="btnImgFile" name="${map.imgfileno}" style="color: #1E7F15; border: none; background: none; margin: 0px;" value="삭제"/></span><br>
+					<span>${map.imgfilename}<input type="button" id="btnImgFileDelete" name="${map.imgfileno}" style="color: #1E7F15; border: none; background: none; margin: 0px;" value="삭제"/></span><br>
 				</c:forEach>
 		 </c:if>
     <div id="divfileattach"></div>
