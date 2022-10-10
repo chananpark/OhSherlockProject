@@ -84,6 +84,9 @@
    
     <form action="" name="ntUpdate" id="ntUpdate">
     	<input type="hidden" name="noticeNo" value="${noticeNo}"/>
+    	<input type="hidden" name="oldNoticeImage" value="${oldNoticeImage}"/>
+    	<input type="hidden" name="oldOriginFileName" value="${oldOriginFileName}"/>
+    	<input type="hidden" name="oldSystemFileName" value="${oldSystemFileName}"/>
 		<label for="noticeSubject">제목<span class="text-danger">*</span></label>
 		<input type="text" id="noticeSubject" name="noticeSubject" value="${noticeSubject}">
 		
@@ -92,10 +95,15 @@
 
 		<label for="file" style="margin: 6px 20px 16px 0;">사진 첨부</label><input type="file" name="noticeImage">
 		<br>
-		
+		<c:if test="${not empty oldNoticeImage}">
+		<input type="checkbox" name="deleteImg" id="deleteImg"><label for ="deleteImg">&nbsp;기존 첨부 사진(${oldNoticeImage}) 삭제하기</label>
+		<br>
+		</c:if>
 		<label for="file" style="margin: 6px 20px 16px 0;">파일 첨부</label><input type="file" name="noticeFile">		
 		<br>
-		
+		<c:if test="${not empty oldOriginFileName}">
+		<input type="checkbox" name="deleteFile" id="deleteFile"><label for ="deleteFile">&nbsp;기존 첨부 파일(${oldOriginFileName}) 삭제하기</label>
+		</c:if>
 		<hr>
 		
 		<div class="text-right" style="margin-top: 30px;">
