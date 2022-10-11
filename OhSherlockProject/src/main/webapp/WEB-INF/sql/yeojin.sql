@@ -284,7 +284,7 @@ order by cartno asc;
 
 
 select A.cartno, A.fk_userid, A.fk_pnum, 
-       B.pname, B.pimage, B.price, B.saleprice, B.point, A.oqty
+       B.pname, B.pimage, B.price, B.saleprice, B.point, A.oqty, B.pqty
 from tbl_cart A join tbl_product B
 on A.fk_pnum = B.pnum
 where A.fk_userid = 'shonyj1'
