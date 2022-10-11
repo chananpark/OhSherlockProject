@@ -186,10 +186,10 @@
 								<c:otherwise>적립</c:otherwise>
 							</c:choose>
 						</td>
-					</tr> 
+					</tr>  
 				</c:forEach>
 				
-				<div style="position: absolute; bottom: 5px; left: 450px;"> 
+				<div style="position: absolute; bottom: -20px; left: 450px; color:#1E7F15; font-weight: bold; "> 
 					<c:if test="${empty requestScope.coin_history}" >예치금 내역이 없습니다.</c:if>
 				</div>
 				
