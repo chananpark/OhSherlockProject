@@ -100,6 +100,9 @@
 	    <input type="hidden" name="noticeNo" value="${nvo.noticeNo}"/>
 	    <input type="hidden" name="noticeSubject" value="${nvo.noticeSubject}"/>
 	    <input type="hidden" name="noticeContent" value="${nvo.noticeContent}"/>
+	    <input type="hidden" name="noticeImage" value="${nvo.noticeImage}"/>
+	    <input type="hidden" name="originFileName" value="${nvo.originFileName}"/>
+	    <input type="hidden" name="systemFileName" value="${nvo.systemFileName}"/>
     </form>
     
 	<%-- 글수정, 삭제 버튼은 관리자 계정에서만 보임 --%>

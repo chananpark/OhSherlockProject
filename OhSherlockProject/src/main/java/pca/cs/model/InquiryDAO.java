@@ -355,24 +355,6 @@ public class InquiryDAO implements InterInquiryDAO {
 		return ivo;
 	}
 
-	// 1:1 문의글 답변 시퀀스 생성하기
-	private String getInquiry_reply_no() throws SQLException {
-
-		String seq_inquiry_reply_no="";
-		try {
-			conn = ds.getConnection();
-			String sql = "select seq_inquiry_reply_no.nextval from dual";
-	
-			pstmt = conn.prepareStatement(sql);
-			rs = pstmt.executeQuery();
-			rs.next();
-			seq_inquiry_reply_no = rs.getString(1);
-		}finally {
-			close();
-		}
-		return seq_inquiry_reply_no;
-	}
-
 	// 1:1 문의 답변 작성
 	@Override
 	public int writeReply(Map<String, String> paraMap){
@@ -381,19 +363,15 @@ public class InquiryDAO implements InterInquiryDAO {
 		
 		int n = 0;
 		try {
-			// 시퀀스 얻어옴
-			String seq_inquiry_reply_no = getInquiry_reply_no();
-			
 			conn = ds.getConnection();
 			conn.setAutoCommit(false); // 오토커밋 해제
 			
 			String sql = "insert into tbl_inquiry_reply(inquiry_reply_no, fk_inquiry_no, inquiry_reply_content)\n"+
-					"values(?, ?, ?)";
+					"values(seq_inquiry_reply_no.nextval, ?, ?)";
 
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, seq_inquiry_reply_no);
-			pstmt.setString(2, inquiry_no);
-			pstmt.setString(3, inquiry_reply_content);
+			pstmt.setString(1, inquiry_no);
+			pstmt.setString(2, inquiry_reply_content);
 			n = pstmt.executeUpdate();
 			
 			if (n==1) { // 문의글의 답변여부 컬럼 업데이트하기

@@ -172,19 +172,19 @@ public class ProductDAO implements InterProductDAO {
 		        conn = ds.getConnection();
 
 		        String sql = "SELECT cname, sname, pnum, pname, pimage, \n"+
-		        		"    pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt\n"+
+		        		"    pqty, price, saleprice, psummary, point, reviewCnt, orederCnt\n"+
 		        		"FROM\n"+
 		        		"    (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, \n"+
-		        		"            pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt\n"+
+		        		"            pqty, price, saleprice, psummary, point, reviewCnt, orederCnt\n"+
 		        		"    FROM\n"+
 		        		"        (SELECT c.cname, s.sname, pnum, pname, pimage, \n"+
-		        		"                pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,\n"+
+		        		"                pqty, price, saleprice, psummary, point,\n"+
 		        		"                orederCnt,reviewCnt\n"+
 		        		"        FROM\n"+
 		        		"            (SELECT\n"+
 		        		"                pnum, pname, pimage, \n"+
-		        		"                pqty, price, saleprice, pcontent, PSUMMARY, point,\n"+
-		        		"                to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum,\n"+
+		        		"                pqty, price, saleprice, psummary, point,\n"+
+		        		"                fk_cnum, fk_snum,\n"+
 		        		"                (select distinct count(fk_odrcode) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
 		        		"                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt\n"+
 		        		"            FROM tbl_product\n";

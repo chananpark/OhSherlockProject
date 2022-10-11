@@ -146,8 +146,8 @@
 		<label for="inquiry_sms">답변 완료 시 SMS로 받으시겠습니까?<span>&nbsp;(연락처: ${loginuser.mobile })</span></label>
 		
 		<div class="text-right" style="margin-top: 30px;">
-	    	<input type="button" class="writeBtns" id="btnCancel" value="취소" style="margin-right: 0" />&nbsp;
-	      	<input type="button" class="btn-secondary writeBtns" id="btnSubmit" value="등록" style="margin-left: 5px;" />
+	    	<input type="button" class="writeBtns rounded" id="btnCancel" value="취소" style="margin-right: 0" />&nbsp;
+	      	<input type="button" class="btn-secondary writeBtns rounded" id="btnSubmit" value="등록" style="margin-left: 5px;" />
    		</div>
 	</form>
 	
