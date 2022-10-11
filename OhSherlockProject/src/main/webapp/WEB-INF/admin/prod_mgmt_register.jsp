@@ -195,9 +195,6 @@ input[type="reset"], input[type="button"] {
 	
 			<label for="point" style="margin: 6px 20px 16px 0;">적립금<span class="text-danger">*</span></label><br>
 			<input type="number" style="width: 150px;" name="point" class="required" > 찻잎<br>
-			
-			<label for="pcontent">상품설명<span class="text-danger">*</span></label> 
-			<textarea name="pcontent" rows="5" cols="60" class="required"></textarea>
 	
 			<label for="pimage" style="margin: 6px 20px 16px 0;">썸네일<span class="text-danger">*</span></label><br>
 			<input type="file" name="pimage" class="required" /><br>

@@ -160,7 +160,7 @@ input[type="reset"], input[type="button"] {
 	}); // end of $(document).ready(function(){});-------------------------
 
 	function goDetailPage() {
-		location.href = "<%= request.getContextPath() %>"/prod_mgmt;
+		location.href = "<%= request.getContextPath() %>/admin/prod_mgmt_detail.tea?pnum="+${requestScope.product_select_one.pnum}+"&goBackURL="+goBackURL;
 	} // end of function goMemberList()
 	
 	// "등록" 버튼을 클릭시 호출되는 함수 
@@ -228,9 +228,6 @@ input[type="reset"], input[type="button"] {
 		<label for="point" style="margin: 6px 20px 16px 0;">적립금<span class="text-danger">*</span></label><br>
 		<input type="number" style="width: 150px;" name="point" value="${requestScope.product_select_one.point}" class="required" > 찻잎<br>
 
-		<label for="pcontent">상품설명<span class="text-danger">*</span></label> 
-		<textarea name="pcontent" rows="5" cols="60">${requestScope.product_select_one.pcontent}</textarea>
-		
 		<label for="pimage" style="margin: 6px 20px 16px 0;">썸네일<span class="text-danger">*</span></label><br>
 		<div id="selectPimage">${requestScope.product_select_one.pimage}</div><br>
 		<input type="file" name="pimage" /><br>

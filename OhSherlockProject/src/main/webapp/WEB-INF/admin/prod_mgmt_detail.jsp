@@ -141,10 +141,6 @@
 						<td class="col-8"><fmt:formatNumber value="${requestScope.product_select_one.point}" pattern="###,###"/> 찻잎</td>
 					</tr>
 					<tr>
-						<td class="col-4">상품설명</td>
-						<td class="col-8">${requestScope.product_select_one.pcontent}</td>
-					</tr>
-					<tr>
 						<td class="col-4">상품이미지</td>
 						<td class="col-8">
 						 <c:if test="${not empty requestScope.imgList }">
