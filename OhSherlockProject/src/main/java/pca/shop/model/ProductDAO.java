@@ -261,10 +261,8 @@ public class ProductDAO implements InterProductDAO {
 		            spvo.setSname(rs.getString("sname"));
 		            pvo.setSpvo(spvo);
 
-		            pvo.setPcontent(rs.getString("pcontent"));
 		            pvo.setPsummary(rs.getString("psummary"));
 		            pvo.setPoint(rs.getInt("point"));
-		            pvo.setPinputdate(rs.getString("pinputdate"));
 		            pvo.setReviewCnt(rs.getInt("reviewCnt"));
 		            pvo.setOrederCnt(rs.getInt("orederCnt"));
 
