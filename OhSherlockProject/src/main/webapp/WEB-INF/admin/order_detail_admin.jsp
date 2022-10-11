@@ -156,11 +156,13 @@ $(()=>{
 						<span class="text-danger">
 						환불요청
 						</span>
+						<tr><td class="text-right">환불사유: ${odvo.refund_reason}</td></tr>
 					</c:when>
 					<c:when test="${odvo.cancel == 1}">
 						<span class="text-muted">
 						주문취소
 						</span>
+						<tr><td class="text-right">취소사유: ${odvo.cancel_reason}</td></tr>
 					</c:when>
 					<c:otherwise>
 						<span class="text-success">

@@ -153,8 +153,8 @@
 	function sendSMSAlert() {
 		
 		const userid = '${ivo.fk_userid}';
-		
 		const smsContent = '[오!셜록] 고객님의 1:1 문의 [${ivo.inquiry_subject}]에 답변이 등록되었습니다.';
+		
 		$.ajax({
 			url:"<%=ctxPath%>/cs/sendSMSAlert.tea",
 			type:"post",

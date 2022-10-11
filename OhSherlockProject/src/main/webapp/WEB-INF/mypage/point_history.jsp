@@ -181,12 +181,12 @@
 							<c:choose>
 								<c:when test="${pvo.point_amount < 0}">사용</c:when> 
 								<c:otherwise>적립</c:otherwise>
-							</c:choose>
-						</td>
+							</c:choose> 
+						</td>  
 					</tr> 
-				</c:forEach>
+				</c:forEach>  
 				
-				<div style="position: absolute; bottom: 5px; left: 450px;"> 
+				<div style="position: absolute; bottom: -20px; left: 450px; color:#1E7F15; font-weight: bold; ">  
 					<c:if test="${empty requestScope.point_history}" >적립금 내역이 없습니다.</c:if>
 				</div>
 				

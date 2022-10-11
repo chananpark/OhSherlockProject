@@ -16,12 +16,18 @@ public class NoticeUpdate extends AbstractController {
 			String noticeNo = request.getParameter("noticeNo");
 			String noticeSubject = request.getParameter("noticeSubject");
 			String noticeContent = request.getParameter("noticeContent");
+			String oldNoticeImage = request.getParameter("noticeImage");
+			String oldOriginFileName = request.getParameter("originFileName");
+			String oldSystemFileName = request.getParameter("systemFileName");
 			noticeContent = noticeContent.replace("<br>","\n");
 			
 			// 수정하기 전 내용
 			request.setAttribute("noticeNo", noticeNo);
 			request.setAttribute("noticeSubject", noticeSubject);
 			request.setAttribute("noticeContent", noticeContent);
+			request.setAttribute("oldNoticeImage", oldNoticeImage);
+			request.setAttribute("oldOriginFileName", oldOriginFileName);
+			request.setAttribute("oldSystemFileName", oldSystemFileName);
 			
 			super.setViewPage("/WEB-INF/admin/noticeUpdate_admin.jsp");
 		} else {

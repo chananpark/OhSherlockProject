@@ -53,11 +53,28 @@ public class NoticeUpdateEnd extends AbstractController {
 			// 사진파일 서버상 파일명
 	        String noticeImage = mtrequest.getFilesystemName("noticeImage");
 	        
+	        // 기존 사진 삭제 여부
+	        String deleteImg = mtrequest.getParameter("deleteImg");
+	        
+	        // 기존 사진을 유지하는 경우
+	        if (noticeImage == null && deleteImg == null) {
+	        	noticeImage = mtrequest.getParameter("oldNoticeImage");
+	        }
+	        
 	        // 첨부파일 서버상 파일명
 	        String systemFileName = mtrequest.getFilesystemName("noticeFile");
 
 			// 첨부파일 업로드 당시 파일명
 	        String originFileName = mtrequest.getOriginalFileName("noticeFile");
+	        
+	        // 기존 파일 삭제 여부
+	        String deleteFile = mtrequest.getParameter("deleteFile");
+	        
+	        // 기존 파일을 유지하는 경우
+	        if (originFileName == null && deleteFile == null) {
+	        	originFileName = mtrequest.getParameter("oldOriginFileName");
+	        	systemFileName = mtrequest.getParameter("oldSystemFileName");
+	        }
 	        
 	        // 제목
 			String noticeSubject = mtrequest.getParameter("noticeSubject");
@@ -74,6 +91,8 @@ public class NoticeUpdateEnd extends AbstractController {
 			paraMap.put("noticeImage", noticeImage);
 			paraMap.put("systemFileName", systemFileName);
 			paraMap.put("originFileName", originFileName);
+			paraMap.put("deleteImg", deleteImg);
+			paraMap.put("deleteFile", deleteFile);
 			
 			InterNoticeDAO ndao = new NoticeDAO();
 			int n = ndao.noticeUpdate(paraMap);

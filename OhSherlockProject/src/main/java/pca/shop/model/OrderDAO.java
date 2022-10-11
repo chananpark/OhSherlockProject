@@ -283,8 +283,7 @@ public class OrderDAO implements InterOrderDAO {
 		try {
 			conn = ds.getConnection();
 
-			String sql = "select odnum, fk_odrcode, fk_pnum, oqty, oprice, opoint, refund, cancel,\n"+
-					"pname\n"+
+			String sql = "select odnum, fk_odrcode, fk_pnum, oqty, oprice, opoint, refund, cancel, refund_reason, cancel_reason, pname\n"+
 					"from tbl_order_detail join tbl_product\n"+
 					"on fk_pnum = pnum\n"+
 					"where fk_odrcode = ?";
@@ -296,10 +295,10 @@ public class OrderDAO implements InterOrderDAO {
 			while (rs.next()) {
 				OrderDetailVO odvo = new OrderDetailVO();
 				odvo = new OrderDetailVO(rs.getInt(1), rs.getString(2), rs.getInt(3), 
-						rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7), rs.getInt(8));
+						rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7), rs.getInt(8), rs.getString(9), rs.getString(10));
 				
 				ProductVO pvo = new ProductVO();
-				pvo.setPname(rs.getString(9));
+				pvo.setPname(rs.getString(11));
 				odvo.setPvo(pvo);
 				
 				orderPrdList.add(odvo);

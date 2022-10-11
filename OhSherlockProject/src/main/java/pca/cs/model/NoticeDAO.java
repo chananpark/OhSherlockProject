@@ -252,7 +252,7 @@ public class NoticeDAO implements InterNoticeDAO {
 			conn = ds.getConnection();
 
 			String sql = "update tbl_notice set noticeSubject = ?, noticeContent = ?, "
-					+ " noticeImage = ?, systemFileName = ?, originFileName = ? where noticeNo = ?";
+			+ " noticeImage = ?, systemFileName = ?, originFileName = ? where noticeNo = ?";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, paraMap.get("noticeSubject"));
