@@ -249,8 +249,8 @@ nominvalue
 nocycle
 nocache;
 
-insert into tbl_order_detail(odnum, fk_odrcode, fk_pnum, oqty, Oprice)
-values(seq_tbl_order_detail.nextval, 'O20221014-1', 32, 1, 22000);
+insert into tbl_order_detail(odnum, fk_odrcode, fk_pnum, oqty, Oprice, opoint)
+values(seq_tbl_order_detail.nextval, 'O20221007-2', 32, 1, 22000, 220);
 commit;
 
 String sql = "select odnum, fk_pnum, oqty, Oprice, refund, cancel,\n"+
@@ -278,4 +278,35 @@ constraint FK_tbl_review_fk_userid foreign key(fk_userid) references tbl_member(
 );
 
 --------------------------------------------------------------------------------
-commit;
+SELECT odrcode, fk_userid, odrdate, odrtotalprice, odrstatus
+FROM( SELECT
+    ROWNUM AS rno,
+    odrcode,
+    fk_userid,
+    odrdate,
+    odrtotalprice,
+    odrstatus
+FROM     ( SELECT
+    odrcode,
+    fk_userid,
+    odrdate,
+    odrtotalprice,
+    odrstatus
+FROM
+    tbl_order a 
+    where not exists 
+    (select '1' from tbl_order_detail b where a.odrcode = b.fk_odrcode and refund = -1)  
+    and odrstatus in  
+    order by odrdate desc )V
+    )T
+    where rno BETWEEN 1 AND 10;
+    
+    select ceil(count(*)/10) from tbl_order a where not exists (select '1' from tbl_order_detail b where a.odrcode = b.fk_odrcode and refund = -1)  and odrstatus in (1) ;
+
+select odrcode, fk_userid, odrdate, odrtotalprice, odrstatus, fk_pnum, oqty, pname
+from
+(select odrcode, fk_userid, odrdate, odrtotalprice, odrstatus, fk_pnum, oqty
+from tbl_order join tbl_order_detail
+on odrcode = fk_odrcode 
+where odrstatus = 2)
+join tbl_product on pnum = fk_pnum;

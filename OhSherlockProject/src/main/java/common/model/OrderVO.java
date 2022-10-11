@@ -19,6 +19,8 @@ public class OrderVO {
 	
 	private MemberVO mvo;
 	
+	private OrderDetailVO odvo;
+	
 	public OrderVO() {}
 
 	// 주문목록 생성자
@@ -169,6 +171,14 @@ public class OrderVO {
 
 	public void setMvo(MemberVO mvo) {
 		this.mvo = mvo;
+	}
+
+	public OrderDetailVO getOdvo() {
+		return odvo;
+	}
+
+	public void setOdvo(OrderDetailVO odvo) {
+		this.odvo = odvo;
 	}
 
 }

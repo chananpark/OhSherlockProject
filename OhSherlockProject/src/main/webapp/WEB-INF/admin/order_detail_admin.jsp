@@ -149,7 +149,12 @@ $(()=>{
 				<c:choose>
 					<c:when test="${odvo.refund == 1}">
 						<span class="text-danger">
-						환불
+						환불완료
+						</span>
+					</c:when>
+					<c:when test="${odvo.refund == -1}">
+						<span class="text-danger">
+						환불요청
 						</span>
 					</c:when>
 					<c:when test="${odvo.cancel == 1}">
