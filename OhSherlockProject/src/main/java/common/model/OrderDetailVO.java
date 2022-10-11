@@ -10,12 +10,15 @@ public class OrderDetailVO {
 	private int opoint;    
 	private int refund;    
 	private int cancel;
+	private String refund_reason;
+	private String cancel_reason;
 	
 	private ProductVO pvo;
 	
 	public OrderDetailVO() {}
 
-	public OrderDetailVO(int odnum, String fk_odrcode, int fk_pnum, int oqty, int oprice, int opoint, int refund, int cancel) {
+	public OrderDetailVO(int odnum, String fk_odrcode, int fk_pnum, int oqty, int oprice, int opoint, int refund, int cancel,
+			String refund_reason, String cancel_reason) {
 		this.odnum = odnum;
 		this.fk_odrcode = fk_odrcode;
 		this.fk_pnum = fk_pnum;
@@ -24,6 +27,8 @@ public class OrderDetailVO {
 		this.opoint = opoint;
 		this.refund = refund;
 		this.cancel = cancel;
+		this.refund_reason = refund_reason;
+		this.cancel_reason = cancel_reason;
 	}
 
 	public int getOdnum() {
@@ -83,6 +88,22 @@ public class OrderDetailVO {
 
 	public void setOpoint(int opoint) {
 		this.opoint = opoint;
+	}
+
+	public String getRefund_reason() {
+		return refund_reason;
+	}
+
+	public void setRefund_reason(String refund_reason) {
+		this.refund_reason = refund_reason;
+	}
+
+	public String getCancel_reason() {
+		return cancel_reason;
+	}
+
+	public void setCancel_reason(String cancel_reason) {
+		this.cancel_reason = cancel_reason;
 	}
 	
 	
