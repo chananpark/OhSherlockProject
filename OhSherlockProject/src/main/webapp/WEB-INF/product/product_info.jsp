@@ -32,7 +32,7 @@
 	<table>
 	  <tr>
 	    <td class="col-3">상품명</td>
-	    <td class="col-9">프리미엄 티 컬렉션</td>
+	    <td class="col-9">${pvo.pname}</td>
 	  </tr>
 	  <tr>
 	    <td class="col-3">식품의 유형</td>
