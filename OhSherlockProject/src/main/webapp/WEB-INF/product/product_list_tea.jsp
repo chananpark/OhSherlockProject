@@ -104,6 +104,11 @@ button.order {
   border-color: #1E7F15;
 }
 
+input.cart { 
+   background-color: transparent; 
+     border-style: none;
+}
+
 </style>
 
 <script type="text/javascript">
@@ -310,7 +315,18 @@ function goLike(pnum) {
      
 }// end of function goLike(pnum)------------------------------
 	
-
+//장바구니 담기
+function clickCart(pnum) { 
+	
+	const frm = document.prodStorageFrm;
+	
+	$("#hidden_pnum").val(pnum);
+	
+	frm.method = "POST"; 
+	frm.action = "<%=request.getContextPath()%>/cart/cartAdd.tea";
+	frm.submit();
+	
+} // end of function goCart()
 
 </script>
 
@@ -417,8 +433,8 @@ function goLike(pnum) {
 				      			<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart" onclick="goLike(${pvo.pnum})"></i></a>
 				      			<a class="card-text text-secondary mr-5 like" onclick="goLike(${pvo.pnum})">찜하기</a>
 				      							      			
-				      			<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a>
-				      			<a class="card-text text-secondary">담기</a>
+				      			<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg " onClick="clickCart(${pvo.pnum});"></i></a>
+                           		<input class="card-text text-secondary cart" type="button" onClick="clickCart(${pvo.pnum});" value="담기" style="padding-left: 0; margin-left: 0;"/>
 				      			
 				   			</div>
 				  		</div>
