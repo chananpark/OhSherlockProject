@@ -306,7 +306,7 @@ div#brandStoryText {
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
 				<ul class="navbar-nav text-right">
 					<li class="nav-item dropdown mr-2">
-					<a class="nav-link dropdown-toggle menufont_size text-dark" href="" id="navbarDropdown" data-toggle="dropdown">티제품</a> <%-- 여기 클릭시 전체 상품으로 연결 --%>
+					<a class="nav-link dropdown-toggle menufont_size text-dark" id="navbarDropdown" data-toggle="dropdown">티제품</a> <%-- 여기 클릭시 전체 상품으로 연결 --%>
 						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown" id="teaProducts">
 							<a class="dropdown-item" href="<%= ctxPath %>/shop/productTea.tea">전체상품</a> 
 							<a class="dropdown-item" href="<%= ctxPath %>/shop/productTea.tea?snum=2">베스트</a> 
@@ -315,8 +315,23 @@ div#brandStoryText {
 							<a class="dropdown-item" href="<%= ctxPath %>/shop/productTea.tea?cnum=3">허브차</a>
 						</div>
 					</li>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%= ctxPath %>/shop/productGiftset.tea">기프트세트</a></li>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=${currentShowPageNo}&snum=&cnum=&order=pinputdate desc">이벤트상품</a></li>
+					<li class="nav-item dropdown mr-2">
+					<a class="nav-link dropdown-toggle menufont_size text-dark" id="navbarDropdown2" data-toggle="dropdown">기프트세트</a>
+						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown2" id="teaProducts">
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productGiftset.tea">전체상품</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productTea.tea?snum=2">베스트</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productTea.tea?cnum=4">감사 선물</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productTea.tea?cnum=5">애정 선물</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productTea.tea?cnum=6">응원 선물</a>
+						</div>
+					</li>
+					<li class="nav-item dropdown mr-2">
+					<a class="nav-link dropdown-toggle menufont_size text-dark" id="navbarDropdown3" data-toggle="dropdown">이벤트상품</a>
+					<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown2" id="teaProducts">
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=1&snum=&cnum=&order=pinputdate%20desc">전체상품</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=1&snum=2&cnum=&order=pinputdate%20desc">베스트</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=1&snum=1&cnum=&order=pinputdate%20desc">신상품</a> 
+						</div>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath %>/storeInfo/storeList.jsp">매장안내</a></li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath %>/brandStory/brandStory.tea">브랜드스토리</a></li>
 				</ul>
@@ -327,12 +342,6 @@ div#brandStoryText {
 				<c:if test="${empty sessionScope.loginuser}"> 
 					<li class="nav-item dropdown mr-2"><a class="nav-link dropdown-toggle menufont_size text-secondary"
 						href="<%= ctxPath %>/login/login.tea">로그인</a> 
-						<%-- href="<%= ctxPath %>/login/login.tea" id="navbarDropdown" data-toggle="dropdown">로그인</a>  --%>
-						<%-- 로그인을 누르면 기본은 로그인 창으로 연결 --%>
-						<%-- <div class="dropdown-menu no-border" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="<%= ctxPath %>/login/login.tea">로그인</a> 
-							<a class="dropdown-item" href="<%= ctxPath %>/member/memberRegister.tea">회원가입</a>
-						</div></li> --%>
 					<li class="nav-item active mr-2">
 					  <%-- 로그인 전 회원가입 접속가능 --%>
 					  <c:if test="${empty sessionScope.loginuser}">
