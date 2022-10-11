@@ -7,6 +7,7 @@
 
 .mysidebar .nav-link {
 	/* border:solid 1px red; */
+	width: 500px;
     padding: 0 0 3px 0;
     font-size: 13px;       
     color: #404040; 
@@ -26,13 +27,18 @@
 } 
 
 .mysidebar{
-font-family: 'Gowun Dodum', sans-serif;
+	font-family: 'Gowun Dodum', sans-serif;
 	position: alsolute;
 	/* margin-top: 60px;    */  
-	margin-left: 60px;  
+	margin-left: 70px;  
 	width: 100px; 
 	float: left;
 }  
+
+.withdrawal {
+	position: relative; /* 원래있던 자신의 위치를 기준으로 한 상대위치 값을 지정한다. 자주사용한다.!! */
+	left: 60px;  /* 가로위치값 */
+}
 
 .withdrawalAgree, .withdrawalDisagree {
 	width: 85px; 
@@ -85,7 +91,7 @@ font-family: 'Gowun Dodum', sans-serif;
 
 </script>
 
-<div class="container mypage">
+<div class="container withdrawal">
 	<h2 style="font-weight: bold">회원탈퇴</h2><br>
       <hr style="background-color: black; height: 1.2px;">
 	
