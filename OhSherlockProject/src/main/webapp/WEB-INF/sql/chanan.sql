@@ -310,3 +310,5 @@ from tbl_order join tbl_order_detail
 on odrcode = fk_odrcode 
 where odrstatus = 2)
 join tbl_product on pnum = fk_pnum;
+
+desc tbl_order_detail;

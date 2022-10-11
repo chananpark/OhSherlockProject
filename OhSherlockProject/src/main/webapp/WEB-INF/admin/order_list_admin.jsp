@@ -129,6 +129,63 @@ const searchWord = '${searchWord}';
 	   const isChecked = obj.prop('checked');
 	   $('.'+className).prop('checked', isChecked);
 	}
+	
+	// 발송처리
+	function deliver(method) {
+		
+		// 체크된 체크박스
+		const orders = $("input:checkbox[class=deliverChk]:checked");
+		
+		const cnt = orders.length;
+
+      	if(cnt < 1) {
+          	alert("처리할 주문을 선택하세요!");
+          	return; // 종료 
+       	}
+      			
+		// 선택된 주문번호들을 담는 배열
+		const odrcodeArr = new Array();
+		
+		for(let i = 0; i < cnt; i++) {
+			const odrcode = $(".td_odrcode").eq(i).text();
+			odrcodeArr.push(odrcode);
+		}
+		
+		$.ajax({
+            url:"<%=ctxPath%>/shop/orderAdd.up",
+            type:"POST",
+            data:{"pnumjoin":pnumjoin,
+                 "oqtyjoin":oqtyjoin, 
+                 "cartnojoin":cartnojoin,
+                 "totalPricejoin":totalPricejoin,
+                 "sumtotalPrice":sumtotalPrice,
+                 "sumtotalPoint":sumtotalPoint},
+            dataType:"JSON",     
+            success:function(json){
+               if(json.nSuccess == 1) {
+                  location.href="<%= request.getContextPath()%>/shop/orderList.up";
+               }
+               else {
+                  location.href="<%= request.getContextPath()%>/shop/orderError.up";
+               }
+            },
+            error: function(request, status, error){
+               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+         });
+		
+	}
+	
+	// 배송완료처리
+	function complete() {
+		
+		
+	}
+	
+	// 환불처리
+	function refund() {
+		
+	}
 
 </script>
 
@@ -168,20 +225,17 @@ const searchWord = '${searchWord}';
 	  	<%-- 배송대기 상태일 경우 --%>
 	  	<c:if test="${odrstatus == '1' }">
 			<input type="checkbox" id="deliverAll" class="all" onChange="checkAll('deliverChk',$(this))"/>&nbsp;<label for="deliverAll">전체선택</label>&nbsp;
-			<input type="button" class="rounded" value="발송처리"/>
-			<%-- 발송처리 클릭 시 tbl_order의 odrstatus 컬럼 1 -> 2로 업데이트 --%>
+			<input type="button" class="rounded" value="발송처리" onclick="deliver('deliver')"/>
 		</c:if>
 		<%-- 배송중 상태일 경우 --%>
 		<c:if test="${odrstatus == '2' }">
 			<input type="checkbox" id="completeAll" class="all ml-3" onChange="checkAll('completeChk',$(this))"/>&nbsp;<label for="completeAll">전체선택</label>&nbsp;
-			<input type="button" class="rounded" value="배송완료"/>
-			<%-- 발송처리 클릭 시 tbl_order의 odrstatus 컬럼 2 -> 3으로 업데이트 --%>
+			<input type="button" class="rounded" value="배송완료" onclick="complete()"/>
 		</c:if>
 		<%-- 환불요청 상태일 경우 --%>
 		<c:if test="${odrstatus == 'refundRequest' }">
 			<input type="checkbox" id="refundAll" class="all ml-3" onChange="checkAll('refundChk',$(this))"/>&nbsp;<label for="refundAll">전체선택</label>&nbsp;
-			<input type="button" class="rounded" value="환불처리"/>
-			<%-- 발송처리 클릭 시 tbl_order_detail의 refund 컬럼 -1 -> 1로 업데이트 --%>
+			<input type="button" class="rounded" value="환불처리" onclick="refund()"/>
 		</c:if>
 		</div>
   	</form>		
@@ -204,7 +258,7 @@ const searchWord = '${searchWord}';
 			<c:forEach items="${orderList }" var="ovo" varStatus="status">
 				<tr class="row">
 					<td class="col">${ovo.odrdate}</td>
-					<td class="col">${ovo.odrcode}</td>
+					<td class="col td_odrcode">${ovo.odrcode}</td>
 					<td class="col">${ovo.odvo.pvo.pname}</td>
 					<td class="col"><fmt:formatNumber value="${ovo.odvo.oprice}" pattern="#,###"/>원</td>
 					<td class="col">${ovo.fk_userid}</td>
