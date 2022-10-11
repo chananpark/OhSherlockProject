@@ -7,18 +7,6 @@
 
 <%@ page import="common.model.ProductVO" %>
 
-<script type="text/javascript">
-
-	$(document).ready(function(){
-		
-		
-		
-		
-	}); // end of $(document).ready
-	
-	
-</script>
-
 <style>
 
 .productListContainer .sidebar {
@@ -76,10 +64,6 @@
   	justify-content: flex-end;
 }
 
-/* .productListContainer a:link, .productListContainer a:visited {
-	color: black;
-} */
-
 .productListContainer a:hover {
 	cursor: pointer;
 	text-decoration-line: none;
@@ -127,11 +111,6 @@ button.order {
 	font-weight: bold;
 }
 
-input.like {
-	background-color: transparent; 
-  	border-style: none;
-}
-
 </style>
 
 <script>
@@ -143,6 +122,7 @@ let order;
 let jsonPageBar;
 
 $(()=>{
+	
 	cnum = "${cnum}";
 	snum = "${snum}";
 	currentShowPageNo = "${currentShowPageNo}";
@@ -150,6 +130,13 @@ $(()=>{
 	console.log(cnum);
 	console.log(snum);
 	console.log(currentShowPageNo);
+	
+	// 찜하기 클릭시 색깔 변경
+	$('i.heart').click(function() {
+		$(this).removeClass("text-secondary");
+		$(this).addClass("text-danger");
+    });
+
 	
 	// 정렬 버튼 클릭시 이벤트
 	 $(".order").click((e)=>{
@@ -224,8 +211,8 @@ function getOrderedList() {
 	   			'<p class="card-text">'+item.price.toLocaleString('en')+'원</p> '+
 	   			
 	   			
-	   			'<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart"></i></a> '+
-	   			'<a class="card-text text-secondary mr-5">찜하기</a> '+
+	   			'<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart" onclick="goLike(' + item.pnum + ');"></i></a> '+
+	   			'<a class="card-text text-secondary mr-5 like" onclick="goLike(' + item.pnum + ');">찜하기</a> '+
 	   							      			
 	   			'<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a> '+
 	   			'<a class="card-text text-secondary">담기</a> '+
@@ -301,49 +288,21 @@ function getPageBar() {
 	
 }
 
-
-
-//Function Declaration
-// 찜하기버튼 클릭시
-function goLike(obj) {
-<%-- 	
-	 const index = $("input.like").index(obj); 
-	 const pnum = $("input.pnum").eq(index).val();  // eq() 는 여러 찜하기 배열중에서 선택한 한개를 끄집어오는 것.
-	 
-	 $.ajax({
-		  url:"<%= request.getContextPath()%>/shop/likeAdd.tea",
-		  type:"POST",
-		  data:{"pnum":pnum},
-		  dataType:"JSON",
-		  success:function(json) {
-			  // {n:1}
-			  if(json.n == 1) {  // json.n 객체는 넘겨받은 {n:1} 을 의미함.
-				  alert("찜하기 성공!");
-				  location.href = "likeList.up"; // 삭제가 반영된 장바구니 목록을 보여준다. 장바구니 보기는 페이징처리를 안함.
-			  }
-		  },
-		  error: function(request, status, error){
-			  alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-       }
-	  }); 
-    --%>
-	 
+// 찜목록 추가하기
+function goLike(pnum){
 	
-     const frm = document.prodStorageFrm;
-     
-     frm.method = "POST";
-     frm.action = "<%= request.getContextPath()%>/shop/likeAdd.tea";
-     frm.submit();
-     
-}// end of function goLike()------------------------------
-
-
-
-
+	const frm = document.prodStorageFrm;
+	
+	$("#hidden_pnum").val(pnum);
+	
+	frm.method = "POST";
+	frm.action = "<%= request.getContextPath()%>/shop/likeAdd.tea";
+	frm.submit();
+	
+}
 
 </script>
-
-<form name="prodStorageFrm">
+	
 	<div class="container productListContainer">
 		<div><img src= "../images/giftset_header.png" width=100%/></div>
       
@@ -422,18 +381,18 @@ function goLike(obj) {
 			    				
 			      				<h5 class="card-title" style="font-weight:bold;"><a href="<%= ctxPath %>/shop/productView.tea?pnum=${pvo.pnum}"> ${pvo.pname}</a></h5>
 				      			<p class="card-text"><fmt:formatNumber value="${pvo.price}" pattern="#,###"/>원</p>
-				      		
-				      			<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart"></i></a>
-				      			<input class="card-text text-secondary mr-5 like" type="button" onclick="goLike(this);" value="찜하기" style="padding-left: 0; margin-left: 0;" />
+				      			
+				      			<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart" onclick="goLike(${pvo.pnum})"></i></a>
+				      			<a class="card-text text-secondary mr-5" onclick="goLike(${pvo.pnum})">찜하기</a>
 				      							      			
 				      			<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a>
 				      			<a class="card-text text-secondary">담기</a>
-			      				<input type="hidden" name="pnum" value="${pvo.pnum}" />  <%-- 제품번호--%>
+				      			
 				   			</div>
 				  		</div>
 				  		</c:forEach>
 				  		</c:if>
-				  		<c:if test="${empty productList}">
+				  		<c:if test="${empty productList }">
 				  		상품 준비중입니다.
 				  		</c:if>
 				  		</div>
@@ -449,10 +408,13 @@ function goLike(obj) {
 				</div>
 	       		<%-- 본문 끝 --%>
 				
+				<form name="prodStorageFrm">
+				<%-- 제품번호--%>
+				<input type="hidden" name="pnum" id="hidden_pnum" />
+				</form>
 			</div>
     	    
 		</div>
 	</div>
-</form>
 	
 <%@ include file="../footer.jsp"%>

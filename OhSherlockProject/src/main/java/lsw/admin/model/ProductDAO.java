@@ -147,7 +147,7 @@ public class ProductDAO implements InterProductDAO {
 			
 			if( searchWord != null && !searchWord.trim().isEmpty() ) { // 서치워드에 공백을 지우고 동시에 비어있지 않는다면
 				// !searchWord.trim().isEmpty() 이거만 단독으로 주게되면 nullPonitException 이 떨어진다
-				sql += " and pnum like '%' || ? || '%' "; 
+				sql += " where pnum like '%' || ? || '%' "; 
 				// 위치홀더는 컬럼명이나 테이블명이 올 경우에는 에러발생. 검색어만 들어와야 한다. 테이블명 또는 컬럼명이 변수로 들어올 수 없다.
 				// 테이블명 또는 컬럼명이 변수로 들어와야 할 경우에는 변수로 처리해주어야 한다.
 			}
@@ -197,7 +197,7 @@ public class ProductDAO implements InterProductDAO {
 					
 					if( searchWord != null && !searchWord.trim().isEmpty() ) { // 서치워드에 공백을 지우고 동시에 비어있지 않는다면 // 검색어가 있다면
 						// !searchWord.trim().isEmpty() 이거만 단독으로 주게되면 nullPonitException 이 떨어진다
-						sql += " and pnum like '%' || ? || '%' ";  // 컬럼명과 변수명이 들어온다.
+						sql += " where pnum like '%' || ? || '%' ";  // 컬럼명과 변수명이 들어온다.
 						// 위치홀더는 컬럼명이나 테이블명이 올 경우에는 에러발생. 검색어만 들어와야 한다. 테이블명 또는 컬럼명이 변수로 들어올 수 없다.
 						// 테이블명 또는 컬럼명이 변수로 들어와야 할 경우에는 변수로 처리해주어야 한다.
 					}		
@@ -262,11 +262,11 @@ public class ProductDAO implements InterProductDAO {
 			try {
 				conn = ds.getConnection();
 						
-				String sql = " select S.sname, cname, pnum, pname, fk_cnum, pimage, pqty, price, saleprice, fk_snum, pcontent, psummary, point\n "+
+				String sql = " select sname, snum, cname, cnum, pnum, pname, fk_cnum, pimage, pqty, price, saleprice, fk_snum, pcontent, psummary, point\n "+
 							"    ,pinputdate\n "+
 							"    from\n "+
 							" (\n "+
-							" select C.cname, pnum, pname, fk_cnum, pimage, pqty, price, saleprice, fk_snum, pcontent, psummary, point\n "+
+							" select C.cnum, C.cname, pnum, pname, fk_cnum, pimage, pqty, price, saleprice, fk_snum, pcontent, psummary, point\n "+
 							"    , to_char(pinputdate, 'yyyy-mm-dd') as pinputdate\n "+
 							" from tbl_category C left join tbl_product P  \n "+
 							" on C.cnum = P.fk_cnum \n "+
@@ -286,24 +286,28 @@ public class ProductDAO implements InterProductDAO {
 					// select 해서 가져올 게 있냐
 					product = new ProductVO();
 					
-					product.setPnum(rs.getInt(3));
-					product.setPname(rs.getString(4));
-					product.setFk_cnum(rs.getInt(5));
-					product.setPimage(rs.getString(6));
-					product.setPqty(rs.getInt(7));
-					product.setPrice(rs.getInt(8));
-					product.setSaleprice(rs.getInt(9));
-					product.setFk_cnum(rs.getInt(10));
-					product.setPcontent(rs.getString(11));
-					product.setPsummary(rs.getString(12));
-					product.setPoint(rs.getInt(13));
-					product.setPinputdate(rs.getString(14));
+					product.setPnum(rs.getInt(5));
+					product.setPname(rs.getString(6));
+					product.setFk_cnum(rs.getInt(7));
+					product.setPimage(rs.getString(8));
+					product.setPqty(rs.getInt(9));
+					product.setPrice(rs.getInt(10));
+					product.setSaleprice(rs.getInt(11));
+					product.setFk_cnum(rs.getInt(12));
+					product.setPcontent(rs.getString(13));
+					product.setPsummary(rs.getString(14));
+					product.setPoint(rs.getInt(15));
+					product.setPinputdate(rs.getString(16));
 					
 					SpecVO spvo = new SpecVO();
 					spvo.setSname(rs.getString(1));
+					spvo.setSnum(rs.getInt(2));
+					product.setSpvo(spvo);
 					
 					CategoryVO cvo = new CategoryVO();
-					cvo.setCname(rs.getString(2));
+					cvo.setCname(rs.getString(3));
+					cvo.setCnum(rs.getInt(4));
+					product.setCategvo(cvo);
 					
 				} // end of if(rs.next())
 				
@@ -423,7 +427,7 @@ public class ProductDAO implements InterProductDAO {
 		         conn = ds.getConnection();
 		         
 		         String sql = " insert into tbl_product_imagefile(imgfileno, fk_pnum, imgfilename) "+ 
-		                    " values(seqImgfileno.nextval, ?, ?) ";
+		                      " values(seq_imgfileno.nextval, ?, ?) ";
 		         
 		         pstmt = conn.prepareStatement(sql);
 		         
@@ -472,4 +476,142 @@ public class ProductDAO implements InterProductDAO {
 
 		    return categoryList;
 		}
+
+		
+		// 관리자가 제품정보을 수정하는 메소드
+		@Override
+		public int productUpdate(ProductVO pvo) throws SQLException {
+			int result = 0;
+			
+			try {
+				conn = ds.getConnection();
+				
+				String sql = " update tbl_product set fk_cnum = ? "
+						   + " 					   , fk_snum = ? "
+						   + " 					   , pname = ? "
+						   + " 					   , psummary = ? "
+						   + " 					   , pqty = ? "
+						   + " 					   , price = ? "
+						   + " 					   , saleprice = ? "
+						   + " 					   , point = ? "
+						   + " 					   , pcontent = ? "
+						   + " 					   , pimage = ? "
+						   + " where pnum = ? "; 
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setInt(1, pvo.getFk_cnum());
+				
+				if(pvo.getFk_snum() > 0) {
+					pstmt.setInt(2, pvo.getFk_snum());
+				}else {
+					pstmt.setObject(2, null);
+				}
+					pstmt.setString(3, pvo.getPname());
+					pstmt.setString(4, pvo.getPsummary());
+					pstmt.setInt(5, pvo.getPqty()); 
+					pstmt.setInt(6, pvo.getPrice());
+					pstmt.setInt(7, pvo.getSaleprice());
+					pstmt.setInt(8, pvo.getPoint());
+					pstmt.setString(9, pvo.getPcontent());
+					pstmt.setString(10, pvo.getPimage());    
+					pstmt.setInt(11, pvo.getPnum());    
+				
+				
+				result = pstmt.executeUpdate();
+				
+			} finally {
+				close();
+			}
+			return result;
+		}// end of public int productUpdate(ProductVO pvo) throws SQLException {} ------------
+
+		
+		// 관리자가 제품삭제하는 메소드
+		@Override
+		public int prod_mgmt_delete(String pnum) throws SQLException {
+			int n = 0;
+
+			try {
+				conn = ds.getConnection();
+				
+				String sql = " delete from tbl_product "+
+						     " where pnum = ? ";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, pnum);
+				
+				n = pstmt.executeUpdate();
+				
+
+			} finally {
+				close();
+			}
+			return n; 
+		}// end of public int prod_mgmt_delete(String pnum) throws SQLException{}
+
+		
+		// 제품번호를 가지고서 해당 제품의 추가된 이미지 정보를 조회해오기
+		@Override
+		public List<HashMap<String, String>> getImagesByPnum(String pnum) throws SQLException {
+			
+			 List<HashMap<String, String>> imgList = new ArrayList<>();
+			
+			try {
+				conn = ds.getConnection();
+				
+				String sql = " select imgfilename, imgfileno "
+						   + " from tbl_product_imagefile "
+						   + " where fk_pnum = ? ";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, pnum);
+				
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					HashMap<String, String> map = new HashMap<>();
+		            map.put("imgfilename", rs.getString(1));
+		            map.put("imgfileno", rs.getString(2));
+
+		            imgList.add(map);
+					
+				}// end of while-------------------
+				
+			} finally {
+				close();
+			}
+			
+			return imgList;
+			
+		}// end of public List<String> getImagesByPnum(String pnum) throws SQLException-------
+
+		
+		// 추가이미지테이블에서 특정 이미지 삭제
+		@Override
+		public int prod_imgfile_delete(String imgfileno) throws SQLException {
+			int n = 0;
+
+			try {
+				conn = ds.getConnection();
+				
+				String sql = " delete from tbl_product_imagefile "+
+						     " where imgfileno = ? ";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, imgfileno);
+				
+				n = pstmt.executeUpdate();
+				
+
+			} finally {
+				close();
+			}
+			return n; 
+			
+		}// end of public int prod_imgfile_delete(String imgfileno) throws SQLException----
+
+		
+
+		
 }

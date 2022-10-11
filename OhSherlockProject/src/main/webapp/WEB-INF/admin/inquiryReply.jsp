@@ -116,8 +116,7 @@
 		});
 		
 		$("#showList").click(()=>{
-			const goBackURLInquiry = sessionStorage.getItem("goBackURLInquiry");
-			location.href="<%=ctxPath%>"+goBackURLInquiry;
+			location.href="<%=ctxPath%>/cs/inquiry.tea";
 		});
 		
 	});

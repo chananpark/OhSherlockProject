@@ -25,8 +25,8 @@ public class LikeAdd extends AbstractController {
 	            이와 같이 하려고 ProdView 클래스에서 super.goBackURL(request); 을 해두었음.   
 	        */
 				
-			request.setAttribute("message", "찜하기는 로그인 후 가능합니다.");
-	        request.setAttribute("loc", "login.tea");
+			request.setAttribute("message", "찜목록은 로그인 후 이용 가능합니다.");
+			request.setAttribute("loc", request.getContextPath() + "/login/login.tea");
 			
 		//	super.setRedirect(false);
 	        super.setViewPage("/WEB-INF/msg.jsp");
@@ -53,24 +53,24 @@ public class LikeAdd extends AbstractController {
 				int n = pdao.addLike(loginuser.getUserid(), pnum);  // 어떤 회원의 아이디가 어떤제품을 가져왔는지 조회한다.
 				
 				if(n == 1) {  // insert 및 update 가 성공되어진다면
-					request.setAttribute("message", "찜하기 성공!");
-					request.setAttribute("loc", "javascript:history.back()");  // 
+					request.setAttribute("message", "상품을 찜하였습니다. 찜목록으로 이동하시겠습니까?");
+					request.setAttribute("loc", "likeList.tea");  // 
 					// 찜목록은 마이페이지 통해서만 조회가능함.
 					
 				}
 				else {
-				    request.setAttribute("message", "찜하기 실패!");
+				    request.setAttribute("message", "상품 찜하기를 실패하였습니다.");
 				    request.setAttribute("loc", "javascript:history.back()");  // 이전페이지로 이동
 				}
 				
 			    // super.setRedirect(false);
-		        super.setViewPage("/WEB-INF/msg.jsp");
+				super.setViewPage("/WEB-INF/msg_confirm.jsp");
 				
 				
 			}
 			else {
 				// GET 방식이라면
-				String message = "비정상적인 경로로 들어왔습니다.";
+				String message = "비정상적인 접근입니다.";
 				String loc = "javascript:history.back()";  // 이전페이지로 이동
 		         
 		        request.setAttribute("message", message);

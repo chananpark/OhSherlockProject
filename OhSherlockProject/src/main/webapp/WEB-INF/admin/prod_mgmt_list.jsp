@@ -53,10 +53,10 @@
 
 		// 각 행을 클릭했을 때 해당하는 행의 상품 상세 조회 보여주기
 		// 모든 tr을 잡아와서 그 중 name 이 userid 인 것의 text만 가져오는 이벤트
-		$("tbody > tr").click(function(e){
+		$("tbody > tr > td").not('td.buttons').click(function(e){
 			
 			const $target = $(e.target); // <td> 태그 이다. 왜냐하면 tr 속에 td가 있기 때문에
-		//	console.log("확인용 : "+ $target.html());
+			//console.log("확인용 : "+ $target.html());
 			
 			// 클릭한 tr의 pnum 알아오기
 			const pnum = $target.parent().find("td[name='pnum']").text(); 
@@ -68,18 +68,56 @@
 				
 		// 수정하기 버튼을 클릭하였을때 해당 행의 상품 수정창으로 가기 
 		$("input#btnProdEdit").click(function(e) {
+			
 			const $target = $(e.target); 
-			// console.log("확인용 : "+ $target.html());
+			 // console.log("확인용 : "+ $target.html());
 				
 				// 클릭한 btnProdEdit의 pnum 알아오기
-				const pnum = $target.parentsUntil("td").find("td[name='pnum']").text(); 
-				console.log("확인용 : "+ pnum);
-				 
-				//location.href = "<%= request.getContextPath() %>/admin/prod_mgmt_detail.tea?pnum="+pnum+"&goBackURL=${requestScope.goBackURL}";
-			
+				const pnum = $target.parent().parent().find("td[name='pnum']").text(); 
+				// console.log("확인용 : "+ pnum);
+				
+				location.href = "<%= request.getContextPath()%>/admin/prod_mgmt_edit.tea?pnum="+pnum;
+				
 		});
+		
+		// 삭제하기 버튼을 클릭하였을때 해당 행의 상품 수정창으로 가기 
+		$("input#btnProdDel").click(function(e) {
+			const $target = $(e.target); 
+			 // console.log("확인용 : "+ $target.html());
 				
+				// 클릭한 btnProdEdit의 pnum 알아오기
+				const pnum = $target.parent().parent().find("td[name='pnum']").text(); 
+				// console.log("확인용 : "+ pnum);
 				
+					const bool = confirm("해당 상품을 삭제하시겠습니까?");
+			   
+			   	if(bool) {
+				   
+				   $.ajax({
+					   url:"<%=request.getContextPath()%>/admin/prod_mgmt_delete.tea",
+					   type: "POST",
+					   data:{"pnum": pnum},
+					   dataType: "text",
+					   success: function(json) {
+						  
+							  location.href = "prod_mgmt_list.tea"; 
+						 
+					   },
+					   error: function(request, status, error){
+			               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		         }
+					   
+				   });
+				   
+			   } 
+			   
+			   else {
+				   alert("상품 삭제를 취소하셨습니다.");
+				   
+   			 }
+				
+		});
+		
 		// select 태그에 대한 이벤트는 클릭이 아니라 change 이다
 		// select 를 선택할 때의 이벤트
 		$("select#sizePerPage").bind("change", function(){
@@ -165,10 +203,9 @@
 						<td name="saleprice">${pvo.saleprice}</td>
 						<td name="pqty">${pvo.pqty}</td>
 						<td name="pinputdate">${pvo.pinputdate}</td>
-						<td>
-							<div class="adminOnlyBtns mb-1">
+						<td class="buttons">
 								<input type="button" id="btnProdEdit" value="수정" /> 
-							</div>
+								<input type="button" id="btnProdDel" value="삭제" /> 
 						</td>
 					</tr>
 				</c:forEach>

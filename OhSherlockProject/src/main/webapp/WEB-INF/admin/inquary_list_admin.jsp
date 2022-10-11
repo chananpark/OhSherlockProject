@@ -39,7 +39,7 @@
 	}
 	
 	.btn-secondary:hover {
-		border: 2px none #1E7F15;
+		border: none;
 		background-color: #1E7F15;
 	    color: white;
 	}
@@ -83,10 +83,6 @@ $(document).ready(()=>{
 		answered_yn = '답변완료';
 	
 	$(".answered_yn").text(answered_yn);
-	
-	// 세션스토리지에 goBackURLInquiry 저장
-	const goBackURLInquiry = "${goBackURLInquiry}";
-	sessionStorage.setItem("goBackURLInquiry", goBackURLInquiry);
 	
 	$(".answerBtn").click((e)=>{
 		const answerFrm = document.answerFrm;
