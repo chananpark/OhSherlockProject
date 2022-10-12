@@ -65,8 +65,8 @@
 					<tr class="reviewInfo">
 						<td name="rnum">${review.rnum}</td>
 						<td name="rsubject">${review.rsubject}</td>
-						<td name="fk_userid">${review.fk_userid}</td>
-						<td name="writedate">${review.writedate}</td>
+						<td name="fk_userid">${review.userid}</td>
+						<td name="writedate">${review.writeDate}</td>
 						<td name="score">${review.score}</td>
 					</tr>
 				</c:forEach>

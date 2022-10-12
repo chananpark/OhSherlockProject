@@ -152,40 +152,6 @@
 	            
 	   }// end of goCart() -----------------------------------------         
 	
-	<%--    
-	   function click_category(selectid) {
-			let html = "";
-			
-			// 페이지는 그대로 있으면서 데이터에서 상품을 가져와서 ajax 로 뿌려준다.
-			$.ajax({
-				url: "<%= request.getContextPath() %>/shop/reviewJSON.tea",
-			//	type: "GET",
-				data: {"selectid":selectid}, 	 
-				dataType: "JSON", // 성공하면 JSON 형태로 넣어주어야 한다.
-				success: function(json){ // 올바르게 값을 가져왔으면 버튼의 값을 바꿔준다.
-					
-					if( json.length == 0 ) { 
-						html += " "; // 나중에 적어줘야하는데 여기 적어주면 에러나니까 그냥 자주묻는 질문은 무조건 다 나오는 걸로 하는 건 어떤지..?
-		                
-		                
-					} else if( json.length > 0 ) {	
-						// 상품이 있는 경우
-						$.each(json, function(index, item){ 
-							
-							
-						});  // end of $.each(json, function(index, item)		
-						
-					} // end of 상품이 있는 경우와 없는 경우이 if-else
-				},  // end of success
-				
-				error: function(request, status, error){
-		        	alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-		        }
-			}); // end of ajax
-			
-			
-		} // end of function click_category()
-	    --%>
 	   
 </script>
 
@@ -273,10 +239,7 @@
 			<button class="tablink" onclick="openPage('Home', this, '#1E7F15', 'white')" id="defaultOpen">상품상세</button>
 
 			<button class="tablink" onclick="openPage('Review', this, '#1E7F15', 'white')" >고객리뷰</button>
-			<button type="button" class="tablink" id="all" onclick="click_category()">고객리뷰</button> -->
 
-			<button class="tablink" onclick="openPage('Review', this, '#1E7F15', 'white')">고객리뷰</button>
- 
 			<button class="tablink" onclick="openPage('Info', this, '#1E7F15', 'white')">상품고시정보</button>
 		</div>
 		

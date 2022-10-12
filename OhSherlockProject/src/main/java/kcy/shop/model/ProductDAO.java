@@ -161,7 +161,7 @@ public class ProductDAO implements InterProductDAO {
 			try {
 				conn = ds.getConnection();
 
-				String sql = " select rnum, rsubject, userid, writeDate, score "+
+				String sql = " select rnum, rsubject, fk_userid, writedate, score "+
 						     " from TBL_REVIEW "+
 						     " where rnum = ? ";
 
@@ -225,11 +225,11 @@ public class ProductDAO implements InterProductDAO {
 			try {
 				conn = ds.getConnection();
 
-				String sql = " select rnum, rsubject, userid, writeDate, score "+
+				String sql = " select rnum, rsubject, fk_userid, writedate, score "+
 						     " from  "+
-						     "    (select rownum as rno, rnum, rsubject, fk_userid, writeDate, score  "+
+						     "    (select rownum as rno, rnum, rsubject, fk_userid, writedate, score  "+
 						     "     from  "+
-						     "         (select rnum, rsubject, userid, writeDate, score "+
+						     "         (select rnum, rsubject, fk_userid, writedate, score "+
 						     "          from TBL_REVIEW   "+
 						     "          order by 1 desc) V  "+
 						     "    ) T  "+
@@ -277,7 +277,7 @@ public class ProductDAO implements InterProductDAO {
 
 				conn = ds.getConnection();
 				
-				String sql = " select rnum, rsubject, userid, writeDate, score "+
+				String sql = " select rnum, rsubject, fk_userid, writedate, score "+
 							 " from TBL_REVIEW ";
 				
 				String selectid = paraMap.get("selectid");
