@@ -4,14 +4,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import common.model.FaqVO;
 import common.model.ProductVO;
 import common.model.SpecVO;
 
@@ -145,6 +149,172 @@ public class ProductDAO implements InterProductDAO {
 			return imgList;
 			
 		}// end of 제품번호를 가지고서 해당 제품의 추가된 이미지 정보를 조회해오기 -----------------------
+
+		
+		// 리뷰 내용 조회
+		@Override
+		public ReviewVO showReviewDetail(Map<String, String> paraMap) throws SQLException {
+			
+			ReviewVO rvo = new ReviewVO();
+			
+			try {
+				conn = ds.getConnection();
+
+				String sql = " select rnum, rsubject, fk_userid, writedate, score "+
+						     " from TBL_REVIEW "+
+						     " where rnum = ? ";
+
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, paraMap.get("rnum"));
+				rs = pstmt.executeQuery();
+
+				if (rs.next()) {
+					rvo.setRnum(Integer.parseInt(paraMap.get("rnum")));
+					rvo.setRsubject(rs.getString(2));
+					rvo.setFk_userid(rs.getString(3));
+					rvo.setWritedate(rs.getDate(4));
+					rvo.setScore(rs.getInt(5));
+					
+				}
+
+			} finally {
+				close();
+			}	
+			
+			return rvo;
+			
+			
+		}// end of 리뷰 내용 조회 ------------------------------------------------
+
+		
+		// 전체 페이지 수 알아오기
+		@Override
+		public int getTotalPage(Map<String, String> paraMap) throws SQLException {
+			
+			
+			int totalPage = 0;
+
+			try {
+				conn = ds.getConnection();
+
+				String sql = " select ceil(count(*)/?) from TBL_REVIEW ";
+
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, 10);
+
+				rs = pstmt.executeQuery();
+				rs.next();
+				totalPage = rs.getInt(1);
+
+			} finally {
+				close();
+			}
+
+			return totalPage;
+			
+			
+		}// end of 전체 페이지 수 알아오기 ------------------------------------------
+
+		// 리뷰 목록
+		@Override
+		public List<ReviewVO> showReviewList(Map<String, String> paraMap) throws SQLException {
+
+			List<ReviewVO> reviewList = new ArrayList<>();
+			
+			try {
+				conn = ds.getConnection();
+
+				String sql = " select rnum, rsubject, fk_userid, writedate, score "+
+						     " from  "+
+						     "    (select rownum as rno, rnum, rsubject, fk_userid, writedate, score  "+
+						     "     from  "+
+						     "         (select rnum, rsubject, fk_userid, writedate, score "+
+						     "          from TBL_REVIEW   "+
+						     "          order by 1 desc) V  "+
+						     "    ) T  "+
+						     " where RNO between ? and ?  ";      
+				
+				// 페이징처리
+				
+				int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));  // 조회하고자 하는 페이지 번호
+				int sizePerPage = 10; // 한페이지당 보여줄 행의 개수
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setInt(1, (currentShowPageNo*sizePerPage) - (sizePerPage-1) );
+				pstmt.setInt(2, (currentShowPageNo*sizePerPage) );
+				
+				rs = pstmt.executeQuery();
+
+				while (rs.next()) {
+					ReviewVO review = new ReviewVO();
+					review.setRnum(rs.getInt(1));
+					review.setRsubject(rs.getString(2));
+					review.setFk_userid(rs.getString(3));
+					review.setWritedate(rs.getDate(4));
+					review.setScore(rs.getInt(5));
+					
+					reviewList.add(review);
+				}
+
+			} finally {
+				close();
+			}		
+			
+			return reviewList;
+			
+		}// end of 리뷰 목록 목록 -------------------------------------------------
+
+		
+		// 버튼아이디에 따른 리스트 select 해오기
+		@Override
+		public List<ReviewVO> selectreviewList(Map<String, String> paraMap) throws SQLException {
+			
+			List<ReviewVO> reviewList = new ArrayList<>();
+			
+			try {
+
+				conn = ds.getConnection();
+				
+				String sql = " select rnum, rsubject, fk_userid, writedate, score "+
+							 " from TBL_REVIEW ";
+				
+				String selectid = paraMap.get("selectid");
+				
+				if( !("all".equals(selectid)) ) {
+					// faq_category 가 선택되어질 경우의 sql 문
+					sql += " where rnum = ? ";
+				}
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, selectid);
+				
+				rs = pstmt.executeQuery();
+				
+				// 복수개의 행 출력
+				while(rs.next()) {
+					
+					ReviewVO rvo = new ReviewVO();
+					
+					rvo.setRnum(rs.getInt(1));
+					rvo.setRsubject(rs.getString(2));
+					rvo.setFk_userid(rs.getString(3));
+					rvo.setWritedate(rs.getDate(4));
+					rvo.setScore(rs.getInt(5));
+
+					reviewList.add(rvo);
+					
+				} // end of while
+				
+			} finally {
+				close();
+			}
+
+			return reviewList;
+			
+			
+		}// end of 버튼아이디에 따른 리스트 select 해오기 --------------------------------------------------
 	
 	
 }
