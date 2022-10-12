@@ -59,25 +59,62 @@
 	  background-color: #fafafa; 
 	  border-color: #1E7F15;
 	}
-   
+	
+	
 </style>
 
 <script type="text/javascript">
 
    $(document).ready(function(){
       
-	   
-	   
 	  // 찜목록 전체개수 값
       const allCnt = $("input[name='odrcodeCnt']").length;
       document.getElementById("reviewCnt").textContent = allCnt;
 	   
-      
+      // 별점 주기
       $('#star a').click(function(){ 
     	  $(this).parent().children("a").removeClass("on");    
     	  $(this).addClass("on").prevAll("a").addClass("on");
     	  console.log($(this).attr("value"));
-   	  });      
+   	  });    
+      
+      // 리뷰 내용
+      $('.box').each(function(){  //  each() 메소드: object 와 배열 모두에서 사용할 수 있는 일반적인 반복 함수
+    	  var content = $(this).children('.content');
+          var content_txt = content.text();
+          var content_txt_short = content_txt.substring(0,50)+"...";
+          //var images = $(".image").val();
+          var btn_more = $('<a href="javascript:void(0)" class="more">더보기</a>');
+          
+
+          //$(this).append(images);
+          $(this).append(btn_more);
+          
+          if(content_txt.length >= 100){
+              content.html(content_txt_short)
+              
+          }else{
+              btn_more.hide()
+          }
+          
+          btn_more.click(toggle_content);
+
+          function toggle_content(){
+              if($(this).hasClass('short')){
+                  // 접기 상태
+                  $(this).html('더보기');
+                  content.html(content_txt_short)
+                  $(this).removeClass('short');
+              }else{
+                  // 더보기 상태
+                  $(this).html('접기');
+                  content.html(content_txt);
+                  $(this).addClass('short');
+
+              }
+          }
+      });
+      
 	   
    });// end of $(document).ready()--------------------------
    
@@ -98,15 +135,14 @@
       <div class="likeList">
          <table class="table mt-4">
 	        <colgroup>
-		          <col width="220px" />
-		          <col />
+		          <col width="300px" />
 		          <col />
 		          <col />
 	      	</colgroup>
             <thead class="thead-light">
                <tr>
                   <th colspan='2' style="text-align: center;">상품정보</th>
-                  <th colspan='2' style="text-align: center;">리뷰</th>
+                  <th style="padding-left: 30px;">리뷰</th>
                </tr>
             </thead>
             <tbody>
@@ -125,13 +161,13 @@
                    <tr>
                      <td>
                          <a href="/OhSherlockProject/shop/productView.tea?pnum=${reivewvo.pnum}" style="text-align: right;">  <%-- 썸네일이미지 --%>
-                            <img src="/OhSherlockProject/images/${reivewvo.prod.pimage}" class="img-thumbnail" width="100" style="margin-left: 50px; border: 0;" />
+                            <img src="/OhSherlockProject/images/${reivewvo.prod.pimage}" class="img-thumbnail" width="100" style="margin-left: 100px; border: 0;" />
                          </a>
                          <input type="hidden" name="pnumCnt" for="pnum${status.index}" value="${reivewvo.pnum}" /> <%-- 제품번호 --%>  
                          <input type="hidden" name="odrcodeCnt" for="pnum${status.index}" value="${reivewvo.odrcode}" /> <%-- 주문상세번호 --%>  
                      </td>
                      <td>    
-                        <span class="like_pname">${reivewvo.prod.pname}</span>  <%-- 제품명 --%>
+                        <span class="like_pname" style="font-weight: bold;">${reivewvo.prod.pname}</span><br>  <%-- 제품명 --%>
                         <span>작성일 :&nbsp; ${reivewvo.writeDate}</span><br>
                         <P id="star"> <!-- 부모 -->
 						    <a href="#" value="1">★</a> <!-- 자식들-->
@@ -140,13 +176,21 @@
 						    <a href="#" value="4">★</a>
 						    <a href="#" value="5">★</a>
 						<p>
+						<span>${reivewvo.rsubject}</span><br>
+						
+						<div class="box">
+						    <div class="content">
+						    	배송지연으로 오래 기다려서 받았는데, 박스가 터져서 왔네요. 여기서 박스터져서 손상된 물건을 받은 적이 처음이라 황당해요. 빠른 처리해주세요...하..
+						    </div>
+						</div>
+						
                         <input type="hidden" class="likeno" value="${reivewvo.rnum}" />  <%-- 찜목록번호(시퀀스) 는 hidden 처리함. --%>
                       </td> 
                       <td>  
-						<p><input class="paymentBtn" type="button" onClick="clickCart(${reivewvo.pnum}, ${reivewvo.rnum});" value="리뷰수정"/></p>  
+						<p><input class="paymentBtn" type="button" onClick="clickCart(${reivewvo.pnum}, ${reivewvo.rnum});" style="clear:none;" value="리뷰수정"/></p>  
 						<input type="hidden" name="allCnt" id="hidden_pnum" value="${reivewvo.pnum}" /> <%-- 제품번호--%>
 						<%-- 찜목록에서 해당 특정 제품 비우기 --%> 
-						<p><input type="button" value="리뷰보기"/></p> <%-- 찜목록번호(시퀀스)로 구별하여 삭제해준다. ${reivewvo.likeno} 은 숫자이든 문자이든 적용될 수 있도록 '' 를 꼭 감싸준다. 예: 찜목록번호 234-567 도 인식할 수 있음. --%>
+						<p><input type="button" value="리뷰삭제" style="clear:none;" /></p> <%-- 찜목록번호(시퀀스)로 구별하여 삭제해준다. ${reivewvo.likeno} 은 숫자이든 문자이든 적용될 수 있도록 '' 를 꼭 감싸준다. 예: 찜목록번호 234-567 도 인식할 수 있음. --%>
                      </td> 
                    </tr>
 			      </c:forEach>
