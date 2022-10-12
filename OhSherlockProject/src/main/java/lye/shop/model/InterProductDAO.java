@@ -1,11 +1,13 @@
-package lye.product.model;
+package lye.shop.model;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 import common.model.LikeVO;
+import common.model.MemberVO;
 import common.model.ProductVO;
+import common.model.ReviewVO;
 
 public interface InterProductDAO {
 
@@ -45,6 +47,22 @@ public interface InterProductDAO {
 	
 	// 찜목록 테이블에서 특정제품 선택 행들을 찜목록에서 비우기
 	int delSelectLike(String[] likenoArr) throws SQLException;
+
+	
+	// 로그인한 사용자의 상품리뷰 조회하기
+	List<ReviewVO> ProductReviewList(String userid) throws SQLException;
+
+	// 페이징 방식 리뷰상품 총 페이지수 알아오기
+	int getTotalPages(String userid) throws SQLException;
+	//int getTotalPages(Map<String, String> paraMap) throws SQLException;
+
+	// 페이징 처리를 한 모든 상품리뷰 목록 보여주기
+	List<ReviewVO> selectPagingReview(Map<String, Object> paraMap) throws SQLException;
+
+	
+
+	
+
 
 
 

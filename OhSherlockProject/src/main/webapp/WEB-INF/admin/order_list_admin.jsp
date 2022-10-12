@@ -131,10 +131,10 @@ const searchWord = '${searchWord}';
 	}
 	
 	// 발송처리
-	function deliver(method) {
+	function processDeliver(type) {
 		
 		// 체크된 체크박스
-		const orders = $("input:checkbox[class=deliverChk]:checked");
+		const orders = $("input:checkbox[class='"+type+"Chk']:checked");
 		
 		const cnt = orders.length;
 
@@ -151,23 +151,20 @@ const searchWord = '${searchWord}';
 			odrcodeArr.push(odrcode);
 		}
 		
+		const odrcodes = odrcodeArr.join();
+				
 		$.ajax({
-            url:"<%=ctxPath%>/shop/orderAdd.up",
+            url:"<%= ctxPath%>/admin/processDeliver.tea",
             type:"POST",
-            data:{"pnumjoin":pnumjoin,
-                 "oqtyjoin":oqtyjoin, 
-                 "cartnojoin":cartnojoin,
-                 "totalPricejoin":totalPricejoin,
-                 "sumtotalPrice":sumtotalPrice,
-                 "sumtotalPoint":sumtotalPoint},
+            data:{"type":type,"odrcodes":odrcodes},
             dataType:"JSON",     
             success:function(json){
-               if(json.nSuccess == 1) {
-                  location.href="<%= request.getContextPath()%>/shop/orderList.up";
-               }
-               else {
-                  location.href="<%= request.getContextPath()%>/shop/orderError.up";
-               }
+            	if(json.isSuccess){
+					alert("주문 처리가 완료되었습니다.");
+					location.href="javascript:history.go(0)"; 
+            	}else{
+            		alert("주문 처리를 실패하였습니다.");
+            	}
             },
             error: function(request, status, error){
                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -176,15 +173,76 @@ const searchWord = '${searchWord}';
 		
 	}
 	
-	// 배송완료처리
-	function complete() {
-		
-		
-	}
-	
 	// 환불처리
-	function refund() {
+	function refundOrder() {
+		// 체크된 체크박스
+		const orders = $("input:checkbox[class=refundChk]:checked");
 		
+		const cnt = orders.length;
+
+      	if(cnt < 1) {
+          	alert("처리할 주문을 선택하세요!");
+          	return; // 종료 
+       	}
+      	
+     	// 선택된 주문번호들을 담는 배열
+		const odrcodeArr = new Array();
+		
+		for(let i = 0; i < cnt; i++) {
+			const odrcode = $(".td_odrcode").eq(i).text();
+			odrcodeArr.push(odrcode);
+		}
+		
+		const odrcodes = odrcodeArr.join();
+      			
+		// 선택된 주문상세번호들을 담는 배열
+		const odnumArr = new Array();
+		
+		
+		for(let i = 0; i < cnt; i++) {
+			const odnum = $(".span_odnum").eq(i).text();
+			odnumArr.push(odnum);
+		}
+		
+		const odnums = odnumArr.join();
+
+		// 선택된 주문자들을 담는 배열
+		const useridArr = new Array();
+		
+		for(let i = 0; i < cnt; i++) {
+			const userid = $(".td_fk_userid").eq(i).text();
+			useridArr.push(userid);
+		}
+		
+		const userids = useridArr.join();
+
+		// 선택된 주문금액들을 담는 배열
+		const opriceArr = new Array();
+		
+		for(let i = 0; i < cnt; i++) {
+			const oprice = $(".span_oprice").eq(i).text();
+			opriceArr.push(oprice);
+		}
+		
+		const oprices = opriceArr.join();
+
+		$.ajax({
+            url:"<%= ctxPath%>/admin/refundOrder.tea",
+            type:"POST",
+            data:{"odrcodes":odrcodes,"odnums":odnums,"userids":userids,"oprices":oprices},
+            dataType:"JSON",     
+            success:function(json){
+            	if(json.isSuccess){
+					alert("주문 처리가 완료되었습니다.");
+					location.href="javascript:history.go(0)"; 
+            	}else{
+            		alert("주문 처리를 실패하였습니다.");
+            	}
+            },
+            error: function(request, status, error){
+               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+         });
 	}
 
 </script>
@@ -225,17 +283,17 @@ const searchWord = '${searchWord}';
 	  	<%-- 배송대기 상태일 경우 --%>
 	  	<c:if test="${odrstatus == '1' }">
 			<input type="checkbox" id="deliverAll" class="all" onChange="checkAll('deliverChk',$(this))"/>&nbsp;<label for="deliverAll">전체선택</label>&nbsp;
-			<input type="button" class="rounded" value="발송처리" onclick="deliver('deliver')"/>
+			<input type="button" class="rounded" value="발송처리" onclick="processDeliver('deliver')"/>
 		</c:if>
 		<%-- 배송중 상태일 경우 --%>
 		<c:if test="${odrstatus == '2' }">
 			<input type="checkbox" id="completeAll" class="all ml-3" onChange="checkAll('completeChk',$(this))"/>&nbsp;<label for="completeAll">전체선택</label>&nbsp;
-			<input type="button" class="rounded" value="배송완료" onclick="complete()"/>
+			<input type="button" class="rounded" value="배송완료" onclick="processDeliver('complete')"/>
 		</c:if>
 		<%-- 환불요청 상태일 경우 --%>
 		<c:if test="${odrstatus == 'refundRequest' }">
 			<input type="checkbox" id="refundAll" class="all ml-3" onChange="checkAll('refundChk',$(this))"/>&nbsp;<label for="refundAll">전체선택</label>&nbsp;
-			<input type="button" class="rounded" value="환불처리" onclick="refund()"/>
+			<input type="button" class="rounded" value="환불처리" onclick="refundOrder()"/>
 		</c:if>
 		</div>
   	</form>		
@@ -256,12 +314,14 @@ const searchWord = '${searchWord}';
 			<tbody>
 			<c:if test="${not empty orderList }">
 			<c:forEach items="${orderList }" var="ovo" varStatus="status">
+					<span class="span_odnum" style="display:none;">${ovo.odvo.odnum}</span>
+					<span class="span_oprice" style="display:none;">${ovo.odvo.oprice}</span>
 				<tr class="row">
 					<td class="col">${ovo.odrdate}</td>
 					<td class="col td_odrcode">${ovo.odrcode}</td>
 					<td class="col">${ovo.odvo.pvo.pname}</td>
 					<td class="col"><fmt:formatNumber value="${ovo.odvo.oprice}" pattern="#,###"/>원</td>
-					<td class="col">${ovo.fk_userid}</td>
+					<td class="col td_fk_userid">${ovo.fk_userid}</td>
 					<td class="col">
 						<input type="button" class="rounded" id="orderDetailBtn" 
 						onclick="location.href='<%=ctxPath%>/admin/orderDetail.tea?odrcode=${ovo.odrcode}&goBackURL=${goBackURL}'" value="조회"/>

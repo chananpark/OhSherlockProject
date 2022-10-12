@@ -1,4 +1,4 @@
-package lye.product.model;
+package lye.shop.model;
 
 import java.sql.*;
 import java.util.*;
@@ -119,7 +119,7 @@ public class ProductDAO implements InterProductDAO {
 			conn = ds.getConnection();
 
 			String sql = " select ceil( count(*)/6 ) " // 6 이 sizePerPage 이다.
-					+ " from tbl_product " ;
+					   + " from tbl_product " ;
 			
 			// 특정 카테고리 조회시
 			if (!"".equals(cnum)) {
@@ -272,7 +272,7 @@ public class ProductDAO implements InterProductDAO {
 	}// end of public List<ProductVO> selectGoodsByCategory(Map<String, String> paraMap) throws SQLException {}-------------------
 
 
-
+	
 	
 	
 /*	
@@ -593,6 +593,209 @@ public class ProductDAO implements InterProductDAO {
 		
 		return n;
 	}// end of public int delLike(String likeno) throws SQLException {}-------------------
+
+	
+	
+
+	// 로그인한 사용자의 상품리뷰 조회하기
+	@Override
+	public List<ReviewVO> ProductReviewList(String userid) throws SQLException {
+		
+		List<ReviewVO> reviewList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection(); // 커넥션풀 방식
+			
+			String sql = " select rnum, fk_userid, fk_odnum, score, rsubject, rcontent, rimage, A.fk_odrcode, writeDate, A.fk_pnum "+
+						 "      , pname, pimage, price, saleprice, oprice "+
+						 " from tbl_review A join tbl_product B "+
+						 " on A.fk_pnum = B.pnum "+
+						 " join tbl_order_detail C "+
+						 " on A.fk_odrcode = C.fk_odrcode "+
+						 " where fk_userid = ? "+
+						 " order by writeDate desc ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {  // 조회한 상품리뷰가 있다면
+				
+				int rnum = rs.getInt("rnum");
+				String fk_userid = rs.getString("fk_userid");
+				int fk_odnum = rs.getInt("fk_odnum");
+				int score = rs.getInt("score");
+				String rsubject = rs.getString("rsubject");
+				String rcontent = rs.getString("rcontent");
+				String rimage = rs.getString("rimage");
+				String fk_odrcode = rs.getString("fk_odrcode");
+				String writeDate = rs.getString("writeDate");
+				int fk_pnum = rs.getInt("fk_pnum");
+				String pname = rs.getString("pname");
+				String pimage = rs.getString("pimage");
+				int price = rs.getInt("price");
+				int saleprice = rs.getInt("saleprice");
+				int oprice = rs.getInt("oprice");
+				
+				ProductVO prodvo = new ProductVO();  // join한 제품테이블
+				prodvo.setPnum(fk_pnum);
+				prodvo.setPname(pname);
+				prodvo.setPimage(pimage);
+				prodvo.setPrice(price);
+				prodvo.setSaleprice(saleprice);
+				
+				OrderDetailVO odvo = new OrderDetailVO(); // join한 주문상세테이블
+				odvo.setFk_odrcode(fk_odrcode);
+				odvo.setOprice(oprice);
+				
+				ReviewVO rvo = new ReviewVO(); // 리뷰 테이블
+				rvo.setRnum(rnum);
+				rvo.setUserid(fk_userid);  // 사용자아이디
+				rvo.setOdnum(fk_odnum);
+				rvo.setScore(score);
+				rvo.setRsubject(rsubject);
+				rvo.setRcontent(rcontent);
+				rvo.setRimage(rimage);
+				rvo.setOdrcode(fk_odrcode);
+				rvo.setWriteDate(writeDate);
+				rvo.setPnum(fk_pnum);      // 제품번호
+				rvo.setProd(prodvo);       // join 한 제품테이블 정보(위에서 set한 정보들을 넣어준다.)
+				rvo.setOddt(odvo);         // join 한 주문상세테이블 정보(위에서 set한 정보들을 넣어준다.)
+				
+				reviewList.add(rvo);
+			}// end of while---------------------
+			
+		} finally {
+			close();
+		}
+		
+		//System.out.println(reviewList.toString());
+		return reviewList;  // 리턴할 값이 없으면 0 이 들어온다.
+		
+	}// end of public List<LikeVO> ProductReviewList(String userid) throws SQLException {}-------------------
+
+	
+	// 페이징 방식 리뷰상품 총 페이지수 알아오기
+	@Override
+	public int getTotalPages(String userid) throws SQLException {
+
+		int totalPage = 0;  // 초기값
+		
+		try {
+			conn = ds.getConnection();  // 커넥션풀 방식
+			
+			String sql = " select ceil( count(*)/10 ) "  // 10 이 sizePerPage 이다. 한페이지당 보여주는 제품목록  // ceil 은 예를 들어 3.5 이면 보다큰 최소의 정수 4로 올려준다.
+					   + " from tbl_review "
+					   + " where fk_userid = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			
+			rs = pstmt.executeQuery();
+			
+			rs.next();
+				
+			totalPage = rs.getInt(1);
+			
+		} catch (Exception e) {
+			close();
+		}
+		
+		System.out.println("확인용 totalPage:" + totalPage);
+		return totalPage;
+	}// end of public int getTotalPage(String cnum) throws SQLException {}-------------------
+
+
+	// 페이징 처리를 한 모든 상품리뷰 목록 보여주기
+	public List<ReviewVO> selectPagingReview(Map<String, Object> paraMap) throws SQLException {
+		
+		List<ReviewVO> reviewList = new ArrayList<>();  // ArrayList 객체생성
+		
+		try {
+			conn = ds.getConnection();  // 커넥션풀 방식 연결
+			
+			String sql = " select rnum, fk_userid, fk_odnum, score, rsubject, rcontent, rimage, fk_odrcode, writeDate, fk_pnum "+
+						 "      , pname, pimage "+
+						 "     from "+
+						 "     ( "+
+						 "         select rownum AS RNO, V.rnum, V.fk_userid, V.fk_odnum, V.score, V.rsubject, V.rcontent, V.rimage, V.fk_odrcode, V.writeDate, V.fk_pnum "+
+						 "              , V.pname, V.pimage "+
+						 "         from "+
+						 "         ( "+
+						 "             select rnum, fk_userid, fk_odnum, score, rsubject, rcontent, rimage, A.fk_odrcode, writeDate, A.fk_pnum "+
+						 "                  , pname, pimage, price, saleprice, oprice "+
+						 "             from tbl_review A join tbl_product B "+
+						 "             on A.fk_pnum = B.pnum "+
+						 "             join tbl_order_detail C "+
+						 "             on A.fk_odrcode = C.fk_odrcode "+
+						 "             where fk_userid = ? "+
+						 "             order by writeDate desc "+
+						 "         ) V "+
+						 "     ) T "+
+						 " where T.RNO between ? and ? ";  
+			
+			int currentShowPageNo = Integer.parseInt((String)paraMap.get("currentShowPageNo"));  // 조회하고자 하는 페이지 번호
+			int sizePerPage = 10; // 한페이지당 보여줄 행의 개수
+
+			
+			pstmt = conn.prepareStatement(sql);  // 우편배달부
+			pstmt.setString(1, (String) paraMap.get("userid"));
+			pstmt.setInt(2, (currentShowPageNo*sizePerPage) - (sizePerPage - 1) ); // 공식(몇 페이지부터)
+			pstmt.setInt(3, (currentShowPageNo*sizePerPage) ); // 공식(몇 페이지까지)
+			
+			
+			rs = pstmt.executeQuery();  // 자원 저장소(결과값)
+			
+			while(rs.next()) {  // 조회한 상품리뷰가 있다면
+				
+				int rnum = rs.getInt("rnum");
+				String fk_userid = rs.getString("fk_userid");
+				int fk_odnum = rs.getInt("fk_odnum");
+				int score = rs.getInt("score");
+				String rsubject = rs.getString("rsubject");
+				String rcontent = rs.getString("rcontent");
+				String rimage = rs.getString("rimage");
+				String fk_odrcode = rs.getString("fk_odrcode");
+				String writeDate = rs.getString("writeDate");
+				int fk_pnum = rs.getInt("fk_pnum");
+				String pname = rs.getString("pname");
+				String pimage = rs.getString("pimage");
+				
+				ProductVO prodvo = new ProductVO();  // join한 제품테이블
+				prodvo.setPnum(fk_pnum);
+				prodvo.setPname(pname);
+				prodvo.setPimage(pimage);
+				
+				OrderDetailVO odvo = new OrderDetailVO(); // join한 주문상세테이블
+				odvo.setFk_odrcode(fk_odrcode);
+				
+				ReviewVO rvo = new ReviewVO(); // 리뷰 테이블
+				rvo.setRnum(rnum);
+				rvo.setUserid(fk_userid);  // 사용자아이디
+				rvo.setOdnum(fk_odnum);
+				rvo.setScore(score);
+				rvo.setRsubject(rsubject);
+				rvo.setRcontent(rcontent);
+				rvo.setRimage(rimage);
+				rvo.setOdrcode(fk_odrcode);
+				rvo.setWriteDate(writeDate);
+				rvo.setPnum(fk_pnum);      // 제품번호
+				rvo.setProd(prodvo);       // join 한 제품테이블 정보(위에서 set한 정보들을 넣어준다.)
+				rvo.setOddt(odvo);         // join 한 주문상세테이블 정보(위에서 set한 정보들을 넣어준다.)
+				
+				reviewList.add(rvo);
+			}// end of while---------------------
+			
+		} finally {
+			close();
+		}
+		
+		return reviewList;
+	}// end of public List<ReviewVO> selectPagingReview(Map<String, Object> paraMap) throws SQLException {}-------------------
+
+
+
 
 
 

@@ -29,6 +29,8 @@ public class FaqEdit extends AbstractController {
 			
 			String faq_content = fvo.getFaq_content();
 			faq_content = faq_content.replace("<br>","\r\n");
+			faq_content = faq_content.replaceAll("&lt;", "<");
+			faq_content = faq_content.replaceAll("&gt;", ">");
 			
 			fvo.setFaq_content(faq_content);
 			

@@ -2,7 +2,7 @@
    pageEncoding="UTF-8"%>
 <%@ include file="../header.jsp"%>
 
-<style>
+<style type="text/css">
    #likeContainer th, #likeContainer td {
       text-align: center;
       vertical-align: middle;
@@ -196,7 +196,7 @@
 </script>
    
 <form name="prodStorageFrm"> 
-     <div class="container" id="likeContainer">
+  <div class="container" id="likeContainer">
       <i class="fas fa-coins" style="font-size: 40px; float: left; padding-right: 10px;"></i>  
       <h2 style="font-weight: bold">찜목록</h2><br>
          <hr style="background-color: black; height: 1.2px;"> 
@@ -256,7 +256,7 @@
 							<%-- 장바구니에 추가해주기★ --%>
 							<p><input class="paymentBtn" type="button" onClick="clickCart(${likevo.pnum}, ${likevo.likeno});" value="장바구니"/></p>  
 							<input type="hidden" name="pnum" id="hidden_pnum" value="${likevo.pnum}" /> <%-- 제품번호--%>
-							<input type="hidden" name="likeno" id="hidden_likeno" value="${likevo.pnum}" /> <%-- 찜목록번호--%>
+							<input type="hidden" name="likeno" id="hidden_likeno" value="${likevo.likeno}" /> <%-- 찜목록번호--%>
 							<%-- 찜목록에서 해당 특정 제품 비우기 --%> 
 							<p><input type="button" onclick="goDel('${likevo.likeno}')" value="상품삭제"/></p> <%-- 찜목록번호(시퀀스)로 구별하여 삭제해준다. ${likevo.likeno} 은 숫자이든 문자이든 적용될 수 있도록 '' 를 꼭 감싸준다. 예: 찜목록번호 234-567 도 인식할 수 있음. --%>
 						</td> 
@@ -272,6 +272,7 @@
 		<%-- 체크박스 선택한 것들만 잡아와서 삭제해주기 주문하기 참고하기★ --%>
 		<span class="float-right"><input type="button" class="paymentBtn del" onClick="goSelectDel();"  value="선택삭제"/></span>
 	</div>
-</div>
-
+  </div>
+  
+</form>
 <%@ include file="../footer.jsp"%>
