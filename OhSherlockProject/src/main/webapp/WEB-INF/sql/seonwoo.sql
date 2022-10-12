@@ -152,3 +152,48 @@ where pnum = 4;
 
 delete from tbl_product
 where pnum = 101;
+
+
+-- 특정 회원 주문내역 조회
+select odnum, fk_pnum, oqty, oprice, fk_userid, odrdate, pname, ODRCODE
+from
+(
+select rownum as rno, odnum, fk_pnum, oqty, oprice, fk_userid, odrdate, pname, ODRCODE
+from
+(
+select odnum, fk_pnum, oqty, oprice, fk_userid, odrdate, pname, ODRCODE
+from 
+(
+select fk_userid, substr(odrdate,0,10) odrdate , odnum, fk_pnum, oqty, oprice, ODRCODE
+from tbl_order join tbl_order_detail
+on odrcode = fk_odrcode  
+where FK_USERID = 'pca719'
+) v
+join tbl_product 
+on pnum = fk_pnum
+order by odrdate desc) C
+) T
+where rno between 1 and 10
+
+
+-- 특정 회원 주문목록 총페이지수
+select ceil(count(*)/5)
+from tbl_order join tbl_order_detail
+on odrcode = fk_odrcode
+where fk_userid = 'pca719'
+
+
+-- 특정 주문코드의 주문조회
+
+select odnum, fk_pnum, oqty, oprice, fk_userid, odrdate, pname, ODRCODE
+from 
+(
+select fk_userid, substr(odrdate,0,10) odrdate , odnum, fk_pnum, oqty, oprice, ODRCODE
+from tbl_order join tbl_order_detail
+on odrcode = fk_odrcode  
+where FK_USERID = 'pca719' and odrcode = 'O20221014-1'
+) v
+join tbl_product 
+on pnum = fk_pnum
+order by odrdate desc
+

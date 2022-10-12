@@ -4,9 +4,6 @@
 
 <%@ include file="../header.jsp"%>   
 
-<!-- 직접 만든 CSS -->
-<link rel="stylesheet" type="text/css" href="./css/style_yeeun.css" />    <!-- /MyMVC/src/main/webapp/css/style.css 파일 경로 -->
-    
 <style type="text/css">
 	
 	.btn-secondary {
@@ -60,6 +57,15 @@
 					<td class="align-middle">12,000원</td>
 					<td class="align-middle">결제완료</td>
 				</tr>
+				<c:forEach var="ovo" items="${requestScope.orderList}">
+					<tr>
+						<td class="align-middle" style="text-align: center;">${ovo.odrdate}<br>[ ${ovo.odvo.odnum} ]</td>
+						<td><img src="<%=request.getContextPath() %>/images/${ovo.odvo.pvo.pimage}" width=100 height=100 />${ovo.odvo.pvo.pname}</td>
+						<td class="align-middle">${ovo.odvo.oqty}</td>
+						<td class="align-middle">${ovo.odvo.oprice}</td>
+						<td class="align-middle"><input name="ordcode" type="hidden" value="${ovo.odrcode}" /></td>
+					</tr>
+				</c:forEach>
 			</tbody>
 		</table>
 	</div>
