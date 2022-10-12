@@ -300,7 +300,7 @@ public class ProductDAO implements InterProductDAO {
 			conn = ds.getConnection();
 			
 			String sql = "select A.cartno, A.fk_userid, A.fk_pnum, \n"+
-						"       B.pname, B.pimage, B.price, B.saleprice, B.point, A.oqty\n"+
+						"       B.pname, B.pimage, B.price, B.saleprice, B.point, A.oqty, B.pqty \n"+
 						"from tbl_cart A join tbl_product B\n"+
 						"on A.fk_pnum = B.pnum\n"+
 						"where A.fk_userid = ? \n"+
@@ -322,6 +322,7 @@ public class ProductDAO implements InterProductDAO {
 				int saleprice = rs.getInt("saleprice");
 				int point = rs.getInt("point");
 				int oqty = rs.getInt("oqty");  // 주문량
+				int pqty = rs.getInt("pqty"); // 재고량
 				
 				ProductVO prodvo = new ProductVO();
 				prodvo.setPnum(fk_pnum);
@@ -330,6 +331,7 @@ public class ProductDAO implements InterProductDAO {
 				prodvo.setPrice(price);
 				prodvo.setSaleprice(saleprice);
 				prodvo.setPoint(point);
+				prodvo.setPqty(pqty);
 				
 				prodvo.setTotalPriceTotalPoint(oqty); // 총 결제금액, 포인트
 				
