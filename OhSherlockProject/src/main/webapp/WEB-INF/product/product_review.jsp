@@ -9,6 +9,20 @@
 
 <style type="text/css">
 
+	.page-link {
+	  color: #666666; 
+	  background-color: #fff;
+	  border: 1px solid #ccc; 
+	}
+	
+	.page-item.active .page-link {
+	 z-index: 1;
+	 color: white;
+	 border-color: #1E7F15;
+	 background-color: #1E7F15; 
+	 
+	}
+
 	#review_page a {
 		text-decoration: none;
 		color: black;
