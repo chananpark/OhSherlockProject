@@ -17,6 +17,7 @@ import javax.sql.DataSource;
 
 import common.model.FaqVO;
 import common.model.ProductVO;
+import common.model.ReviewVO;
 import common.model.SpecVO;
 
 public class ProductDAO implements InterProductDAO {
@@ -160,7 +161,7 @@ public class ProductDAO implements InterProductDAO {
 			try {
 				conn = ds.getConnection();
 
-				String sql = " select rnum, rsubject, fk_userid, writedate, score "+
+				String sql = " select rnum, rsubject, userid, writeDate, score "+
 						     " from TBL_REVIEW "+
 						     " where rnum = ? ";
 
@@ -171,8 +172,8 @@ public class ProductDAO implements InterProductDAO {
 				if (rs.next()) {
 					rvo.setRnum(Integer.parseInt(paraMap.get("rnum")));
 					rvo.setRsubject(rs.getString(2));
-					rvo.setFk_userid(rs.getString(3));
-					rvo.setWritedate(rs.getDate(4));
+					rvo.setUserid(rs.getString(3));
+					rvo.setWriteDate(rs.getString(4));
 					rvo.setScore(rs.getInt(5));
 					
 				}
@@ -224,11 +225,11 @@ public class ProductDAO implements InterProductDAO {
 			try {
 				conn = ds.getConnection();
 
-				String sql = " select rnum, rsubject, fk_userid, writedate, score "+
+				String sql = " select rnum, rsubject, userid, writeDate, score "+
 						     " from  "+
-						     "    (select rownum as rno, rnum, rsubject, fk_userid, writedate, score  "+
+						     "    (select rownum as rno, rnum, rsubject, userid, writeDate, score  "+
 						     "     from  "+
-						     "         (select rnum, rsubject, fk_userid, writedate, score "+
+						     "         (select rnum, rsubject, userid, writeDate, score "+
 						     "          from TBL_REVIEW   "+
 						     "          order by 1 desc) V  "+
 						     "    ) T  "+
@@ -250,8 +251,8 @@ public class ProductDAO implements InterProductDAO {
 					ReviewVO review = new ReviewVO();
 					review.setRnum(rs.getInt(1));
 					review.setRsubject(rs.getString(2));
-					review.setFk_userid(rs.getString(3));
-					review.setWritedate(rs.getDate(4));
+					review.setUserid(rs.getString(3));
+					review.setWriteDate(rs.getString(4));
 					review.setScore(rs.getInt(5));
 					
 					reviewList.add(review);
@@ -276,7 +277,7 @@ public class ProductDAO implements InterProductDAO {
 
 				conn = ds.getConnection();
 				
-				String sql = " select rnum, rsubject, fk_userid, writedate, score "+
+				String sql = " select rnum, rsubject, userid, writeDate, score "+
 							 " from TBL_REVIEW ";
 				
 				String selectid = paraMap.get("selectid");
@@ -299,8 +300,8 @@ public class ProductDAO implements InterProductDAO {
 					
 					rvo.setRnum(rs.getInt(1));
 					rvo.setRsubject(rs.getString(2));
-					rvo.setFk_userid(rs.getString(3));
-					rvo.setWritedate(rs.getDate(4));
+					rvo.setUserid(rs.getString(3));
+					rvo.setWriteDate(rs.getString(4));
 					rvo.setScore(rs.getInt(5));
 
 					reviewList.add(rvo);

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import common.model.ProductVO;
+import common.model.ReviewVO;
 
 public interface InterProductDAO {
 

@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import common.controller.AbstractController;
 import common.model.ProductVO;
+import common.model.ReviewVO;
 import kcy.shop.model.InterProductDAO;
 import kcy.shop.model.ProductDAO;
-import kcy.shop.model.ReviewVO;
 import my.util.MyUtil;
 
 public class ProductView extends AbstractController {
