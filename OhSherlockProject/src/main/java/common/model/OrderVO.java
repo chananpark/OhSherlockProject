@@ -11,6 +11,7 @@ public class OrderVO {
 	private String recipient_address;
 	private String recipient_detail_address;
 	private String recipient_extra_address;
+	private String recipient_memo;
 	private int odrtotalprice;
 	private int odrtotalpoint; 
 	private int delivery_cost;
@@ -179,6 +180,14 @@ public class OrderVO {
 
 	public void setOdvo(OrderDetailVO odvo) {
 		this.odvo = odvo;
+	}
+
+	public String getRecipient_memo() {
+		return recipient_memo;
+	}
+
+	public void setRecipient_memo(String recipient_memo) {
+		this.recipient_memo = recipient_memo;
 	}
 
 }
