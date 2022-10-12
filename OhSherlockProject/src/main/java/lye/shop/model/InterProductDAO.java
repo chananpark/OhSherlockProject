@@ -54,9 +54,14 @@ public interface InterProductDAO {
 
 	// 페이징 방식 리뷰상품 총 페이지수 알아오기
 	int getTotalPages(String userid) throws SQLException;
+	//int getTotalPages(Map<String, String> paraMap) throws SQLException;
 
 	// 페이징 처리를 한 모든 상품리뷰 목록 보여주기
-	List<ReviewVO> selectPagingReview(Map<String, String> paraMap) throws SQLException;
+	List<ReviewVO> selectPagingReview(Map<String, Object> paraMap) throws SQLException;
+
+	
+
+	
 
 
 

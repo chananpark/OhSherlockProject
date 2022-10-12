@@ -33,5 +33,8 @@ public interface InterProductDAO {
 	// 메인에 표시할 상품 4개
 	List<ProductVO> selectTodayProducts();
 
+	// 주문번호 시퀀스 채번
+	int getSeq_tbl_order() throws SQLException;
+
 
 }
