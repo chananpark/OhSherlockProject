@@ -237,7 +237,9 @@
 		<%-- 탭 버튼 --%>
 		<div id="btnClass" class="d-flex justify-content-center ">
 			<button class="tablink" onclick="openPage('Home', this, '#1E7F15', 'white')" id="defaultOpen">상품상세</button>
-			<button class="tablink" onclick="openPage('Review', this, '#1E7F15', 'white')">고객리뷰</button>
+
+			<button class="tablink" onclick="openPage('Review', this, '#1E7F15', 'white')" >고객리뷰</button>
+
 			<button class="tablink" onclick="openPage('Info', this, '#1E7F15', 'white')">상품고시정보</button>
 		</div>
 		
@@ -250,7 +252,9 @@
 		
 		<div id="Review" class="tabcontent">
 			<%@ include file="product_review.jsp"%>
-		</div>
+		</div> 
+		
+
 		
 		<div id="Info" class="tabcontent">
 			<%@ include file="product_info.jsp"%>

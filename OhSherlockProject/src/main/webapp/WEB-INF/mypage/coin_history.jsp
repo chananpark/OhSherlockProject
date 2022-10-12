@@ -5,6 +5,21 @@
 
 <style>
 
+
+.page-link {
+	  color: #666666; 
+	  background-color: #fff;
+	  border: 1px solid #ccc; 
+	}
+	
+	.page-item.active .page-link {
+	 z-index: 1;
+	 color: white;
+	 border-color: #1E7F15;
+	 background-color: #1E7F15; 
+	 
+	}
+	
 .mysidebar .nav-link {
 	/* border:solid 1px red; */
 	width: 500px;

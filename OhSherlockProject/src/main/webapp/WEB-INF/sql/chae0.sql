@@ -262,3 +262,50 @@ from tbl_product_imagefile
 where fk_pnum = 16;
     
 
+
+create table tbl_review
+(rnum        not null number(8)     -- 리뷰번호
+,fk_odnum    not null number(8)     -- 주문번호
+,fk_pnum     not null number(8)     -- 상품코드 
+,fk_userid   not null varchar2(15)  -- 아이디 
+,score       not null number(2)     -- 별점 
+,rsubject    not null varchar2(100) -- 리뷰제목
+,rcontent    not null varchar2(500) -- 리뷰내용
+,rimage               varchar2(100) -- 첨부파일
+,fk_odrcode  not null varchar2(20)  -- 주문상세번호
+,registerday date default sysdate   -- 리뷰 작성일자
+,constraint PK_tbl_review_rnum primary key(rnum)
+,constraint fk_tbl_review_fk_odrcode foreign key(fk_odrcode) references tbl_order(odrcode)
+,constraint FK_tbl_review_fk_odnum foreign key(fk_odnum) references tbl_order_detail(odnum)
+,constraint FK_tbl_review_fk_pnum foreign key(fk_pnum) references tbl_product(pnum)
+,constraint FK_tbl_review_fk_userid foreign key(fk_userid) references tbl_member(userid)
+);
+
+select RNUM, FK_ODNUM, FK_PNUM, FK_USERID, SCORE, RSUBJECT, RCONTENT, RIMAGE, FK_ODRCODE, WRITEDATE
+from TBL_REVIEW;
+
+select *
+from TBL_PRODUCT;
+
+select *
+from tbl_order_detail;
+
+select ceil(count(*)/?) from TBL_REVIEW
+
+
+select rnum, rsubject, fk_userid, writedate, score
+from TBL_REVIEW 
+where rnum = 2
+
+select rnum, rsubject, fk_userid, writedate, score
+from 
+    (select rownum as rno, rnum, rsubject, fk_userid, writedate, score 
+     from 
+         (select rnum, rsubject, fk_userid, writedate, score
+          from TBL_REVIEW  
+          order by 1 desc) V 
+    ) T 
+where RNO between 1 and 6
+             
+             
+     
