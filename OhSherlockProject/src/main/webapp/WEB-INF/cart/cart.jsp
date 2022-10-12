@@ -122,7 +122,7 @@
          	return;
       	}
 	   	
-   		if( oqty > pqty ) {
+   		if( Number(oqty) > Number(pqty) ) {
    			alert("수정하시려는 수량이 상품 재고보다 많습니다.");
         	location.href="cart.tea";
          	return;

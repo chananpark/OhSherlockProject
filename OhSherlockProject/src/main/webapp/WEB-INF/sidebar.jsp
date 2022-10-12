@@ -19,7 +19,7 @@
 		  <p class="title" id="activity" style="font-weight: bold; padding-top: 20px;">나의 활동</p>    
 		  <div class="nav flex-column" id="nav03">
 		      <div><a class="nav-link" href="<%=request.getContextPath()%>/mypage/inquiryList.tea">1:1 문의 내역</a></div>
-		      <div><a class="nav-link" href="#">상품 리뷰</a></div>
+		      <div><a class="nav-link" href="<%=request.getContextPath()%>/mypage/reviewList.tea?userid=${(sessionScope.loginuser).userid}">상품 리뷰</a></div>
 		  </div>
 		  
 		  <p class="title" id="information" style="font-weight: bold; padding-top: 20px;">나의 정보</p>

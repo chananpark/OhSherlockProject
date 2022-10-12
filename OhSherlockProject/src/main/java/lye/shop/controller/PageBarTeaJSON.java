@@ -1,4 +1,4 @@
-package lye.product.controller;
+package lye.shop.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import common.controller.AbstractController;
-import lye.product.model.InterProductDAO;
-import lye.product.model.ProductDAO;
+import lye.shop.model.InterProductDAO;
+import lye.shop.model.ProductDAO;
 
 public class PageBarTeaJSON extends AbstractController {
 

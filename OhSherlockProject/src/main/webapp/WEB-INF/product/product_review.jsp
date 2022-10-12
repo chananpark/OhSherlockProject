@@ -1,26 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<script type="text/javascript">
-
-	$(document).ready(function (e) {
-
-		// 제목 클릭 시 상품 상세 열어주는 함수(수정필요)
-		$(".viewhidden").click(function () {
-            status = $(".hidden").css("display"); 
-            if (status == "none") {
-                $(".hidden").css("display", "");
-            } else {
-                $(".hidden").css("display", "none");
-            }
-        });
-	
-	});
-	
-
-</script>
-
-<style>
+<style type="text/css">
 
 	#review_page a {
 		text-decoration: none;
@@ -41,6 +22,24 @@
 
 </style>
 
+<script type="text/javascript">
+
+	$(document).ready(function (e) {
+
+		// 제목 클릭 시 상품 상세 열어주는 함수(수정필요)
+		$(".viewhidden").click(function () {
+            status = $(".hidden").css("display"); 
+            if (status == "none") {
+                $(".hidden").css("display", "");
+            } else {
+                $(".hidden").css("display", "none");
+            }
+        });
+	
+	});
+	
+
+</script>
 
 <div id="review_page">
 	<table class="table mt-4" style="text-align: center;"> 
@@ -152,8 +151,8 @@
 	      	<div class="modal-body">
 	        	<div id="reviewWrite">
 	        	<%-- jsp 파일 연결을 위해서 iframe 을 사용하지 않고, 우선 include로 연결해 두었다. --%>
-	        	<%--	<iframe id="iframe_reviewWrite" style="border: none; width: 100%; height: 350px;" src="<%= request.getContextPath()%>/login/idFind.up"> </iframe>---%>
-             		<%@ include file="modal_review_write.jsp"%>
+	        	<%-- <iframe id="iframe_reviewWrite" style="border: none; width: 100%; height: 350px;" src="<%= request.getContextPath()%>/shop/writeReview.tea?userid=${loginuser.userid}"></iframe> --%>
+             	 	 <%@ include file="modal_review_write.jsp"%> 
 	        	</div>
 	      	</div>
 	      

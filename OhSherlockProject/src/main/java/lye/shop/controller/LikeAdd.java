@@ -1,4 +1,4 @@
-package lye.product.controller;
+package lye.shop.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -6,8 +6,8 @@ import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
 import common.model.MemberVO;
-import lye.product.model.InterProductDAO;
-import lye.product.model.ProductDAO;
+import lye.shop.model.InterProductDAO;
+import lye.shop.model.ProductDAO;
 
 public class LikeAdd extends AbstractController {
 
@@ -28,7 +28,7 @@ public class LikeAdd extends AbstractController {
 			request.setAttribute("message", "찜목록은 로그인 후 이용 가능합니다.");
 			request.setAttribute("loc", request.getContextPath() + "/login/login.tea");
 			
-		//	super.setRedirect(false);
+		    // super.setRedirect(false);
 	        super.setViewPage("/WEB-INF/msg.jsp");
 			
 			return; // 종료

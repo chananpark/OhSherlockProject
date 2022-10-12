@@ -1,7 +1,5 @@
 package common.model;
 
-import common.model.ProductVO;
-
 public class LikeVO {  // (오라클로 말하면 제품테이블의 자식테이블)
 
 	private int likeno;      //  찜목록 번호        
@@ -9,7 +7,7 @@ public class LikeVO {  // (오라클로 말하면 제품테이블의 자식테�
     private int pnum;        //  제품번호                
     private int oqty;        //  주문량 
     
-    private ProductVO prod;  // 제품정보객체 (오라클로 말하면 부모테이블인 제품테이블)
+    private ProductVO prod;  // 상품정보객체    (오라클로 말하면 부모테이블인 상품테이블)
 
 
 	public LikeVO() {} // 기본생성자
