@@ -312,3 +312,8 @@ where odrstatus = 2)
 join tbl_product on pnum = fk_pnum;
 
 desc tbl_order_detail;
+
+select odrusedpoint from tbl_order where odrcode = 'O20221014-1';
+
+update tbl_order set odrtotalpoint = 0;
+commit;

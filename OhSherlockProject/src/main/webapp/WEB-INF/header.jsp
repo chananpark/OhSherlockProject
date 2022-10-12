@@ -319,10 +319,10 @@ div#brandStoryText {
 					<a class="nav-link dropdown-toggle menufont_size text-dark" id="navbarDropdown2" data-toggle="dropdown">기프트세트</a>
 						<div class="dropdown-menu no-border" aria-labelledby="navbarDropdown2" id="teaProducts">
 							<a class="dropdown-item" href="<%= ctxPath %>/shop/productGiftset.tea">전체상품</a> 
-							<a class="dropdown-item" href="<%= ctxPath %>/shop/productTea.tea?snum=2">베스트</a> 
-							<a class="dropdown-item" href="<%= ctxPath %>/shop/productTea.tea?cnum=4">감사 선물</a> 
-							<a class="dropdown-item" href="<%= ctxPath %>/shop/productTea.tea?cnum=5">애정 선물</a> 
-							<a class="dropdown-item" href="<%= ctxPath %>/shop/productTea.tea?cnum=6">응원 선물</a>
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productGiftset.tea?snum=2">베스트</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productGiftset.tea?cnum=4">감사 선물</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productGiftset.tea?cnum=5">애정 선물</a> 
+							<a class="dropdown-item" href="<%= ctxPath %>/shop/productGiftset.tea?cnum=6">응원 선물</a>
 						</div>
 					</li>
 					<li class="nav-item dropdown mr-2">
