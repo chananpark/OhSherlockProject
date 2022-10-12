@@ -28,6 +28,7 @@
    
    img {
        display: inline-block;
+       width: 250px;
        content: "";
    }
    
@@ -60,6 +61,16 @@
 	  border-color: #1E7F15;
 	}
 	
+	/* .box{margin-right:40px;} */
+	.content{
+		width: 500px;
+		margin-left: 0;
+       /*  border:1px solid #ddd; */
+    }
+    
+    .more {
+    	display: block;
+    }
 	
 </style>
 
@@ -83,18 +94,19 @@
     	  var content = $(this).children('.content');
           var content_txt = content.text();
           var content_txt_short = content_txt.substring(0,50)+"...";
-          //var images = $(".image").val();
+          var image = $(this).children('.image');
           var btn_more = $('<a href="javascript:void(0)" class="more">더보기</a>');
           
 
-          //$(this).append(images);
+          $(this).append(image);
           $(this).append(btn_more);
           
-          if(content_txt.length >= 100){
+          if(content_txt.length >= 50 || image != null){
               content.html(content_txt_short)
+              image.hide();  // 이미지 숨기기
               
-          }else{
-              btn_more.hide()
+          }else{  // 텍스트가 50 이하이고, 이미지가 없다면
+              btn_more.hide();
           }
           
           btn_more.click(toggle_content);
@@ -102,11 +114,13 @@
           function toggle_content(){
               if($(this).hasClass('short')){
                   // 접기 상태
+                  image.hide();  // 이미지 숨기기
                   $(this).html('더보기');
                   content.html(content_txt_short)
                   $(this).removeClass('short');
               }else{
                   // 더보기 상태
+                  image.show();  // 이미지 보이기
                   $(this).html('접기');
                   content.html(content_txt);
                   $(this).addClass('short');
@@ -135,9 +149,9 @@
       <div class="likeList">
          <table class="table mt-4">
 	        <colgroup>
-		          <col width="300px" />
+		          <col width="330px" />
 		          <col />
-		          <col />
+		          <col width="180px" />
 	      	</colgroup>
             <thead class="thead-light">
                <tr>
@@ -161,7 +175,7 @@
                    <tr>
                      <td>
                          <a href="/OhSherlockProject/shop/productView.tea?pnum=${reivewvo.pnum}" style="text-align: right;">  <%-- 썸네일이미지 --%>
-                            <img src="/OhSherlockProject/images/${reivewvo.prod.pimage}" class="img-thumbnail" width="100" style="margin-left: 100px; border: 0;" />
+                            <img src="/OhSherlockProject/images/${reivewvo.prod.pimage}" class="img-thumbnail" style="margin-left: 50px; border: 0;" />
                          </a>
                          <input type="hidden" name="pnumCnt" for="pnum${status.index}" value="${reivewvo.pnum}" /> <%-- 제품번호 --%>  
                          <input type="hidden" name="odrcodeCnt" for="pnum${status.index}" value="${reivewvo.odrcode}" /> <%-- 주문상세번호 --%>  
@@ -180,8 +194,9 @@
 						
 						<div class="box">
 						    <div class="content">
-						    	배송지연으로 오래 기다려서 받았는데, 박스가 터져서 왔네요. 여기서 박스터져서 손상된 물건을 받은 적이 처음이라 황당해요. 빠른 처리해주세요...하..
-						    </div>
+						    	${reivewvo.rcontent}
+						    </div><br>
+						    <img class="image" src="../images/${reivewvo.rimage}" style="width: 200px;" />
 						</div>
 						
                         <input type="hidden" class="likeno" value="${reivewvo.rnum}" />  <%-- 찜목록번호(시퀀스) 는 hidden 처리함. --%>
