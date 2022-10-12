@@ -27,6 +27,7 @@ public class ProductVO {
 	*/
 	private int totalPrice;         // 판매당시의 제품판매가 * 주문량
 	private int totalPoint;         // 판매당시의 포인트점수 * 주문량 
+	private int totalOriginPrice;	// 판매당시의 원가 * 주문량
 		
 	//////////////////////////////////////////////////////////////
 	// 목록 정렬시 활용
@@ -56,6 +57,10 @@ public class ProductVO {
 
 	public void setTotalPoint(int totalPoint) {
 		this.totalPoint = totalPoint;
+	}
+	
+	public void setTotalOriginPrice(int totalOriginPrice) {
+		this.totalOriginPrice = totalOriginPrice;
 	}
 
 	//////////////////////////////////////////////////////////////
@@ -233,23 +238,29 @@ public class ProductVO {
 		
 		totalPrice = saleprice * oqty; // 판매당시의 제품판매가 * 주문량
 		totalPoint = point * oqty;     // 판매당시의 포인트점수 * 주문량 
+		totalOriginPrice = price * oqty; // 판매당시의 제품원가 * 주문량
 		}
 		
 		public int getTotalPrice() {
-		return totalPrice;
+			return totalPrice;
 		}
 		
 		public int getTotalPoint() {
-		return totalPoint;
-	}
-
+			return totalPoint;
+		}
+		
+		public int getotalOrignPrice() {
+			return totalOriginPrice;
+		}
+	
 		@Override
 		public String toString() {
 			return "ProductVO [pnum=" + pnum + ", pname=" + pname + ", pimage=" + pimage + ", prdmanual_systemfilename="
 					+ prdmanual_systemfilename + ", prdmanual_orginfilename=" + prdmanual_orginfilename + ", pqty="
 					+ pqty + ", price=" + price + ", saleprice=" + saleprice + ", fk_snum=" + fk_snum + ", pcontent="
 					+ pcontent + ", psummary=" + psummary + ", point=" + point + ", pinputdate=" + pinputdate
-					+ ", fk_cnum=" + fk_cnum + ", categvo=" + categvo + ", spvo=" + spvo + ", totalPrice=" + totalPrice
+					+ ", fk_cnum=" + fk_cnum + ", categvo=" + categvo + ", spvo=" + spvo + ", totalPrice=" + totalPrice 
+					+ ", totalOriginPrice=" + totalOriginPrice 
 					+ ", totalPoint=" + totalPoint + ", reviewCnt=" + reviewCnt + ", orederCnt=" + orederCnt + "]";
 		}
 

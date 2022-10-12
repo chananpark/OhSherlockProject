@@ -1,4 +1,4 @@
-package lye.product.controller;
+package lye.shop.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -6,10 +6,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import common.controller.AbstractController;
-import lye.product.model.InterProductDAO;
-import lye.product.model.ProductDAO;
+import lye.shop.model.InterProductDAO;
+import lye.shop.model.ProductDAO;
 
-public class LikeSelectDel extends AbstractController {
+public class LikeDel extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -32,14 +32,12 @@ public class LikeSelectDel extends AbstractController {
 		else if("POST".equalsIgnoreCase(method) && super.checkLogin(request)) {  
 			// POST 방식이면서 로그인을 했을 경우 (올바른경우)
 			
-			String likenojoin = request.getParameter("likenojoin");  //  ["1,2"]
-			
-			String[] likenoArr = likenojoin.split("\\,");  // 배열로 만들어줌.  // ["1","2"]
+			String likeno = request.getParameter("likeno");
 			
 			InterProductDAO pdao = new ProductDAO();  // ProductDAO 객체생성
 			
 			// 찜목록 테이블에서 특정제품만 삭제하기
-			int n = pdao.delSelectLike(likenoArr);  // 성공적으로 pdao 에서 넘겨받았다면 n=1 이 나온다.
+			int n = pdao.delLike(likeno);  // 성공적으로 pdao 에서 넘겨받았다면 n=1 이 나온다.
 			
 			JSONObject jsobj = new JSONObject();  // {} => JSONObject 객체생성
 			jsobj.put("n", n); // {n:1}  => jsobj 에 n 값 저장하기(1 또는 0)

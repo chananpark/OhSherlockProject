@@ -1,4 +1,4 @@
-package lye.product.controller;
+package lye.shop.controller;
 
 import java.util.List;
 
@@ -9,8 +9,8 @@ import javax.servlet.http.HttpSession;
 import common.controller.AbstractController;
 import common.model.LikeVO;
 import common.model.MemberVO;
-import lye.product.model.InterProductDAO;
-import lye.product.model.ProductDAO;
+import lye.shop.model.InterProductDAO;
+import lye.shop.model.ProductDAO;
 
 public class LikeList extends AbstractController {
 

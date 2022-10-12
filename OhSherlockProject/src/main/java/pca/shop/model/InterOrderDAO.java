@@ -21,4 +21,13 @@ public interface InterOrderDAO {
 	// 주문 상품 정보 가져오기
 	List<OrderDetailVO> getOrderPrdDetail(String odrcode) throws SQLException;
 
+	// 주문 발송 처리하기
+	int sendDelivery(String odrcodes) throws SQLException;
+
+	// 주문 배송완료 처리하기
+	int completeDelivery(String odrcodes) throws SQLException;
+
+	// 환불처리하기
+	int refundOrder(Map<String, Object> paraMap) throws SQLException;
+
 }

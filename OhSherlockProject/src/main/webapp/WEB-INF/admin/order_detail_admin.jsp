@@ -18,14 +18,27 @@
 
 <script>
 
-$(()=>{
 	
+$(()=>{
+	// 주문금액 + 배송비
 	if (${not empty ovo.odrtotalprice} && ${not empty ovo.delivery_cost}) {
-		sum = Number(${ovo.odrtotalprice}) + Number(${ovo.delivery_cost});
+		let sum = Number(${ovo.odrtotalprice}) + Number(${ovo.delivery_cost});
 		sum = sum.toLocaleString('en');
 		$("#sum").text(sum);
 	}
-
+	
+	// 환불가 제외 최종금액
+	if (${not empty refundSum}) {
+		let finalSum;
+		if (${ovo.odrtotalprice - refundSum >= 30000}){
+			finalSum = (Number(${ovo.odrtotalprice}) - Number(${refundSum})).toLocaleString('en');
+		}else {
+			finalSum = (Number(${ovo.odrtotalprice}) - Number(${refundSum}) + 2500).toLocaleString('en');
+			finalSum = finalSum.toLocaleString('en');
+		}
+		$(".finalSum").text(finalSum);
+	}
+	
 	goBackURL = "${requestScope.goBackURL}";
 	goBackURL = goBackURL.replace(/ /gi,"&");
 });
@@ -151,16 +164,23 @@ $(()=>{
 						<span class="text-danger">
 						환불완료
 						</span>
+						<tr>
+						<td class="text-right">환불사유: ${odvo.refund_reason}&nbsp;&nbsp;</td>
+						</tr>
 					</c:when>
 					<c:when test="${odvo.refund == -1}">
 						<span class="text-danger">
 						환불요청
 						</span>
+						<tr>
+						<td class="text-right">환불사유: ${odvo.refund_reason}</td>
+						</tr>
 					</c:when>
 					<c:when test="${odvo.cancel == 1}">
 						<span class="text-muted">
 						주문취소
 						</span>
+						<tr><td class="text-right">취소사유: ${odvo.cancel_reason}</td></tr>
 					</c:when>
 					<c:otherwise>
 						<span class="text-success">
@@ -182,15 +202,30 @@ $(()=>{
 				<span><fmt:formatNumber value="${ovo.delivery_cost}" pattern="#,###"/> 원</span>
 				(배송비)
 				= 총
-				<span id="sum" style="color: #1E7F15; font-weight:bold"></span>
+				<span id="sum" style="color: #1E7F15; font-weight:bold">
+				</span>
 				원</td>
 			</tr>
 			<c:if test="${refundSum > 0 }">
 				<tr>
 				<td colspan="6" style="text-align:right;" class="bg-light">
-				환불금액 = 
-				<span class="text-danger font-weight-bold"><fmt:formatNumber value="${refundSum}" pattern="#,###"/></span>
+				- <fmt:formatNumber value="${refundSum}" pattern="#,###"/> 원 (환불금액)
+				
+				<c:if test="${ovo.odrtotalprice - refundSum < 30000}">
+				+ <fmt:formatNumber value="2500" pattern="#,###"/> 원 (배송비)
+				<span class="text-danger font-weight-bold"></span>
+				= 총
+				<span class="text-danger finalSum" style="font-weight:bold">
+				</span>
 				원
+				</c:if>
+				
+				<c:if test="${ovo.odrtotalprice - refundSum >= 30000}">
+				= 총
+				<span class="text-danger finalSum" style="font-weight:bold">
+				</span>
+				원
+				</c:if>
 				</td>
 				</tr>
 			</c:if>

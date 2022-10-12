@@ -102,3 +102,4 @@ FrontController.java
 .classpath
 .gitignore
 /build/
+/.codetogether.ignore

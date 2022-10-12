@@ -104,6 +104,11 @@ button.order {
   border-color: #1E7F15;
 }
 
+input.cart { 
+   background-color: transparent; 
+     border-style: none;
+}
+
 </style>
 
 <script type="text/javascript">
@@ -120,10 +125,16 @@ $(document).ready(function(){
 	snum = "${snum}";  // 스펙번호(best)
 	currentShowPageNo = "${currentShowPageNo}";
 	
-	// 찜하기 클릭시 색깔 변경
+	// 찜하기(아이콘) 클릭시 색깔 변경
 	$('i.heart').click(function() {
-		$(this).removeClass("text-secondary");
-		$(this).addClass("text-danger");
+        $(this).removeClass("text-secondary");
+        $(this).addClass("text-danger");
+    });
+	// 찜하기 클릭시 색깔 변경
+	$('a.like').click(function(e) {
+		const $target = $(e.target); // 이벤트가 발생되어진 곳
+		$target.parent().find("i.heart").removeClass("text-secondary");
+		$target.parent().find("i.heart").addClass("text-danger");
     });
 	
 	// 정렬 버튼 클릭시 이벤트
@@ -198,10 +209,14 @@ function getOrderedList() {
     				html += ' <h5 class="card-title" style="font-weight:bold;"><a href="<%= ctxPath %>/shop/productView.tea?pnum=' + item.pnum + '"> '+item.pname+'</a></h5> ';
     				
     				if(item.price != item.saleprice) {
-    					html += ' <span class="card-text" style="text-decoration-line: line-through;">' +item.price.toLocaleString('en')+ '원</span> '+
-   								' <span class="card-text" style="color: #1E7F15; font-weight:bold;">' +item.saleprice.toLocaleString('en')+ '원</span><br> ';
+    					html += ' <p>'+
+    							' <span class="card-text" style="text-decoration-line: line-through;">' +item.price.toLocaleString('en')+ '원</span> '+
+   								' <span class="card-text" style="color: #1E7F15; font-weight:bold;">' +item.saleprice.toLocaleString('en')+ '원</span><br> '+
+   								' </p>';
     				} else {
-    					html += ' <span class="card-text">' +item.saleprice.toLocaleString('en')+ '원</span><br> ';
+    					html += ' <p>'+
+    							' <span class="card-text">' +item.saleprice.toLocaleString('en')+ '원</span><br> '+
+    							' </p>';
     					
     				}
     				
@@ -221,10 +236,18 @@ function getOrderedList() {
            	
    	         	$("#teaProductList").html(html); 
    	         	
-   	    		$('i.heart').click(function() {
-   	    	        $(this).removeClass("text-secondary");
-   	    	        $(this).addClass("text-danger");
-   	    	    })
+	   	     	// 찜하기(아이콘) 클릭시 색깔 변경
+	   	     	$('i.heart').click(function() {
+	   	             $(this).removeClass("text-secondary");
+	   	             $(this).addClass("text-danger");
+	   	         });
+	   	     	// 찜하기 클릭시 색깔 변경
+	   	     	$('a.like').click(function(e) {
+	   	     		const $target = $(e.target); // 이벤트가 발생되어진 곳
+	   	     		$target.parent().find("i.heart").removeClass("text-secondary");
+	   	     		$target.parent().find("i.heart").addClass("text-danger");
+	   	         });
+   	         	
            },
            error: function(request, status, error){
         	   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -281,7 +304,7 @@ function getPageBar() {
 //Function Declaration
 //찜하기버튼 클릭시
 function goLike(pnum) {
-      
+	
 	const frm = document.prodStorageFrm;
 	
 	$("#hidden_pnum").val(pnum);
@@ -292,7 +315,18 @@ function goLike(pnum) {
      
 }// end of function goLike(pnum)------------------------------
 	
-
+//장바구니 담기
+function clickCart(pnum) { 
+	
+	const frm = document.prodStorageFrm;
+	
+	$("#hidden_pnum").val(pnum);
+	
+	frm.method = "POST"; 
+	frm.action = "<%=request.getContextPath()%>/cart/cartAdd.tea";
+	frm.submit();
+	
+} // end of function goCart()
 
 </script>
 
@@ -384,19 +418,23 @@ function goLike(pnum) {
 				      			<%-- 세일 상품 금액 표시 --%>
 				      			<c:choose>
 				      				<c:when test="${pvo.price != pvo.saleprice}">
+				      				  <p>
 						      			<span class="card-text" style="text-decoration-line: line-through;"><fmt:formatNumber value="${pvo.price}" pattern="###,###"/>원</span>
 					      				<span class="card-text" style="color: #1E7F15; font-weight:bold;"><fmt:formatNumber value="${pvo.saleprice}" pattern="###,###"/>원</span><br>
+				      				  </p>
 				      				</c:when>
 				      				<c:otherwise>
+				      				  <p>
 					      				<span class="card-text"><fmt:formatNumber value="${pvo.saleprice}" pattern="###,###"/>원</span><br>
+				      				  </p>
 				      				</c:otherwise>
 				      			</c:choose>
 				      			
 				      			<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart" onclick="goLike(${pvo.pnum})"></i></a>
-				      			<a class="card-text text-secondary mr-5" onclick="goLike(${pvo.pnum})">찜하기</a>
+				      			<a class="card-text text-secondary mr-5 like" onclick="goLike(${pvo.pnum})">찜하기</a>
 				      							      			
-				      			<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a>
-				      			<a class="card-text text-secondary">담기</a>
+				      			<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg " onClick="clickCart(${pvo.pnum});"></i></a>
+                           		<input class="card-text text-secondary cart" type="button" onClick="clickCart(${pvo.pnum});" value="담기" style="padding-left: 0; margin-left: 0;"/>
 				      			
 				   			</div>
 				  		</div>

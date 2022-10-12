@@ -32,6 +32,8 @@ public class FaqRegisterEnd extends AbstractController {
 			String title = request.getParameter("title");
 			String content = request.getParameter("content");
 			content = content.replace("\r\n","<br>");
+			content = content.replaceAll("<", "&lt;");
+			content = content.replaceAll(">", "&gt;");
 			
 			InterFaqDAO fdao = new FaqDAO();
 

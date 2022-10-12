@@ -87,6 +87,19 @@ public class Login extends AbstractController {
 					super.setRedirect(true);
 					super.setViewPage(request.getContextPath() + "/index.tea"); // 시작페이지로 이동
 					
+					// 로그인을 하면 시작페이지(index.up)로 가는 것이 아니라 로그인을 시도하려고 머물렀던 그 페이지로 가기 위한 것이다.
+					String goBackURL = (String)session.getAttribute("goBackURL");
+					// /shop/prodView.up?pnum=59
+					// 또는
+					// 그냥 홈에서 로그인을 했으면 session 에 URL 기록이 없기 때문에 null 이 나온다.
+					
+					if(goBackURL != null) {
+						super.setViewPage(request.getContextPath() + goBackURL); 
+					} else {
+						// null 이라면 goBackURL 에 아무것도 없기 때문에 시작페이지로 이동한다. 
+						super.setViewPage(request.getContextPath()+"/index.tea"); // 시작 페이지로 이동
+					}
+					
 				}
 
 			} else {

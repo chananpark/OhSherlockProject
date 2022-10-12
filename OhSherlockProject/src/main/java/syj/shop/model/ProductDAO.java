@@ -300,7 +300,7 @@ public class ProductDAO implements InterProductDAO {
 			conn = ds.getConnection();
 			
 			String sql = "select A.cartno, A.fk_userid, A.fk_pnum, \n"+
-						"       B.pname, B.pimage, B.price, B.saleprice, B.point, A.oqty\n"+
+						"       B.pname, B.pimage, B.price, B.saleprice, B.point, A.oqty, B.pqty \n"+
 						"from tbl_cart A join tbl_product B\n"+
 						"on A.fk_pnum = B.pnum\n"+
 						"where A.fk_userid = ? \n"+
@@ -322,6 +322,7 @@ public class ProductDAO implements InterProductDAO {
 				int saleprice = rs.getInt("saleprice");
 				int point = rs.getInt("point");
 				int oqty = rs.getInt("oqty");  // 주문량
+				int pqty = rs.getInt("pqty"); // 재고량
 				
 				ProductVO prodvo = new ProductVO();
 				prodvo.setPnum(fk_pnum);
@@ -330,6 +331,7 @@ public class ProductDAO implements InterProductDAO {
 				prodvo.setPrice(price);
 				prodvo.setSaleprice(saleprice);
 				prodvo.setPoint(point);
+				prodvo.setPqty(pqty);
 				
 				prodvo.setTotalPriceTotalPoint(oqty); // 총 결제금액, 포인트
 				
@@ -361,11 +363,12 @@ public class ProductDAO implements InterProductDAO {
 		try {
 			conn = ds.getConnection();
 			String sql = "select nvl(sum(B.saleprice*A.oqty),0) as sumtotalprice, \n"+
-						"       nvl(sum(B.point*A.oqty),0) as sumtotalpoint \n"+
+						"       nvl(sum(B.point*A.oqty),0) as sumtotalpoint,\n"+
+						"       nvl(sum(B.price*A.oqty),0) as sumtotaloriginprice\n"+
 						"from tbl_cart A join tbl_product B\n"+
 						"on A.fk_pnum = B.pnum\n"+
 						"where A.fk_userid = ? \n"+
-						" order by A.cartno desc ";
+						"order by A.cartno desc\n";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, userid);
@@ -376,6 +379,7 @@ public class ProductDAO implements InterProductDAO {
 				
 			sumMap.put("SUMTOTALPRICE", rs.getString("SUMTOTALPRICE"));
 			sumMap.put("SUMTOTALPOINT", rs.getString("SUMTOTALPOINT"));
+			sumMap.put("SUMTOTALORIGINPRICE", rs.getString("SUMTOTALORIGINPRICE"));
 			
 		} finally {
 			close();
@@ -410,6 +414,99 @@ public class ProductDAO implements InterProductDAO {
 		
 		return n;
 	}// end of public int delLike(String likeno) throws SQLException {}-------------------	
+
+	
+	// 장바구니 테이블에서 특정 제품을 장바구니에서 지우기
+	@Override
+	public int delCart(String cartno) throws SQLException {
+		
+		int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+
+			String sql = " delete from tbl_cart "+
+						 " where cartno = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, cartno);
+
+			n = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+	
+		return n;
+		
+	} // end of public int delCart(String cartno) throws SQLException 
+
+	
+	// 장바구니 테이블에서 특정 제품의 수량을 변경하기
+	@Override
+	public int updateCart(String cartno, String oqty) throws SQLException {
+		
+		int n = 0;
+		
+		try {
+			conn = ds.getConnection();
+
+			String sql = " update tbl_cart set oqty = ? "+
+						 " where cartno = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, oqty);
+			pstmt.setString(2, cartno);
+
+			n = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+	
+		return n;
+	
+	} // end of public int updateCart(String cartno, String oqty) throws SQLException
+
+	
+	// 장바구니에서 특정제품만 삭제하기
+	@Override
+	public int delSelectCart(String[] cartnoArr) throws SQLException {
+
+		int n = 0;
+		
+		String params = "";
+		for (int i = 0; i < cartnoArr.length; i++) {
+			params += cartnoArr[i];
+			if(i<cartnoArr.length-1) {
+				params += ",";  // ["1,2"]
+			}
+		}
+		
+		try {
+			 conn = ds.getConnection(); 
+			 
+			 String sql = " delete from tbl_cart " +
+					      " where cartno in ("+params+") ";
+					   
+			 pstmt = conn.prepareStatement(sql);
+			 
+			 n = pstmt.executeUpdate();
+			 
+			 if(n > 0) {
+				 n = 1;
+			 }
+			 else {
+				 n = 0;
+			 }
+			 
+		} finally {
+			close();
+		}
+		
+		return n;
+	
+	} // end of public int delSelectCart(String[] cartnoArr) throws SQLException
 	
 	
 

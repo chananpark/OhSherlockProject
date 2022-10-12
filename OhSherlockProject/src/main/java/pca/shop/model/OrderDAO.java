@@ -138,10 +138,10 @@ public class OrderDAO implements InterOrderDAO {
 			
 			String orderstatus = paraMap.get("odrstatus");
 			
-			String sql = "select odrcode, fk_userid, odrdate, odrtotalprice, odrstatus, fk_pnum, oprice, pname, refund, cancel "+
-					 " from (select rownum as rno, odrcode, fk_userid, odrdate, odrtotalprice, odrstatus, fk_pnum, oprice, pname, refund, cancel "+
-					 " from (select odrcode, fk_userid, odrdate, odrtotalprice, odrstatus, fk_pnum, oprice, pname, refund, cancel "+
-					 " from (select odrcode, fk_userid, odrdate, odrtotalprice, odrstatus, fk_pnum, oprice, refund, cancel "+
+			String sql = "select odrcode, fk_userid, odrdate, odrtotalprice, odrstatus, fk_pnum, oprice, pname, refund, cancel, odnum "+
+					 " from (select rownum as rno, odrcode, fk_userid, odrdate, odrtotalprice, odrstatus, fk_pnum, oprice, pname, refund, cancel, odnum "+
+					 " from (select odrcode, fk_userid, odrdate, odrtotalprice, odrstatus, fk_pnum, oprice, pname, refund, cancel, odnum "+
+					 " from (select odrcode, fk_userid, odrdate, odrtotalprice, odrstatus, fk_pnum, oprice, refund, cancel, odnum "+
 					 " from tbl_order join tbl_order_detail";
 			
 			switch (orderstatus) {
@@ -211,6 +211,7 @@ public class OrderDAO implements InterOrderDAO {
 				odvo.setOprice(rs.getInt(7));
 				odvo.setRefund(rs.getInt(9));
 				odvo.setCancel(rs.getInt(10));
+				odvo.setOdnum(rs.getInt(11));
 				
 				ProductVO pvo = new ProductVO();
 				pvo.setPname(rs.getString(8));
@@ -283,8 +284,7 @@ public class OrderDAO implements InterOrderDAO {
 		try {
 			conn = ds.getConnection();
 
-			String sql = "select odnum, fk_odrcode, fk_pnum, oqty, oprice, opoint, refund, cancel,\n"+
-					"pname\n"+
+			String sql = "select odnum, fk_odrcode, fk_pnum, oqty, oprice, opoint, refund, cancel, refund_reason, cancel_reason, pname\n"+
 					"from tbl_order_detail join tbl_product\n"+
 					"on fk_pnum = pnum\n"+
 					"where fk_odrcode = ?";
@@ -296,10 +296,10 @@ public class OrderDAO implements InterOrderDAO {
 			while (rs.next()) {
 				OrderDetailVO odvo = new OrderDetailVO();
 				odvo = new OrderDetailVO(rs.getInt(1), rs.getString(2), rs.getInt(3), 
-						rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7), rs.getInt(8));
+						rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7), rs.getInt(8), rs.getString(9), rs.getString(10));
 				
 				ProductVO pvo = new ProductVO();
-				pvo.setPname(rs.getString(9));
+				pvo.setPname(rs.getString(11));
 				odvo.setPvo(pvo);
 				
 				orderPrdList.add(odvo);
@@ -310,6 +310,219 @@ public class OrderDAO implements InterOrderDAO {
 		}
 
 		return orderPrdList;
+	}
+
+	// 주문 발송 처리하기
+	@Override
+	public int sendDelivery(String odrcodes) throws SQLException {
+		int n = 0;
+		try {
+			conn = ds.getConnection();
+			
+			String[] odrcodeArr = odrcodes.split("\\,");
+			odrcodes = String.join("','", odrcodeArr);
+			odrcodes = "'"+odrcodes+"'";
+			
+			String sql = "update tbl_order set odrstatus = 2 where odrcode in (" + odrcodes + ")";
+			pstmt = conn.prepareStatement(sql);
+			n = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		return n;
+	}
+
+	// 주문 배송완료 처리하기
+	@Override
+	public int completeDelivery(String odrcodes) throws SQLException {
+		int n = 0;
+		try {
+			conn = ds.getConnection();
+			
+			String[] odrcodeArr = odrcodes.split("\\,");
+			odrcodes = String.join("','", odrcodeArr);
+			odrcodes = "'"+odrcodes+"'";
+			
+			String sql = "update tbl_order set odrstatus = 3, delivery_date = sysdate where odrcode in (" + odrcodes + ")";
+			pstmt = conn.prepareStatement(sql);
+			n = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		return n;
+	}
+
+	// 환불처리하기
+	@Override
+	public int refundOrder(Map<String, Object> paraMap) throws SQLException {
+		int n = 0;
+		int result = 0;
+		int afterRefund = 0; // 전체 주문금액 - 환불금액
+		int refundAmount = 0; // 주문자에게 환불될 금액
+		int usedPoint = 0; // 결제시 사용한 적립금
+		
+		String[] odnumArr = (String[]) paraMap.get("odnumArr");
+		String[] useridArr = (String[]) paraMap.get("useridArr");
+		String[] odrcodeArr = (String[]) paraMap.get("odrcodeArr");
+		String[] opriceArr = (String[]) paraMap.get("opriceArr");
+		int length = odnumArr.length; 
+		
+		try {
+			conn = ds.getConnection();
+			conn.setAutoCommit(false); // 수동커밋
+			String sql;
+			
+			for (int i = 0; i < length; i++) {
+				
+				// odnum에 해당하는 환불상태 컬럼 바꾸기
+				sql = "update tbl_order_detail set refund = 1 where odnum = ?";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, odnumArr[i]);
+				n = pstmt.executeUpdate();
+				
+				// 예치금으로 환불
+				if (n == 1) {
+				
+					// 환불금액 계산
+					sql = "select odrtotalprice - ? from tbl_order where odrcode = ?";
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, opriceArr[i]);
+					pstmt.setString(2, odrcodeArr[i]);
+					rs = pstmt.executeQuery();
+					
+					rs.next();
+					
+					afterRefund = (rs.getInt(1)); // 전체 주문금액 - 환불금액
+					
+					// 전체 주문금액 - 환불금액 >= 30000이라면 환불금액 - 2500(반품배송비)
+					if (afterRefund >= 30000) {
+						refundAmount = Integer.parseInt(opriceArr[i]) - 2500;
+					}
+					
+					// 전체 주문금액 - 환불금액 < 30000이라면 환불금액 - 2500(반품배송비) - 2500(최초배송비)
+					else {
+						refundAmount = Integer.parseInt(opriceArr[i]) - 5000;
+					}
+					
+					// 만약 결제시 적립금을 사용하여 결제하였다면 환불금에서 적립금만큼 차감
+
+					// 적립금 사용 여부
+					sql = "select odrusedpoint from tbl_order where odrcode = ?";
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, odrcodeArr[i]);
+					rs = pstmt.executeQuery();
+					
+					rs.next();
+					
+					usedPoint = rs.getInt(1);
+					
+					// 적립금을 사용했다면
+					if (usedPoint > 0) {
+						refundAmount -= usedPoint;
+					}
+					
+					sql = "update tbl_member set coin = coin + ? where userid = ?";
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setInt(1, refundAmount);
+					pstmt.setString(2, useridArr[i]);
+					n = pstmt.executeUpdate();
+					
+					// 예치금 내역 삽입
+					if (n == 1) {
+						sql = "insert into tbl_coin_history(coinno, fk_userid, coin_amount)"
+								+ " values(seq_coin_history.nextval, ?, ?)";
+						pstmt = conn.prepareStatement(sql);
+						pstmt.setString(1, useridArr[i]);
+						pstmt.setInt(2, refundAmount);
+						n = pstmt.executeUpdate();
+					
+						// 적립금 반환/차감
+						if (n==1) {
+							
+							// 적립금를 사용하여 결제했으면 사용된 적립금 반환
+							if (usedPoint > 0) {
+								// 일부 환불하는 경우
+								if (afterRefund>0) {
+									// 전체 주문금액
+									int odrtotalprice = afterRefund + Integer.parseInt(opriceArr[i]);
+									// 전체 주문금액에서 환불금액이 차지하는 비율
+									float portion = (float) ((Integer.parseInt(opriceArr[i])*1.0 / odrtotalprice));
+									usedPoint = (int) (usedPoint * portion);
+								}
+								
+								sql = "update tbl_member set point = point + ? where userid = ?";
+								pstmt = conn.prepareStatement(sql);
+								pstmt.setInt(1, usedPoint);
+								pstmt.setString(2, useridArr[i]);
+								n = pstmt.executeUpdate();
+								
+								// 적립금 내역 삽입
+								if (n==1) {
+									sql = "insert into tbl_point_history(pointno, fk_userid, point_amount)"
+											+ " values(seq_point_history.nextval, ?, ?)";
+									pstmt = conn.prepareStatement(sql);
+									pstmt.setString(1, useridArr[i]);
+									pstmt.setInt(2, usedPoint);
+									n = pstmt.executeUpdate();
+								}
+							} 
+							// 적립금를 사용하여 결제하지 않았으면 적립된 적립금 수거
+							else {
+								int rollbackPoint = 0;
+								// 일부 환불하는 경우
+								if (afterRefund>0) {
+									int odrtotalprice = afterRefund + Integer.parseInt(opriceArr[i]);
+									// 전체 주문금액에서 환불금액이 차지하는 비율
+									float portion = (float) ((Integer.parseInt(opriceArr[i])*1.0 / odrtotalprice));
+									rollbackPoint = (int) (odrtotalprice * portion) / 100;
+								}
+								// 전체 환불하는 경우
+								else {
+									rollbackPoint = Integer.parseInt(opriceArr[i])/100;
+								}
+								
+								sql = "update tbl_member set point = point - ? where userid = ?";
+								pstmt = conn.prepareStatement(sql);
+								pstmt.setInt(1, rollbackPoint);
+								pstmt.setString(2, useridArr[i]);
+								n = pstmt.executeUpdate();
+								
+								// 적립금 내역 삽입
+								if (n==1) {
+									
+									rollbackPoint = (-1) * rollbackPoint ;
+									
+									sql = "insert into tbl_point_history(pointno, fk_userid, point_amount)"
+											+ " values(seq_point_history.nextval, ?, ?)";
+									pstmt = conn.prepareStatement(sql);
+									pstmt.setString(1, useridArr[i]);
+									pstmt.setInt(2, rollbackPoint);
+									n = pstmt.executeUpdate();
+									
+								}
+							}
+							if (n==1)
+								result += 1;
+						}
+					}
+				}
+			} // end of for
+			
+			if (result == odnumArr.length)
+				conn.commit();
+			
+			
+		} catch(SQLException e) {
+			conn.rollback();
+			
+		} finally {
+			conn.setAutoCommit(true); // 자동커밋
+			close();
+		}
+		return result;
 	}
 
 }
