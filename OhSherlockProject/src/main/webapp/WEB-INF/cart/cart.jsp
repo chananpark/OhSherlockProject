@@ -21,19 +21,19 @@
 		border: none;
 	}
 	
-	#cartContainer a {
+	a {
 		text-decoration: none;
 	}
 	
-	#cartContainer a:link {
+	a:link {
 		text-decoration: none;
 	}
 	
-	#cartContainer a:hover  {
+	a:hover  {
 		text-decoration: none;
 	}
 	
-	#cartContainer a:visited  {
+	a:visited  {
 		text-decoration: none;
 		color: black;
 	}
@@ -319,7 +319,7 @@
 			const frm = document.cartFrm;
 			
 			frm.method = "POST"; 
-			frm.action = "<%=request.getContextPath()%>/order/orderView.tea";
+			frm.action = "<%=request.getContextPath()%>/shop/orderPayment.tea";
 			frm.submit();
         }
 	}// end of function goOrder()----------------------
@@ -386,7 +386,7 @@
     			const frm = document.cartFrm;
     			
     			frm.method = "POST"; 
-    			frm.action = "<%=request.getContextPath()%>/order/orderView.tea";
+    			frm.action = "<%=request.getContextPath()%>/shop/orderPayment.tea";
     			frm.submit();
             }
 		} // end of if(checkCnt < 1) - else 
@@ -438,7 +438,7 @@
 								</a>
 							</td>
 							<td class="cart_pname">
-								<a href="<%=ctxPath%>/shop/productView.tea?pnum=${cartvo.pnum}">${cartvo.prod.pname}</a>
+								<a href="<%=ctxPath%>/shop/productView.tea?pnum=${cartvo.pnum}" style="color:black;">${cartvo.prod.pname}</a>
 							</td>
 							<td>
 								<input class="spinner oqty" style="width:50px" name="oqty" value="${cartvo.oqty}"  required/>
