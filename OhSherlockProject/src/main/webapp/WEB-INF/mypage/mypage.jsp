@@ -85,6 +85,22 @@
 	vertical-align: middle;
 }
 
+a {
+	text-decoration: none;
+}
+
+a:link {
+	text-decoration: none;
+}
+
+a:hover  {
+	text-decoration: none;
+}
+
+a:visited  {
+	text-decoration: none;
+	color: black;
+}
 </style>
 
 <script type="text/javascript">
@@ -160,8 +176,6 @@
 	           
 	        }
 
-	
-	
 
 </script>
 
@@ -197,30 +211,26 @@
 			<thead class="thead-light"> 
 				<tr>
 					<th>날짜</th>
-					<th>상품명</th>
+					<th>주문코드</th>
 					<th>결제금액</th>
-					<th>배송현황</th>
+					<th>주문상세보기</th>
 				</tr>
 			</thead> 
 			<tbody>
-				<tr>
-					<td>2022.09.05</td>
-					<td>프리미엄 티 컬렉션</td>
-					<td>28,000원</td> 
-					<td><input type="button" class="viewBtns" value="조회" /></td>
-				</tr>
-				<tr>
-					<td>2022.01.20</td>
-					<td>러블리 티 박스</td>
-					<td>20,000원</td> 
-					<td><input type="button" class="viewBtns" value="조회" /></td> 
-				</tr>
-				<tr>
-					<td>2021.12.22</td>
-					<td>에브리데이 텀블러 키트</td>
-					<td>36,500원</td> 
-					<td><input type="button" class="viewBtns" value="조회" /></td> 
-				</tr>
+				<c:if test="${empty requestScope.orderList}">
+					<tr><td colspan="6" align="center">최근 한달 이내에 주문하신 상품이 없습니다.</td></tr>
+				</c:if>
+				<c:if test="${not empty requestScope.orderList}">
+					<c:forEach var="ovo" items="${orderList}">
+						<tr>
+							<td>${ovo.odrdate}</td>
+							<td>${ovo.odrcode}</td>
+							<td>${ovo.odrtotalprice}</td> 
+							<td><input type="button" class="viewBtns" value="조회" /></td>
+						
+						</tr>
+					</c:forEach>
+				</c:if>
 			</tbody>
 		</table>
 	</div>
@@ -229,7 +239,7 @@
     <br>
 	<div>
 	   <span style="font-weight: bold; font-size: 15pt;">최근 문의내역</span>
-	   <span style="float: right;">더보기&nbsp;></span>
+	   <span style="float: right;"><a href="<%=request.getContextPath()%>/mypage/inquiryList.tea">더보기&nbsp;></a></span>
 	</div>
 
 	<div>
@@ -242,21 +252,25 @@
 				</tr>
 			</thead> 
 			<tbody>
-				<tr>
-					<td>2022.09.06</td>
-					<td>배송문의</td>
-					<td>기타</td> 
-				</tr>
-				<tr>
-					<td>2022.01.20</td>
-					<td>주문취소/배송전변경 문의</td>
-					<td>취소/환불/교환</td> 
-				</tr>
-				<tr>
-					<td>2021.12.26</td>
-					<td>교환/반품문의</td>
-					<td>취소/환불/교환</td> 
-				</tr>
+				<c:if test="${empty inquiryList}">
+					<tr><td colspan="6" align="center">등록된 1:1문의가 없습니다.</td></tr>
+				</c:if>
+				<c:if test="${not empty inquiryList}">
+					<c:forEach var="ivo" items="${inquiryList}"> 
+						<tr>
+							<td>${ivo.inquiry_date}</td>
+							<td>${ivo.inquiry_subject}</td>
+							<td>
+								<c:if test="${ivo.inquiry_type == 'delivery'}">배송문의</c:if>
+								<c:if test="${ivo.inquiry_type == 'product'}">상품문의</c:if>
+								<c:if test="${ivo.inquiry_type == 'coin_point'}">예치금/적립금</c:if>
+								<c:if test="${ivo.inquiry_type == 'cancle'}">취소/환불/교환</c:if>
+								<c:if test="${ivo.inquiry_type == 'member'}">회원</c:if>
+								<c:if test="${ivo.inquiry_type == 'others'}">기타</c:if>
+							</td> 
+						</tr>
+					</c:forEach>
+				</c:if>
 			</tbody>
 		</table>
 	</div>
