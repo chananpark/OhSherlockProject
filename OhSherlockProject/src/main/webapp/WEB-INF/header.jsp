@@ -272,6 +272,11 @@ div#brandStoryText {
 }
 
 /* --- 이벤트 컨테이너 css 끝 --- */
+
+
+input[type=radio] {
+    accent-color: #1E7F15 !important;
+}
 </style>
 
 </head>
@@ -285,8 +290,7 @@ div#brandStoryText {
 			<%-- 고정 부분 --%>
 			<div class="d-flex order-xl-1 ml-auto pr-2">
 				<ul class="navbar-nav flex-row">
-					<li class="nav-item active mr-2"><span class="nav-link menufont_size text-dark">
-					<i class="fas fa-grip-lines-vertical fa-lg"></i></span></li>
+					<li class="nav-item active mr-2"><span class="nav-link menufont_size text-dark"></span></li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/cart/cart.tea">
 					<i class="fas fa-shopping-basket fa-lg"></i></a></li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath%>/shop/likeList.tea">

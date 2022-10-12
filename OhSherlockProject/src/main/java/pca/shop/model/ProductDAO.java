@@ -502,4 +502,30 @@ public class ProductDAO implements InterProductDAO {
 			return todayProductList;
 		}
 
+		// 주문번호 시퀀스 채번
+		@Override
+		public int getSeq_tbl_order() throws SQLException {
+			int seq = 0;
+
+		    try {
+		        conn = ds.getConnection();
+
+		        String sql = " select seq_tbl_order.nextval as seq "
+		                   + " from dual ";
+
+		        pstmt = conn.prepareStatement(sql);
+
+		        rs = pstmt.executeQuery();
+
+		        rs.next();
+
+		        seq = rs.getInt("seq");
+
+		    } finally {
+		        close();
+		    }
+
+		    return seq;
+		}
+
 }
