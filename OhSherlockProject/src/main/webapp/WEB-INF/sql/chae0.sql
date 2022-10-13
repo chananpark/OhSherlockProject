@@ -357,10 +357,15 @@ where pnum = 14
 
 
 INSERT INTO tbl_product_imagefile(imgfileno, fk_pnum, imgfilename)
-VALUES (SEQ_IMGFILENO.nextval, 2, '말차스틱 상세.png');
+VALUES (SEQ_IMGFILENO.nextval, 16, '달달 박스 60입 상세.png');
 
 
 commit;
 
+select *
+from tbl_product_imagefile
 
 
+delete from tbl_product_imagefile where imgfileno = 48
+
+commit;
