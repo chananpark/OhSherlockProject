@@ -421,7 +421,7 @@
 								<fmt:formatNumber value="${cartvo.prod.saleprice*cartvo.oqty}" pattern="###,###" /> 원
 							</td>
 							<td>
-								<p><input class="paymentBtn btn" type="button" value="바로구매" onclick="goOrder();"/></p>
+								<p><input class="paymentBtn btn" type="button" value="바로구매" style="background-color: #1E7F15; color:white;" onclick="goOrder();"/></p>
 								<p><input class="btn bg-light text-dark" type="button" value="상품삭제" onclick="goDel('${cartvo.cartno}')"/></p>
 							</td>
 						</tr>

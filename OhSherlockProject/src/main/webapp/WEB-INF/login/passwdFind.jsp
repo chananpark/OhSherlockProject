@@ -85,6 +85,27 @@
 	  #div_certification {
 	  	text-align: center;
 	  }	
+	  
+	  .loader {
+		  border: 5px solid #f3f3f3;
+		  border-radius: 50%;
+		  border-top: 5px solid  #1E7F15 ;
+		  width: 25px;
+		  height: 25px;
+		  -webkit-animation: spin 2s linear infinite; /* Safari */
+		  animation: spin 2s linear infinite;
+		}
+		
+		/* Safari */
+		@-webkit-keyframes spin {
+		  0% { -webkit-transform: rotate(0deg); }
+		  100% { -webkit-transform: rotate(360deg); }
+		}
+		
+		@keyframes spin {
+		  0% { transform: rotate(0deg); }
+		  100% { transform: rotate(360deg); }
+		}
 
 	
 </style>
@@ -97,6 +118,7 @@
 	$(document).ready(function(){
 		
 		$("span.error").hide();
+		$("span.loader").hide();
 		
 		// email 형식에 맞게 입력 받아오기
 		$("input[name='email']").blur( (e)=>{
@@ -159,6 +181,7 @@
 			$("input[name='email']").val("${requestScope.email}");
 			$("input[name='name']").val("${requestScope.name}");
 	        
+			$("span.loader").hide();
 			// 인증코드 발송되었다는 문구 출력
 	    	$("div#div_findResult").show();
 			
@@ -225,6 +248,7 @@
 		// 이름, 이메일, 아이디가 공백일 때 
 		if( useridVal != "" && emailVal != "" && nameVal != "") {
 			
+			$("span.loader").show();
 			// 올바르게 입력할 경우
 			const frm = document.pwdFindFrm;
 			// 다 올바르게 입력했다면 보내준다.
@@ -246,10 +270,12 @@
 <div class="container">
 	<form name="pwdFindFrm" id="pwdFindFrm">
        	<div id="passwdFind_box" class="d-flex flex-column m-auto">
-       		<div id="passwdFind_title">
-       			<h2 style="text-align: center; font-size: 30px; line-height: 40px; font-weight: bold; " > FIND P/W </h2>
+       		<div id="passwdFind_title" style="display:inline-block;">
+       			<h2 style="text-align: center; font-size: 30px; line-height: 40px; font-weight: bold; " > 
+       				FIND P/W 
+       				<span class="loader" style="display:inline-block;"></span>
+     			</h2>
        		</div>
-
           	<div id="input_passwdFind" class="d-flex flex-column">
 				<input type="text" name="name" placeholder="이름" autocomplete="off" required />
 				<input type="text" name="userid" placeholder="아이디" autocomplete="off" required />
