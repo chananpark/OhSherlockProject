@@ -146,7 +146,7 @@
          
          // 주문개수가 1개 이상인 경우
          frm.method = "POST";
-         frm.action = "<%= request.getContextPath() %>/shop/cartAdd.up";
+         frm.action = "<%= request.getContextPath() %>/cart/cartAdd.tea";
          frm.submit();
          
                
@@ -177,7 +177,9 @@
          $("#sumtotalPoint").val(sumtotalPoint);
          
          
-         var bool = confirm("총주문액 : "+sumtotalPrice+"원 결제하시겠습니까?");
+         const str_sumtotalPrice = sumtotalPrice.toLocaleString('en');
+         
+         var bool = confirm("총주문액 : "+str_sumtotalPrice+"원 결제하시겠습니까?");
            
            if(bool) {
            
@@ -267,7 +269,18 @@
                   </tr>
                   <tr>
                        <td class="col col-9" style="color:#1E7F15; font-weight:bolder;"><h4>결제예정금액</h4></td>
-                      <td class="col col-3 text-right" style="color:#1E7F15;"><h4 style="font-weight:bold;"><fmt:formatNumber value="${requestScope.pvo.saleprice}" pattern="###,###"/>원</h4></td>
+                      <td class="col col-3 text-right" style="color:#1E7F15;">
+                     	 <c:if test="${requestScope.pvo.saleprice >= 30000}">
+	                      <h4 style="font-weight:bold;">
+	                      	<fmt:formatNumber value="${requestScope.pvo.saleprice}" pattern="###,###"/>원
+	                      </h4>
+	                      </c:if>
+	                      <c:if test="${requestScope.pvo.saleprice < 30000}">
+	                      	<h4 style="font-weight:bold;">
+	                      		<fmt:formatNumber value="${requestScope.pvo.saleprice + 2500}" pattern="###,###"/>원
+	                      	</h4>
+	                      </c:if>
+                      </td>
                   </tr>
                 </tbody>
           </table>
@@ -278,17 +291,16 @@
                   <input class="productbtn" type="button" onclick="goCart();" value="장바구니" style="width: 30%; margin-right: 12.5px;" />
                   <input class="productbtn" type="button"  onclick="goOrder('${pvo.pnum}');" value="바로구매" style="width: 30%; background-color: #1E7F15; color:white;"/>
             </div>
-            <input type="text" name="pnumjoin" id="pnumjoin" value="${requestScope.pvo.pnum}" />
-            <input type="text" name="price" id="hidden_price" value="${requestScope.pvo.price}" />
-            <input type="text" name="point" id="hidden_point" value="${requestScope.pvo.point}" />
-            <input type="text" name="saleprice" id="hidden_saleprice" value="${requestScope.pvo.saleprice}" />
-            <input type="text" name="pnamejoin" id="pnamejoin" value="${pvo.pname}" />
-            <input type="text" name="oqtyjoin" id="oqtyjoin" value=""/>
-            <input type="text" name="imagejoin" id="imagejoin" value="${pvo.pimage}" />
-            <input type="text" name="totalPricejoin" id="totalPricejoin" value=""/>
-            <input type="text" name="sumtotalOriginalPrice" id="sumtotalOriginalPrice" value=""/>
-            <input type="text" name="sumtotalPrice" id="sumtotalPrice" value=""/>
-            <input type="text" name="cartnojoin" id="cartnojoin"  value=""/>
+            <input type="hidden" name="pnumjoin" id="pnumjoin" value="${requestScope.pvo.pnum}" />
+            <input type="hidden" name="price" id="hidden_price" value="${requestScope.pvo.price}" />
+            <input type="hidden" name="point" id="hidden_point" value="${requestScope.pvo.point}" />
+            <input type="hidden" name="saleprice" id="hidden_saleprice" value="${requestScope.pvo.saleprice}" />
+            <input type="hidden" name="pnamejoin" id="pnamejoin" value="${pvo.pname}" />
+            <input type="hidden" name="oqtyjoin" id="oqtyjoin" value=""/>
+            <input type="hidden" name="imagejoin" id="imagejoin" value="${pvo.pimage}" />
+            <input type="hidden" name="totalPricejoin" id="totalPricejoin" value=""/>
+            <input type="hidden" name="sumtotalOriginalPrice" id="sumtotalOriginalPrice" value=""/>
+            <input type="hidden" name="sumtotalPrice" id="sumtotalPrice" value=""/>
             
          
       </div>
