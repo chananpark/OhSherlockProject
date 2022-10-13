@@ -32,6 +32,11 @@
        content: "";
    }
    
+   #star{
+	   color: red;
+   } 
+   
+/*   
    #star a{
 	   text-decoration: none;
 	   color: gray;
@@ -40,7 +45,7 @@
    #star a.on{
 	   color: red;
    } 
-   
+*/   
    .page-link {
 	  color: #666666; 
 	  background-color: #fff;
@@ -147,7 +152,6 @@
               }
           }
       });
-      
 	   
     });// end of $(document).ready()--------------------------
     
@@ -240,14 +244,21 @@
                      <td>    
                         <span class="like_pname" style="font-weight: bold;">${reivewvo.prod.pname}</span><br>  <%-- 상품명 --%>
                         <span>작성일 :&nbsp; ${fn:substring(reivewvo.writeDate, 0, 10)}</span><br>
-                        <P id="star"> <!-- 부모 -->
-						    <a href="#" value="1">★</a> <!-- 자식들-->
-						    <a href="#" value="2">★</a>
-						    <a href="#" value="3">★</a>
-						    <a href="#" value="4">★</a>
-						    <a href="#" value="5">★</a>
-						<p>
-						<span>${reivewvo.rsubject}</span><br>
+                        <input type="hidden" name="score" id="score" value="${reivewvo.score}" />
+	                    <%--   <P id="star"> <!-- 부모 -->
+							    <a value="1">★</a> <!-- 자식들-->
+							    <a value="2">★</a>
+							    <a value="3">★</a>
+							    <a value="4">★</a>
+							    <a value="5">★</a>
+							</p>
+						--%> 	
+						<c:forEach begin="1" end="${reivewvo.score}" varStatus="status">
+							<a id="star" value="${status.index}"><span>★</span></a>
+						</c:forEach><br><br>
+							
+							
+						<span style="font-weight: bold;">${reivewvo.rsubject}</span><br>
 						
 						<div class="box">
 						    <div class="content">

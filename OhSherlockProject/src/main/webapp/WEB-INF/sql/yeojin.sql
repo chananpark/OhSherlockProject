@@ -367,10 +367,17 @@ on pnum = fk_pnum  order by odrdate desc) C  ) T
 
 
 
+-- 상품 상세보기 sql
+ select S.sname, pnum, pname, price, saleprice, point, pqty, pcontent, pimage, prdmanual_systemfilename, nvl(prdmanual_orginfilename, '없음') AS prdmanual_orginfilename  
+ from   (  select fk_snum, pnum, pname, price, saleprice, point, pqty, pcontent, pimage, fk_cnum
+            from tbl_product  
+            where pnum = 1  ) P 
+outer JOIN tbl_spec S  ON P.fk_snum = S.SNUM 
 
 
-
-
+select  likeno, fk_userid, pnum, pname, pimage
+from tbl_like L join tbl_product P
+on P.pnum = L.fk_pnum
 
 
 

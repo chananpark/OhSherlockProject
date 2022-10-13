@@ -45,6 +45,7 @@
 <script type="text/javascript">
 
 	$(document).ready(function (e) {
+
 		
 			// 각 행을 클릭했을 때 해당하는 행의 회원 상세 조회 보여주기
 	      // 모든 tr을 잡아와서 그 중 name 이 userid 인 것의 text만 가져오는 이벤트
@@ -57,6 +58,21 @@
 	      }); // end of $("tbody > tr").click(function()
 	
 	});
+
+
+		// 제목 클릭 시 상품 상세 열어주는 함수(수정필요)
+		$(".viewhidden").click(function () {
+            status = $(".hidden").css("display"); 
+            if (status == "none") {
+                $(".hidden").css("display", "");
+            } else {
+                $(".hidden").css("display", "none");
+            }
+        });
+		
+	});// end of 
+	
+
 
 	 
 	// 모달창 띄우는 함수

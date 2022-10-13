@@ -78,6 +78,16 @@
 		   
 		});
       	
+      	// 한개만 바로주문
+      	$(".directOrder").click((e)=>{
+      		const length = "directOrder".length;
+      		const index = $(e.target).attr('id').substr(length);
+      		console.log(index);
+      		
+      		$('#pnum'+index).prop('checked', true);
+      		goChkOrder();
+      	});
+      	
 	}); // end of $(document).ready()--------------------------
 	
 	
@@ -421,7 +431,7 @@
 								<fmt:formatNumber value="${cartvo.prod.saleprice*cartvo.oqty}" pattern="###,###" /> 원
 							</td>
 							<td>
-								<p><input class="paymentBtn btn" type="button" value="바로구매" onclick="goOrder();"/></p>
+								<p><input id="directOrder${status.index}" class="directOrder paymentBtn btn" type="button" value="바로구매" style="background-color: #1E7F15; color:white;"/></p>
 								<p><input class="btn bg-light text-dark" type="button" value="상품삭제" onclick="goDel('${cartvo.cartno}')"/></p>
 							</td>
 						</tr>

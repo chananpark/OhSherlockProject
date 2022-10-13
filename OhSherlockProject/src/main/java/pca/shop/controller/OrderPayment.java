@@ -50,6 +50,8 @@ public class OrderPayment extends AbstractController {
 			String imagejoin = request.getParameter("imagejoin");
 			// 상품 구매금액
 			String totalPricejoin = request.getParameter("totalPricejoin");
+			// 결제방법
+			String paymentMethod = request.getParameter("paymentMethod");
 			
 			String[] pnumArr = pnumjoin.split("\\,"); 
 			
@@ -86,8 +88,19 @@ public class OrderPayment extends AbstractController {
 			
 			// 총 구매 정가
 			int sumtotalOriginalPrice = Integer.parseInt(request.getParameter("sumtotalOriginalPrice"));
+			
 			// 총 구매금액
 			int sumtotalPrice = Integer.parseInt(request.getParameter("sumtotalPrice"));
+			
+			// 배송비
+			int delivery_cost = 0;
+			if(sumtotalPrice < 30000) {
+				delivery_cost = 2500;
+			}
+			
+			// 배송비 포함 총 결제금액
+			int totalPaymentAmount = sumtotalPrice + delivery_cost;
+			
 			// 총 할인금액
 			int saleAmount = sumtotalOriginalPrice - sumtotalPrice;
 					
@@ -98,7 +111,10 @@ public class OrderPayment extends AbstractController {
 			request.setAttribute("totalPricejoin", totalPricejoin);
 			request.setAttribute("cartnojoin", cartnojoin);
 			request.setAttribute("saleAmount", saleAmount);
+			request.setAttribute("delivery_cost", delivery_cost);
 			request.setAttribute("sumtotalPrice", sumtotalPrice);
+			request.setAttribute("totalPaymentAmount", totalPaymentAmount);
+			request.setAttribute("paymentMethod", paymentMethod);
 	
 			// 주문 결제 화면 이동
 			super.setViewPage("/WEB-INF/product/payment.jsp");

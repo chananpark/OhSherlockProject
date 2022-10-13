@@ -336,7 +336,7 @@ input[type=radio] {
 							<a class="dropdown-item" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=1&snum=2&cnum=&order=pinputdate%20desc">베스트</a> 
 							<a class="dropdown-item" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=1&snum=1&cnum=&order=pinputdate%20desc">신상품</a> 
 						</div>
-					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath %>/storeInfo/storeList.jsp">매장안내</a></li>
+					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath %>/storeInfo/storeList.tea" >매장안내</a></li>
 					<li class="nav-item active mr-2"><a class="nav-link menufont_size text-dark" href="<%=ctxPath %>/brandStory/brandStory.tea">브랜드스토리</a></li>
 				</ul>
 				<ul class="navbar-nav text-right mx-auto">
