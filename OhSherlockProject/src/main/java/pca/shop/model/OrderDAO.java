@@ -654,23 +654,26 @@ public class OrderDAO implements InterOrderDAO {
 	            }
 	        }
 	        
-	        
 	    // 5. 장바구니 테이블에서 cartnojoin 값에 해당하는 행들을 삭제 
-	       if(paraMap.get("cartnojoin") != null && n3==1) {
-	           String cartnojoin = (String) paraMap.get("cartnojoin");
-
-	           sql = " delete from tbl_cart"
-	               + " where cartno in ("+ cartnojoin +") ";
-	           // in 절은 위치홀더 사용불가 => 변수로 처리해야 함 
-
-	           pstmt = conn.prepareStatement(sql);
-	           n4 = pstmt.executeUpdate();
-	       }
-
-	       if( paraMap.get("cartnojoin") == null && n3==1 ) {
-	           // 제품 상세정보 페이지에서 바로주문하기를 한 경우
-	           n4 = 1;
-	       }
+	        
+	        if(n3==1) {
+	        	String cartnojoin = (String) paraMap.get("cartnojoin");
+	        	if(cartnojoin != null && !cartnojoin.trim().isEmpty()) {
+	        		
+	        		sql = " delete from tbl_cart"
+	        				+ " where cartno in ("+ cartnojoin +") ";
+	        		// in 절은 위치홀더 사용불가 => 변수로 처리해야 함 
+	        		
+	        		pstmt = conn.prepareStatement(sql);
+	        		n4 = pstmt.executeUpdate();
+	        	}
+	        	
+	        	else {
+	        		// 제품 상세정보 페이지에서 바로주문하기를 한 경우
+	        		n4 = 1;
+	        	}
+	        	
+	        }
 	       
 	       
 	    // 예치금결제시 예치금 감소, 적립금 사용시 적립금 감소, 적립금 미사용시 적립금 증가 + 내역 테이블에 insert
