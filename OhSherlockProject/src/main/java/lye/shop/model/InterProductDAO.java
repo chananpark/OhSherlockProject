@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import common.model.LikeVO;
-import common.model.MemberVO;
 import common.model.ProductVO;
 import common.model.ReviewVO;
 
@@ -32,7 +31,6 @@ public interface InterProductDAO {
 	//ProductVO selectOneProductByPnum(String pnum) throws SQLException;
 
 	
-	
 	// 찜목록 담기 
     // 찜목록 테이블(tbl_Like)에 해당 제품을 담아야 한다.
     // 찜목록 테이블에 해당 제품이 존재하지 않는 경우에는 tbl_Like 테이블에 insert 를 해야하고, 
@@ -58,6 +56,16 @@ public interface InterProductDAO {
 
 	// 페이징 처리를 한 모든 상품리뷰 목록 보여주기
 	List<ReviewVO> selectPagingReview(Map<String, Object> paraMap) throws SQLException;
+
+	// 상품리뷰 테이블에서 특정리뷰 1개 행을 리뷰목록에서 비우기
+	int reviewLike(String rnum) throws SQLException;
+
+	// 해당제품을 사용자가 실제 구매했는지 여부를 알아오는 것임. 구매했다라면 true, 구매하지 않았으면 false
+	boolean isOrder(Map<String, String> paraMap) throws SQLException;
+
+	// tbl_review 테이블에 상품리뷰 insert 하기
+	int productReview(ReviewVO rvo) throws SQLException;
+
 
 	
 

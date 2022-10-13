@@ -25,4 +25,17 @@ public class MyUtil {
 		return currentURL;
 	}
 	
+	// *** 크로스 사이트 스크립트 공격에 대응하는 안전한 코드(시큐어 코드) 작성하기 *** //
+	public static String secureCode(String str) {
+		
+		str = str.replaceAll("<", "&lt;");  // 태그 < 는 부등호 <(&lt;) 로 바꾼다.
+		str = str.replaceAll(">", "&gt;");  // 태그 > 는 부등호 <(&gt;) 로 바꾼다.
+		
+		return str;
+	}
+	
+	
+	
+	
+	
 }
