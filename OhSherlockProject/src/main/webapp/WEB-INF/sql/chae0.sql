@@ -357,7 +357,7 @@ where pnum = 14
 
 
 INSERT INTO tbl_product_imagefile(imgfileno, fk_pnum, imgfilename)
-VALUES (SEQ_IMGFILENO.nextval, 11, '모로칸 민트티 10입 상세.png');
+VALUES (SEQ_IMGFILENO.nextval, 2, '말차스틱 상세.png');
 
 
 commit;
