@@ -224,8 +224,9 @@ function getOrderedList() {
 	   			'<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart" onclick="goLike(' + item.pnum + ');"></i></a> '+
 	   			'<a class="card-text text-secondary mr-5 like" onclick="goLike(' + item.pnum + ');">찜하기</a> '+
 	   							      			
-	   			'<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a> '+
-	   			'<a class="card-text text-secondary">담기</a> '+
+	   			' <a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg" onClick="clickCart('+item.pnum +');"></i></a> '+
+	   			' <input class="card-text text-secondary cart" type="button" onClick="clickCart('+item.pnum +');" value="담기" style="padding-left: 0; margin-left: 0;"/> '+
+	   			
 	    			
 	 			'</div> </div>';
 	      		}); 

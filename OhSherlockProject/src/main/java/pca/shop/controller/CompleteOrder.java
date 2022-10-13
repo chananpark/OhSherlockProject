@@ -136,6 +136,7 @@ public class CompleteOrder extends AbstractController {
 			sb.append("<주문목록><br>");
 			
 			for(int i = 0; i < jumunProductList.size(); i++) {
+				//sb.append("<img src='http://127.0.0.1:9090/OhSherlockProject/images/"+jumunProductList.get(i).getPimage()+"'/><br>");
 				sb.append(jumunProductList.get(i).getPname()+"&nbsp;"+oqtyArr[i]+"개<br>");
 			}
 			
