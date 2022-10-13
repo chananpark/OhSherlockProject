@@ -119,8 +119,7 @@
       
 	<ul style="list-style-type: none">
     	<li style="margin: 25px 0">
-	<input type="text" value="${requestScope.pvo.pnum}" />
-    		<input type="text" name="userid" value="${sessionScope.loginuser.userid}" />  <%-- 사용후기를 적은 사용자 userid --%>
+    		<input type="hidden" name="userid" value="${sessionScope.loginuser.userid}" />  <%-- 사용후기를 적은 사용자 userid --%>
     		<input type="hidden" name="pnum" value="${requestScope.pvo.pnum}" />      <%-- 사용후기를 적은 상품번호 --%>
         	<label for="name" style="display: inline-block; width: 90px">제목<span class="text-danger">*</span></label>
             <input type="text" class="reviewData" name="subject" id="subject" size="50" placeholder="제목을 입력하세요." autocomplete="off" required />

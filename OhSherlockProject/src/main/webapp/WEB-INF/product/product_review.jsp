@@ -25,11 +25,11 @@
 
    #review_page a {
       text-decoration: none;
-      color: black;
+      color: white;
    }
    
    #review_page a:link, .footer a:visited {
-      color: black;
+      color: white;
    }
    
    #review_page .btnEditDel {
@@ -103,7 +103,7 @@
                     ${review.rcontent }
                     <br><br>
                  </td> 
-                  <td colspan="2" class="vertical_bottom text-right"><span style="width:20%;"><input class="btnEditDel" type="button" value="삭제하기" /></span></td>
+                  <td colspan="2" class="vertical_bottom bg-light"><span style="width:20%;"><input class="btnEditDel" type="button" value="삭제하기" /></span></td>
              </tr>
             
             </c:forEach>
