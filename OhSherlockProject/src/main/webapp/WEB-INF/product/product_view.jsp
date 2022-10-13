@@ -167,18 +167,20 @@
          var sumtotalPoint = Number(oqty) * Number(point); // 
          
          if( sumtotalPrice < 30000 ) {
-            sumtotalPrice += sumtotalPrice + 3000
+            sumtotalPrice += 2500;
          }
+         
+         $("#oqtyjoin").val(oqty);
+         $("#totalPricejoin").val(sumtotalPrice); // 상품구매금액
+         $("#sumtotalPrice").val(sumtotalPrice);
+         $("#sumtotalOriginalPrice").val(sumtotalOriginalPrice); // 총구매정가
+         $("#sumtotalPoint").val(sumtotalPoint);
+         
          
          var bool = confirm("총주문액 : "+sumtotalPrice+"원 결제하시겠습니까?");
            
            if(bool) {
-            $("#oqtyjoin").val(oqty);
-            $("#totalPricejoin").val(sumtotalPrice); // 상품구매금액
-            $("#sumtotalPrice").val(sumtotalPrice);
-            $("#sumtotalOriginalPrice").val(sumtotalOriginalPrice); // 총구매정가
-            $("#sumtotalPoint").val(sumtotalPoint);
-            
+           
             const frm = document.prodStorageFrm;
             
             frm.method = "POST"; 
@@ -276,17 +278,17 @@
                   <input class="productbtn" type="button" onclick="goCart();" value="장바구니" style="width: 30%; margin-right: 12.5px;" />
                   <input class="productbtn" type="button"  onclick="goOrder('${pvo.pnum}');" value="바로구매" style="width: 30%; background-color: #1E7F15; color:white;"/>
             </div>
-            <input type="hidden" name="pnumjoin" id="pnumjoin" value="${requestScope.pvo.pnum}" />
-            <input type="hidden" name="price" id="hidden_price" value="${requestScope.pvo.price}" />
-            <input type="hidden" name="point" id="hidden_point" value="${requestScope.pvo.point}" />
-            <input type="hidden" name="saleprice" id="hidden_saleprice" value="${requestScope.pvo.saleprice}" />
-            <input type="hidden" name="pnamejoin " id="pnamejoin " value="${requestScope.pvo.pname}" />
-            <input type="hidden" name="oqtyjoin  " id="oqtyjoin  " value="" />
-            <input type="hidden" name="imagejoin   " id="imagejoin   " value="${pvo.pimage }" />
-            <input type="hidden" name="totalPricejoin      " id="totalPricejoin      " value="" />
-            <input type="hidden" name="sumtotalOriginalPrice     " id="sumtotalOriginalPrice     " value="" />
-            <input type="hidden" name="sumtotalPrice     " id="sumtotalPrice     " value="" />
-            <input type="hidden" name="cartnojoin     " id="cartnojoin     " value="" />
+            <input type="text" name="pnumjoin" id="pnumjoin" value="${requestScope.pvo.pnum}" />
+            <input type="text" name="price" id="hidden_price" value="${requestScope.pvo.price}" />
+            <input type="text" name="point" id="hidden_point" value="${requestScope.pvo.point}" />
+            <input type="text" name="saleprice" id="hidden_saleprice" value="${requestScope.pvo.saleprice}" />
+            <input type="text" name="pnamejoin" id="pnamejoin" value="${pvo.pname}" />
+            <input type="text" name="oqtyjoin" id="oqtyjoin" value=""/>
+            <input type="text" name="imagejoin" id="imagejoin" value="${pvo.pimage}" />
+            <input type="text" name="totalPricejoin" id="totalPricejoin" value=""/>
+            <input type="text" name="sumtotalOriginalPrice" id="sumtotalOriginalPrice" value=""/>
+            <input type="text" name="sumtotalPrice" id="sumtotalPrice" value=""/>
+            <input type="text" name="cartnojoin" id="cartnojoin"  value=""/>
             
          
       </div>
@@ -331,6 +333,7 @@
 </div>
 
 <%@ include file="../footer.jsp"%>
+
 
 
 
