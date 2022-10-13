@@ -268,10 +268,10 @@ function changePoint() {
 	
 	const usedPoint = Number($("#odrusedpoint").val());
 	$("#td_point").text(usedPoint + " 원");
-
-	$("#span_totalPaymentAmount").text(Number(${sumtotalPrice})-usedPoint);
 	
-	$("#h4_totalPrice").text(Number(${sumtotalPrice})-usedPoint +" 원");
+	$("#span_totalPaymentAmount").text((Number(${sumtotalPrice})+Number(${delivery_cost})-usedPoint).toLocaleString('en'));
+	
+	$("#h4_totalPrice").text((Number(${sumtotalPrice})+Number(${delivery_cost})-usedPoint).toLocaleString('en') +" 원");
 	
 	$("input[name='odrusedpoint']").val(usedPoint);
 }

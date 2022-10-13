@@ -200,14 +200,6 @@ public class OrderVO {
 		this.odrusedpoint = odrusedpoint;
 	}
 
-	public String getRecipient_memo() {
-		return recipient_memo;
-	}
-
-	public void setRecipient_memo(String recipient_memo) {
-		this.recipient_memo = recipient_memo;
-	}
-
 	public MemberVO getMvo() {
 		return mvo;
 	}
@@ -222,6 +214,14 @@ public class OrderVO {
 
 	public void setOdvo(OrderDetailVO odvo) {
 		this.odvo = odvo;
+	}
+
+	public String getRecipient_memo() {
+		return recipient_memo;
+	}
+
+	public void setRecipient_memo(String recipient_memo) {
+		this.recipient_memo = recipient_memo;
 	}
 
 }

@@ -41,37 +41,32 @@ input[type="reset"], input[type="button"] {
 		// 카테고리 값 불러와서 지정해놓기 
 		let html = ""; 	
 		<c:forEach var="map" items="${requestScope.categoryList}">
-			html += '<option value="${map.cnum}" name="${map.cnum}">${map.cname}</option>';
+			html += '<option value="${map.cnum}" name="cnum${map.cnum}">${map.cname}</option>';
 		</c:forEach>
 		html += '<option value="" selected>선택하세요</option>';
 		$("select#fk_cnum").html(html);
 		
-		$("option[name='${requestScope.product_select_one.categvo.cnum}']").prop("selected", true); 
-		
-		// 테스트 중!!!!!!!!!!!!!!!!!!!!!!!!!!!! 값이 안넘어가는건지 선택값도 이상함
-		$("select#fk_cnum").change(function() {
-			concole.log(${requestScope.product_select_one.categvo.cnum});
-			console.log($("select#fk_cnum").val());
-		});
+		$("option[name='cnum${requestScope.product_select_one.categvo.cnum}']").prop("selected", true); 
+		console.log("불러온 값 카테고리값 : "+${requestScope.product_select_one.categvo.cnum});
 		
 
 		// 스펙 값 불러와서 지정해놓기 
 		html = ""; 	
 		<c:forEach var="spvo" items="${requestScope.specList}">
-			html += '<option value="${spvo.snum}" name="${spvo.snum}">${spvo.sname}</option>';
+			html += '<option value="${spvo.snum}" name="snum${spvo.snum}">${spvo.sname}</option>';
     </c:forEach>
     html += '<option value="" selected>선택하세요</option>';
 		$("select#fk_snum").html(html);
 		
-		$("option[name='${requestScope.product_select_one.spvo.snum}']").prop("selected", true); 
-		
+		$("option[name='snum${requestScope.product_select_one.spvo.snum}']").prop("selected", true); 
+		console.log("불러온 스펙값 : "+${requestScope.product_select_one.spvo.snum});
 		
 		// 판매가격 입력하면 적립금 자동 계산 
 		$("input[name='saleprice']").bind("change", function(){
 			
 			let saleprice = $("input[name='saleprice']").val();
 			
-			$("input[name='point']").val( Math.ceil(saleprice * 0.01));
+			$("input[name='point']").val( Math.floor(saleprice * 0.01));
 		});
 		
 		
@@ -120,7 +115,7 @@ input[type="reset"], input[type="button"] {
 
 		
 		// 등록된 이미지 사진 삭제하기
-		$("input#btnImgFile").click(function (e) {
+		$("input#btnImgFileDelete").click(function (e) {
 			
 			const imgfileno = e.target.name;
 			// console.log(imgfileno);
@@ -165,14 +160,15 @@ input[type="reset"], input[type="button"] {
 	}); // end of $(document).ready(function(){});-------------------------
 
 	function goDetailPage() {
-		location.href = "<%= request.getContextPath() %>" + goBackURL;
+		location.href = "<%= request.getContextPath() %>/admin/prod_mgmt_detail.tea?pnum="+${requestScope.product_select_one.pnum}+"&goBackURL="+goBackURL;
 	} // end of function goMemberList()
 	
 	// "등록" 버튼을 클릭시 호출되는 함수 
 	function goEdit() {
 		const frm = document.pdRegFrm;
 		frm.submit();
-		 /*  // **** 필수입력사항에 모두 입력이 되었는지 검사한다. **** //
+		
+		   // **** 필수입력사항에 모두 입력이 되었는지 검사한다. **** //
 		  let b_Flag_required = false;
 		
 		  $(".required").each(function(){
@@ -186,7 +182,7 @@ input[type="reset"], input[type="button"] {
 		  
 		  if(!b_Flag_required) { // 필수 입력을 다 채웠을때
 		
-			} */
+			} 
 	}
 
 </script>
@@ -232,19 +228,16 @@ input[type="reset"], input[type="button"] {
 		<label for="point" style="margin: 6px 20px 16px 0;">적립금<span class="text-danger">*</span></label><br>
 		<input type="number" style="width: 150px;" name="point" value="${requestScope.product_select_one.point}" class="required" > 찻잎<br>
 
-		<label for="pcontent">상품설명<span class="text-danger">*</span></label> 
-		<textarea name="pcontent" rows="5" cols="60">${requestScope.product_select_one.pcontent}</textarea>
-		
 		<label for="pimage" style="margin: 6px 20px 16px 0;">썸네일<span class="text-danger">*</span></label><br>
 		<div id="selectPimage">${requestScope.product_select_one.pimage}</div><br>
-		<input type="file" name="pimage" class="required"/><br>
+		<input type="file" name="pimage" /><br>
 
 		<label for="prdmanual_systemfilename" style="margin: 27px 20px 10px 0;">상품이미지</label>
 		<label for="spinnerImgQty">파일갯수 : </label>
     <input id="spinnerImgQty" value="0" style="width: 30px; "><br>
      <c:if test="${not empty requestScope.imgList }">
 				<c:forEach var="map" items="${requestScope.imgList }">
-					<span>${map.imgfilename}<input type="button" id="btnImgFile" name="${map.imgfileno}" style="color: #1E7F15; border: none; background: none; margin: 0px;" value="삭제"/></span><br>
+					<span>${map.imgfilename}<input type="button" id="btnImgFileDelete" name="${map.imgfileno}" style="color: #1E7F15; border: none; background: none; margin: 0px;" value="삭제"/></span><br>
 				</c:forEach>
 		 </c:if>
     <div id="divfileattach"></div>

@@ -4,9 +4,6 @@
 
 <%@ include file="../header.jsp"%>   
 
-<!-- 직접 만든 CSS -->
-<link rel="stylesheet" type="text/css" href="./css/style_yeeun.css" />    <!-- /MyMVC/src/main/webapp/css/style.css 파일 경로 -->
-    
 <style type="text/css">
 	
 	.btn-secondary {
@@ -24,6 +21,40 @@
 	
 </style>    
     
+<script type="text/javascript">
+
+	let odrcode; 
+
+	$(document).ready(function() {
+		
+		odrcode = "${ovo.odrcode}"; 
+		
+		
+		
+	});// end of $(document).ready()-----------------------
+
+
+	
+	function goMyOrderList() {
+		location.href = "<%= request.getContextPath() %>${requestScope.goBackURL}";
+	} // end of function goMyOrderList()
+	
+	
+	// 환불신청 버튼을 클릭했을시 
+	function goRefund() {
+		
+		location.href = "<%= request.getContextPath() %>/mypage/orderCheck_refund.tea?odrcode="+odrcode+"&goBackURL=${requestScope.goBackURL}";
+		
+	}// end of $("input.btnRefund").click()-------
+	
+	// 주문취소 버튼을 클릭했을시
+	function goCancel() {
+		
+	  location.href = "<%= request.getContextPath() %>/mypage/orderCheck_cancel.tea?odrcode="+odrcode+"&goBackURL=${requestScope.goBackURL}";
+		
+	}// end of $("input.btnRefund").click()-------
+	
+</script>
     
 <div class="container">
   <div class="col-md-12">
@@ -31,7 +62,7 @@
     <div class="col-md-15">
       <h2 style="font-weight: bold;">주문 상세조회</h2><br>
       <hr style="background-color: black; height: 1.2px;"><br>
-      <h5 style="font-weight: bold;">주문번호 2061457780</h5>
+      <h5 style="font-weight: bold;">주문번호 ${ovo.odrcode}</h5>
     </div>  
      
     <div>
@@ -53,13 +84,18 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td class="align-middle" style="text-align: center;">2022.09.13<br>[20220913-0023355]</td>
-					<td><img src="<%= ctxPath%>/images/그린티라떼더블샷.png" width=100 height=100>그린티 라떼 더블샷</td>
-					<td class="align-middle">&nbsp;1</td>
-					<td class="align-middle">12,000원</td>
-					<td class="align-middle">결제완료</td>
-				</tr>
+				<c:set var="prodTotalPrice" value="0"/>
+				
+				<c:forEach var="ovo" items="${requestScope.orderList}">
+					<tr>
+						<td class="align-middle" style="text-align: center;">${ovo.odrdate}<br>[${ovo.odrcode}]</td>
+						<td><img src="<%=request.getContextPath() %>/images/${ovo.odvo.pvo.pimage}" width=100 height=100 />${ovo.odvo.pvo.pname}</td>
+						<td class="align-middle">${ovo.odvo.oqty}</td>
+						<td class="align-middle">${ovo.odvo.oprice}</td>
+						<td class="align-middle"><input name="odrcode" type="hidden" value="${ovo.odrcode}" /></td>
+						<c:set var="prodTotalPrice" value="${prodTotalPrice+ovo.odvo.oprice}"/>
+					</tr>
+				</c:forEach>
 			</tbody>
 		</table>
 	</div>
@@ -68,21 +104,22 @@
       <table class="table table-active table-borderless">
           <tbody class="text-center" style="font-weight: bold;">
             <tr>
-              <td>12,000원&nbsp;+&nbsp;2,500원(배송비)&nbsp;=&nbsp;14,500원</td>
+              <td><fmt:formatNumber value="${prodTotalPrice}" pattern="#,###"/>원&nbsp;+&nbsp;<fmt:formatNumber value="${ovo.delivery_cost}" pattern="#,###"/>원(배송비)&nbsp;=&nbsp;<fmt:formatNumber value="${prodTotalPrice+ovo.delivery_cost}" pattern="#,###"/>원</td>
             </tr>
           </tbody>
         </table>
     </div>
-	
+    
     <div class="text-center" id="detail" style="display: block;"> <!-- 주문상세 id -->
-	  <input type="button" class="btn-secondary" value="주문취소" style="width: 80px;"/>
-	  <input type="button" class="btn-secondary" value="구매확정" style="margin: 15px; width: 80px;"/>
+   <%-- <c:if test="${odrstatus eq 1}"> </c:if>--%>
+  	<input type="button" class="btn-secondary btnCancel" onclick="goCancel();" value="주문취소" style="width: 80px;"/>
+	  
+	  <%-- <c:if test="${odrstatus ne 1}"></c:if> --%>
+ 	  <input type="button" class="btn-secondary btnRefund" onclick="goRefund();" value="환불신청" style="width: 80px;"/>
+ 	  
+	  <input type="button" class="btn-secondary btnConfirm" value="구매확정" style="margin: 15px; width: 80px;"/>
     </div>
     
-    <div class="text-center" id="completion" style="display: none;"> <!-- 구매확정 id -->
-	  <input type="button" class="btn-secondary" value="교환신청" style="width: 80px;"/>
-	  <input type="button" class="btn-secondary" value="반품신청" style="margin: 15px; width: 80px;"/>
-    </div>
 	
 	<br>
     <hr>
@@ -92,16 +129,16 @@
     <table class="table table-bordered mt-4">
          <thead class="thead-light">
             <tr>
-               <th>받는 분</th><td>이순신</td>
+               <th>받는 분</th><td>${requestScope.ovo.recipient_name}</td>
             </tr>
             <tr>
-               <th>연락처</th><td>010-1111-2222</td>
+               <th>연락처</th><td>${requestScope.ovo.recipient_mobile}</td>
             </tr>
             <tr>
-               <th>주소</th><td>01234 서울 마포구 동교로 332 (동교동, 거북아파트) 101동 1107호</td>
+               <th>주소</th><td>${ovo.recipient_address} ${ovo.recipient_detail_address} ${ovo.recipient_extra_address}</td>
             </tr>
             <tr>
-               <th>배송메모</th><td>부재시 경비실에 맡겨주세요</td>
+               <th>배송메모</th><td>${requestScope.ovo.recipient_memo}</td>
             </tr>
          </thead>
 	</table>
@@ -124,31 +161,23 @@
 	              <td class="col col-3 text-right" style="padding-bottom: 0.7px;">0원</td>
 	            </tr>
 	            <tr>
-	              <td class="col col-9 text-left" style="padding-bottom: 0.7px;">└&nbsp;적립금 및 예치금 결제</td>
-	              <td class="col col-3 text-right" style="padding-bottom: 0.7px;">0원</td>
-	            </tr>
-	            <tr>
 	              <td class="col col-9 text-left">배송비</td>
-	              <td class="col col-3 text-right" style="padding-bottom: 20px;">2,500원</td>
+	              <td class="col col-3 text-right" style="padding-bottom: 20px;"><fmt:formatNumber value="${ovo.delivery_cost}" pattern="#,###"/>원</td>
 	            </tr>
 	            <tr style="border-top: 1px solid #d9d9d9;">
 	              <td class="col col-9" style="color:#1E7F15; font-weight:bolder; padding-bottom: 0.7px;"><h4>총 결제금액</h4></td>
-	              <td class="col col-3 text-right" style="color:#1E7F15; font-weight:bolder; padding-bottom: 0.7px;"><h4>14,500</h4></td>
+	              <td class="col col-3 text-right" style="color:#1E7F15; font-weight:bolder; padding-bottom: 0.7px;"><h4><fmt:formatNumber value="${ovo.odrtotalprice}" pattern="#,###"/>원</h4></td>
 	            </tr>
 	            <tr>
-	              <td class="col col-9 text-left" style="padding-top: 0; padding-bottom: 0;">결제수단</td>
-	              <td class="col col-3 text-right" style="padding-top: 0; padding-bottom: 0;">신용카드</td>
-	            </tr>
-	            <tr>
-	              <td class="col col-9 text-left" style="padding-top: 0; padding-bottom: 20px;"></td>
-	              <td class="col col-9 text-right" style="padding-top: 0; padding-bottom: 20px; font-size: 8pt;">2022.09.14 15:40</td>
+	              <td class="col col-9 text-left" style="padding-top: 0; padding-bottom: 0;">결제일자</td>
+	               <td class="col col-9 text-right" style="padding-top: 0; padding-bottom: 20px; font-size: 8pt;">${requestScope.ovo.odrdate}</td>
 	            </tr>
 	          </tbody>
 	        </table>
     	</div>
     	
     <div class="text-center" style="margin-top: 30px;">
-	  <input type="button" class="btn-secondary" value="목록보기" />
+	  <input type="button" onclick="goMyOrderList()" class="btn-secondary" value="목록보기" />
     </div>
     
     

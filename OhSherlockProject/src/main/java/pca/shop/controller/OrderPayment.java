@@ -25,7 +25,7 @@ public class OrderPayment extends AbstractController {
 		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 		
 		// get방식이거나 로그인하지 않았을때
-		if(!"POST".equalsIgnoreCase(method) || loginuser == null) {
+		if(!"POST".equalsIgnoreCase(method)) {
 			String message = "비정상적인 접근입니다.";
 	        String loc = "javascript:history.back()";
 	        
@@ -35,6 +35,17 @@ public class OrderPayment extends AbstractController {
 	        super.setRedirect(false);
 	        super.setViewPage("/WEB-INF/msg.jsp");
 		} 
+		
+		else if( loginuser == null) {
+			String message = "먼저 로그인하세요!";
+	        String loc = "javascript:history.back()";
+	        
+	        request.setAttribute("message", message);
+	        request.setAttribute("loc", loc);
+	        
+	        super.setRedirect(false);
+	        super.setViewPage("/WEB-INF/msg.jsp");
+		}
 		// post방식이고 로그인했을때
 		else {
 			

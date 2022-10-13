@@ -93,9 +93,6 @@ public class Prod_mgmt_register extends AbstractController {
 				            return; // 종료
 						}
 							
-						// === 첨부 이미지 파일, 제품설명서 파일을 올렸으니 그 다음으로 제품정보를 (제품명, 정가, 제품수량,...) DB의 tbl_product 테이블에 insert 를 해주어야 한다.  ===
-						
-						// 새로운 제품 등록시 form 태그에서 입력한 값들을 얻어오기
 						String fk_cnum = mtrequest.getParameter("fk_cnum");
 						String pname = mtrequest.getParameter("pname");
 						
@@ -115,9 +112,12 @@ public class Prod_mgmt_register extends AbstractController {
 			           
 			           // !!!! 크로스 사이트 스크립트 공격에 대응하는 안전한 코드(시큐어코드) 작성하기 !!!! // 
 			           String pcontent = mtrequest.getParameter("pcontent");
-			           pcontent = pcontent.replaceAll("<", "&lt;");
-			           pcontent = pcontent.replaceAll(">", "&gt;");
-			           pcontent = pcontent.replaceAll("\r\n", "<br>");
+			           
+			           if(pcontent!=null && !pcontent.trim().isEmpty()) {
+				           pcontent = pcontent.replaceAll("<", "&lt;");
+				           pcontent = pcontent.replaceAll(">", "&gt;");
+				           pcontent = pcontent.replaceAll("\r\n", "<br>");
+			           }
 			           
 			           String point = mtrequest.getParameter("point");
 			           
@@ -145,9 +145,7 @@ public class Prod_mgmt_register extends AbstractController {
 				           // tbl_product 테이블에 제품정보 insert 하기
 				           pdao.productInsert(pvo);
 				           
-				           // === 추가이미지파일이 있다라면 tbl_product_imagefile 테이블에 제품의 추가이미지 파일명 insert 해주기 === //
 				           String str_attachCount = mtrequest.getParameter("attachCount");
-				           // str_attachCount 이 추가이미지 파일의 개수이다. "" "0"~"10" 이 들어온다.
 				           
 				           int attachCount = 0;
 				           
@@ -155,12 +153,10 @@ public class Prod_mgmt_register extends AbstractController {
 				        	   attachCount = Integer.parseInt(str_attachCount);
 				           }
 				           
-				           // 첨부파일의 파일명(파일서버에 업로드 되어진 실제파일명) 알아오기
 				           for(int i=0; i<attachCount; i++) {
 				        	   String attachFileName = mtrequest.getFilesystemName("attach"+i);
 				        	   
 				        	   pdao.product_imagefile_Insert(pnum, attachFileName);
-				        	   							  // pnum 은 위에서 채번해온 제품번호이다.
 			
 				           }// end of for -----------
 				           

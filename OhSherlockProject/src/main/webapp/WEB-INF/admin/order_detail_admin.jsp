@@ -39,6 +39,14 @@ $(()=>{
 		$(".finalSum").text(finalSum);
 	}
 	
+	let recipient_mobile = "${ovo.recipient_mobile }";
+	recipient_mobile = recipient_mobile.substring(0,3)+"-"+recipient_mobile.substring(3,7)+"-"+recipient_mobile.substring(7);
+	$("#recipient_mobile").text(recipient_mobile);
+	
+	let mobile = "${ovo.mvo.mobile }";
+	mobile = mobile.substring(0,3)+"-"+mobile.substring(3,7)+"-"+mobile.substring(7);
+	$("#mobile").text(mobile);
+	
 	goBackURL = "${requestScope.goBackURL}";
 	goBackURL = goBackURL.replace(/ /gi,"&");
 });
@@ -71,7 +79,7 @@ $(()=>{
 			</tr>
 			<tr>
 				<td class="col-4">주문자 연락처</td>
-				<td class="col-8">${ovo.mvo.mobile }</td>
+				<td id="mobile" class="col-8"></td>
 			</tr>
 			<tr> 
 				<td class="col-4">주문자 이메일</td>
@@ -84,7 +92,7 @@ $(()=>{
 			</tr>
 			<tr>
 				<td class="col-4">수령자 연락처</td>
-				<td class="col-8">${ovo.recipient_mobile }</td>
+				<td id="recipient_mobile"class="col-8"></td>
 			</tr>
 			<tr>
 				<td class="col-4">수령자 우편번호</td>
@@ -96,7 +104,7 @@ $(()=>{
 			</tr>
 			<tr>
 				<td class="col-4">배송메모</td>
-				<td class="col-8">${ovo.recipient_memo }</td>
+				<td class="col-8">${ovo.recipient_memo}</td>
 			</tr>
 			<tr><td style="background-color: transparent; border-style: none;"></td></tr>
 			<tr>
