@@ -355,3 +355,12 @@ from tbl_product P join tbl_product_imagefile I
 on P.pnum = I.fk_pnum
 where pnum = 14
 
+
+INSERT INTO tbl_product_imagefile(imgfileno, fk_pnum, imgfilename)
+VALUES (SEQ_IMGFILENO.nextval, 11, '모로칸 민트티 10입 상세.png');
+
+
+commit;
+
+
+
