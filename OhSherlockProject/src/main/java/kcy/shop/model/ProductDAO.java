@@ -4,9 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,10 +14,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import common.model.FaqVO;
 import common.model.ProductVO;
 import common.model.ReviewVO;
-import common.model.SpecVO;
 
 public class ProductDAO implements InterProductDAO {
 
@@ -53,70 +50,59 @@ public class ProductDAO implements InterProductDAO {
 			}
 		}
 
-		
 		// 제품번호를 가지고서 해당 제품의 정보를 조회해오기 
-		@Override
-		public ProductVO selectOneProductByPnum(String pnum) throws SQLException {
+	      @Override
+	      public ProductVO selectOneProductByPnum(String pnum) throws SQLException {
 
-			ProductVO pvo = null;
-			
-			try {
-				 conn = ds.getConnection();
-				
-				 String sql = " select S.sname, pnum, pname, price, saleprice, point, pqty, pcontent, pimage, prdmanual_systemfilename, nvl(prdmanual_orginfilename, '없음') AS prdmanual_orginfilename "+
-						      " from  "+
-						      " ( "+
-						      " select fk_snum, pnum, pname, price, saleprice, point, pqty, pcontent, pimage, prdmanual_systemfilename, prdmanual_orginfilename "+
-						      " from tbl_product "+
-						      " where pnum = ? "+
-						      " ) P JOIN tbl_spec S "+
-						      " ON P.fk_snum = S.SNUM "; 
-				 
-				 pstmt = conn.prepareStatement(sql);
-				 pstmt.setString(1, pnum);
-				 			 
-				 rs = pstmt.executeQuery();
-				 
-				 if(rs.next()) {
-					 
-					 String sname = rs.getString(1);     // "HIT", "NEW", "BEST" 값을 가짐 
-					 int    npnum = rs.getInt(2);        // 제품번호
-					 String pname = rs.getString(3);     // 제품명
-					 int    price = rs.getInt(4);        // 제품 정가
-					 int    saleprice = rs.getInt(5);    // 제품 판매가
-					 int    point = rs.getInt(6);        // 포인트 점수
-					 int    pqty = rs.getInt(7);         // 제품 재고량
-					 String pcontent = rs.getString(8);  // 제품설명
-					 String pimage = rs.getString(9);  // 제품이미지1
-					 String prdmanual_systemfilename = rs.getString(10); // 파일서버에 업로드되어지는 실제 제품설명서 파일명
-					 String prdmanual_orginfilename = rs.getString(11);  // 웹클라이언트의 웹브라우저에서 파일을 업로드 할때 올리는 제품설명서 파일명 
-					 
-					 pvo = new ProductVO(); 
-					 
-					 SpecVO spvo = new SpecVO();
-					 spvo.setSname(sname);
-					 
-					 pvo.setSpvo(spvo);
-					 pvo.setPnum(npnum);
-					 pvo.setPname(pname);
-					 pvo.setPrice(price);
-					 pvo.setSaleprice(saleprice);
-					 pvo.setPoint(point);
-					 pvo.setPqty(pqty);
-					 pvo.setPcontent(pcontent);
-					 pvo.setPimage(pimage);
-					 pvo.setPrdmanual_systemfilename(prdmanual_systemfilename);
-					 pvo.setPrdmanual_orginfilename(prdmanual_orginfilename); 
-					 
-				 }// end of while-----------------------------
-				 
-			} finally {
-				close();
-			}
-			
-			return pvo;	
-			
-		}// end of 제품번호를 가지고서 해당 제품의 정보를 조회해오기 ------------------------- 
+	         ProductVO pvo = null;
+	         
+	         try {
+	             conn = ds.getConnection();
+	            
+	             String sql = "select fk_snum, pnum, pname, price, saleprice, point, pqty, psummary, pimage, fk_cnum\n"+
+	                   "            from tbl_product  \n"+
+	                   "            where pnum = ? "; 
+	             
+	             pstmt = conn.prepareStatement(sql);
+	             pstmt.setString(1, pnum);
+	                       
+	             rs = pstmt.executeQuery();
+	             
+	             if(rs.next()) {
+	                
+	                int fk_snum = rs.getInt("fk_snum");     // "HIT", "NEW", "BEST" 값을 가짐 
+	                int npnum = rs.getInt("pnum");
+	                String pname = rs.getString("pname");
+	                int price = rs.getInt("price");
+	                int saleprice = rs.getInt("saleprice");
+	                int point = rs.getInt("point");
+	                int pqty = rs.getInt("pqty");
+	                String psummary = rs.getString("psummary");
+	                String pimage = rs.getString("pimage");
+	                int fk_cnum = rs.getInt("fk_cnum");
+	                
+	                pvo = new ProductVO(); 
+	                
+	                pvo.setFk_snum(fk_snum);
+	                pvo.setPnum(npnum);
+	                pvo.setPname(pname);
+	                pvo.setPrice(price);
+	                pvo.setSaleprice(saleprice);
+	                pvo.setPoint(point);
+	                pvo.setPqty(pqty);
+	                pvo.setPsummary(psummary);
+	                pvo.setPimage(pimage);
+	                pvo.setFk_cnum(fk_cnum);
+	                
+	             }// end of while-----------------------------
+	             
+	         } finally {
+	            close();
+	         }
+	         
+	         return pvo;   
+	         
+	      }// end of 제품번호를 가지고서 해당 제품의 정보를 조회해오기 -------------------------  
 
 		
 		// 제품번호를 가지고서 해당 제품의 추가된 이미지 정보를 조회해오기
@@ -222,38 +208,47 @@ public class ProductDAO implements InterProductDAO {
 
 			List<ReviewVO> reviewList = new ArrayList<>();
 			
+			String pnum = paraMap.get("pnum"); 
+
 			try {
 				conn = ds.getConnection();
 
-				String sql = " select rnum, rsubject, fk_userid, writedate, score "+
-						     " from  "+
-						     "    (select rownum as rno, rnum, rsubject, fk_userid, writedate, score  "+
-						     "     from  "+
-						     "         (select rnum, rsubject, fk_userid, writedate, score "+
-						     "          from TBL_REVIEW   "+
-						     "          order by 1 desc) V  "+
-						     "    ) T  "+
-						     " where RNO between ? and ?  ";      
+				String sql = " select rnum, fk_userid, fk_pnum, rsubject, rcontent, to_char(writeDate, 'yyyy-mm-dd') AS writeDate, score "+
+							 " from  "+
+							 "    (select rownum as rno, rnum, fk_userid, fk_pnum, rsubject, rcontent, writeDate, score "+
+							 "     from  "+
+							 "         (select rnum, fk_userid, fk_pnum, rsubject, rcontent, writeDate, score "+
+							 "          from TBL_REVIEW "+
+							 "          where fk_pnum = ? "+
+							 "          order by 1 desc) V  "+
+							 "    ) T  "+
+							 " where RNO between ? and ? ";      
+				
+				
 				
 				// 페이징처리
 				
 				int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));  // 조회하고자 하는 페이지 번호
 				int sizePerPage = 10; // 한페이지당 보여줄 행의 개수
-				
+
 				pstmt = conn.prepareStatement(sql);
 				
-				pstmt.setInt(1, (currentShowPageNo*sizePerPage) - (sizePerPage-1) );
-				pstmt.setInt(2, (currentShowPageNo*sizePerPage) );
+				pstmt.setString(1, pnum);
+				pstmt.setInt(2, (currentShowPageNo*sizePerPage) - (sizePerPage-1) );
+				pstmt.setInt(3, (currentShowPageNo*sizePerPage) );
 				
 				rs = pstmt.executeQuery();
 
 				while (rs.next()) {
 					ReviewVO review = new ReviewVO();
+					
 					review.setRnum(rs.getInt(1));
-					review.setRsubject(rs.getString(2));
-					review.setUserid(rs.getString(3));
-					review.setWriteDate(rs.getString(4));
-					review.setScore(rs.getInt(5));
+					review.setUserid(rs.getString(2));
+					review.setPnum(rs.getInt(3));
+					review.setRsubject(rs.getString(4));
+					review.setRcontent(rs.getString(5));
+					review.setWriteDate(rs.getString(6));
+					review.setScore(rs.getInt(7));
 					
 					reviewList.add(review);
 				}
@@ -316,6 +311,129 @@ public class ProductDAO implements InterProductDAO {
 			
 			
 		}// end of 버튼아이디에 따른 리스트 select 해오기 --------------------------------------------------
-	
+
+		
+		// 리뷰번호 선택시 리뷰 자세히 보기
+		public ReviewVO rnumReviewDetail(String rnum) throws SQLException {
+			
+			ReviewVO rvo = null;
+
+			try {
+				conn = ds.getConnection();
+
+				String sql = " select rsubject, rcontent, score "+
+							 " from TBL_REVIEW ";
+//							 " where rnum = ? ";
+
+				pstmt = conn.prepareStatement(sql);
+//				pstmt.setString(1, rnum);
+				
+				rs = pstmt.executeQuery();
+
+				if (rs.next()) {
+					rvo = new ReviewVO();
+					
+					rvo.setRsubject(rs.getString(1));
+					rvo.setRcontent(rs.getString(2));
+					rvo.setScore(rs.getInt(3));
+
+				}
+
+			} finally {
+				close();
+			}
+
+			return rvo;
+			
+		}// end of 리뷰번호 선택시 리뷰 자세히 보기 -------------------------
+
+		
+		// 리뷰번호 선택시 리뷰 자세히 보기
+		@Override
+		public ReviewVO rnumReviewDetail(Map<String, String> paraMap) throws SQLException {
+			
+			ReviewVO rvo = null;
+
+			try {
+				conn = ds.getConnection();
+
+				String sql = " select rnum, rsubject, rcontent, score "+
+							 " from TBL_REVIEW "+
+							 " where rnum = ? ";
+
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, paraMap.get("rnum"));
+				
+				rs = pstmt.executeQuery();
+
+				if (rs.next()) {
+					rvo = new ReviewVO();
+					
+					rvo.setRnum(rs.getInt(1));
+					rvo.setRsubject(rs.getString(2));
+					rvo.setRcontent(rs.getString(3));
+					rvo.setScore(rs.getInt(4));
+
+				}
+
+			} finally {
+				close();
+			}
+
+			return rvo;
+			
+			
+		}// end of 리뷰번호 선택시 리뷰 자세히 보기 ----------------------------------------------
+
+		
+		// 상세이미지 리스트 가져오기
+		@Override
+		public List<Map<String, String>> getImageDetail(String pnum)  throws SQLException {
+
+			List<Map<String, String>> imgDetailList = new ArrayList<>();
+			
+			try {
+
+				conn = ds.getConnection();
+				
+				String sql = "select pnum, pname, pimage, imgfileno, imgfilename \n"+
+							"from tbl_product P join tbl_product_imagefile I\n"+
+							"on P.pnum = I.fk_pnum\n"+
+							"where pnum = ? ";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, pnum);
+				
+				rs = pstmt.executeQuery();
+				
+				// 복수개의 행 출력
+				while(rs.next()) {
+					
+					 pnum = rs.getString("pnum");
+					 String pname = rs.getString("pname");
+					 String pimage = rs.getString("pimage");
+					 String imgfileno = rs.getString("imgfileno");
+					 String imgfilename = rs.getString("imgfilename");
+					 
+
+					 HashMap<String,String> imgrmap = new HashMap<>();
+					 imgrmap.put("pnum", pnum);
+					 imgrmap.put("pname", pname);
+					 imgrmap.put("pimage", pimage);
+					 imgrmap.put("imgfileno", imgfileno);
+					 imgrmap.put("imgfilename", imgfilename);
+					 
+					 imgDetailList.add(imgrmap);
+					
+				} // end of while
+				
+			} finally {
+				close();
+			}
+		
+			return imgDetailList;
+		} // end of public List<Map<String, String>> getImageDetail(String pnum)
+
+		
 	
 }

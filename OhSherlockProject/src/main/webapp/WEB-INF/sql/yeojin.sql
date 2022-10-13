@@ -331,10 +331,13 @@ where rownum between 1 and 3
 
 select ODRCODE, FK_USERID, to_char(ODRDATE,'yyyy.MM.dd') as ODRDATE, ODRTOTALPRICE
 from tbl_order
-where ODRDATE between to_char(add_months(sysdate,-1), 'yyyy-MM-dd') and to_char(sysdate, 'yyyy-MM-dd') and FK_USERID = 'pca719'
+where (ODRDATE between add_months(sysdate,-1) and sysdate) and FK_USERID = '5sherlock'
 order by ODRDATE desc;
 
-
+select ODRCODE, FK_USERID, to_char(ODRDATE,'yyyy.MM.dd') as ODRDATE, ODRTOTALPRICE
+from tbl_order
+where (ODRDATE between '2022.10.01' and '2022.10.14') and FK_USERID = 'pca719'
+order by ODRDATE desc;
 
 select *
 from tbl_order_detail
@@ -367,10 +370,37 @@ on pnum = fk_pnum  order by odrdate desc) C  ) T
 
 
 
+-- 상품 상세보기 sql
+ select S.sname, pnum, pname, price, saleprice, point, pqty, psummary, pimage, prdmanual_systemfilename, nvl(prdmanual_orginfilename, '없음') AS prdmanual_orginfilename  
+ from   (  select fk_snum, pnum, pname, price, saleprice, point, pqty, psummary, pimage, fk_cnum
+            from tbl_product  
+            where pnum = 1  ) P 
+outer JOIN tbl_spec S  ON P.fk_snum = S.SNUM 
 
 
+select  likeno, fk_userid, pnum, pname, pimage
+from tbl_like L join tbl_product P
+on P.pnum = L.fk_pnum
+
+INSERT INTO tbl_product_imagefile(imgfileno, fk_pnum, imgfilename)
+VALUES (SEQ_IMGFILENO.nextval, 14, '찬물루이보스티상세.png');
+
+INSERT INTO tbl_product_imagefile(imgfileno, fk_pnum, imgfilename)
+VALUES (SEQ_IMGFILENO.nextval, 15, '제주쑥차상세.png');
+
+INSERT INTO tbl_product_imagefile(imgfileno, fk_pnum, imgfilename)
+VALUES (SEQ_IMGFILENO.nextval, 19, '루이보스3입상세.png');
+
+INSERT INTO tbl_product_imagefile(imgfileno, fk_pnum, imgfilename)
+VALUES (SEQ_IMGFILENO.nextval, 35, '메모리인제주상세.png');
+
+INSERT INTO tbl_product_imagefile(imgfileno, fk_pnum, imgfilename)
+VALUES (SEQ_IMGFILENO.nextval, 37, '베스트 블렌디드 티백 박스상세.png');
+
+commit;
 
 
-
-
-
+select pnum, pname, pimage, imgfileno, imgfilename
+from tbl_product P join tbl_product_imagefile I
+on P.pnum = I.fk_pnum
+where pnum = 14

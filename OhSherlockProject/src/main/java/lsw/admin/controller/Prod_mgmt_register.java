@@ -112,9 +112,12 @@ public class Prod_mgmt_register extends AbstractController {
 			           
 			           // !!!! 크로스 사이트 스크립트 공격에 대응하는 안전한 코드(시큐어코드) 작성하기 !!!! // 
 			           String pcontent = mtrequest.getParameter("pcontent");
-			           pcontent = pcontent.replaceAll("<", "&lt;");
-			           pcontent = pcontent.replaceAll(">", "&gt;");
-			           pcontent = pcontent.replaceAll("\r\n", "<br>");
+			           
+			           if(pcontent!=null && !pcontent.trim().isEmpty()) {
+				           pcontent = pcontent.replaceAll("<", "&lt;");
+				           pcontent = pcontent.replaceAll(">", "&gt;");
+				           pcontent = pcontent.replaceAll("\r\n", "<br>");
+			           }
 			           
 			           String point = mtrequest.getParameter("point");
 			           

@@ -6,8 +6,10 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
+import common.model.MemberVO;
 import common.model.ProductVO;
 import syj.shop.model.InterProductDAO;
 import syj.shop.model.ProductDAO;

@@ -307,5 +307,60 @@ from
     ) T 
 where RNO between 1 and 6
              
-             
-     
+ rnum, rsubject, fk_userid, writedate, score, rcontent
+ 
+select rnum, fk_userid, fk_pnum, rsubject, rcontent, to_char(writeDate, 'yyyy-mm-dd') AS writeDate, score
+from TBL_REVIEW
+where fk_pnum = 32
+order by rnum desc;   
+ 
+ 
+select rnum, fk_userid, fk_pnum, rsubject, rcontent, to_char(writeDate, 'yyyy-mm-dd') AS writeDate, score
+from 
+    (select rownum as rno, rnum, fk_userid, fk_pnum, rsubject, rcontent, writeDate, score
+     from 
+         (select rnum, fk_userid, fk_pnum, rsubject, rcontent, writeDate, score
+          from TBL_REVIEW
+          where fk_pnum = 1
+          order by 1 desc) V 
+    ) T 
+where RNO between 1 and 6  
+
+
+select *
+from TBL_REVIEW
+
+
+
+select inquiry_type, inquiry_subject,
+inquiry_content, inquiry_date, inquiry_answered
+from tbl_inquiry
+where inquiry_no = 89
+
+
+select rsubject, rcontent, score
+from TBL_REVIEW
+where rnum = 14
+
+select rnum, fk_userid, fk_pnum, rsubject, rcontent, writeDate, score
+from TBL_REVIEW
+where fk_pnum = 1
+order by 1 desc
+
+commit;
+
+
+select pnum, pname, pimage, imgfileno, imgfilename
+from tbl_product P join tbl_product_imagefile I
+on P.pnum = I.fk_pnum
+where pnum = 14
+
+
+INSERT INTO tbl_product_imagefile(imgfileno, fk_pnum, imgfilename)
+VALUES (SEQ_IMGFILENO.nextval, 11, '모로칸 민트티 10입 상세.png');
+
+
+commit;
+
+
+

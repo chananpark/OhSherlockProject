@@ -30,4 +30,10 @@ public interface InterOrderDAO {
 	// 환불처리하기
 	int refundOrder(Map<String, Object> paraMap) throws SQLException;
 
+	// 주문번호 시퀀스 채번
+	int getSeq_tbl_order() throws SQLException;
+
+	// 주문하기
+	int completeOrder(Map<String, Object> paraMap) throws SQLException;
+
 }

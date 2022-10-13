@@ -62,8 +62,7 @@ public class OrderVO {
 	public OrderVO(String odrcode, String fk_userid, String odrdate, String recipient_name, String recipient_mobile,
 			String recipient_postcode, String recipient_address, String recipient_detail_address,
 			String recipient_extra_address, int odrtotalprice, int odrtotalpoint, int delivery_cost, int odrstatus,
-			String delivery_date) {
-		super();
+			String delivery_date, String recipient_memo) {
 		this.odrcode = odrcode;
 		this.fk_userid = fk_userid;
 		this.odrdate = odrdate;
@@ -78,6 +77,7 @@ public class OrderVO {
 		this.delivery_cost = delivery_cost;
 		this.odrstatus = odrstatus;
 		this.delivery_date = delivery_date;
+		this.recipient_memo = recipient_memo;
 	}
 
 	public String getOdrcode() {

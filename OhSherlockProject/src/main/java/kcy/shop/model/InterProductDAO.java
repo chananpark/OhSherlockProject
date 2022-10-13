@@ -27,6 +27,16 @@ public interface InterProductDAO {
 	// 버튼아이디에 따른 리스트 select 해오기
 	List<ReviewVO> selectreviewList(Map<String, String> paraMap) throws SQLException;
 
+	// 리뷰번호 선택시 리뷰 자세히 보기
+	ReviewVO rnumReviewDetail(String rnum) throws SQLException;
+
+	// 리뷰번호 선택시 리뷰 자세히 보기
+	ReviewVO rnumReviewDetail(Map<String, String> paraMap) throws SQLException;
+
+	// 상세이미지 리스트 가져오기
+	List<Map<String, String>> getImageDetail(String pnum)  throws SQLException;
+
+	
 	
 
 }

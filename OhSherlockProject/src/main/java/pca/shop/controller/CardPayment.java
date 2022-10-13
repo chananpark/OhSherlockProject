@@ -15,25 +15,27 @@ public class CardPayment extends AbstractController {
 		if (super.checkLogin(request)) {
 			// 로그인을 했으면
 
-			HttpSession session = request.getSession(); MemberVO loginUser = (MemberVO)
-					session.getAttribute("loginUser");
-			
-			String pnamejoin = request.getParameter("pnamejoin");
-			int sumtotalPrice = Integer.parseInt(request.getParameter("sumtotalPrice"));
+			HttpSession session = request.getSession();
+			MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 
-			 int index = pnamejoin.indexOf(",");
-			 String productName = pnamejoin.substring(0, index);
-			 System.out.println(productName);
-			 System.out.println(sumtotalPrice);
-			 
-			 request.setAttribute("productName", productName);
-			 request.setAttribute("sumtotalPrice", sumtotalPrice);
-			 
-			 request.setAttribute("email", loginUser.getEmail()); 
-			 request.setAttribute("name", loginUser.getName());
-			 request.setAttribute("mobile", loginUser.getMobile());
-			 super.setViewPage("/WEB-INF/member/paymentGateway.jsp");
-			 
+			String pnamejoin = request.getParameter("pnamejoin");
+			int totalOrderPrice = Integer.parseInt(request.getParameter("totalOrderPrice"));
+
+			String productName = pnamejoin; 
+			
+			int index = pnamejoin.indexOf(",");
+			if (index > 0)
+				productName = pnamejoin.substring(0, index) + " 외";
+
+			request.setAttribute("productName", productName);
+			request.setAttribute("sumtotalPrice", totalOrderPrice);
+
+			request.setAttribute("email", loginuser.getEmail());
+			request.setAttribute("name", loginuser.getName());
+			request.setAttribute("mobile", loginuser.getMobile());
+
+			super.setViewPage("/WEB-INF/product/paymentGateway.jsp");
+
 			// 아임포트 결제창 띄우기
 		} else {
 			String message = "잘못된 접근입니다.";

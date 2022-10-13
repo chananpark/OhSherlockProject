@@ -185,14 +185,13 @@ input.cart { <%-- 여기 --%>
 		
 	} // end of function goCart()
 	
-   	
 	
 </script>
 
 <form name="eventClickFrm">
 
 <div class="container productListContainer">
-	<div><img src= "../images/이벤트배너.png" width=100%/></div>
+	<div><img src= "../images/이벤트상품배너.png" width=100%/></div>
      
 	<div class="row">
       	<%-- 사이드 메뉴 시작 --%>
@@ -292,9 +291,10 @@ input.cart { <%-- 여기 --%>
 				      				</c:otherwise>
 				      			</c:choose>
 				      			
+				      			
 				      			<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart" onclick="goLike(${pvo.pnum});"></i></a>
                            		<input class="card-text text-secondary mr-5 like" type="button" onclick="goLike(${pvo.pnum});" value="찜하기" style="padding-left: 0; margin-left: 0;" />
-                                                  
+                                       
                                 <%-- 여기 --%>                      
                            		<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg " onClick="clickCart(${pvo.pnum});"></i></a>
                            		<input class="card-text text-secondary cart" type="button" onClick="clickCart(${pvo.pnum});" value="담기" style="padding-left: 0; margin-left: 0;"/>

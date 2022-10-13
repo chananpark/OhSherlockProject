@@ -817,7 +817,7 @@ public class ProductDAO implements InterProductDAO {
 		return n;
 	}// end of public int reviewLike(String odrcode) throws SQLException {}-------------------
 
-
+/*
 	// 해당제품을 사용자가 실제 구매했는지 여부를 알아오는 것임. 구매했다라면 true, 구매하지 않았으면 false
 	@Override
 	public boolean isOrder(Map<String, String> paraMap) throws SQLException {
@@ -849,39 +849,65 @@ public class ProductDAO implements InterProductDAO {
 		return isOrder;
 		
 	}// end of public boolean isOrder(Map<String, String> paraMap) throws SQLException {}-------------------
+*/
 
-
-	// tbl_review 테이블에 상품리뷰 insert 하기
+	// 특정 상품의 리뷰를 입력하는 것(insert)
 	@Override
-	public int productReview(ReviewVO rvo) throws SQLException {
-
-		int result = 0;
+	public int addProductReview(ReviewVO rvo) throws SQLException {
+		
+		//System.out.println(rvo.toString());
+		int n = 0;
 	      
-	      try {
-	         conn = ds.getConnection();
-	         
-	         String sql = " insert into tbl_review(rnum, fk_odnum, fk_pnum, fk_userid, score, rsubject, rcontent, rimage, fk_odrcode, writeDate) "+
-	        		 	  " values(seq_review_rnum.nextval, ?, ?, ?, ?, ?, ?, ?, ?, default) ";
-	         
-	         pstmt = conn.prepareStatement(sql);
-	         
-	         pstmt.setInt(1, rvo.getOdnum());
-	         pstmt.setInt(2, rvo.getPnum());
-	         pstmt.setString(3, rvo.getUserid());
-	         pstmt.setInt(4, rvo.getScore());    
-	         pstmt.setString(5, rvo.getRsubject()); 
-	         pstmt.setString(6, rvo.getRcontent());    
-	         pstmt.setString(7, rvo.getRimage()); 
-	         pstmt.setString(8, rvo.getOdrcode()); 
+	       try {
+	          conn = ds.getConnection(); // 커넥션풀 방식
+	          
+	          String sql = " select odnum, fk_odrcode "+
+		        		   " from tbl_order_detail "+
+		        		   " where fk_pnum = ? "+
+		        		   " and fk_odrcode in (select odrcode from tbl_order where fk_userid = ? )";
+         
+	          pstmt = conn.prepareStatement(sql);
+	          pstmt.setInt(1, rvo.getPnum());
+	          pstmt.setString(2, rvo.getUserid());
+	          
+	          rs = pstmt.executeQuery();
+	          
+	          rs.next();
+	          
+	          String odnum = rs.getString(1);
+	          String odrcode = rs.getString(2);
+	          
+	          
+	          sql = " insert into tbl_review(rnum, fk_odnum, fk_pnum, fk_userid, score, rsubject, rcontent, fk_odrcode, writeDate) "+
+		  	   		" values(seq_review_rnum.nextval, ?, ?, ?, ?, ?, ?, ?, default) ";
 	            
-	         result = pstmt.executeUpdate();
+	          
+	          pstmt = conn.prepareStatement(sql);
+	          pstmt.setString(1, odnum);
+	          pstmt.setInt(2, rvo.getPnum());
+	          pstmt.setString(3, rvo.getUserid());
+	          pstmt.setInt(4, rvo.getScore());
+	          pstmt.setString(5, rvo.getRsubject());
+	          pstmt.setString(6, rvo.getRcontent());
+	          //pstmt.setString(7, rvo.getRimage());
+	          pstmt.setString(7, odrcode);
+	          
+	          n = pstmt.executeUpdate(); // 있으면 값을 지우고, 없으면 안지운다. 
 	         
-	      } finally {
-	         close();
-	      }
-	      
-	      return result;   
-	}// end of public void productReview(ReviewVO rvo) throws SQLException {}-------------------
+	       } catch (SQLIntegrityConstraintViolationException e) {  // sql 제약조건에 위배된 익셉션 (예: 좋아요 투표를 중복으로 할 경우) => 만약 이것이 없으면 500번 에러가 떨어질 것이다.
+	    	   // 중복 투표를 하면 무결성 제약조건에 걸려서 에러가 나게 되는데(ORA-00001: 무결성 제약 조건(MYMVC_USER.PK_TBL_PRODUCT_LIKE)에 위배됩니다)
+	           // 이거를 잡아줘서 n 에 0을 넣어주게 되면 500에러가 나지 않게 된다.
+	    	   n = 0;  // 제약조건에 위배되면 0 이 나온다.(생략가능)
+	    	   e.printStackTrace();
+	       } catch(Exception e2){
+	    	   e2.printStackTrace();
+	       }finally {
+	    	   close();
+	       }
+	       
+	       return n;  // 성공시 n==1, 실패시 n==0
+	       
+	}// end of public int addProductReview(ReviewVO rvo) throws SQLException {}-------------------
 
 
 

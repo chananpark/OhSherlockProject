@@ -23,7 +23,7 @@
 					<div class="carousel-caption d-none d-md-block">
 						<!-- d-none 은 display : none; 이므로 화면에 보이지 않다가, d-md-block 이므로 d-md-block 은 width 가 768px이상인 것에서만 display: block; 으로 보여라는 말이다.  -->
 						<h4 class="bannerTitle pb-4">
-							10월 포토 리뷰 이벤트<br>
+							10월 우수 리뷰 이벤트<br>
 						</h4>
 						<p>
 							완연한 가을에 마시는 따뜻한 차 한잔<br>지금 여러분의 티타임을 보여주세요!<br>
@@ -37,12 +37,14 @@
 					<img src="<%=ctxPath%>/images/오설록배너3.png" class="d-block w-100"
 						alt="...">
 					<div class="carousel-caption d-none d-md-block">
-						<h4 class="bannerTitle">
-							데일리 식습관 메이트<br>콤부차 리치피치 출시!
+						<h4 class="bannerTitle pb-4">
+						 	메모리 인 제주 기프트세트 런칭<br>
 						</h4>
 						<p>
-							칼로리 부담없이 건강관리에 즐거움을 더하는 콤부차<br>새로운 맛 리치피치를 만나보세요.<br>
-							<br>09.15 - 09.30
+							제주의 기억을 그대로 담은<br>다양한 티제품을 세트로 즐겨보세요.<br>
+							<br>10.01 - 10.30
+							<button type="button" style="border:solid 1px gray" class="btn ml-4"
+							onclick="location.href='<%=ctxPath%>/shop/productView.tea?pnum=35'">이벤트 보기</button>
 						</p>
 					</div>
 				</div>
@@ -51,11 +53,13 @@
 						alt="...">
 					<div class="carousel-caption d-none d-md-block">
 						<h4 class="bannerTitle">
-							데일리 식습관 메이트<br>콤부차 리치피치 출시!
+							데일리 식습관 메이트<br>스윗베리 루이보스티 출시!
 						</h4>
 						<p>
-							칼로리 부담없이 건강관리에 즐거움을 더하는 콤부차<br>새로운 맛 리치피치를 만나보세요.<br>
-							<br>09.15 - 09.30
+							칼로리 부담없이 건강관리에 즐거움을 더하는<br>스윗베리 루이보스티를 소개합니다.<br>
+							<br>10.15 - 10.30
+							<button type="button" style="border:solid 1px gray" class="btn ml-4"
+							onclick="location.href='<%=ctxPath%>/shop/productView.tea?pnum=10'">이벤트 보기</button>
 						</p>
 					</div>
 				</div>
@@ -63,12 +67,14 @@
 					<img src="<%=ctxPath%>/images/오설록배너1.png" class="d-block w-100"
 						alt="...">
 					<div class="carousel-caption d-none d-md-block">
-						<h4 class="bannerTitle">
-							데일리 식습관 메이트<br>콤부차 리치피치 출시!
+						<h4 class="bannerTitle pb-4">
+							10월 이벤트 상품 안내<br>
 						</h4>
 						<p>
-							칼로리 부담없이 건강관리에 즐거움을 더하는 콤부차<br>새로운 맛 리치피치를 만나보세요.<br>
-							<br>09.15 - 09.30
+							쌀쌀해진 날씨에 어울리는 다양한 상품들을<br>이벤트 할인가로 만나보세요.<br>
+							<br>10.01 - 10.30
+							<button type="button" style="border:solid 1px gray" class="btn ml-4"
+							onclick="location.href='<%=ctxPath%>/shop/eventOrderList.tea?currentShowPageNo=1&snum=&cnum=&order=pinputdate%20desc'">이벤트 보기</button>
 						</p>
 					</div>
 				</div>
@@ -147,14 +153,14 @@
         <div id="indexStoreStory" class="col-md-6">
           
           <div id="storebox">
-		          <a id="store" href="<%=ctxPath%>/storeInfo/storeList.jsp">
+		          <a id="store" href="<%=ctxPath%>/storeInfo/storeList.tea">
 		          <img src="<%=ctxPath%>/images/o_logo.png" style="width: 42%; float:left; margin: 10px;"/>
 		          </a>
            	<div style=" font-size: 49px; margin: 63px 0px 0px 206px"><i class="fa-solid fa-location-dot"></i> 매장안내</div>
           </div>
           
           <div id="brandStory">
-            <a href="<%=ctxPath%>/brandStory/brandStory.jsp"><img
+            <a href="<%=ctxPath%>/brandStory/brandStory.tea"><img
               src="<%=ctxPath%>/images/brand_story_img.jpg"
               style="max-width: 91%; height: 268px; vertical-align: top; border-radius: 0.25rem; " 
             /></a>

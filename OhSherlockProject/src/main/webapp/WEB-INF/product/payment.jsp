@@ -86,13 +86,18 @@
 		$("#saleNpoint > table > tbody > tr.saleNpointInfo > td:last-child").addClass("col col-3");
 		//////////////////////////
 
+		$("#td_paymentMethod").text("예치금");
+		
 		// 예치금 결제 선택시 현재 예치금 알려주기
 		$("input[name='paymentMethod']").change((e)=>{
 			if($(e.target).val() == "coin") {
 				$("#currentCoin").show();
+				$("#td_paymentMethod").text("예치금");
 			}	else {
 				$("#currentCoin").hide();
+				$("#td_paymentMethod").text("신용카드");
 			}	
+			
 		});
 		
 		// 할인금액 넣어주기
@@ -117,15 +122,7 @@
 				}
 			}
 		});
-		
-		// 배송비 계산
-		let delivery_cost=0;
-		if (Number(${sumtotalPrice})<30000){
-			delivery_cost = 2500;
-		}
-		$("#td_delivery_cost").text(delivery_cost.toLocaleString('en') + " 원");
-		$("#delivery_cost").val(delivery_cost);
-				
+						
 		// 적립금 모두 사용 클릭시
 		$("#spendPointAll").click(()=>{
 			$("#odrusedpoint").val('${loginuser.point}');
@@ -268,10 +265,15 @@
 	});
 
 function changePoint() {
+	
 	const usedPoint = Number($("#odrusedpoint").val());
 	$("#td_point").text(usedPoint + " 원");
 	
-	$("#h4_totalPrice").text(Number(${sumtotalPrice})-usedPoint +" 원");
+	$("#span_totalPaymentAmount").text((Number(${sumtotalPrice})+Number(${delivery_cost})-usedPoint).toLocaleString('en'));
+	
+	$("#h4_totalPrice").text((Number(${sumtotalPrice})+Number(${delivery_cost})-usedPoint).toLocaleString('en') +" 원");
+	
+	$("input[name='odrusedpoint']").val(usedPoint);
 }
 
 function pay() {
@@ -315,29 +317,32 @@ function pay() {
 		return;
 	}
 	
+	const totalOrderPrice = Number(${sumtotalPrice})-Number($("#odrusedpoint").val());
+	if($('input[name=paymentMethod]:checked').val() == "card") {
+		cardPayment(totalOrderPrice);
+	}
+	else{
+		if(Number(${loginuser.coin}) > totalOrderPrice){
+			frmSubmit();
+		}
+		else {
+			alert("보유하신 예치금이 부족합니다.");
+			return;
+		}
+	}
+}
+
+function cardPayment(totalOrderPrice) {
+	const url = "<%=ctxPath%>/shop/cardPayment.tea?pnamejoin=${pnamejoin}&totalOrderPrice="+totalOrderPrice;
+
+    window.open(url, "cardPayment", "left=350px, top=100px, width=800px, height=570px");
+}
+
+function frmSubmit() {
 	const frm = document.orderFrm;
 	frm.method = "POST"; 
 	frm.action = "<%=ctxPath%>/shop/completeOrder.tea";
- 
-	
-	if($('input[name=paymentMethod]:checked').val() == "card") {
-		$.ajax({
-            url:"<%=ctxPath%>/shop/cardPayment.tea",
-            type:"POST",
-            data:{"pnamejoin":"${pnamejoin}",
-                 "sumtotalPrice":Number(${sumtotalPrice})-Number($("#odrusedpoint").val())},
-            dataType:"JSON",
-            success:function(json) {
-            	//frm.submit();
-            },
-            error: function(request, status, error){
-               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-            }
-            
-         });
-	}
-	//else
-		//frm.submit();
+	frm.submit();
 }
 </script>
 
@@ -470,9 +475,9 @@ function pay() {
 			<label><input type="radio" name="paymentMethod" value="card"> &nbsp;신용카드</label>
 		</div>
 		<div class="mb-4" id="currentCoin">
-			현재 보유 예치금: <span style="color: #1E7F15; font-weight:bold"><fmt:formatNumber value="${loginuser.coin }" pattern="###,###" /></span> 원
+			현재 보유 예치금: <span style="color: #1E7F15; font-weight:bold"><fmt:formatNumber value="${loginuser.coin}" pattern="###,###" /></span> 원
 			&nbsp;&nbsp;
-			결제 금액: <span style="color: #1E7F15; font-weight:bold"><fmt:formatNumber value="${sumtotalPrice}" pattern="###,###" /></span> 원
+			결제 금액: <span id="span_totalPaymentAmount" style="color: #1E7F15; font-weight:bold"><fmt:formatNumber value="${totalPaymentAmount}" pattern="###,###" /></span> 원
 			
 		</div>		
 		<hr>		
@@ -516,8 +521,8 @@ function pay() {
 					</tr>
 					<tr>
 						<td class="col col-9 text-left">배송비</td>
-						<td id="td_delivery_cost" class="col col-3 text-right" style="padding-bottom: 20px;">
-						</td>
+						<td class="col col-3 text-right" style="padding-bottom: 20px;">
+						<fmt:formatNumber value="${delivery_cost}" pattern="###,###" /> 원</td>
 					</tr>
 					<tr style="border-top: 1px solid #d9d9d9;">
 						<td class="col col-9"
@@ -525,18 +530,25 @@ function pay() {
 								결제금액</h4></td>
 						<td class="col col-3 text-right"
 							style="color: #1E7F15; font-weight: bolder; padding-bottom: 0.7px;">
-							<h4 id="h4_totalPrice"><fmt:formatNumber value="${sumtotalPrice}" pattern="###,###" /> 원</h4></td>
+							<h4 id="h4_totalPrice"><fmt:formatNumber value="${totalPaymentAmount }" pattern="###,###" /> 원</h4></td>
 					</tr>
 					<tr>
 						<td class="col col-9 text-left"
 							style="padding-top: 0; padding-bottom: 0;">결제수단</td>
-						<td class="col col-3 text-right"
+						<td id="td_paymentMethod" class="col col-3 text-right"
 							style="padding-top: 0;" class="pb-2"></td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-			<input type="hidden" id="delivery_cost" name="delivery_cost" />
+			<input type="hidden" id="delivery_cost" name="delivery_cost" value="${delivery_cost}" />
+			<input type="hidden" name="pnumjoin" value="${pnumjoin}" />
+			<input type="hidden" name="oqtyjoin" value="${oqtyjoin}" />
+			<input type="hidden" name="totalPricejoin" value="${totalPricejoin}" />
+			<input type="hidden" name="cartnojoin" value="${cartnojoin}" />
+			<input type="hidden" name="sumtotalPrice" value="${sumtotalPrice}" />
+			<input type="hidden" name="totalPaymentAmount" value="${totalPaymentAmount}" />
+			<input type="hidden" name="odrusedpoint" />
 		</form>
 			<div class="text-center mt-3">
 			<button id="payBtn" type="button" onclick="pay()">결제하기</button>

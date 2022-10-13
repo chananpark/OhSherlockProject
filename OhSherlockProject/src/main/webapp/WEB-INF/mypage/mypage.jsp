@@ -225,8 +225,8 @@ a:visited  {
 						<tr>
 							<td>${ovo.odrdate}</td>
 							<td>${ovo.odrcode}</td>
-							<td>${ovo.odrtotalprice}</td> 
-							<td><input type="button" class="viewBtns" value="조회" /></td>
+							<td><fmt:formatNumber value="${ovo.odrtotalprice}" pattern="###,###" /> </td> 
+							<td><input type="button" class="viewBtns" value="조회" onclick="location.href='orderCheck_detail.tea?odrcode=${ovo.odrcode}&goBackURL=/mypage/orderCheck.tea?userid=${sessionScope.loginuser.userid }'"/></td>
 						
 						</tr>
 					</c:forEach>

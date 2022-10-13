@@ -46,26 +46,17 @@
 
 	$(document).ready(function (e) {
 
-		// 제목 클릭 시 상품 상세 열어주는 함수(수정필요)
-		$(".viewhidden").click(function () {
-            status = $(".hidden").css("display"); 
-            if (status == "none") {
-                $(".hidden").css("display", "");
-            } else {
-                $(".hidden").css("display", "none");
-            }
-        });
-	
 	});
-	
 
+
+
+	
 </script>
 
 <div id="review_page">
 	<table class="table mt-4" style="text-align: center;"> 
 		<thead class="thead-light"> 
 			<tr>
-				<th>번호</th>
 				<th>제목</th>
 				<th>작성자</th>
 				<th>작성일</th>
@@ -73,27 +64,59 @@
 			</tr>
 		</thead> 
 		
+		
 		<tbody>
 			<c:if test="${not empty reviewList}">
 				<c:forEach var="review" items="${requestScope.reviewList}"> 
-					<tr class="reviewInfo">
+				<%--	<tr class="reviewInfo"  >
 						<td name="rnum">${review.rnum}</td>
 						<td name="rsubject">${review.rsubject}</td>
 						<td name="fk_userid">${review.userid}</td>
 						<td name="writedate">${review.writeDate}</td>
 						<td name="score">${review.score}</td>
 					</tr>
+				--%>
+				<tr>
+					<td style="font-weight:bold;">${review.rsubject}</a></td><%-- return false 지우면 작동 안함. 삭제 금지 --%>
+					<td>${review.userid}</td> 
+					<td>${review.writeDate}</td> 
+					<td>
+						<c:if test="${review.score eq 1}">
+							★
+						</c:if>
+						<c:if test="${review.score eq 2}">
+							★★
+						</c:if>
+						<c:if test="${review.score eq 3}">
+							★★★
+						</c:if>
+						<c:if test="${review.score eq 4}">
+							★★★★
+						</c:if>
+						<c:if test="${review.score eq 5}">
+							★★★★★
+						</c:if>
+					</td> 
+				</tr>
+				<tr  >
+			        <td colspan="3" style="text-align: left; padding:20px 50px;" class="bg-light">
+			        	${review.rcontent }
+			        	<br><br>
+			        </td> 
+				   	<td colspan="2" class="vertical_bottom text-right"><span style="width:20%;"><input class="btnEditDel" type="button" value="삭제하기" /></span></td>
+			    </tr>
+				
 				</c:forEach>
 			</c:if>
 			<c:if test="${empty reviewList}">
 				<tr>
-					<td class="pt-5" colspan="4">
+					<td class="pt-4" colspan="6" >      
 						작성된 리뷰가 없습니다.
 					</td>
 				</tr>
 				
 			</c:if>
-
+		
 		</tbody>
 		
 		
@@ -109,7 +132,6 @@
 	</nav>
 	
 </div>
-
 
 
 

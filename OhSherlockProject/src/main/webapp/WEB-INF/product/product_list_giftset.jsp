@@ -224,8 +224,9 @@ function getOrderedList() {
 	   			'<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart" onclick="goLike(' + item.pnum + ');"></i></a> '+
 	   			'<a class="card-text text-secondary mr-5 like" onclick="goLike(' + item.pnum + ');">찜하기</a> '+
 	   							      			
-	   			'<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg "></i></a> '+
-	   			'<a class="card-text text-secondary">담기</a> '+
+	   			' <a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg" onClick="clickCart('+item.pnum +');"></i></a> '+
+	   			' <input class="card-text text-secondary cart" type="button" onClick="clickCart('+item.pnum +');" value="담기" style="padding-left: 0; margin-left: 0;"/> '+
+	   			
 	    			
 	 			'</div> </div>';
 	      		}); 
@@ -363,7 +364,7 @@ function clickCart(pnum) {
 					<span id="subtitle" class="text-dark h5" style="font-weight:bold;">전체 상품</span>
 					
 					<%-- 정렬 선택 창 --%>
-					<div class="text-right" style="float: right;">
+					<div class="text-right" >
 					<button type="button" class="order selected" id="pnum desc">신상품순</button>
 					<span class="text-dark">|</span>
 					<button type="button" class="order" id="price desc">높은가격순</button>

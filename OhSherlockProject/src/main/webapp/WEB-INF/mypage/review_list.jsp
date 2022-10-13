@@ -25,13 +25,19 @@
       border-radius: 5%;
       height: 35px;
    }
-   
+
+/*   
    img.img-thumbnail {
        display: inline-block;
        width: 250px;
        content: "";
    }
+*/   
+   #star{
+	   color: red;
+   } 
    
+/*   
    #star a{
 	   text-decoration: none;
 	   color: gray;
@@ -40,7 +46,7 @@
    #star a.on{
 	   color: red;
    } 
-   
+*/   
    .page-link {
 	  color: #666666; 
 	  background-color: #fff;
@@ -61,11 +67,9 @@
 	  border-color: #1E7F15;
 	}
 	
-	/* .box{margin-right:40px;} */
 	.content{
 		width: 500px;
 		margin-left: 0;
-       /*  border:1px solid #ddd; */
     }
     
     .more {
@@ -113,16 +117,16 @@
     	  var content = $(this).children('.content');
           var content_txt = content.text();
           var content_txt_short = content_txt.substring(0,50)+"...";
-          var image = $(this).children('.image');
+          //var image = $(this).children('.image');
           var btn_more = $('<a href="javascript:void(0)" class="more">더보기</a>');
           
 
-          $(this).append(image);
+          //$(this).append(image);
           $(this).append(btn_more);
           
-          if(content_txt.length >= 50 || image != null){
+          if(content_txt.length >= 50){
               content.html(content_txt_short)
-              image.hide();  // 이미지 숨기기
+              //image.hide();  // 이미지 숨기기
               
           }else{  // 텍스트가 50 이하이고, 이미지가 없다면
               btn_more.hide();
@@ -133,13 +137,13 @@
           function toggle_content(){
               if($(this).hasClass('short')){
                   // 접기 상태
-                  image.hide();  // 이미지 숨기기
+                  //image.hide();  // 이미지 숨기기
                   $(this).html('더보기');
                   content.html(content_txt_short)
                   $(this).removeClass('short');
               }else{
                   // 더보기 상태
-                  image.show();  // 이미지 보이기
+                  //image.show();  // 이미지 보이기
                   $(this).html('접기');
                   content.html(content_txt);
                   $(this).addClass('short');
@@ -147,7 +151,6 @@
               }
           }
       });
-      
 	   
     });// end of $(document).ready()--------------------------
     
@@ -183,11 +186,6 @@
     }// end of function goDel(likeno) {}-------------------
    
    
-   
-   
-   
-   
-   
 </script>
    
 <form name="prodStorageFrm"> 
@@ -205,9 +203,9 @@
       <div class="likeList">
          <table class="table mt-4">
 	        <colgroup>
-		          <col width="330px" />
+		          <col width="380px" />
 		          <col />
-		          <col width="180px" />
+		          <col width="150px" />
 	      	</colgroup>
             <thead class="thead-light">
                <tr>
@@ -231,7 +229,7 @@
                    <tr>
                      <td>
                          <a href="/OhSherlockProject/shop/productView.tea?pnum=${reivewvo.pnum}" style="text-align: right;">  <%-- 썸네일이미지 --%>
-                            <img src="/OhSherlockProject/images/${reivewvo.prod.pimage}" class="img-thumbnail" style="margin-left: 50px; border: 0;" />
+                            <img src="/OhSherlockProject/images/${reivewvo.prod.pimage}" class="img-thumbnail" style="margin-left: 20px; border: 0;" />
                          </a>
                          <input type="hidden" name="allCnt" id="hidden_pnum" for="pnum${status.index}" value="${reivewvo.rnum}" /> <%-- 상품번호 --%>  
                          <input type="hidden" for="pnum${status.index}" value="${reivewvo.pnum}" /> <%-- 상품번호 --%>  
@@ -240,20 +238,27 @@
                      <td>    
                         <span class="like_pname" style="font-weight: bold;">${reivewvo.prod.pname}</span><br>  <%-- 상품명 --%>
                         <span>작성일 :&nbsp; ${fn:substring(reivewvo.writeDate, 0, 10)}</span><br>
-                        <P id="star"> <!-- 부모 -->
-						    <a href="#" value="1">★</a> <!-- 자식들-->
-						    <a href="#" value="2">★</a>
-						    <a href="#" value="3">★</a>
-						    <a href="#" value="4">★</a>
-						    <a href="#" value="5">★</a>
-						<p>
-						<span>${reivewvo.rsubject}</span><br>
+                        <input type="hidden" name="score" id="score" value="${reivewvo.score}" />
+	                    <%--   <P id="star"> <!-- 부모 -->
+							    <a value="1">★</a> <!-- 자식들-->
+							    <a value="2">★</a>
+							    <a value="3">★</a>
+							    <a value="4">★</a>
+							    <a value="5">★</a>
+							</p>
+						--%> 	
+						<c:forEach begin="1" end="${reivewvo.score}" varStatus="status">
+							<a id="star" value="${status.index}"><span>★</span></a>
+						</c:forEach><br><br>
+							
+							
+						<span style="font-weight: bold;">${reivewvo.rsubject}</span><br>
 						
 						<div class="box">
 						    <div class="content">
 						    	${reivewvo.rcontent}
 						    </div><br>
-						    <img class="image" src="../images/${reivewvo.rimage}" style="width: 200px;" />
+						    <%-- <img class="image" src="../images/${reivewvo.rimage}" style="width: 200px;" /> --%>
 						</div>
 						
                         <input type="hidden" class="reviewno" value="${reivewvo.rnum}" />  <%-- 상품리뷰번호(시퀀스)는 hidden 처리함. --%>
