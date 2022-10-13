@@ -1212,17 +1212,22 @@ $(function(){
 	<section id="syj">
 	<hr style="padding-top: 90px; border-style:none">
 		<h4>손여진</h4>
-	</section>
+	</section> 
 	<hr>
 	<section id="lsw">
 	<hr style="padding-top: 90px; border-style:none">
-		<h4>임선우</h4>
+		<h4>임선우</h4> 
 	</section>
 	<hr>
-	<section id="kcy">
-	<hr style="padding-top: 90px; border-style:none">
-		<h4>강채영</h4>
+	<section id="kcy">   
+	<hr style="padding-top: 90px; border-style:none">  
+		<h4>강채영</h4> 
+ 			<h4 style="position: absolute; bottom: 300px; left: 400px;">마무리하며 소감을 요약해서 말하자면 좋은 사람들을 만나고 그 사람들을 통해 즐겁게  </h4>
+		<img src="../images/미모티콘.png" width="450" height="450" style="z-index: 1; right: 30px;">
+<!-- 		<img src="../images/말풍선2.png" style="position: relative; right: 80px; bottom: 50px;">   -->
+<!-- 		style="transform: rotate(20deg); -->
+		
 	</section>
 </div>
-
+ 
 <%@ include file="../footer.jsp"%>
