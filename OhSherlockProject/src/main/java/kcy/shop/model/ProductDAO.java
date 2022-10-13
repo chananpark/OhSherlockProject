@@ -1,5 +1,7 @@
 package kcy.shop.model;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,6 +18,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import common.model.FaqVO;
+import common.model.MemberVO;
 import common.model.ProductVO;
 import common.model.ReviewVO;
 import common.model.SpecVO;
@@ -349,6 +352,44 @@ public class ProductDAO implements InterProductDAO {
 			return rvo;
 			
 		}// end of 리뷰번호 선택시 리뷰 자세히 보기 -------------------------
-	
+
+		
+		// 리뷰번호 선택시 리뷰 자세히 보기
+		@Override
+		public ReviewVO rnumReviewDetail(Map<String, String> paraMap) throws SQLException {
+			
+			ReviewVO rvo = null;
+
+			try {
+				conn = ds.getConnection();
+
+				String sql = " select rsubject, rcontent, score "+
+							 " from TBL_REVIEW "+
+							 " where rnum = ? ";
+
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, paraMap.get("rnum"));
+				
+				rs = pstmt.executeQuery();
+
+				if (rs.next()) {
+					rvo = new ReviewVO();
+					
+					rvo.setRsubject(rs.getString(1));
+					rvo.setRcontent(rs.getString(2));
+					rvo.setScore(rs.getInt(3));
+
+				}
+
+			} finally {
+				close();
+			}
+
+			return rvo;
+			
+			
+		}// end of 리뷰번호 선택시 리뷰 자세히 보기 ----------------------------------------------
+
+		
 	
 }

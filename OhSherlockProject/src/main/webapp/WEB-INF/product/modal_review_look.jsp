@@ -40,6 +40,13 @@
 		background-color: #1E7F15;
 		color: white
 	}
+	
+	td#rsubject{
+		font-weight: bold;
+		font-size: 20px;
+	
+	}
+	
 	</style>
 
 
@@ -61,8 +68,20 @@
 
 	<%-- 리뷰를 자세히보는 페이지--%>
 
+				<c:forEach var="review" items="${requestScope.reviewList}"> 
+					<tr class="reviewInfo"  >
+						<td name="rnum">${review.rnum}</td>
+						<td name="rsubject">${review.rsubject}</td>
+						<td name="fk_userid">${review.userid}</td>
+						<td name="writedate">${review.writeDate}</td>
+						<td name="score">${review.score}</td>
+					</tr>
+				</c:forEach>
+
+
 	<div class=" text-left">
-		<div style="font-weight: bold; font-size: 20px;">${review.rsubject}</div>
+	
+		<div style="font-weight: bold; font-size: 20px;">${requestScope.review.rsubject}</div> 
 		<br>
 		<div
 			style="font-weight: normal; font-size: 15.5px; margin-bottom: 10px;">${ivo.inquiry_date}</div>
@@ -77,8 +96,8 @@
 			<tr>
 				<td class="p-2 pl-3">답변</td>
 				<td class="text-right p-2 pr-3">
-					<c:if test="${not empty ivo.irevo}">
-						${ivo.irevo.inquiry_reply_date }
+					<c:if test="${not empty review_look}">
+						${requestScope.pvo.point} 
 					</c:if>
 					<c:if test="${empty ivo.irevo}">
 					-
@@ -102,3 +121,4 @@
 
 
 </div> 
+
