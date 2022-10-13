@@ -237,8 +237,8 @@
          <p class="h2" style="font-weight:bold;">${pvo.pname}</p>
          <p>${pvo.psummary}</p>
          <p class="h5 row mt-5" >
-            <span class="col-9" style="text-align: left;" >상품 가격</span>
-            <span class="col-3" style="font-weight:bold; text-align: center;"><fmt:formatNumber value="${pvo.price}" pattern="###,###"/>원</span>
+            <span class="col-9" style="text-align: left;" >판매 금액</span>
+            <span class="col-3" style="font-weight:bold; text-align: center;"><fmt:formatNumber value="${pvo.saleprice}" pattern="###,###"/>원</span>
          </p>
          
             <p class="h5 row" >
@@ -251,7 +251,7 @@
          <table class="table table-active table-borderless bg-light">
                 <tbody>
                   <tr>
-                       <td class="col col-9 text-left">상품금액</td>
+                       <td class="col col-9 text-left">정가</td>
                        <td class="col col-3 text-right"><fmt:formatNumber value="${pvo.price}" pattern="###,###"/>원</td>
                   </tr>
                   <tr>

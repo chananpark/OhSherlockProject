@@ -34,7 +34,7 @@ public class FaqRegisterEnd extends AbstractController {
 			content = content.replace("\r\n","<br>");
 			content = content.replaceAll("<", "&lt;");
 			content = content.replaceAll(">", "&gt;");
-			
+
 			InterFaqDAO fdao = new FaqDAO();
 
 			Map<String, String> paraMap = new HashMap<>();
