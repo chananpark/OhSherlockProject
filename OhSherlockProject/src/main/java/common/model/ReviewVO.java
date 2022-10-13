@@ -11,7 +11,7 @@ public class ReviewVO {  // (오라클로 말하면 제품테이블의 자식테
 	private String rcontent;     //  리뷰내용  
 	private String rimage;       //  첨부파일  
 	private String odrcode;      //  주문상세번호
-	private String writeDate;  //  리뷰 작성일자
+	private String writeDate;    //  리뷰 작성일자
 	
 	private ProductVO prod;      // 상품정보객체    (오라클로 말하면 부모테이블인 상품테이블)
 	private OrderDetailVO oddt;  // 주문상세정보객체 (오라클로 말하면 부모테이블인 주문상세테이블)
