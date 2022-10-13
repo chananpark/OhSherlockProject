@@ -122,10 +122,16 @@
       
    </table>
    
+   <c:if test="${not empty sessionScope.loginuser}">
    <div class="row justify-content-end" style="margin-top:50px;">
       <span><input class="btnEditDel mr-4" type="button" value="상품후기작성" data-toggle="modal" data-target="#btnReview" data-dismiss="modal" data-backdrop="static"/></span>
-      <span><input class="btnEditDel mr-4" type="button" value="전체상품 후기조회" id="btnAllReview"/></span>
    </div>
+	</c:if>
+	
+	
+	<c:if test="${empty sessionScope.loginuser}">
+		
+	</c:if>
 
    <nav aria-label="Page navigation example" style="margin-top: 60px;">
       <ul class="pagination justify-content-center" style="margin:auto;">${requestScope.pageBar}</ul>
