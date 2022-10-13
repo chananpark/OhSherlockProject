@@ -71,7 +71,7 @@ public class OrderDAO implements InterOrderDAO {
 
 			String sql = "select odrcode, fk_userid, to_char(ODRDATE,'yyyy.MM.dd') as odrdate, odrtotalprice \n"+
 						"from tbl_order\n"+
-						"where ODRDATE between to_char(add_months(sysdate,-1), 'yyyy-MM-dd') and to_char(sysdate, 'yyyy-MM-dd') and FK_USERID = ? \n"+
+						"where (ODRDATE between add_months(sysdate,-1) and sysdate) and FK_USERID = ? \n"+
 						"order by ODRDATE desc";
 
 			pstmt = conn.prepareStatement(sql);

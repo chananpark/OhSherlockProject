@@ -331,10 +331,13 @@ where rownum between 1 and 3
 
 select ODRCODE, FK_USERID, to_char(ODRDATE,'yyyy.MM.dd') as ODRDATE, ODRTOTALPRICE
 from tbl_order
-where ODRDATE between to_char(add_months(sysdate,-1), 'yyyy-MM-dd') and to_char(sysdate, 'yyyy-MM-dd') and FK_USERID = 'pca719'
+where (ODRDATE between add_months(sysdate,-1) and sysdate) and FK_USERID = '5sherlock'
 order by ODRDATE desc;
 
-
+select ODRCODE, FK_USERID, to_char(ODRDATE,'yyyy.MM.dd') as ODRDATE, ODRTOTALPRICE
+from tbl_order
+where (ODRDATE between '2022.10.01' and '2022.10.14') and FK_USERID = 'pca719'
+order by ODRDATE desc;
 
 select *
 from tbl_order_detail
@@ -395,3 +398,9 @@ INSERT INTO tbl_product_imagefile(imgfileno, fk_pnum, imgfilename)
 VALUES (SEQ_IMGFILENO.nextval, 37, '베스트 블렌디드 티백 박스상세.png');
 
 commit;
+
+
+select pnum, pname, pimage, imgfileno, imgfilename
+from tbl_product P join tbl_product_imagefile I
+on P.pnum = I.fk_pnum
+where pnum = 14
