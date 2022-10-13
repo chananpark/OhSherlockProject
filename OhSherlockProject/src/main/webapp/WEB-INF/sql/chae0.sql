@@ -342,4 +342,10 @@ select rsubject, rcontent, score
 from TBL_REVIEW
 where rnum = 14
 
+select rnum, fk_userid, fk_pnum, rsubject, rcontent, writeDate, score
+from TBL_REVIEW
+where fk_pnum = 1
+order by 1 desc
+
+
 

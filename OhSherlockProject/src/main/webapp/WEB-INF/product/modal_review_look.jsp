@@ -1,68 +1,124 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+
+
+	<style>
+	* {
+			font-family: 'Gowun Dodum', sans-serif;
+		  }
+	
+	/* .listView {
+		width: 90px;
+		margin: 15px;
+		border-style: none;
+		height: 30px;
+		font-size: 14px;
+	}
+	 */
+	.btn-secondary:hover {
+		border: 2px none #1E7F15;
+		background-color: #1E7F15;
+		color: white;
+	}
+	
+	.inquiryContent {
+		border: 1px solid gray;
+		border-radius: 1%;
+		min-height: 150px;
+		max-height: 250;
+		overflow: auto;
+		background-color: white;
+	}
+	
+	#replyTbl{
+		width: 100%;
+	}
+	
+	#replyTbl thead {
+		background-color: #1E7F15;
+		color: white
+	}
+	
+	td#rsubject{
+		font-weight: bold;
+		font-size: 20px;
+	
+	}
+	
+	</style>
+
 
 	<script type="text/javascript">
-
-	$(document).ready(function(){
-		
+	
+		$(document).ready(function(){
 			
+				
+				
 			
-		
-	}); // end of $(document).ready(function()
+		}); // end of $(document).ready(function()
 			
 
 	</script>
-
-	<form name="reviewFrm">
 	
-		<ul style="list-style-type: none">
-		
-	    	<li style="margin: 25px 0">
-	        	<label for="name" style="display: inline-block; width: 90px">제목<span class="text-danger">*</span></label>
-	            <input type="text" name="title" id="title" size="50" placeholder="제목을 입력하세요." autocomplete="off" required />
-	     	</li>
-	     	<li style="margin: 25px 0">
-	        	<label for="content" style="display: inline-block; width: 90px">내용<span class="text-danger">*</span></label>
-	            <input type="text" name="content" id="content" size="50" placeholder="내용을 입력하세요." autocomplete="off" style="height: 200px;"required />
-	     	</li>
-	        <li style="margin: 25px 0">
-	        	<label for="review_radio" style="display: inline-block; width: 90px">평점<span class="text-danger">*</span></label>
-	        	<div>
-	        		<%-- 별점 선택하면 리뷰 화면에는 별로 출력 : switch문 사용..? --%>
-		        	<span style="width:50px;" class="mr-4">
-						<input type="radio" name="review_score" id="review_radio1" value="1">
-						<label for="review_radio1">1점</label>
-					</span>
-					<span style="width:50px;" class="mr-4">
-						<input type="radio" name="review_score" id="review_radio2" value="2">
-						<label for="review_radio2">2점</label>
-					</span>
-					<span style="width:50px;" class="mr-4">
-						<input type="radio" name="review_score" id="review_radio3" value="3">
-						<label for="review_radio3">3점</label>
-					</span>
-					<span style="width:50px;" class="mr-4">
-						<input type="radio" name="review_score" id="review_radio4" value="4">
-						<label for="review_radio4">4점</label>
-					</span>
-					<span style="width:50px;">
-						<input type="radio" name="review_score" id="review_radio5" value="5" checked>
-						<label for="review_radio5">5점</label>
-					</span>
-				</div>
-	     	</li>
-	     	<li style="margin: 25px 0">
-	        	<label for="photo" style="display: inline-block; width: 100px">사진 첨부</label>
-	        	<br>
-	            <input type="file" name="photo" id="photo" size="50"/>
-	     	</li>
-		</ul>
-		
-		<div class="my-3">
-		    <p class="text-center">
-		       <button type="button" class="btn" id="btnWriteFin" style="background-color: #1E7F15; color: white;">상품 후기 등록하기</button>
-		    </p>
-	  	</div>
-		
-	  	
-	</form>    
+	
+
+	<div class="container-fluid">
+
+	<%-- 리뷰를 자세히보는 페이지--%>
+
+				<c:forEach var="review" items="${requestScope.reviewList}"> 
+					<tr class="reviewInfo"  >
+						<td name="rnum">${review.rnum}</td>
+						<td name="rsubject">${review.rsubject}</td>
+						<td name="fk_userid">${review.userid}</td>
+						<td name="writedate">${review.writeDate}</td>
+						<td name="score">${review.score}</td>
+					</tr>
+				</c:forEach>
+
+
+	<div class=" text-left">
+	
+		<div style="font-weight: bold; font-size: 20px;">${requestScope.review.rsubject}</div> 
+		<br>
+		<div
+			style="font-weight: normal; font-size: 15.5px; margin-bottom: 10px;">${ivo.inquiry_date}</div>
+		</div>
+
+
+	<div class="text-left inquiryContent jumbotron mt-4 pt-auto">${ivo.inquiry_content}
+	</div>
+
+	<table id="replyTbl">
+		<thead>
+			<tr>
+				<td class="p-2 pl-3">답변</td>
+				<td class="text-right p-2 pr-3">
+					<c:if test="${not empty review_look}">
+						${requestScope.pvo.point} 
+					</c:if>
+					<c:if test="${empty ivo.irevo}">
+					-
+					</c:if>
+				</td>
+			</tr>
+		</thead>
+		<tbody class="bg-light">
+			<tr>
+				<td colspan='2' class="p-3">
+					<c:if test="${not empty ivo.irevo}">
+					 ${ivo.irevo.inquiry_reply_content}
+					 </c:if>
+					 <c:if test="${empty ivo.irevo}">
+					 답변 준비중입니다.
+					 </c:if>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+
+</div> 
+

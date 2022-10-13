@@ -29,6 +29,11 @@ public interface InterProductDAO {
 
 	// 리뷰번호 선택시 리뷰 자세히 보기
 	ReviewVO rnumReviewDetail(String rnum) throws SQLException;
+
+	// 리뷰번호 선택시 리뷰 자세히 보기
+	ReviewVO rnumReviewDetail(Map<String, String> paraMap) throws SQLException;
+
+	
 	
 
 }

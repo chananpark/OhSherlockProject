@@ -123,7 +123,6 @@ public class ProductView extends AbstractController {
 		
 		
 		
-		
 		// 카테고리 목록을 조회해오기
 		super.getCategoryList(request);
 		
