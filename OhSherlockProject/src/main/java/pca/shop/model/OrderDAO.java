@@ -556,7 +556,11 @@ public class OrderDAO implements InterOrderDAO {
 	public int completeOrder(Map<String, Object> paraMap) throws SQLException {
 
 		int nSuccess = 0;
-	    int n1=0, n2=0, n3=0, n4=0, n5=0;
+		int n1=0, n2=0, n3=0, n4=0, n5=0, n6=0;
+
+		String[] pnumArr = (String[]) paraMap.get("pnumArr"); // 제품번호
+        String[] oqtyArr = (String[]) paraMap.get("oqtyArr"); // 주문량
+        String[] totalPriceArr = (String[]) paraMap.get("totalPriceArr"); // 주문금액 
 
 	    try {
 	        conn = ds.getConnection();
@@ -580,21 +584,18 @@ public class OrderDAO implements InterOrderDAO {
 	        pstmt.setString(8, (String) paraMap.get("recipient_extra_address"));
 	        pstmt.setString(9, (String) paraMap.get("sumtotalPrice"));
 	        pstmt.setString(10, (String) paraMap.get("delivery_cost"));
-	        pstmt.setString(11, (String) paraMap.get("odrtotalpoint"));
+	        pstmt.setInt(11, (int) paraMap.get("odrtotalpoint"));
 	        pstmt.setString(12, (String) paraMap.get("recipient_memo"));
 
 	        n1 = pstmt.executeUpdate();
 
 	        // tbl_order_detail에 insert
 	        if(n1 == 1) {
-	            String[] pnumArr = (String[]) paraMap.get("pnumArr"); // 제품번호
-	            String[] oqtyArr = (String[]) paraMap.get("oqtyArr"); // 주문량
-	            String[] totalPriceArr = (String[]) paraMap.get("totalPriceArr"); // 주문금액 
-
+	            
 	            int cnt = 0;
 	            for(int i=0; i<pnumArr.length; i++) {
 	                sql = " insert into tbl_order_detail(odnum, fk_odrcode, fk_pnum, oqty, odrprice, opoint) " 
-	                    + " values(seq_tbl_orderdetail.nextval, ?, to_number(?), to_number(?), to_number(?), ?) ";
+	                    + " values(seq_tbl_order_detail.nextval, ?, to_number(?), to_number(?), to_number(?), ?) ";
 
 	                pstmt = conn.prepareStatement(sql);
 	                pstmt.setString(1, (String) paraMap.get("odrcode"));
@@ -604,7 +605,7 @@ public class OrderDAO implements InterOrderDAO {
 	                
 	                int opoint = 0;
 	                // 적립금 사용하지 않았을 시 물건의 1% 적립
-	    	        if(Integer.parseInt((String)paraMap.get("odrusedpoint"))>0) {
+	    	        if(Integer.parseInt((String)paraMap.get("odrusedpoint")) == 0) {
 	    	        	opoint = Integer.parseInt(totalPriceArr[i]) / 100;
 	    	        }
 	                pstmt.setInt(5, opoint);
@@ -620,8 +621,7 @@ public class OrderDAO implements InterOrderDAO {
 
 	    //	4. 제품 테이블에서 주문량만큼 재고 감소 처리
 	        if(n2 == 1) {
-	            String[] pnumArr = (String[]) paraMap.get("pnumArr"); // 제품번호
-	            String[] oqtyArr = (String[]) paraMap.get("oqtyArr"); // 주문량
+	            
 
 	            int cnt = 0;
 	            for(int i=0; i<pnumArr.length; i++) {
@@ -656,24 +656,86 @@ public class OrderDAO implements InterOrderDAO {
 	           // 제품 상세정보 페이지에서 바로주문하기를 한 경우
 	           n4 = 1;
 	       }
+	       
 	    // 예치금결제시 예치금 감소, 적립금 사용시 적립금 감소, 적립금 미사용시 적립금 증가 + 내역 테이블에 insert
 	       if(n4 > 0) {
+	    	   
+	    	   String paymentMethod = (String)paraMap.get("paymentMethod");
+	    	   
+	    	  // 예치금결제시
+	    	   if(paymentMethod.equals("coin")) {
+	    		   sql = " update tbl_member set coin = coin - ? "
+	    	               + " where userid = ? ";
 
-	           sql = " update tbl_member set coin = coin - ? "
-	               + "                     , point = point + ? "
-	               + " where userid = ? ";
+	    	           pstmt = conn.prepareStatement(sql);
 
-	           pstmt = conn.prepareStatement(sql);
+	    	           pstmt.setInt(1, Integer.parseInt((String) paraMap.get("sumtotalPrice")) );
+	    	           pstmt.setString(2, (String) paraMap.get("userid"));
 
-	           pstmt.setInt(1, Integer.parseInt((String) paraMap.get("sumtotalPrice")) );
-	           pstmt.setInt(2, Integer.parseInt((String) paraMap.get("sumtotalPoint")));
-	           pstmt.setString(3, (String) paraMap.get("userid"));
+	    	           n5 = pstmt.executeUpdate();
+	    	           
+	    	           // 예치금 내역 insert
+	    	           if(n5 == 1) {
+	    	        	   sql = "insert into tbl_coin_history(coinno, fk_userid, coin_amount)"
+									+ " values(seq_coin_history.nextval, ?, ?)";
+							pstmt = conn.prepareStatement(sql);
+							pstmt.setString(1, (String) paraMap.get("userid"));
+							pstmt.setInt(2, Integer.parseInt((String) paraMap.get("sumtotalPrice")));
+							n6 = pstmt.executeUpdate();
+	    	           }
+	    	   }
+	    	   
+	    	   int odrusedpoint = Integer.parseInt((String)paraMap.get("odrusedpoint"));
+		    	// 적립금 사용시
+	   	        if(odrusedpoint > 0) {
+	   	        	sql = " update tbl_member set point = point - ? "
+		    	               + " where userid = ? ";
 
-	           n5 = pstmt.executeUpdate();
+    	            pstmt = conn.prepareStatement(sql);
+ 
+    	            pstmt.setInt(1, odrusedpoint );
+    	            pstmt.setInt(2, Integer.parseInt((String) paraMap.get("sumtotalPoint")));
+    	            pstmt.setString(3, (String) paraMap.get("userid"));
+
+		    	     n5 = pstmt.executeUpdate();
+		    	     // 적립금 내역 insert
+		    	     if(n5 == 1) {
+		    	    	 sql = "insert into tbl_point_history(pointno, fk_userid, point_amount)"
+									+ " values(seq_point_history.nextval, ?, ?)";
+							pstmt = conn.prepareStatement(sql);
+							pstmt.setString(1, (String) paraMap.get("userid"));
+							pstmt.setInt(2, odrusedpoint*(-1));
+							n6 = pstmt.executeUpdate();
+		    	     }
+	   	        }else {
+	   	        	// 적립금 미사용시
+	   	        	sql = " update tbl_member set point = point + ? "
+		    	               + " where userid = ? ";
+
+    	            pstmt = conn.prepareStatement(sql);
+ 
+    	            pstmt.setInt(1, odrusedpoint );
+    	            pstmt.setInt(2,  Integer.parseInt((String) paraMap.get("sumtotalPrice"))/ 100);
+    	            pstmt.setString(3, (String) paraMap.get("userid"));
+
+    	            n5 = pstmt.executeUpdate();
+		    	     
+		    	    // 적립금 내역 insert
+		    	    if(n5 == 1) {
+		    	    	sql = "insert into tbl_point_history(pointno, fk_userid, point_amount)"
+								+ " values(seq_point_history.nextval, ?, ?)";
+						pstmt = conn.prepareStatement(sql);
+						pstmt.setString(1,  (String) paraMap.get("userid"));
+						pstmt.setInt(2, Integer.parseInt((String) paraMap.get("sumtotalPrice"))/ 100);
+						n6 = pstmt.executeUpdate();   
+		    	    }
+	   	        }
+	   	        
+	           
 	       }
 
 	    // 7. 모든 처리 성공시 commit
-	       if(n1*n2*n3*n4*n5 > 0) {
+	       if(n1*n2*n3*n4*n5*n6 > 0) {
 	           conn.commit();
 	           conn.setAutoCommit(true); // 자동커밋으로 전환 
 	           nSuccess = 1;

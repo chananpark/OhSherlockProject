@@ -105,19 +105,34 @@ public class CompleteOrder extends AbstractController {
 		// 장바구니 테이블에 delete시 필요한 것
 		paraMap.put("cartnojoin", cartnojoin);
 		// 바로주문하기 한 경우라면 cartnojoin 의 값은 null임
-
-		// 주문하기 트랜잭션 메소드 실행
-		InterOrderDAO odao = new OrderDAO();
-		//int n = odao.completeOrder(paraMap);
 		
 		// 예치금 사용했으면 tbl_member 예치금 update, 예치금 내역 insert
 		paraMap.put("totalPaymentAmount", totalPaymentAmount);
-		
-		// tbl_member 적립금 update, 적립금 내역 insert
-		
-		// 장바구니에서 주문했으면 장바구니 delete
+
+		// 주문하기 트랜잭션 메소드 실행
+		InterOrderDAO odao = new OrderDAO();
+		int nSuccess = odao.completeOrder(paraMap);
 		
 		// 이메일 발송하기
+		
+		if(nSuccess == 1) {
+			String message = "주문이 완료되었습니다.";
+			String loc = request.getContextPath() + "/mypage/mypage.tea";
+
+			request.setAttribute("message", message);
+			request.setAttribute("loc", loc);
+
+			super.setViewPage("/WEB-INF/msg.jsp");
+		}else {
+			String message = "주문 실패";
+			String loc = request.getContextPath() + "/cart/cart.tea";
+
+			request.setAttribute("message", message);
+			request.setAttribute("loc", loc);
+
+			super.setViewPage("/WEB-INF/msg.jsp");
+		}
+		
 	}
 
 }
