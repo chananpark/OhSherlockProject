@@ -121,7 +121,7 @@
 	   function goCart(){
 	            
 	      // === 주문량에 대한 유효성 검사하기 ===
-	      const frm = document.cartOrderFrm;
+	      const frm = document.prodStorageFrm;
 	      
 	      const regExp = /^[0-9]+$/; // 숫자만 체크하는 정규표현식
 	      const oqty = frm.oqty.value;
@@ -153,6 +153,42 @@
 	   }// end of goCart() -----------------------------------------         
 	
 	   
+	   
+	   // 바로주문
+	   function goOrder(pnum) {
+		   
+		   var oqty = $("input[name='oqty']").val();
+		   var price = $("input[name='price']").val();
+		   var point = $("input[name='point']").val();
+		   var saleprice = $("input[name='saleprice']").val();
+
+		   var sumtotalOriginalPrice = Number(oqty) * Number(price); // 총구매정가
+		   var sumtotalPrice = Number(oqty) * Number(saleprice); // 총구매금액
+		   var sumtotalPoint = Number(oqty) * Number(point); // 
+		   
+		   if( sumtotalPrice < 30000 ) {
+			   sumtotalPrice += sumtotalPrice + 3000
+		   }
+		   
+		   var bool = confirm("총주문액 : "+sumtotalPrice+"원 결제하시겠습니까?");
+           
+           if(bool) {
+   			$("#oqtyjoin").val(oqty);
+   			$("#totalPricejoin").val(sumtotalPrice); // 상품구매금액
+   			$("#sumtotalPrice").val(sumtotalPrice);
+   			$("#sumtotalOriginalPrice").val(sumtotalOriginalPrice); // 총구매정가
+   			$("#sumtotalPoint").val(sumtotalPoint);
+   			
+   			const frm = document.prodStorageFrm;
+   			
+   			frm.method = "POST"; 
+   			frm.action = "<%=request.getContextPath()%>/shop/orderPayment.tea";
+   			frm.submit();
+           }
+		   
+		   
+	   } // end of function goOrder(pnum)
+	   
 </script>
 
 
@@ -160,12 +196,13 @@
 <div class="container productViewContainer">
 
 	<%-- 상품 상세 상단부 시작 --%>
+	<form name="prodStorageFrm">
 	<div id="product_top" class="row">
 		
 		<div id="product_img" class="col-md-6" style="text-align:center;">
 			<img src="../images/${pvo.pimage}" width="90%" />
 			<p class="mt-2">
-				<span class="mr-3"><i class="fab fa-envira mr-1"></i>적립금 ${requestScope.pvo.pqty} 찻잎 적립</span>
+				<span class="mr-3"><i class="fab fa-envira mr-1"></i>적립금 ${requestScope.pvo.point} 찻잎 적립</span>
 				<span class="mr-3"><i class="fas fa-truck-moving mr-1"></i>3만원 이상 무료배송</span>
 				<span><i class="fas fa-shopping-bag mr-1"></i>쇼핑백 동봉</span>
 			</p>
@@ -173,23 +210,37 @@
 	
 		<div id="product_title" class="col-md-6">
 			<p class="my-3 pt-3">
-				<span>티제품</span>
-				<span>&nbsp;>&nbsp;</span>
-				<span>티세트</span>
+				<span>
+					<c:if test="${pvo.fk_cnum == '1' || pvo.fk_cnum == '2' || pvo.fk_cnum == '3'}">
+						티제품
+					</c:if>
+					<c:if test="${pvo.fk_cnum == '4' || pvo.fk_cnum == '5' || pvo.fk_cnum == '6'}">
+						기프트세트
+					</c:if>
+				</span>
+				<span>
+					<c:if test="${pvo.fk_cnum == '1'}">
+						&nbsp;>&nbsp;녹차/말차
+					</c:if>
+					<c:if test="${pvo.fk_cnum == '2'}">
+						&nbsp;>&nbsp;홍차
+					</c:if>
+					<c:if test="${pvo.fk_cnum == '3'}">
+						&nbsp;>&nbsp;허브티
+					</c:if>
+				</span>
 			</p>		
 			<p class="h2" style="font-weight:bold;">${pvo.pname}</p>
-			<p>취향과 기분에 따라 다채로운 맛과 향을 즐기기 좋은, 알찬 구성의 베스트셀러 티 세트</p>
+			<p>${pvo.psummary}</p>
 			<p class="h5 row mt-5" >
 				<span class="col-9" style="text-align: left;" >상품 가격</span>
 				<span class="col-3" style="font-weight:bold; text-align: center;"><fmt:formatNumber value="${pvo.price}" pattern="###,###"/>원</span>
 			</p>
 			
-			<form name="cartOrderFrm">
 				<p class="h5 row" >
 					<label for="spinner" class="col-9" style="text-align: left; margin-top: 10px;">구매 수량</label> 
 					<span class="col-3"><input id="spinner" name="oqty" value="1" min="1" max="100" style="text-align: right; width: 50px;" /></span>		
 				</p>
-			</form> 
 			
 			<hr>
 			
@@ -205,7 +256,12 @@
             		</tr>
             		<tr>
               			<td class="col col-9 text-left">배송비</td>
-              			<td class="col col-3 text-right">2,500</td>
+              			<c:if test="${requestScope.pvo.saleprice >= 30000}">
+              				<td class="col col-3 text-right">배송비 무료</td>
+            			</c:if>
+            			<c:if test="${requestScope.pvo.saleprice < 30000}">
+              				<td class="col col-3 text-right">2,500원</td>
+            			</c:if>
             		</tr>
             		<tr>
               			<td class="col col-9" style="color:#1E7F15; font-weight:bolder;"><h4>결제예정금액</h4></td>
@@ -215,14 +271,23 @@
 	       </table>
 	       
 	       <%-- ==== 장바구니담기 또는 바로주문하기 폼 ==== --%>
-	       <form name="prodStorageFrm">
 		       <div class="row">
 				   <input class="productbtn" type="button" onclick="goLike();" value="찜하기" style="width: 30%; margin-left: 16px; margin-right: 12.5px;" />
 	               <input class="productbtn" type="button" onclick="goCart();" value="장바구니" style="width: 30%; margin-right: 12.5px;" />
-	               <input class="productbtn" type="button"  onclick="goOrder();" value="바로구매" style="width: 30%; background-color: #1E7F15; color:white;"/>
+	               <input class="productbtn" type="button"  onclick="goOrder('${pvo.pnum}');" value="바로구매" style="width: 30%; background-color: #1E7F15; color:white;"/>
 			   </div>
-			   <input type="hidden" name="pnum" value="${requestScope.pvo.pnum}" />
-		   </form>
+			   <input type="hidden" name="pnumjoin" id="pnumjoin" value="${requestScope.pvo.pnum}" />
+			   <input type="hidden" name="price" id="hidden_price" value="${requestScope.pvo.price}" />
+			   <input type="hidden" name="point" id="hidden_point" value="${requestScope.pvo.point}" />
+			   <input type="hidden" name="saleprice" id="hidden_saleprice" value="${requestScope.pvo.saleprice}" />
+			   <input type="hidden" name="pnamejoin " id="pnamejoin " value="${requestScope.pvo.pname}" />
+			   <input type="hidden" name="oqtyjoin  " id="oqtyjoin  " value="" />
+			   <input type="hidden" name="imagejoin   " id="imagejoin   " value="${pvo.pimage }" />
+			   <input type="hidden" name="totalPricejoin      " id="totalPricejoin      " value="" />
+			   <input type="hidden" name="sumtotalOriginalPrice     " id="sumtotalOriginalPrice     " value="" />
+			   <input type="hidden" name="sumtotalPrice     " id="sumtotalPrice     " value="" />
+			   <input type="hidden" name="cartnojoin     " id="cartnojoin     " value="" />
+			   
 		   
 		</div>
 		
@@ -262,6 +327,12 @@
 	
 	</div>
 	<%-- 상품 상세 페이지 끝--%>
+</form>
 </div>
 
 <%@ include file="../footer.jsp"%>
+
+
+
+
+
