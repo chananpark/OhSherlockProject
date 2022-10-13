@@ -192,7 +192,7 @@ input.cart { <%-- 여기 --%>
 <form name="eventClickFrm">
 
 <div class="container productListContainer">
-	<div><img src= "../images/이벤트배너.png" width=100%/></div>
+	<div><img src= "../images/이벤트상품배너.png" width=100%/></div>
      
 	<div class="row">
       	<%-- 사이드 메뉴 시작 --%>

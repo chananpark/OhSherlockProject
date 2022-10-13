@@ -254,14 +254,18 @@ public class OrderDAO implements InterOrderDAO {
 			
 			if(rs.next()) {
 				
-				ovo = new OrderVO(rs.getString(1), rs.getString(2), rs.getString(3), 
+				String delivery_date = rs.getString(14);
+				if(delivery_date!=null) {
+					delivery_date = rs.getString(14).substring(0,10);
+				}
+				ovo = new OrderVO(rs.getString(1), rs.getString(2), rs.getString(3).substring(0,10), 
 						rs.getString(4), aes.decrypt(rs.getString(5)), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9)
-						, rs.getInt(10), rs.getInt(11), rs.getInt(12), rs.getInt(13), rs.getString(14), rs.getString(15));
+						, rs.getInt(10), rs.getInt(11), rs.getInt(12), rs.getInt(13), delivery_date , rs.getString(18));
 				
 				MemberVO mvo = new MemberVO();
 				mvo.setName(rs.getString(15));
 				mvo.setMobile(aes.decrypt(rs.getString(16)));
-				mvo.setEmail(aes.decrypt(rs.getString(16)));
+				mvo.setEmail(aes.decrypt(rs.getString(17)));
 				
 				ovo.setMvo(mvo);
 			}
@@ -570,22 +574,29 @@ public class OrderDAO implements InterOrderDAO {
 	        // tbl_order 테이블 insert
 	        String sql = " insert into tbl_order(odrcode, fk_userid, recipient_name, recipient_mobile, "
 	        		+ "recipient_postcode, recipient_address, recipient_detail_address, recipient_extra_address,"
-	        		+ " odrtotalprice, delivery_cost, odrtotalpoint, recipient_memo)"
-                   + " values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+	        		+ " odrtotalprice, delivery_cost, odrtotalpoint, recipient_memo, odrusedpoint)"
+                   + " values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 
 	        pstmt = conn.prepareStatement(sql);
 	        pstmt.setString(1, (String) paraMap.get("odrcode"));
 	        pstmt.setString(2, (String) paraMap.get("userid"));
 	        pstmt.setString(3, (String) paraMap.get("recipient_name"));
-	        pstmt.setString(4, (String) paraMap.get("recipient_mobile"));
+	        pstmt.setString(4, aes.encrypt((String) paraMap.get("recipient_mobile")));
 	        pstmt.setString(5, (String) paraMap.get("recipient_postcode"));
 	        pstmt.setString(6, (String) paraMap.get("recipient_address"));
 	        pstmt.setString(7, (String) paraMap.get("recipient_detail_address"));
 	        pstmt.setString(8, (String) paraMap.get("recipient_extra_address"));
 	        pstmt.setString(9, (String) paraMap.get("sumtotalPrice"));
 	        pstmt.setString(10, (String) paraMap.get("delivery_cost"));
-	        pstmt.setInt(11, (int) paraMap.get("odrtotalpoint"));
+	        
+	        int opoint = 0;
+            // 적립금 사용하지 않았을 시 물건의 1% 적립
+	        if(Integer.parseInt((String)paraMap.get("odrusedpoint")) == 0) {
+	        	opoint = Integer.parseInt((String) paraMap.get("sumtotalPrice")) / 100;
+	        }
+	        pstmt.setInt(11, opoint);
 	        pstmt.setString(12, (String) paraMap.get("recipient_memo"));
+	        pstmt.setString(13, (String) paraMap.get("odrusedpoint"));
 
 	        n1 = pstmt.executeUpdate();
 
@@ -603,7 +614,7 @@ public class OrderDAO implements InterOrderDAO {
 	                pstmt.setString(3, oqtyArr[i]);
 	                pstmt.setString(4, totalPriceArr[i]);
 	                
-	                int opoint = 0;
+	                opoint = 0;
 	                // 적립금 사용하지 않았을 시 물건의 1% 적립
 	    	        if(Integer.parseInt((String)paraMap.get("odrusedpoint")) == 0) {
 	    	        	opoint = Integer.parseInt(totalPriceArr[i]) / 100;
@@ -685,7 +696,7 @@ public class OrderDAO implements InterOrderDAO {
 									+ " values(seq_coin_history.nextval, ?, ?)";
 							pstmt = conn.prepareStatement(sql);
 							pstmt.setString(1, (String) paraMap.get("userid"));
-							pstmt.setString(2, (String)paraMap.get("totalPaymentAmount"));
+							pstmt.setInt(2, (-1)*Integer.parseInt((String)paraMap.get("totalPaymentAmount")));
 							n6 = pstmt.executeUpdate();
 	    	           }
 	    	   }
@@ -745,7 +756,7 @@ public class OrderDAO implements InterOrderDAO {
 	           nSuccess = 1;
 	       }
 
-	    } catch(SQLException e) {
+	    } catch(SQLException | UnsupportedEncodingException | GeneralSecurityException e) {
 	        conn.rollback();
 	        conn.setAutoCommit(true); // 자동커밋으로 전환 
 	        nSuccess = 0;
