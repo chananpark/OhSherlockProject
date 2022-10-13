@@ -33,7 +33,6 @@ public class OrderCheck_cancel extends AbstractController {
 		}
 		else {
 			
-			
 			String method = request.getContextPath();
 			
 			if(!"POST".equalsIgnoreCase(method)) { 

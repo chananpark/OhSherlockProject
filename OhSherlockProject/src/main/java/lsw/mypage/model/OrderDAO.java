@@ -102,16 +102,16 @@ public class OrderDAO implements InterOrderDAO {
 		try {
 			conn = ds.getConnection();
 			
-			String sql = "select odnum, fk_pnum, oqty, oprice, fk_userid, odrdate, pname, pimage, odrcode "+
+			String sql = "select odnum, fk_pnum, oqty, oprice, fk_userid, odrdate, pname, pimage, odrcode, odrstatus "+
 						" from "+
 						" ( "+
-						" select rownum as rno, odnum, fk_pnum, oqty, oprice, fk_userid, odrdate, pname, pimage, odrcode "+
+						" select rownum as rno, odnum, fk_pnum, oqty, oprice, fk_userid, odrdate, pname, pimage, odrcode, odrstatus "+
 						" from "+
 						" ( "+
-						" select odnum, fk_pnum, oqty, oprice, fk_userid, odrdate, pname, pimage, odrcode "+
+						" select odnum, fk_pnum, oqty, oprice, fk_userid, odrdate, pname, pimage, odrcode, odrstatus "+
 						" from  "+
 						" ( "+
-						" select fk_userid, odrdate, odnum, fk_pnum, oqty, oprice, odrcode "+
+						" select fk_userid, odrdate, odnum, fk_pnum, oqty, oprice, odrcode, odrstatus "+
 						" from tbl_order join tbl_order_detail "+
 						" on odrcode = fk_odrcode   "+
 						" where fk_userid = ? and odrdate between ? and to_date(? ||' 23:59:59', 'yyyy-mm-dd hh24:mi:ss') "+
@@ -142,6 +142,7 @@ public class OrderDAO implements InterOrderDAO {
 				ovo.setFk_userid(rs.getString("fk_userid"));
 				ovo.setOdrdate(rs.getString("odrdate").substring(0, 10));
 				ovo.setOdrcode(rs.getString("odrcode"));
+				ovo.setOdrstatus(rs.getInt("odrstatus"));
 				
 				OrderDetailVO odvo = new OrderDetailVO();
 				odvo.setOdnum(rs.getInt("odnum"));

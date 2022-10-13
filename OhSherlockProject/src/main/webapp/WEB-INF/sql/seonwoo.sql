@@ -253,3 +253,10 @@ select *
 from tbl_order join tbl_order_detail
 on odrcode = fk_odrcode  
 where FK_USERID = 'pca719' and odrcode = 'O20221014-1'
+
+commit
+
+select ODRCODE, FK_USERID, to_char(ODRDATE,'yyyy-mm-dd hh24:mi:ss') as ODRDATE, ODRTOTALPRICE
+from tbl_order
+where FK_USERID = 'pca719'
+order by ODRDATE desc;

@@ -96,7 +96,13 @@
 			
 	    const oqty = $target.parents().find("input[name='hidden_oqty']").val(); 
 	    const oprice = $target.parents().find("input[name='oprice']").val(); 
-			// console.log($target.val())
+	    const name = $target.attr('name');
+	    
+	    
+			 console.log(name)
+			 console.log(oqty)
+			 console.log(oprice)
+			 console.log($target.val())
 			// 주문량보다 초과선택할경우
 			
 			if($target.val() > oqty ){
@@ -155,9 +161,7 @@
 	}
 	  
 	function goCancel() {
-	
 	   	
-	   	else {
 	         const allCnt = $("input:checkbox[name=odnum]").length; // 모든 체크박스의 개수
 	         
 	         const odnumArr = new Array(); // 제품번호 // DB에 넣기 위해서 받아오는데, 상품이 여러개 일 수 있으니 배열로 받아온다
@@ -187,11 +191,8 @@
 		   		  frm.method = 'post';
 		   		  frm.submit();
 	         }
-	   	}
-    
-
+	   	
 	}// end of function goRefund() 	
- 	
  	
  	
 </script> 
@@ -225,13 +226,13 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="ovo" items="${requestScope.orderList}">
+				<c:forEach var="ovo" items="${requestScope.orderList}" varStatus="status">
 					<tr>
 						<td><input type="checkbox" class="chkboxodnum" id="odnum${status.index}" name="odnum" value="${ovo.odvo.odnum}" onclick="clickCheckBox(this.form)"></td>
 						<td class="align-middle" style="text-align: center;">${ovo.odrdate}<br>[${ovo.odrcode}]</td>
 						<td><img src="<%=request.getContextPath() %>/images/${ovo.odvo.pvo.pimage}" width=100 height=100>${ovo.odvo.pvo.pname}</td>
-						<td><input class="spinner oqty" style="width:50px" name="oqty" value="${ovo.odvo.oqty}" required/></td>
-						<td class="align-middle">${ovo.odvo.oprice}</td>
+						<td><input class="spinner oqty" style="width:50px" name="oqty${status.index}" value="${ovo.odvo.oqty}" required/></td>
+						<td class="align-middle"><fmt:formatNumber value="${ovo.odvo.oprice}" pattern="#,###"/>원</td>
 					</tr>
 					<input type="hidden" name="oprice" value="${ovo.odvo.oprice}"/>
 					<input type="hidden" name="hidden_oqty" value="${ovo.odvo.oqty}"/>

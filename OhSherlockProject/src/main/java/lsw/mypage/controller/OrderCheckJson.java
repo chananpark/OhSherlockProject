@@ -131,6 +131,7 @@ public class OrderCheckJson extends AbstractController {
 				jsonObj.put("oprice", ovo.getOdvo().getOprice());
 				jsonObj.put("pname", ovo.getOdvo().getPvo().getPname());
 				jsonObj.put("pimage", ovo.getOdvo().getPvo().getPimage());
+				jsonObj.put("odrstatus", ovo.getOdrstatus());
 				
 				jsonArr.put(jsonObj);
 			}

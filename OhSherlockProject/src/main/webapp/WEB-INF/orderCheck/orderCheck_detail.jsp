@@ -29,10 +29,7 @@
 		
 		odrcode = "${ovo.odrcode}"; 
 		
-		
-		
 	});// end of $(document).ready()-----------------------
-
 
 	
 	function goMyOrderList() {
@@ -92,7 +89,12 @@
 						<td><img src="<%=request.getContextPath() %>/images/${ovo.odvo.pvo.pimage}" width=100 height=100 />${ovo.odvo.pvo.pname}</td>
 						<td class="align-middle">${ovo.odvo.oqty}</td>
 						<td class="align-middle">${ovo.odvo.oprice}</td>
-						<td class="align-middle"><input name="odrcode" type="hidden" value="${ovo.odrcode}" /></td>
+						<td class="align-middle">
+							<c:if test="${ovo.odrstatus eq '1'}">상품준비중</c:if>
+							<c:if test="${ovo.odrstatus eq '2'}">배송중</c:if>
+							<c:if test="${ovo.odrstatus eq '3'}">배송완료</c:if>
+						  <input name="odrcode" type="hidden" value="${ovo.odrcode}" />
+					  </td>
 						<c:set var="prodTotalPrice" value="${prodTotalPrice+ovo.odvo.oprice}"/>
 					</tr>
 				</c:forEach>
@@ -111,12 +113,11 @@
     </div>
     
     <div class="text-center" id="detail" style="display: block;"> <!-- 주문상세 id -->
-   <%-- <c:if test="${odrstatus eq 1}"> </c:if>--%>
-  	<input type="button" class="btn-secondary btnCancel" onclick="goCancel();" value="주문취소" style="width: 80px;"/>
-	  
-	  <%-- <c:if test="${odrstatus ne 1}"></c:if> --%>
- 	  <input type="button" class="btn-secondary btnRefund" onclick="goRefund();" value="환불신청" style="width: 80px;"/>
- 	  
+	    <%-- <c:if test="${odrstatus eq 1}"></c:if> --%>
+	  	 <input type="button" class="btn-secondary btnCancel" onclick="goCancel();" value="주문취소" style="width: 80px;"/>
+		  <%-- <c:if test="${odrstatus eq 1}"></c:if> --%>
+	 	   <input type="button" class="btn-secondary btnRefund" onclick="goRefund();" value="환불신청" style="width: 80px;"/>
+	 	  
 	  <input type="button" class="btn-secondary btnConfirm" value="구매확정" style="margin: 15px; width: 80px;"/>
     </div>
     
@@ -154,11 +155,7 @@
 	          <tbody>
 	            <tr>
 	              <td class="col col-9 text-left" style="padding-top: 20px; padding-bottom: 0.7px;">총 상품금액</td>
-	              <td class="col col-3 text-right" style="padding-top: 20px; padding-bottom: 0.7px;">12,000원</td>
-	            </tr>
-	            <tr>
-	              <td class="col col-9 text-left" style="padding-bottom: 0.7px;">총 할인금액</td>
-	              <td class="col col-3 text-right" style="padding-bottom: 0.7px;">0원</td>
+	              <td class="col col-3 text-right" style="padding-top: 20px; padding-bottom: 0.7px;"><fmt:formatNumber value="${prodTotalPrice}" pattern="#,###"/>원</td>
 	            </tr>
 	            <tr>
 	              <td class="col col-9 text-left">배송비</td>
@@ -166,11 +163,11 @@
 	            </tr>
 	            <tr style="border-top: 1px solid #d9d9d9;">
 	              <td class="col col-9" style="color:#1E7F15; font-weight:bolder; padding-bottom: 0.7px;"><h4>총 결제금액</h4></td>
-	              <td class="col col-3 text-right" style="color:#1E7F15; font-weight:bolder; padding-bottom: 0.7px;"><h4><fmt:formatNumber value="${ovo.odrtotalprice}" pattern="#,###"/>원</h4></td>
+	              <td class="col col-3 text-right" style="color:#1E7F15; font-weight:bolder; padding-bottom: 0.7px;"><h4><fmt:formatNumber value="${prodTotalPrice+ovo.delivery_cost}" pattern="#,###"/>원</h4></td>
 	            </tr>
 	            <tr>
 	              <td class="col col-9 text-left" style="padding-top: 0; padding-bottom: 0;">결제일자</td>
-	               <td class="col col-9 text-right" style="padding-top: 0; padding-bottom: 20px; font-size: 8pt;">${requestScope.ovo.odrdate}</td>
+	               <td class="col col-9 text-right" style="padding-top: 0; padding-bottom: 20px; font-size: 10pt;">${requestScope.ovo.odrdate}</td>
 	            </tr>
 	          </tbody>
 	        </table>

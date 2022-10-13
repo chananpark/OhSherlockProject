@@ -36,6 +36,24 @@
 		width: 20%;
 	}
 
+
+	/* 기간 탭 기본 css 시작 */
+	#btnClass .tablink {
+		background-color: white;
+		color: black;
+		float: left;
+		border: none;
+		outline: none;
+		cursor: pointer;
+		padding: 14px 0px;
+		font-size: 17px;
+		width: 11%;
+	}
+	
+	#btnClass .tablink:hover {
+		background-color: #e9ecef;
+		
+	}
 </style>    
     
     
@@ -63,6 +81,7 @@
 			search();
 		});
 		
+		/*
 		// 날짜선택 조회버튼 이벤트
 		$("input#datePickBtn").on('click', () => {
 			const now = new Date();
@@ -77,6 +96,7 @@
 			search();
 		});
 		
+		*/
 		// jQuery UI 의 datepicker
 		$("input.chooseDate").datepicker({
                  dateFormat: 'yy-mm-dd'  //Input Display Format
@@ -120,55 +140,33 @@
 			 			location.href = "<%= request.getContextPath() %>/mypage/orderCheck_detail.tea?odrcode="+odrcode+"&goBackURL=${requestScope.goBackURL}";
 		 		}); // end of $("tbody > tr").click(function()
         
+		  // datepicker에 기간 조회 
+      $("#datePickBtn").on('click',function(e){
+				const dateFrm = document.datepickerFrm;
+				dateFrm.action="<%=request.getContextPath()%>/mypage/orderCheck.tea";
+				dateFrm.submit();
+			});		
+		 	
+	   // 기간조회 탭버튼 클릭이벤트
+			$("button.period").on('click', (e) => {
+				const now = new Date();
+				period = $(e.target).attr("id");
+				endDate = formatDate(now);
+				startDate = formatDate(now.setMonth(now.getMonth()-Number(period)));
+				
+				$("input#hide_startDate").val(startDate);
+				$("input#hide_endDate").val(endDate);
+				
+				const datePeriod = document.datePeriod;
+				datePeriod.action="<%=request.getContextPath()%>/mypage/orderCheck.tea";
+				datePeriod.submit();
+			});
          
 	});// $(document).ready(function() {});
 
     function search() {
-	      // 주문목록 조회
-		 		$.ajax({
-		 			url:"<%=ctxPath%>/mypage/orderCheckJson.tea",
-		 			type:"get",
-		 			data:{ "currentShowPageNo": currentShowPageNo, "startDate":startDate, "endDate":endDate},
-		 			dataType:"JSON",
-		 			success:function(json){
-		          		// console.log(json); 
-		 							$("tbody").empty(); // 기존 내용 지우기
-		 							$("nav > ul").empty();
-		 							
-		 							let html = '';
-		          		
-		          		if (json.length == 0) {
-		          			
-		          			// 데이터가 존재하지 않는 경우
-		          		  html += "<tr><td colspan='4'>주문내역이 존재하지 않습니다.</td><tr>";
-			 	         		// 메시지 출력
-			 	         		$("tbody").html(html);
-			 	         		
-		          		}
-		          		else{
-		          			// 데이터가 존재하는 경우
-		   	         		$.each(json, function(index, item){
-		
-			 	         			html += "<tr><td class='align-middle' style='text-align: center;'>"+item.odrdate+"<br>[ "+item.odnum+" ]</td>"
-							 					 		 +"<td><img src='<%=request.getContextPath() %>/images/"+item.pimage+"' width=100 height=100 />"+item.pname+"</td>"
-							 							 +"<td class='align-middle'>"+item.oqty+"</td> "
-							 						 	 +"<td class='align-middle'>"+item.oprice+"</td>"
-							 							 +"<td class='align-middle'><input name='odrcode' type='hidden' value='"+item.odrcode+"' /></td></tr>";
-			 	         			
-			 							 if(item.pageBar != null){
-			 	         				$("nav > ul").html(item.pageBar);
-			 	         			}
-		   	         		
-		   	         		}); 
-		   	         		$("tbody").html(html);
-		          		 
-		   	         	} 
-		 			},
-		 			error: function(request, status, error){
-		 	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-		 	        }
-		 		});	
-
+    	
+    
 
 } // end of function search() {}-------------------
 	
@@ -188,17 +186,6 @@
  	    
  	}
 	
-	
-	
-	
-	<%-- function search() {
-		
-		 const frm = document.myOrderListFrm;
-		  frm.action = '<%=ctxPath%>/mypage/orderCheck.tea';
-		  frm.method = 'get';
-		  frm.submit();
-		
-	}// end of function search()-------- --%>
 </script>    
     
 <div class="container">
@@ -208,27 +195,35 @@
       <h2 style="font-weight: bold;">주문조회</h2><br>
       <hr style="background-color: black; height: 1.2px;"><br>
       <h5 style="font-weight: bold;">최근 주문내역</h5>
-    </div>  
-    <form id="myOrderListFrm">
-		   <div class="row bg-light" style="height: 80px; margin-top: 55px; width: 99.8%; margin-left: 0;">
-				<%-- 탭 버튼 --%>
-		    <div class="btn-group mx-auto" role="group" aria-label="Basic example" style="float: left;">
-				  <button id="1" type="button" class="btn btn-light period">1개월</button>
-				  <button id="3" type="button" class="btn btn-light period">3개월</button>
-				  <button id="6" type="button" class="btn btn-light period">6개월</button>
-				  <button id="12" type="button" class="btn btn-light period">12개월</button>
-				</div>
-			    
-		   	<%-- datepicker --%>  
-		    <div class="date" style="float: left; margin-top: 25px;">
-		    	<input class="chooseDate" type="text" id="startDate">
-					<span class="bar">~</span>
-					<input class="chooseDate" type="text" id="endDate">
-					<input type="button" id="datePickBtn" value="조회" style="margin-left: 10px; width: 80px;"/>
-				</div>
-			</div>
-    </form>
-     
+    </div>
+  
+    
+    <div class="row bg-light" style="height: 80px; margin-top: 55px; width: 99.8%; margin-left: 0;">
+		<%-- 탭 버튼 --%>
+	    <div class="btn-group mx-auto" role="group" aria-label="Basic example" style="float: left;">
+		  <button id="1" type="button" class="btn btn-light period">1개월</button>
+		  <button id="3" type="button" class="btn btn-light period">3개월</button>
+		  <button id="6" type="button" class="btn btn-light period">6개월</button>
+		  <button id="12" type="button" class="btn btn-light period">12개월</button>
+		</div>
+		
+		<form name="datePeriod">
+			<input type="hidden" id="hide_startDate"  name="startDate">
+			<input type="hidden" id="hide_endDate"  name="endDate">
+		</form>
+		
+	  <form id="datepickerFrm" name="datepickerFrm">  
+  	<%-- datepicker --%>  
+  	<div class="date" style="float: left; margin-top: 25px;">
+	    	<input class="chooseDate" type="text" id="startDate" name="startDate">
+			<span class="bar">~</span>
+			<input class="chooseDate" type="text" id="endDate"  name="endDate">
+			<input type="button" id="datePickBtn" value="조회" style="margin-left: 10px; width: 80px;"/>
+		</div>
+		
+		</form>	
+	</div>
+    
     <div>
 		<table class="table" style="margin-top: 80px;">
 			<colgroup>
@@ -254,7 +249,12 @@
 						<td><img src="<%=request.getContextPath() %>/images/${ovo.odvo.pvo.pimage}" width=100 height=100 />${ovo.odvo.pvo.pname}</td>
 						<td class="align-middle">${ovo.odvo.oqty}</td>
 						<td class="align-middle">${ovo.odvo.oprice}</td>
-						<td class="align-middle"><input name="odrcode" type="hidden" value="${ovo.odrcode}" /></td>
+						<td class="align-middle">
+							<c:if test="${ovo.odrstatus eq '1'}">상품준비중</c:if>
+							<c:if test="${ovo.odrstatus eq '2'}">배송중</c:if>
+							<c:if test="${ovo.odrstatus eq '3'}">배송완료</c:if>
+							<input name="odrcode" type="hidden" value="${ovo.odrcode}" />
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>
