@@ -18,8 +18,6 @@ public class Review_look extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		// 카테고리 목록을 조회해오기
-		super.getCategoryList(request);
 				
 		// *** 리뷰 상세보여주기 ***//
 		String pnum = request.getParameter("pnum");

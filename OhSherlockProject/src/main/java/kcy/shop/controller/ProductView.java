@@ -122,10 +122,18 @@ public class ProductView extends AbstractController {
 		
 		
 		
+		ReviewVO review_select_one = pdao.rnumReviewDetail(paraMap);
+		
+		request.setAttribute("review_select_one", review_select_one);
+		
+		System.out.println(review_select_one);
+		
+		// 상세이미지 가져오기 
+		List<Map<String,String>> imgDetailList = pdao.getImageDetail(pnum);
+		request.setAttribute("imgDetailList", imgDetailList);
 		
 		// 카테고리 목록을 조회해오기
 		super.getCategoryList(request);
-		
 		
 	//				InterProductDAO pdao = new ProductDAO();
 		
@@ -157,6 +165,16 @@ public class ProductView extends AbstractController {
 		//	super.setRedirect(false);
 			super.setViewPage("/WEB-INF/product/product_view.jsp"); 
 		}
+		
+		
+	
+		
+		
+		
+		
+		
+		
+		
 		
 		
 	}

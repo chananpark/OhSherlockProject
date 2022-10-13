@@ -33,6 +33,9 @@ public interface InterProductDAO {
 	// 리뷰번호 선택시 리뷰 자세히 보기
 	ReviewVO rnumReviewDetail(Map<String, String> paraMap) throws SQLException;
 
+	// 상세이미지 리스트 가져오기
+	List<Map<String, String>> getImageDetail(String pnum)  throws SQLException;
+
 	
 	
 

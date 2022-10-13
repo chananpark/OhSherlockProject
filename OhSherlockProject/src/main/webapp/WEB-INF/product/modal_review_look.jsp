@@ -71,19 +71,19 @@
 
 	<div class=" text-left">
 	
-		<div style="font-weight: bold; font-size: 20px; padding-bottom: 10px;">${pvo.pimage}</div> <br>
+		<div style="font-weight: bold; font-size: 20px; padding-bottom: 10px;">${pvo.pname}</div> <br>
 		
 
 	<table id="replyTbl">
 		<thead>
 			<tr>
-				<td class="p-2 pl-3">${requestScope.review_select_one.rcontent}</td>
+				<td class="p-2 pl-3">${rvo.rcontent}</td>
 				<td class="text-right p-2 pr-3">
 					<c:if test="${not empty review_look}">
 						${requestScope.pvo.point} 
 					</c:if>
 					<c:if test="${empty ivo.irevo}">
-					-
+					🍵
 					</c:if>
 				</td>
 			</tr>

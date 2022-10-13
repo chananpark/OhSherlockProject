@@ -347,5 +347,11 @@ from TBL_REVIEW
 where fk_pnum = 1
 order by 1 desc
 
+commit;
 
+
+select pnum, pname, pimage, imgfileno, imgfilename
+from tbl_product P join tbl_product_imagefile I
+on P.pnum = I.fk_pnum
+where pnum = 14
 

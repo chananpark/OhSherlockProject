@@ -1,14 +1,11 @@
 package kcy.shop.model;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,11 +14,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import common.model.FaqVO;
-import common.model.MemberVO;
 import common.model.ProductVO;
 import common.model.ReviewVO;
-import common.model.SpecVO;
 
 public class ProductDAO implements InterProductDAO {
 
@@ -328,11 +322,11 @@ public class ProductDAO implements InterProductDAO {
 				conn = ds.getConnection();
 
 				String sql = " select rsubject, rcontent, score "+
-							 " from TBL_REVIEW "+
-							 " where rnum = ? ";
+							 " from TBL_REVIEW ";
+//							 " where rnum = ? ";
 
 				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1, rnum);
+//				pstmt.setString(1, rnum);
 				
 				rs = pstmt.executeQuery();
 
@@ -363,7 +357,7 @@ public class ProductDAO implements InterProductDAO {
 			try {
 				conn = ds.getConnection();
 
-				String sql = " select rsubject, rcontent, score "+
+				String sql = " select rnum, rsubject, rcontent, score "+
 							 " from TBL_REVIEW "+
 							 " where rnum = ? ";
 
@@ -375,9 +369,10 @@ public class ProductDAO implements InterProductDAO {
 				if (rs.next()) {
 					rvo = new ReviewVO();
 					
-					rvo.setRsubject(rs.getString(1));
-					rvo.setRcontent(rs.getString(2));
-					rvo.setScore(rs.getInt(3));
+					rvo.setRnum(rs.getInt(1));
+					rvo.setRsubject(rs.getString(2));
+					rvo.setRcontent(rs.getString(3));
+					rvo.setScore(rs.getInt(4));
 
 				}
 
@@ -389,6 +384,55 @@ public class ProductDAO implements InterProductDAO {
 			
 			
 		}// end of 리뷰번호 선택시 리뷰 자세히 보기 ----------------------------------------------
+
+		
+		// 상세이미지 리스트 가져오기
+		@Override
+		public List<Map<String, String>> getImageDetail(String pnum)  throws SQLException {
+
+			List<Map<String, String>> imgDetailList = new ArrayList<>();
+			
+			try {
+
+				conn = ds.getConnection();
+				
+				String sql = "select pnum, pname, pimage, imgfileno, imgfilename \n"+
+							"from tbl_product P join tbl_product_imagefile I\n"+
+							"on P.pnum = I.fk_pnum\n"+
+							"where pnum = ? ";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, pnum);
+				
+				rs = pstmt.executeQuery();
+				
+				// 복수개의 행 출력
+				while(rs.next()) {
+					
+					 pnum = rs.getString("pnum");
+					 String pname = rs.getString("pname");
+					 String pimage = rs.getString("pimage");
+					 String imgfileno = rs.getString("imgfileno");
+					 String imgfilename = rs.getString("imgfilename");
+					 
+
+					 HashMap<String,String> imgrmap = new HashMap<>();
+					 imgrmap.put("pnum", pnum);
+					 imgrmap.put("pname", pname);
+					 imgrmap.put("pimage", pimage);
+					 imgrmap.put("imgfileno", imgfileno);
+					 imgrmap.put("imgfilename", imgfilename);
+					 
+					 imgDetailList.add(imgrmap);
+					
+				} // end of while
+				
+			} finally {
+				close();
+			}
+		
+			return imgDetailList;
+		} // end of public List<Map<String, String>> getImageDetail(String pnum)
 
 		
 	
