@@ -63,8 +63,8 @@ public interface InterProductDAO {
 	// 해당제품을 사용자가 실제 구매했는지 여부를 알아오는 것임. 구매했다라면 true, 구매하지 않았으면 false
 	boolean isOrder(Map<String, String> paraMap) throws SQLException;
 
-	// tbl_review 테이블에 상품리뷰 insert 하기
-	int productReview(ReviewVO rvo) throws SQLException;
+	// 특정 상품의 리뷰를 입력하는 것(insert)
+	int addProductReview(ReviewVO rvo) throws SQLException;
 
 
 	

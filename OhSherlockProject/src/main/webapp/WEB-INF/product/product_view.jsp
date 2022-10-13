@@ -264,5 +264,4 @@
 	<%-- 상품 상세 페이지 끝--%>
 </div>
 
-
 <%@ include file="../footer.jsp"%>

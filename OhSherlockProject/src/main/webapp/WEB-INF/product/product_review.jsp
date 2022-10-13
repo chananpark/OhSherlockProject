@@ -55,8 +55,8 @@
                 $(".hidden").css("display", "none");
             }
         });
-	
-	});
+		
+	});// end of 
 	
 
 </script>
