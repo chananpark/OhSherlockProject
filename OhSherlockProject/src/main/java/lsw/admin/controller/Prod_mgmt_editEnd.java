@@ -61,12 +61,7 @@ public class Prod_mgmt_editEnd extends AbstractController {
            psummary = psummary.replaceAll(">", "&gt;");
            psummary = psummary.replaceAll("\r\n", "<br>");
            
-           // !!!! 크로스 사이트 스크립트 공격에 대응하는 안전한 코드(시큐어코드) 작성하기 !!!! // 
-           String pcontent = mtrequest.getParameter("pcontent");
-           pcontent = pcontent.replaceAll("<", "&lt;");
-           pcontent = pcontent.replaceAll(">", "&gt;");
-           pcontent = pcontent.replaceAll("\r\n", "<br>");
-           
+
            String point = mtrequest.getParameter("point");
            
            InterProductDAO pdao = new ProductDAO();
@@ -80,7 +75,6 @@ public class Prod_mgmt_editEnd extends AbstractController {
            pvo.setPnum(pnum);
            pvo.setPname(pname);
            pvo.setPsummary(psummary);
-           pvo.setPcontent(pcontent);
            pvo.setPqty(Integer.parseInt(pqty));
            pvo.setPrice(Integer.parseInt(price));
            pvo.setSaleprice(Integer.parseInt(saleprice));
