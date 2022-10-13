@@ -476,7 +476,7 @@ public class ProductDAO implements InterProductDAO {
 				
 				conn = ds.getConnection();
 
-		        String sql = "SELECT rownum pnum, pname, pimage, price, saleprice from "
+		        String sql = "SELECT rownum, pnum, pname, pimage, price, saleprice from "
 		        		+ "(SELECT pnum, pname, pimage, price, saleprice FROM tbl_product ORDER BY pnum desc)"
 		        		+ "where rownum between 1 and 4";
 		        pstmt = conn.prepareStatement(sql);

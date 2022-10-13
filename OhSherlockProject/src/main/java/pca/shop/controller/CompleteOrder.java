@@ -61,13 +61,17 @@ public class CompleteOrder extends AbstractController {
 		String totalPaymentAmount = request.getParameter("totalPaymentAmount");
 		// 장바구니 번호들
 		String cartnojoin = request.getParameter("cartnojoin");
+		
 		// 결제시 사용된 적립금
 		String odrusedpoint = request.getParameter("odrusedpoint");
+		// 결제방법
+		String paymentMethod = request.getParameter("paymentMethod");
 		
 		// 주문으로인해 적립되는 적립금
 		int odrtotalpoint = 0;
+		// 적립금을 사용하여 주문하지 않았으면 1% 적립
 		if(Integer.parseInt(odrusedpoint) == 0) {
-			odrtotalpoint = Integer.parseInt(sumtotalPrice);
+			odrtotalpoint = Integer.parseInt(sumtotalPrice)/100;
 		}
 		
 		Map<String, Object> paraMap = new HashMap<>();
@@ -107,6 +111,7 @@ public class CompleteOrder extends AbstractController {
 		// 바로주문하기 한 경우라면 cartnojoin 의 값은 null임
 		
 		// 예치금 사용했으면 tbl_member 예치금 update, 예치금 내역 insert
+		paraMap.put("paymentMethod", paymentMethod);
 		paraMap.put("totalPaymentAmount", totalPaymentAmount);
 
 		// 주문하기 트랜잭션 메소드 실행
