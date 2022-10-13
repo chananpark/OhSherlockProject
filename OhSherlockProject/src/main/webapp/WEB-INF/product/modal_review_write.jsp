@@ -55,12 +55,6 @@
 					return;  // 종료
 				}
 				
-				/*
-					if(review_score == "") {  // 제품사용 내용이 없는 경우
-						alert("평점을 선택해주세요.");
-						return;  // 종료
-					}
-				*/
 				// === 보내야할 데이터를 선정하는 첫번째 방법 ===
 				<%--
 				const queryString = {"fk_userid":"${sessionScope.loginuser.userid}",   // ${sessionScope.loginuser.userid} 은 문자열타입이므로 꼭 "" 안에 적어줘야 한다.
@@ -93,7 +87,7 @@
 				    		alert("상품 리뷰가 등록되었습니다.");
 				    	}
 				    	else {  // insert 실패시(후기 중복 작성시))
-				    		// 동일한 제품에 대하여 동일한 회원이 제품후기를 2번 쓰려고 경우 unique 제약에 위배됨.
+				    		// 동일한 상품에 대하여 동일한 회원이 제품후기를 2번 쓰려고 경우 unique 제약에 위배됨.
 				    		alert("이미 후기를 작성하셨습니다."); 
 				    	}
 				    	
@@ -113,9 +107,6 @@
 		});// end of $("button#btnCommentOK").click(function(){});----------------
 		
 		
-		
-		
-		
 	});// end of $(document).ready(function(){}------------------------
 			
 	
@@ -125,14 +116,14 @@
 </script>
 
 <form name="reviewFrm"
-      action="<%= request.getContextPath()%>/shop/writeReview.tea"   <%-- action 은 본인페이지로 보낸다. --%>
+      action="<%= request.getContextPath()%>/shop/reviewRegister.tea"   <%-- action 은 본인페이지로 보낸다. --%>
       method="post"
       enctype="multipart/form-data">
       
 	<ul style="list-style-type: none">
 	
     	<li style="margin: 25px 0">
-    		<input type="hidden" name="userid" value="${sessionScope.loginuser.userid}" />  <%-- 사용후기를 적은 사용자 userid --%>
+    		<input type="text" name="userid" value="${sessionScope.loginuser.userid}" />  <%-- 사용후기를 적은 사용자 userid --%>
     		<input type="hidden" name="pnum" value="${requestScope.pvo.pnum}" />      <%-- 사용후기를 적은 상품번호 --%>
         	<label for="name" style="display: inline-block; width: 90px">제목<span class="text-danger">*</span></label>
             <input type="text" class="reviewData" name="subject" id="subject" size="50" placeholder="제목을 입력하세요." autocomplete="off" required />
@@ -168,11 +159,12 @@
 				</span>
 			</div>
      	</li>
-     	<li style="margin: 25px 0">
-        	<label for="photo" style="display: inline-block; width: 100px">사진 첨부</label>
+     	<%-- <li style="margin: 25px 0">
+        	<label for="image" style="display: inline-block; width: 100px">사진 첨부</label>
         	<br>
-            <input type="file" class="reviewData" name="photo" id="photo" size="50"/>
+            <input type="file" class="image" name="image" id="image" size="50"/>
      	</li>
+     	--%>
 	</ul>
 	
 	<div class="my-3">

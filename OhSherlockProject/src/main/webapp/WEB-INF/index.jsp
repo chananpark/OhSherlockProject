@@ -23,7 +23,7 @@
 					<div class="carousel-caption d-none d-md-block">
 						<!-- d-none 은 display : none; 이므로 화면에 보이지 않다가, d-md-block 이므로 d-md-block 은 width 가 768px이상인 것에서만 display: block; 으로 보여라는 말이다.  -->
 						<h4 class="bannerTitle pb-4">
-							10월 포토 리뷰 이벤트<br>
+							10월 우수 리뷰 이벤트<br>
 						</h4>
 						<p>
 							완연한 가을에 마시는 따뜻한 차 한잔<br>지금 여러분의 티타임을 보여주세요!<br>

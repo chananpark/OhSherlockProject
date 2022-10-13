@@ -243,7 +243,7 @@ public class OrderDAO implements InterOrderDAO {
 			String sql = "select odrcode, fk_userid, odrdate, recipient_name, recipient_mobile, recipient_postcode, "
 					+ "recipient_address, recipient_detail_address, recipient_extra_address, "
 					+ "odrtotalprice, odrtotalpoint, delivery_cost, odrstatus, delivery_date, "
-					+ "name, mobile, email "
+					+ "name, mobile, email, recipient_memo "
 					+ "from tbl_order join tbl_member "
 					+ "on fk_userid = userid "
 					+ "where odrcode = ?";
@@ -256,7 +256,7 @@ public class OrderDAO implements InterOrderDAO {
 				
 				ovo = new OrderVO(rs.getString(1), rs.getString(2), rs.getString(3), 
 						rs.getString(4), aes.decrypt(rs.getString(5)), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9)
-						, rs.getInt(10), rs.getInt(11), rs.getInt(12), rs.getInt(13), rs.getString(14));
+						, rs.getInt(10), rs.getInt(11), rs.getInt(12), rs.getInt(13), rs.getString(14), rs.getString(15));
 				
 				MemberVO mvo = new MemberVO();
 				mvo.setName(rs.getString(15));
@@ -591,10 +591,10 @@ public class OrderDAO implements InterOrderDAO {
 
 	        // tbl_order_detail에 insert
 	        if(n1 == 1) {
-	            
+	        		        		            
 	            int cnt = 0;
 	            for(int i=0; i<pnumArr.length; i++) {
-	                sql = " insert into tbl_order_detail(odnum, fk_odrcode, fk_pnum, oqty, odrprice, opoint) " 
+	                sql = " insert into tbl_order_detail(odnum, fk_odrcode, fk_pnum, oqty, oprice, opoint) " 
 	                    + " values(seq_tbl_order_detail.nextval, ?, to_number(?), to_number(?), to_number(?), ?) ";
 
 	                pstmt = conn.prepareStatement(sql);
@@ -608,9 +608,11 @@ public class OrderDAO implements InterOrderDAO {
 	    	        if(Integer.parseInt((String)paraMap.get("odrusedpoint")) == 0) {
 	    	        	opoint = Integer.parseInt(totalPriceArr[i]) / 100;
 	    	        }
+	    	        
 	                pstmt.setInt(5, opoint);
 
 	                pstmt.executeUpdate();
+
 	                cnt++;
 	            }
 
@@ -640,6 +642,8 @@ public class OrderDAO implements InterOrderDAO {
 	                n3 = 1;
 	            }
 	        }
+	        
+	        
 	    // 5. 장바구니 테이블에서 cartnojoin 값에 해당하는 행들을 삭제 
 	       if(paraMap.get("cartnojoin") != null && n3==1) {
 	           String cartnojoin = (String) paraMap.get("cartnojoin");
@@ -657,6 +661,7 @@ public class OrderDAO implements InterOrderDAO {
 	           n4 = 1;
 	       }
 	       
+	       
 	    // 예치금결제시 예치금 감소, 적립금 사용시 적립금 감소, 적립금 미사용시 적립금 증가 + 내역 테이블에 insert
 	       if(n4 > 0) {
 	    	   
@@ -669,7 +674,7 @@ public class OrderDAO implements InterOrderDAO {
 
 	    	           pstmt = conn.prepareStatement(sql);
 
-	    	           pstmt.setInt(1, Integer.parseInt((String) paraMap.get("sumtotalPrice")) );
+	    	           pstmt.setInt(1, Integer.parseInt((String)paraMap.get("totalPaymentAmount")));
 	    	           pstmt.setString(2, (String) paraMap.get("userid"));
 
 	    	           n5 = pstmt.executeUpdate();
@@ -680,10 +685,11 @@ public class OrderDAO implements InterOrderDAO {
 									+ " values(seq_coin_history.nextval, ?, ?)";
 							pstmt = conn.prepareStatement(sql);
 							pstmt.setString(1, (String) paraMap.get("userid"));
-							pstmt.setInt(2, Integer.parseInt((String) paraMap.get("sumtotalPrice")));
+							pstmt.setString(2, (String)paraMap.get("totalPaymentAmount"));
 							n6 = pstmt.executeUpdate();
 	    	           }
 	    	   }
+
 	    	   
 	    	   int odrusedpoint = Integer.parseInt((String)paraMap.get("odrusedpoint"));
 		    	// 적립금 사용시
@@ -694,8 +700,7 @@ public class OrderDAO implements InterOrderDAO {
     	            pstmt = conn.prepareStatement(sql);
  
     	            pstmt.setInt(1, odrusedpoint );
-    	            pstmt.setInt(2, Integer.parseInt((String) paraMap.get("sumtotalPoint")));
-    	            pstmt.setString(3, (String) paraMap.get("userid"));
+    	            pstmt.setString(2, (String) paraMap.get("userid"));
 
 		    	     n5 = pstmt.executeUpdate();
 		    	     // 적립금 내역 insert
@@ -714,9 +719,8 @@ public class OrderDAO implements InterOrderDAO {
 
     	            pstmt = conn.prepareStatement(sql);
  
-    	            pstmt.setInt(1, odrusedpoint );
-    	            pstmt.setInt(2,  Integer.parseInt((String) paraMap.get("sumtotalPrice"))/ 100);
-    	            pstmt.setString(3, (String) paraMap.get("userid"));
+    	            pstmt.setInt(1, Integer.parseInt((String) paraMap.get("sumtotalPrice"))/ 100);
+    	            pstmt.setString(2, (String) paraMap.get("userid"));
 
     	            n5 = pstmt.executeUpdate();
 		    	     
@@ -730,7 +734,7 @@ public class OrderDAO implements InterOrderDAO {
 						n6 = pstmt.executeUpdate();   
 		    	    }
 	   	        }
-	   	        
+		    	  
 	           
 	       }
 
@@ -745,6 +749,7 @@ public class OrderDAO implements InterOrderDAO {
 	        conn.rollback();
 	        conn.setAutoCommit(true); // 자동커밋으로 전환 
 	        nSuccess = 0;
+	        e.printStackTrace();
 
 	    } finally {
 	        close();

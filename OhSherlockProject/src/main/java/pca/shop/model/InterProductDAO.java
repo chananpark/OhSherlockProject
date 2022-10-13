@@ -36,5 +36,8 @@ public interface InterProductDAO {
 	// 주문번호 시퀀스 채번
 	int getSeq_tbl_order() throws SQLException;
 
+	// 주문한상품 정보 가져오기
+	List<ProductVO> getJumunProductList(String pnumjoin) throws SQLException;
+
 
 }

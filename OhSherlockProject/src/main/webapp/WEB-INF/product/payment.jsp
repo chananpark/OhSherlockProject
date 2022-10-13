@@ -86,13 +86,18 @@
 		$("#saleNpoint > table > tbody > tr.saleNpointInfo > td:last-child").addClass("col col-3");
 		//////////////////////////
 
+		$("#td_paymentMethod").text("예치금");
+		
 		// 예치금 결제 선택시 현재 예치금 알려주기
 		$("input[name='paymentMethod']").change((e)=>{
 			if($(e.target).val() == "coin") {
 				$("#currentCoin").show();
+				$("#td_paymentMethod").text("예치금");
 			}	else {
 				$("#currentCoin").hide();
+				$("#td_paymentMethod").text("신용카드");
 			}	
+			
 		});
 		
 		// 할인금액 넣어주기
@@ -313,13 +318,13 @@ function pay() {
 	}
 	
 	const totalOrderPrice = Number(${sumtotalPrice})-Number($("#odrusedpoint").val());
-	
 	if($('input[name=paymentMethod]:checked').val() == "card") {
 		cardPayment(totalOrderPrice);
 	}
 	else{
-		if(Number(${loginuser.coin}) > totalOrderPrice)
+		if(Number(${loginuser.coin}) > totalOrderPrice){
 			frmSubmit();
+		}
 		else {
 			alert("보유하신 예치금이 부족합니다.");
 			return;
@@ -530,7 +535,7 @@ function frmSubmit() {
 					<tr>
 						<td class="col col-9 text-left"
 							style="padding-top: 0; padding-bottom: 0;">결제수단</td>
-						<td class="col col-3 text-right"
+						<td id="td_paymentMethod" class="col col-3 text-right"
 							style="padding-top: 0;" class="pb-2"></td>
 					</tr>
 				</tbody>

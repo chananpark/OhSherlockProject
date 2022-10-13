@@ -61,7 +61,7 @@ public interface InterProductDAO {
 	int reviewLike(String rnum) throws SQLException;
 
 	// 해당제품을 사용자가 실제 구매했는지 여부를 알아오는 것임. 구매했다라면 true, 구매하지 않았으면 false
-	boolean isOrder(Map<String, String> paraMap) throws SQLException;
+	// boolean isOrder(Map<String, String> paraMap) throws SQLException;
 
 	// 특정 상품의 리뷰를 입력하는 것(insert)
 	int addProductReview(ReviewVO rvo) throws SQLException;
