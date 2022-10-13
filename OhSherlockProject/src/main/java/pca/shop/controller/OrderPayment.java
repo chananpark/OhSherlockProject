@@ -92,6 +92,10 @@ public class OrderPayment extends AbstractController {
 			int saleAmount = sumtotalOriginalPrice - sumtotalPrice;
 					
 			request.setAttribute("odList", odList);
+			request.setAttribute("pnumjoin", pnumjoin);
+			request.setAttribute("pnamejoin", pnamejoin);
+			request.setAttribute("oqtyjoin", oqtyjoin);
+			request.setAttribute("totalPricejoin", totalPricejoin);
 			request.setAttribute("cartnojoin", cartnojoin);
 			request.setAttribute("saleAmount", saleAmount);
 			request.setAttribute("sumtotalPrice", sumtotalPrice);
