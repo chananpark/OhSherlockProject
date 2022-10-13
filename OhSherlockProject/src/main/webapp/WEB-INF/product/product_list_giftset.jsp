@@ -363,7 +363,7 @@ function clickCart(pnum) {
 					<span id="subtitle" class="text-dark h5" style="font-weight:bold;">전체 상품</span>
 					
 					<%-- 정렬 선택 창 --%>
-					<div class="text-right" style="float: right;">
+					<div class="text-right" >
 					<button type="button" class="order selected" id="pnum desc">신상품순</button>
 					<span class="text-dark">|</span>
 					<button type="button" class="order" id="price desc">높은가격순</button>
