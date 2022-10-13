@@ -118,9 +118,23 @@ public class CompleteOrder extends AbstractController {
 		InterOrderDAO odao = new OrderDAO();
 		int nSuccess = odao.completeOrder(paraMap);
 		
-		// 이메일 발송하기
-		
 		if(nSuccess == 1) {
+			
+			// 이메일 발송하기
+			
+			// session loginuser정보 update
+			if(paymentMethod.equals("coin")) {
+				loginuser.setCoin(loginuser.getCoin() - Integer.parseInt(totalPaymentAmount)); // 코인빼기
+			}
+			// 결제시 포인트 사용하였으면
+			if(Integer.parseInt(odrusedpoint) > 0) {
+				
+				loginuser.setPoint(loginuser.getPoint() - Integer.parseInt(odrusedpoint)); // 포인트빼기
+			}else {
+				loginuser.setPoint(loginuser.getPoint() + Integer.parseInt(sumtotalPrice)/100); // 포인트더하기
+			}
+			
+			
 			String message = "주문이 완료되었습니다.";
 			String loc = request.getContextPath() + "/mypage/mypage.tea";
 

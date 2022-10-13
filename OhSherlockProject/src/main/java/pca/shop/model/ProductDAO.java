@@ -528,4 +528,42 @@ public class ProductDAO implements InterProductDAO {
 		    return seq;
 		}
 
+		@Override
+		public List<ProductVO> getJumunProductList(String pnumjoin) throws SQLException {
+			List<ProductVO> jumunProductList = new ArrayList<>();
+		      
+		       try {
+		           conn = ds.getConnection();
+		         
+		           String[] pnumArr = pnumjoin.split("\\,"); 
+		           pnumjoin = String.join("','", pnumArr);   
+		           pnumjoin = "'"+pnumjoin+"'";            
+		          
+		           String sql = " select pnum, pname, saleprice, pimage"
+		                    + " from tbl_product "
+		                    + " where pnum in ("+pnumjoin+") "; 
+		          
+		           pstmt = conn.prepareStatement(sql);
+		          
+		           rs = pstmt.executeQuery();
+		          
+		           while(rs.next()) {
+		             
+		              ProductVO pvo = new ProductVO();
+		             
+		              pvo.setPnum(rs.getInt(1));       
+		              pvo.setPname(rs.getString(2));  
+		              pvo.setSaleprice(rs.getInt(3));   
+		              pvo.setPimage(rs.getString(4)); 
+		                 
+		              jumunProductList.add(pvo);
+		           }// end of while-----------------------------
+		          
+		       } finally {
+		          close();
+		       }
+		      
+		       return jumunProductList;
+		}
+
 }
