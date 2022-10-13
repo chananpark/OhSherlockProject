@@ -195,14 +195,26 @@
   		var totalDiscountSum = 0;
   		
 		var count = frm.pnum.length;
-	  	for(var i=0; i < count; i++ ){
-	  		if( frm.pnum[i].checked == true ){
-  				totalSalePriceSum += parseInt( (frm.saleprice[i].value)*(frm.oqty[i].value) );
-  				totalPointSum += parseInt( (frm.point[i].value)*(frm.oqty[i].value) );
-  				totalDiscountSum += (parseInt( (frm.price[i].value)*(frm.oqty[i].value)) - parseInt( (frm.saleprice[i].value)*(frm.oqty[i].value) ));
-      		}
-		}
+		if(count == undefined) count = 1;
+		
+		if( count == 1) {
+			if( frm.pnum.checked == true ){
+				totalSalePriceSum = parseInt( (frm.saleprice.value)*(frm.oqty.value) );
+				totalPointSum += parseInt( (frm.point.value)*(frm.oqty.value) );
+				totalDiscountSum += (parseInt( (frm.price.value)*(frm.oqty.value)) - parseInt( (frm.saleprice.value)*(frm.oqty.value) ));
+			}	
+		} else if (count > 1) {
+		
+		  	for(var i=0; i < count; i++ ){
+		  		if( frm.pnum[i].checked == true ){
+	  				totalSalePriceSum += parseInt( (frm.saleprice[i].value)*(frm.oqty[i].value) );
+	  				totalPointSum += parseInt( (frm.point[i].value)*(frm.oqty[i].value) );
+	  				totalDiscountSum += (parseInt( (frm.price[i].value)*(frm.oqty[i].value)) - parseInt( (frm.saleprice[i].value)*(frm.oqty[i].value) ));
+	      		}
+			}
 	  	
+		}
+		
 		$("#ValTotalPrice").html(totalSalePriceSum.toLocaleString('en')+"원");
 		$("#ValTotalPoint").html(totalPointSum.toLocaleString('en')+"찻잎");
 		$("#ValTotalDiscount").html(totalDiscountSum.toLocaleString('en')+"원");
