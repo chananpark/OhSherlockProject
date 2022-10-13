@@ -17,7 +17,7 @@ public class ReviewVO {  // (오라클로 말하면 제품테이블의 자식테
 	private OrderDetailVO oddt;  // 주문상세정보객체 (오라클로 말하면 부모테이블인 주문상세테이블)
 
 	public ReviewVO() {}  // 기본생성자
-    
+ 
 	public ReviewVO(int rnum, int odnum, int pnum, String userid, int score, String rsubject, String rcontent,
 			String rimage, String odrcode, String writeDate, ProductVO prod, OrderDetailVO oddt) {  // 파라미터 있는 생성자
 		this.rnum = rnum;
@@ -132,12 +132,17 @@ public class ReviewVO {  // (오라클로 말하면 제품테이블의 자식테
 	}
 
 	
+	
+	
 	@Override
 	public String toString() {
 		return "ReviewVO [rnum=" + rnum + ", odnum=" + odnum + ", pnum=" + pnum + ", userid=" + userid + ", score="
 				+ score + ", rsubject=" + rsubject + ", rcontent=" + rcontent + ", rimage=" + rimage + ", odrcode="
 				+ odrcode + ", writeDate=" + writeDate + ", prod=" + prod + ", oddt=" + oddt + "]";
 	}
+
+	
+	
 
 
 
