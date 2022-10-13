@@ -121,7 +121,7 @@
       function goCart(){
                
          // === 주문량에 대한 유효성 검사하기 ===
-         const frm = document.cartOrderFrm;
+         const frm = document.prodStorageFrm;
          
          const regExp = /^[0-9]+$/; // 숫자만 체크하는 정규표현식
          const oqty = frm.oqty.value;
@@ -153,6 +153,42 @@
       }// end of goCart() -----------------------------------------         
    
       
+      
+      // 바로주문
+      function goOrder(pnum) {
+         
+         var oqty = $("input[name='oqty']").val();
+         var price = $("input[name='price']").val();
+         var point = $("input[name='point']").val();
+         var saleprice = $("input[name='saleprice']").val();
+
+         var sumtotalOriginalPrice = Number(oqty) * Number(price); // 총구매정가
+         var sumtotalPrice = Number(oqty) * Number(saleprice); // 총구매금액
+         var sumtotalPoint = Number(oqty) * Number(point); // 
+         
+         if( sumtotalPrice < 30000 ) {
+            sumtotalPrice += sumtotalPrice + 3000
+         }
+         
+         var bool = confirm("총주문액 : "+sumtotalPrice+"원 결제하시겠습니까?");
+           
+           if(bool) {
+            $("#oqtyjoin").val(oqty);
+            $("#totalPricejoin").val(sumtotalPrice); // 상품구매금액
+            $("#sumtotalPrice").val(sumtotalPrice);
+            $("#sumtotalOriginalPrice").val(sumtotalOriginalPrice); // 총구매정가
+            $("#sumtotalPoint").val(sumtotalPoint);
+            
+            const frm = document.prodStorageFrm;
+            
+            frm.method = "POST"; 
+            frm.action = "<%=request.getContextPath()%>/shop/orderPayment.tea";
+            frm.submit();
+           }
+         
+         
+      } // end of function goOrder(pnum)
+      
 </script>
 
 
@@ -160,6 +196,7 @@
 <div class="container productViewContainer">
 
    <%-- 상품 상세 상단부 시작 --%>
+   <form name="prodStorageFrm">
    <div id="product_top" class="row">
       
       <div id="product_img" class="col-md-6" style="text-align:center;">
@@ -200,12 +237,10 @@
             <span class="col-3" style="font-weight:bold; text-align: center;"><fmt:formatNumber value="${pvo.price}" pattern="###,###"/>원</span>
          </p>
          
-         <form name="cartOrderFrm">
             <p class="h5 row" >
                <label for="spinner" class="col-9" style="text-align: left; margin-top: 10px;">구매 수량</label> 
                <span class="col-3"><input id="spinner" name="oqty" value="1" min="1" max="100" style="text-align: right; width: 50px;" /></span>      
             </p>
-         </form> 
          
          <hr>
          
@@ -236,14 +271,23 @@
           </table>
           
           <%-- ==== 장바구니담기 또는 바로주문하기 폼 ==== --%>
-          <form name="prodStorageFrm">
              <div class="row">
                <input class="productbtn" type="button" onclick="goLike();" value="찜하기" style="width: 30%; margin-left: 16px; margin-right: 12.5px;" />
                   <input class="productbtn" type="button" onclick="goCart();" value="장바구니" style="width: 30%; margin-right: 12.5px;" />
-                  <input class="productbtn" type="button"  onclick="goOrder();" value="바로구매" style="width: 30%; background-color: #1E7F15; color:white;"/>
+                  <input class="productbtn" type="button"  onclick="goOrder('${pvo.pnum}');" value="바로구매" style="width: 30%; background-color: #1E7F15; color:white;"/>
             </div>
-            <input type="hidden" name="pnum" value="${requestScope.pvo.pnum}" />
-         </form>
+            <input type="hidden" name="pnumjoin" id="pnumjoin" value="${requestScope.pvo.pnum}" />
+            <input type="hidden" name="price" id="hidden_price" value="${requestScope.pvo.price}" />
+            <input type="hidden" name="point" id="hidden_point" value="${requestScope.pvo.point}" />
+            <input type="hidden" name="saleprice" id="hidden_saleprice" value="${requestScope.pvo.saleprice}" />
+            <input type="hidden" name="pnamejoin " id="pnamejoin " value="${requestScope.pvo.pname}" />
+            <input type="hidden" name="oqtyjoin  " id="oqtyjoin  " value="" />
+            <input type="hidden" name="imagejoin   " id="imagejoin   " value="${pvo.pimage }" />
+            <input type="hidden" name="totalPricejoin      " id="totalPricejoin      " value="" />
+            <input type="hidden" name="sumtotalOriginalPrice     " id="sumtotalOriginalPrice     " value="" />
+            <input type="hidden" name="sumtotalPrice     " id="sumtotalPrice     " value="" />
+            <input type="hidden" name="cartnojoin     " id="cartnojoin     " value="" />
+            
          
       </div>
       
@@ -283,6 +327,10 @@
    
    </div>
    <%-- 상품 상세 페이지 끝--%>
+</form>
 </div>
 
 <%@ include file="../footer.jsp"%>
+
+
+
