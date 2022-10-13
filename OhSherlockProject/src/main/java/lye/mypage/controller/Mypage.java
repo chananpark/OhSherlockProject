@@ -1,11 +1,19 @@
 package lye.mypage.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
+import common.model.InquiryVO;
 import common.model.MemberVO;
+import common.model.OrderVO;
+import syj.cs.model.InquiryDAO;
+import syj.cs.model.InterInquiryDAO;
+import syj.shop.model.InterOrderDAO;
+import syj.shop.model.OrderDAO;
 
 public class Mypage extends AbstractController {
 
@@ -17,7 +25,21 @@ public class Mypage extends AbstractController {
 		if( super.checkLogin(request) ) { 
 			// 로그인을 했으면
 			
-           	//super.setRedirect(false); 		
+			HttpSession session =  request.getSession();
+			MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+			
+			String userid = loginuser.getUserid();
+			
+			InterInquiryDAO idao = new InquiryDAO();
+			InterOrderDAO odao = new OrderDAO();
+
+			List<InquiryVO> inquiryList = idao.mypageInquiryList(userid);
+			List<OrderVO> orderList = odao.mypageOrderList(userid);
+			
+			request.setAttribute("inquiryList", inquiryList);
+			request.setAttribute("orderList", orderList);
+			
+           	super.setRedirect(false); 		
 			super.setViewPage("/WEB-INF/mypage/mypage.jsp"); // 마이페이지로 이동  
 			
 		}

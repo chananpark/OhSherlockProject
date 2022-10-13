@@ -7,7 +7,7 @@ import java.util.Map;
 import common.model.FaqVO;
 
 public interface InterFaqDAO {
-
+	
 	// 자주묻는질문 공지사항 작성하기
 	int registerFaq(Map<String, String> paraMap) throws SQLException;
 

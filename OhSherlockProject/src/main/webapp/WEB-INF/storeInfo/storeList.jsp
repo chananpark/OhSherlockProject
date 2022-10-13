@@ -10,9 +10,9 @@ $(document).ready(() => {
 	});
 	
 	$("tbody > tr").click( (e) => {
-			const target = $(e.target);
-			const storeNo = target.find("td.storeNo").text(); // 매장번호
-			location.href="storeDetail.tea?no="+storeNo;
+			let target = $(e.target);
+			let storeNo = target.parent().find(".storeNo").html(); // 매장번호
+			location.href="<%=ctxPath%>/storeInfo/storeDetail.tea?no="+storeNo;
             // 매장번호와 함께 해당 url로 get방식 요청을 보낸다.
 	});
 });
@@ -22,10 +22,10 @@ $(document).ready(() => {
 
 	<h2 style="font-weight:bold">매장안내</h2><br>
 		<hr style="background-color: black; height: 1.2px;"><br>
-		<table class="table mt-4">
+		<table class="table mt-2 text-center">
 			<thead class="thead-light">
 				<tr>
-					<th>매장유형</th>
+					<th class="col-2">매장유형</th>
 					<th>지점이름</th>
 					<th>상세주소</th>
 					<th>전화번호</th>

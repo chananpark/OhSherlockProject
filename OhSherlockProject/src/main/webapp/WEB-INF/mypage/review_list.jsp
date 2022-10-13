@@ -26,7 +26,7 @@
       height: 35px;
    }
    
-   img {
+   img.img-thumbnail {
        display: inline-block;
        width: 250px;
        content: "";
@@ -70,6 +70,25 @@
     
     .more {
     	display: block;
+    	color: #1E7F15;
+    }
+	
+	a {
+       text-decoration: none;
+    }
+   
+    a:link {
+       text-decoration: none;
+    }
+   
+    a:hover  {
+       color: black;
+       text-decoration: none;
+    }
+   
+    a:visited  {
+       text-decoration: none;
+       color: #1E7F15;
     }
 	
 </style>
@@ -79,7 +98,7 @@
    $(document).ready(function(){
       
 	  // 찜목록 전체개수 값
-      const allCnt = $("input[name='odrcodeCnt']").length;
+      const allCnt = $("input[name='allCnt']").length;
       document.getElementById("reviewCnt").textContent = allCnt;
 	   
       // 별점 주기
@@ -89,7 +108,7 @@
     	  console.log($(this).attr("value"));
    	  });    
       
-      // 리뷰 내용
+      // 리뷰 내용 및 이미지 더보기/접기
       $('.box').each(function(){  //  each() 메소드: object 와 배열 모두에서 사용할 수 있는 일반적인 반복 함수
     	  var content = $(this).children('.content');
           var content_txt = content.text();
@@ -130,7 +149,44 @@
       });
       
 	   
-   });// end of $(document).ready()--------------------------
+    });// end of $(document).ready()--------------------------
+    
+    
+ 	// 찜목록 테이블에서 특정제품 1개행을 찜목록에서 비우기
+    function goDel(rnum) {   // 리뷰삭제 버튼 누르면  => 리뷰번호(시퀀스)로 구별하여 삭제하기
+
+       const bool = confirm("해당상품 리뷰를 삭제하시겠습니까?");
+       
+       if(bool) {
+     	  
+     	  $.ajax({
+     		  url:"<%= request.getContextPath()%>/mypage/reviewDel.tea",
+     		  type:"POST",
+     		  data:{"rnum":rnum},  // 리뷰번호(시퀀스)를 넘겨주어 알아온다.
+     		  dataType:"JSON",
+     		  success:function(json) {
+     			  // {n:1}
+     			  if(json.n == 1) {  // json.n 객체는 넘겨받은 {n:1} 을 의미함.
+     				  location.href = "reviewList.tea";   // 삭제가 반영된 리뷰목록을 보여준다.
+     			  }
+     		  },
+     		  error: function(request, status, error){
+     			  alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+               }
+     	  });
+       }
+       else {
+     	  alert(pname+" 상품 삭제를 취소하셨습니다.");
+     	  
+       }
+       
+    }// end of function goDel(likeno) {}-------------------
+   
+   
+   
+   
+   
+   
    
 </script>
    
@@ -177,12 +233,13 @@
                          <a href="/OhSherlockProject/shop/productView.tea?pnum=${reivewvo.pnum}" style="text-align: right;">  <%-- 썸네일이미지 --%>
                             <img src="/OhSherlockProject/images/${reivewvo.prod.pimage}" class="img-thumbnail" style="margin-left: 50px; border: 0;" />
                          </a>
-                         <input type="hidden" name="pnumCnt" for="pnum${status.index}" value="${reivewvo.pnum}" /> <%-- 제품번호 --%>  
-                         <input type="hidden" name="odrcodeCnt" for="pnum${status.index}" value="${reivewvo.odrcode}" /> <%-- 주문상세번호 --%>  
+                         <input type="hidden" name="allCnt" id="hidden_pnum" for="pnum${status.index}" value="${reivewvo.rnum}" /> <%-- 상품번호 --%>  
+                         <input type="hidden" for="pnum${status.index}" value="${reivewvo.pnum}" /> <%-- 상품번호 --%>  
+                         <input type="hidden" for="pnum${status.index}" value="${reivewvo.odrcode}" /> <%-- 주문상세번호 --%>  
                      </td>
                      <td>    
-                        <span class="like_pname" style="font-weight: bold;">${reivewvo.prod.pname}</span><br>  <%-- 제품명 --%>
-                        <span>작성일 :&nbsp; ${reivewvo.writeDate}</span><br>
+                        <span class="like_pname" style="font-weight: bold;">${reivewvo.prod.pname}</span><br>  <%-- 상품명 --%>
+                        <span>작성일 :&nbsp; ${fn:substring(reivewvo.writeDate, 0, 10)}</span><br>
                         <P id="star"> <!-- 부모 -->
 						    <a href="#" value="1">★</a> <!-- 자식들-->
 						    <a href="#" value="2">★</a>
@@ -199,13 +256,12 @@
 						    <img class="image" src="../images/${reivewvo.rimage}" style="width: 200px;" />
 						</div>
 						
-                        <input type="hidden" class="likeno" value="${reivewvo.rnum}" />  <%-- 찜목록번호(시퀀스) 는 hidden 처리함. --%>
+                        <input type="hidden" class="reviewno" value="${reivewvo.rnum}" />  <%-- 상품리뷰번호(시퀀스)는 hidden 처리함. --%>
                       </td> 
                       <td>  
 						<p><input class="paymentBtn" type="button" onClick="clickCart(${reivewvo.pnum}, ${reivewvo.rnum});" style="clear:none;" value="리뷰수정"/></p>  
-						<input type="hidden" name="allCnt" id="hidden_pnum" value="${reivewvo.pnum}" /> <%-- 제품번호--%>
-						<%-- 찜목록에서 해당 특정 제품 비우기 --%> 
-						<p><input type="button" value="리뷰삭제" style="clear:none;" /></p> <%-- 찜목록번호(시퀀스)로 구별하여 삭제해준다. ${reivewvo.likeno} 은 숫자이든 문자이든 적용될 수 있도록 '' 를 꼭 감싸준다. 예: 찜목록번호 234-567 도 인식할 수 있음. --%>
+						<%-- 특정 상품리뷰 비우기 --%> 
+						<p><input type="button" onclick="goDel('${reivewvo.rnum}')" value="리뷰삭제" style="clear:none;" /></p>
                      </td> 
                    </tr>
 			      </c:forEach>
@@ -215,7 +271,7 @@
       </div>
 	
 	  <%-- 페이징처리 해주기★ --%> 
-	  <nav aria-label="Page navigation example" style="margin-top: 60px;">
+	  <nav aria-label="Page navigation example" style="margin-top: 60px; margin-bottom: 60px;">
 		<ul class="pagination justify-content-center" style="margin:auto;">${requestScope.pageBar}</ul>
 	  </nav>
 	

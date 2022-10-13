@@ -316,14 +316,54 @@ from tbl_cart
 select *
 from tbl_like
 
+select *
+from tbl_member
+
+-- 1대1문의
+
+select rownum, inquiry_no, fk_userid, inquiry_type, inquiry_subject, inquiry_content, to_char(inquiry_date,'yyyy.MM.dd') as inquiry_date
+from
+(select  inquiry_no, fk_userid, inquiry_type, inquiry_subject, inquiry_content, inquiry_date
+from tbl_inquiry
+where fk_userid='shonyj1'
+order by inquiry_date desc)
+where rownum between 1 and 3
+
+select ODRCODE, FK_USERID, to_char(ODRDATE,'yyyy.MM.dd') as ODRDATE, ODRTOTALPRICE
+from tbl_order
+where ODRDATE between to_char(add_months(sysdate,-1), 'yyyy-MM-dd') and to_char(sysdate, 'yyyy-MM-dd') and FK_USERID = 'pca719'
+order by ODRDATE desc;
 
 
 
+select *
+from tbl_order_detail
+
+select ODRCODE, FK_USERID, to_char(ODRDATE,'yyyy.MM.dd') as ODRDATE, ODRTOTALPRICE
+from tbl_order 
+where ODRDATE between to_char(add_months(sysdate,-1), 'yyyy-MM-dd') and to_char(sysdate, 'yyyy-MM-dd') and FK_USERID = 'pca719'
+order by ODRDATE desc;
 
 
+select odrcode, fk_pnum, fk_userid, to_char(ODRDATE,'yyyy.MM.dd') as ODRDATE, ODRTOTALPRICE, pname
+from tbl_order_detail D JOIN tbl_order O
+on D.fk_odrcode = O.ODRCODE
+JOIN tbl_product P
+on d.fk_pnum = P.pnum
+where ODRDATE between to_char(add_months(sysdate,-1), 'yyyy-MM-dd') and to_char(sysdate, 'yyyy-MM-dd') and FK_USERID = 'pca719'
+order by ODRDATE desc;
 
-
-
+select odnum, fk_pnum, oqty, fk_userid, odrdate, pname, odrcode, ODRTOTALPRICE
+from   
+   (select rownum as rno, odnum, fk_pnum, oqty, oprice, fk_userid, odrdate, pname, pimage, odrcode, ODRTOTALPRICE   
+    from    
+        (select odnum, fk_pnum, oqty, oprice, fk_userid, odrdate, pname, pimage, odrcode, ODRTOTALPRICE   
+        from   
+            ( select fk_userid, odrdate, odnum, fk_pnum, oqty, oprice, odrcode, ODRTOTALPRICE 
+              from tbl_order join tbl_order_detail  on odrcode = fk_odrcode
+              where fk_userid = 'pca719' and odrdate between to_char(add_months(sysdate,-1), 'yyyy-MM-dd') and to_char(sysdate, 'yyyy-MM-dd')  ) v 
+join tbl_product   
+on pnum = fk_pnum  order by odrdate desc) C  ) T 
 
 
 

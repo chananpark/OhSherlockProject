@@ -17,6 +17,8 @@ public class OrderVO {
 	private int delivery_cost;
 	private int odrstatus;
 	private String delivery_date;
+	private int odrusedpoint;
+	private String recipient_memo;
 	
 	private MemberVO mvo;
 	
@@ -33,6 +35,31 @@ public class OrderVO {
 		this.odrstatus = odrstatus;
 		}
 	
+
+	public OrderVO(String odrcode, String fk_userid, String odrdate, String recipient_name, String recipient_mobile,
+			String recipient_postcode, String recipient_address, String recipient_detail_address,
+			String recipient_extra_address, int odrtotalprice, int odrtotalpoint, int delivery_cost, int odrstatus,
+			String delivery_date, int odrusedpoint, String recipient_memo) {
+		super();
+		this.odrcode = odrcode;
+		this.fk_userid = fk_userid;
+		this.odrdate = odrdate;
+		this.recipient_name = recipient_name;
+		this.recipient_mobile = recipient_mobile;
+		this.recipient_postcode = recipient_postcode;
+		this.recipient_address = recipient_address;
+		this.recipient_detail_address = recipient_detail_address;
+		this.recipient_extra_address = recipient_extra_address;
+		this.odrtotalprice = odrtotalprice;
+		this.odrtotalpoint = odrtotalpoint;
+		this.delivery_cost = delivery_cost;
+		this.odrstatus = odrstatus;
+		this.delivery_date = delivery_date;
+		this.odrusedpoint = odrusedpoint;
+		this.recipient_memo = recipient_memo;
+	}
+
+	// 주문상세정보 
 	public OrderVO(String odrcode, String fk_userid, String odrdate, String recipient_name, String recipient_mobile,
 			String recipient_postcode, String recipient_address, String recipient_detail_address,
 			String recipient_extra_address, int odrtotalprice, int odrtotalpoint, int delivery_cost, int odrstatus,
@@ -164,6 +191,22 @@ public class OrderVO {
 
 	public void setDelivery_date(String delivery_date) {
 		this.delivery_date = delivery_date;
+	}
+
+	public int getOdrusedpoint() {
+		return odrusedpoint;
+	}
+
+	public void setOdrusedpoint(int odrusedpoint) {
+		this.odrusedpoint = odrusedpoint;
+	}
+
+	public String getRecipient_memo() {
+		return recipient_memo;
+	}
+
+	public void setRecipient_memo(String recipient_memo) {
+		this.recipient_memo = recipient_memo;
 	}
 
 	public MemberVO getMvo() {
