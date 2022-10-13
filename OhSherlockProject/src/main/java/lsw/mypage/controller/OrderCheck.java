@@ -15,6 +15,7 @@ import common.model.MemberVO;
 import common.model.OrderVO;
 import lsw.mypage.model.InterOrderDAO;
 import lsw.mypage.model.OrderDAO;
+import my.util.MyUtil;
 
 public class OrderCheck extends AbstractController {
 
@@ -132,6 +133,12 @@ public class OrderCheck extends AbstractController {
 					request.setAttribute("pageBar", pageBar);
 					
 					// *** 페이지바 만들기 끝 *** //
+					
+					String currentURL = MyUtil.getCurrentURL(request);
+							
+					currentURL = currentURL.replaceAll("&", " "); // & 를 공백으로 바꾸어라.
+
+					request.setAttribute("goBackURL", currentURL);
 					
 					super.setRedirect(false);
 					super.setViewPage("/WEB-INF/orderCheck/orderCheck.jsp");

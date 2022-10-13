@@ -40,13 +40,23 @@ public class OrderCheck_detail extends AbstractController {
 			InterOrderDAO odao = new OrderDAO();
 			Map<String, String> paraMap = new HashMap<>();
 			
-			String ordcode = request.getParameter("ordcode");
+			String odrcode = request.getParameter("odrcode");
+			// System.out.println(odrcode);
 			paraMap.put("loginuser", loginuser.getUserid());
-			paraMap.put("ordcode", ordcode);
+			paraMap.put("odrcode", odrcode);
 			
-			List<OrderVO> orderList = odao.selectMyOrderDetail(paraMap);
+			List<OrderVO> orderList = odao.selectOneOrder(paraMap);
+			OrderVO ovo = odao.getOrderDetail(odrcode);
 			
+			request.setAttribute("odrcode", odrcode);
 			request.setAttribute("orderList", orderList);
+			request.setAttribute("ovo", ovo);
+			
+			//  *** 현재 페이지를 돌아갈 페이지(goBackURL)로 주소 지정하기 *** //
+			String goBackURL = request.getParameter("goBackURL");
+	//		System.out.println("확인용 : " + goBackURL); 
+			
+			request.setAttribute("goBackURL", goBackURL); // 공백이 있는 상태 그대로 전달해준다.
 			
 			super.setRedirect(false);
 			super.setViewPage("/WEB-INF/orderCheck/orderCheck_detail.jsp");

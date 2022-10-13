@@ -17,5 +17,11 @@ public interface InterOrderDAO {
 	// 주문 상세정보 출력하는 메소드 
 	List<OrderVO> selectMyOrderDetail(Map<String, String> paraMap)throws SQLException;
 
+	// 주문상세정보에서 상품리스트 출력하는 메소드
+	List<OrderVO> selectOneOrder(Map<String, String> paraMap)throws SQLException;
+
+	// 주문상세정보에서 배송지 출력하는 메소드
+	OrderVO getOrderDetail(String odrcode)throws SQLException;
+
 
 }

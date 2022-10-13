@@ -1,6 +1,7 @@
 package lsw.mypage.model;
 
 import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -175,28 +176,27 @@ public class OrderDAO implements InterOrderDAO {
 		try {
 			conn = ds.getConnection();
 		
-			String sql = " select odnum, fk_pnum, oqty, oprice, fk_userid, odrdate, pname, odrcode "+
-					" from  "+
-					" ( "+
-					" select fk_userid, substr(odrdate,0,10) odrdate, recipient_name, recipient_mobile, recipient_postcode, recipient_address, recipient_detail_address, recipient_extra_address "+
-					" odnum, fk_pnum, oqty, oprice, odrcode "+
-					" from tbl_order join tbl_order_detail "+
-					" on odrcode = fk_odrcode   "+
-					" where fk_userid = ? and odrcode = ? "+
-					" ) v "+
-					" join tbl_product  "+
-					" on pnum = fk_pnum "+
-					" order by odrdate desc";
+			
+			String sql = "select odnum, fk_pnum, oqty, oprice, fk_userid, odrdate, pname, pimage, odrcode "+
+						"from  "+
+						"( "+
+						"select fk_userid, substr(odrdate,0,10) odrdate , odnum, fk_pnum, oqty, oprice, odrcode "+
+						"from tbl_order join tbl_order_detail "+
+						"on odrcode = fk_odrcode   "+
+						"where fk_userid = ? and odrcode = ? "+
+						") v "+
+						"join tbl_product  "+
+						"on pnum = fk_pnum";
 	
 		pstmt = conn.prepareStatement(sql);
 		
 		pstmt.setString(1, paraMap.get("loginuser"));
-		pstmt.setString(2, paraMap.get("ordcode"));
+		pstmt.setString(2, paraMap.get("odrcode"));
 		
 		rs = pstmt.executeQuery();
 		
 		while(rs.next()) {
-			
+
 			OrderVO ovo = new OrderVO();
 			ovo.setFk_userid(rs.getString("fk_userid"));
 			ovo.setOdrdate(rs.getString("odrdate").substring(0, 10));
@@ -225,6 +225,126 @@ public class OrderDAO implements InterOrderDAO {
 		return orderList;
 
 	}// end of public List<OrderVO> selectMyOrderDetail(Map<String, String> paraMap) throws SQLException-----
+
+	
+	
+	// 주문상세정보에서 상품리스트 출력하는 메소드
+	@Override
+	public List<OrderVO> selectOneOrder(Map<String, String> paraMap) throws SQLException {
+	
+		List<OrderVO> orderList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+		
+			
+			String sql = " select fk_userid, odrdate, recipient_name, recipient_mobile, recipient_postcode, recipient_address, recipient_detail_address, recipient_extra_address, odrtotalprice, delivery_cost, odrstatus, odrcode, "+
+						"        odnum, fk_pnum, oqty, oprice, pname, pimage "+
+						" from  "+
+						" ( "+
+						" select fk_userid, odrdate, recipient_name, recipient_mobile, recipient_postcode, recipient_address, recipient_detail_address, recipient_extra_address, odrtotalprice, delivery_cost, odrstatus, odrcode, "+
+						"		odnum, fk_pnum, oqty, oprice "+
+						" from tbl_order join tbl_order_detail "+
+						" on odrcode = fk_odrcode   "+
+						" where fk_userid = ? and odrcode = ? "+
+						" ) v "+
+						" join tbl_product  "+
+						" on pnum = fk_pnum "+
+						" order by odrdate desc ";
+	
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, paraMap.get("loginuser"));
+			pstmt.setString(2, paraMap.get("odrcode"));
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				OrderVO ovo = new OrderVO();
+				ovo.setFk_userid(rs.getString("fk_userid"));
+				ovo.setOdrdate(rs.getString("odrdate").substring(0, 10));
+				ovo.setRecipient_name(rs.getString("recipient_name"));
+				ovo.setRecipient_mobile(rs.getString("recipient_mobile"));
+				ovo.setRecipient_postcode(rs.getString("recipient_postcode"));
+				ovo.setRecipient_address(rs.getString("recipient_address"));
+				ovo.setRecipient_detail_address(rs.getString("recipient_detail_address"));
+				ovo.setRecipient_extra_address(rs.getString("recipient_extra_address"));
+				ovo.setOdrtotalprice(rs.getInt("odrtotalprice"));
+				ovo.setDelivery_cost(rs.getInt("delivery_cost"));
+				ovo.setOdrstatus(rs.getInt("odrstatus"));
+				ovo.setOdrcode(rs.getString("odrcode"));
+				
+				OrderDetailVO odvo = new OrderDetailVO();
+				odvo.setOdnum(rs.getInt("odnum"));
+				odvo.setFk_pnum(rs.getInt("fk_pnum"));
+				odvo.setOqty(rs.getInt("oqty"));
+				odvo.setOprice(rs.getInt("oprice"));
+				
+				
+				ProductVO pvo = new ProductVO();
+				pvo.setPname(rs.getString("pname"));
+				pvo.setPimage(rs.getString("pimage"));
+				odvo.setPvo(pvo);
+				
+				ovo.setOdvo(odvo);
+				
+				orderList.add(ovo);
+			}
+				
+			} finally {
+				close();
+			}
+			
+			return orderList;
+	}// end of public List<OrderVO> selectOneOrder(Map<String, String> paraMap) throws SQLException--------------
+
+	
+	// 주문상세정보에서 배송지 출력하는 메소드
+	@Override
+	public OrderVO getOrderDetail(String odrcode) throws SQLException {
+		
+		OrderVO ovo = null;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select odrcode, fk_userid, odrdate, recipient_name, recipient_mobile, recipient_postcode, recipient_address, recipient_detail_address, recipient_extra_address, odrtotalprice, delivery_cost, odrstatus, nvl(recipient_memo, '(배송메모 없음)') recipient_memo "+
+						 " from tbl_order "+
+						 " where odrcode = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,odrcode);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				ovo = new OrderVO();
+				
+				ovo.setOdrcode(rs.getString("odrcode"));
+				ovo.setFk_userid(rs.getString("fk_userid"));
+				ovo.setOdrdate(rs.getString("odrdate"));
+				ovo.setRecipient_name(rs.getString("recipient_name"));
+				ovo.setRecipient_mobile(aes.decrypt(rs.getString("recipient_mobile")));
+				ovo.setRecipient_postcode(rs.getString("recipient_postcode"));
+				ovo.setRecipient_address(rs.getString("recipient_address"));
+				ovo.setRecipient_detail_address(rs.getString("recipient_detail_address"));
+				ovo.setRecipient_extra_address(rs.getString("recipient_extra_address"));
+				ovo.setOdrtotalprice(rs.getInt("odrtotalprice"));
+				ovo.setDelivery_cost(rs.getInt("delivery_cost"));
+				ovo.setOdrstatus(rs.getInt("odrstatus"));
+				ovo.setRecipient_memo(rs.getString("recipient_memo"));
+				
+			}
+			
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+
+		return ovo;
+	}// end of public OrderVO getOrderDetail(String odrcode) throws SQLException 
 
 	
 

@@ -45,6 +45,7 @@
 	let startDate; // 시작날짜
 	let endDate; // 마지막날짜
 	let currentShowPageNo;
+	let goBackURL = ""; // 전역변수
 	
 	$(document).ready(function() {
 		
@@ -112,11 +113,11 @@
  			
 			 			const $target = $(e.target); 
 			 			
-			 			// 클릭한 tr의 ordcode 알아오기
-			 			const ordcode = $target.parent().find("td[name='ordcode']").text(); 
-			 		//	console.log("확인용 : "+ ordcode);
+			 			// 클릭한 tr의 odrcode 알아오기
+			 			const odrcode = $target.parent().find("input[name='odrcode']").val(); 
+			 			// console.log("확인용 : "+ odrcode);
 			 			 
-			 			location.href = "<%= request.getContextPath() %>/mypage/orderCheck_detail.tea?ordcode="+ordcode+"&goBackURL=${requestScope.goBackURL}";
+			 			location.href = "<%= request.getContextPath() %>/mypage/orderCheck_detail.tea?odrcode="+odrcode+"&goBackURL=${requestScope.goBackURL}";
 		 		}); // end of $("tbody > tr").click(function()
         
          
@@ -152,7 +153,7 @@
 							 					 		 +"<td><img src='<%=request.getContextPath() %>/images/"+item.pimage+"' width=100 height=100 />"+item.pname+"</td>"
 							 							 +"<td class='align-middle'>"+item.oqty+"</td> "
 							 						 	 +"<td class='align-middle'>"+item.oprice+"</td>"
-							 							 +"<td class='align-middle'><input name='ordcode' type='hidden' value='"+item.odrcode+"' /></td></tr>";
+							 							 +"<td class='align-middle'><input name='odrcode' type='hidden' value='"+item.odrcode+"' /></td></tr>";
 			 	         			
 			 							 if(item.pageBar != null){
 			 	         				$("nav > ul").html(item.pageBar);
@@ -249,11 +250,11 @@
 			<tbody>
 				<c:forEach var="ovo" items="${requestScope.orderList}">
 					<tr>
-						<td class="align-middle" style="text-align: center;">${ovo.odrdate}<br>[ ${ovo.odvo.odnum} ]</td>
+						<td class="align-middle" style="text-align: center;">${ovo.odrdate}<br>[${ovo.odrcode}]</td>
 						<td><img src="<%=request.getContextPath() %>/images/${ovo.odvo.pvo.pimage}" width=100 height=100 />${ovo.odvo.pvo.pname}</td>
 						<td class="align-middle">${ovo.odvo.oqty}</td>
 						<td class="align-middle">${ovo.odvo.oprice}</td>
-						<td class="align-middle"><input name="ordcode" type="hidden" value="${ovo.odrcode}" /></td>
+						<td class="align-middle"><input name="odrcode" type="hidden" value="${ovo.odrcode}" /></td>
 					</tr>
 				</c:forEach>
 			</tbody>
