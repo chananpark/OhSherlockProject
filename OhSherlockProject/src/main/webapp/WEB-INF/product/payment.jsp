@@ -318,13 +318,13 @@ function pay() {
 	}
 	
 	const totalOrderPrice = Number(${sumtotalPrice})-Number($("#odrusedpoint").val());
-	
 	if($('input[name=paymentMethod]:checked').val() == "card") {
 		cardPayment(totalOrderPrice);
 	}
 	else{
-		if(Number(${loginuser.coin}) > totalOrderPrice)
+		if(Number(${loginuser.coin}) > totalOrderPrice){
 			frmSubmit();
+		}
 		else {
 			alert("보유하신 예치금이 부족합니다.");
 			return;
