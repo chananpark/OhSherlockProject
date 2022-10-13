@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import common.controller.AbstractController;
-import common.model.MemberVO;
 import common.model.ReviewVO;
 import kcy.shop.model.InterProductDAO;
 import kcy.shop.model.ProductDAO;
@@ -19,7 +18,9 @@ public class Review_look extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		
+		// 카테고리 목록을 조회해오기
+		super.getCategoryList(request);
+				
 		// *** 리뷰 상세보여주기 ***//
 		String pnum = request.getParameter("pnum");
 		
@@ -29,18 +30,18 @@ public class Review_look extends AbstractController {
 		InterProductDAO pdao = new ProductDAO();
 		ReviewVO review_select_one = pdao.rnumReviewDetail(paraMap);
 		
+		request.setAttribute("review_select_one", review_select_one);
 		
-		System.out.println("실행됨");
-//		System.out.println(review_look.size());
+		System.out.println(review_select_one);
 		
-		String currentURL = MyUtil.getCurrentURL(request);
-		request.setAttribute("goBackURL", currentURL);
-		//
+	//  *** 현재 페이지를 돌아갈 페이지(goBackURL)로 주소 지정하기 *** //
+		String goBackURL = request.getParameter("goBackURL");
+//		System.out.println("확인용 : " + goBackURL); 
+
+		request.setAttribute("goBackURL", goBackURL); // 공백이 있는 상태 그대로 전달해준다.
 		
-		request.setAttribute("pnum", pnum);
-		
-		
-		super.setViewPage("/WEB-INF/product/modal_review_look.jsp"); // key값이 json 인 jsonview.jsp에 뿌러준다.
+		super.setRedirect(false);
+		super.setViewPage("/WEB-INF/product/modal_review_look.jsp"); 
 		
 		
 		// *** 리뷰 보여주기 끝 ***//

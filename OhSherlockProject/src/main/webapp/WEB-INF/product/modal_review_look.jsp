@@ -68,33 +68,16 @@
 
 	<%-- 리뷰를 자세히보는 페이지--%>
 
-				<c:forEach var="review" items="${requestScope.reviewList}"> 
-					<tr class="reviewInfo"  >
-						<td name="rnum">${review.rnum}</td>
-						<td name="rsubject">${review.rsubject}</td>
-						<td name="fk_userid">${review.userid}</td>
-						<td name="writedate">${review.writeDate}</td>
-						<td name="score">${review.score}</td>
-					</tr>
-				</c:forEach>
-
 
 	<div class=" text-left">
 	
-		<div style="font-weight: bold; font-size: 20px;">${requestScope.review.rsubject}</div> 
-		<br>
-		<div
-			style="font-weight: normal; font-size: 15.5px; margin-bottom: 10px;">${ivo.inquiry_date}</div>
-		</div>
-
-
-	<div class="text-left inquiryContent jumbotron mt-4 pt-auto">${ivo.inquiry_content}
-	</div>
+		<div style="font-weight: bold; font-size: 20px; padding-bottom: 10px;">${pvo.pimage}</div> <br>
+		
 
 	<table id="replyTbl">
 		<thead>
 			<tr>
-				<td class="p-2 pl-3">답변</td>
+				<td class="p-2 pl-3">${requestScope.review_select_one.rcontent}</td>
 				<td class="text-right p-2 pr-3">
 					<c:if test="${not empty review_look}">
 						${requestScope.pvo.point} 
@@ -112,7 +95,7 @@
 					 ${ivo.irevo.inquiry_reply_content}
 					 </c:if>
 					 <c:if test="${empty ivo.irevo}">
-					 답변 준비중입니다.
+					 리뷰상세내용들어오기....
 					 </c:if>
 				</td>
 			</tr>
@@ -120,5 +103,6 @@
 	</table>
 
 
+</div> 
 </div> 
 

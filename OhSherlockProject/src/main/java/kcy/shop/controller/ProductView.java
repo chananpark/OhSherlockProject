@@ -114,7 +114,7 @@ public class ProductView extends AbstractController {
 		
 		
 		
-		super.setViewPage("/WEB-INF/jsonview.jsp"); // key값이 json 인 jsonview.jsp에 뿌러준다.
+//		super.setViewPage("/WEB-INF/jsonview.jsp"); // key값이 json 인 jsonview.jsp에 뿌러준다.
 		
 		
 		// *** 리뷰 보여주기 끝 ***//
