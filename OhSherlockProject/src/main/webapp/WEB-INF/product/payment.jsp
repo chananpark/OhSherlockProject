@@ -318,7 +318,26 @@ function pay() {
 	const frm = document.orderFrm;
 	frm.method = "POST"; 
 	frm.action = "<%=ctxPath%>/shop/completeOrder.tea";
-	frm.submit();
+ 
+	
+	if($('input[name=paymentMethod]:checked').val() == "card") {
+		$.ajax({
+            url:"<%=ctxPath%>/shop/cardPayment.tea",
+            type:"POST",
+            data:{"pnamejoin":"${pnamejoin}",
+                 "sumtotalPrice":Number(${sumtotalPrice})-Number($("#odrusedpoint").val())},
+            dataType:"JSON",
+            success:function(json) {
+            	//frm.submit();
+            },
+            error: function(request, status, error){
+               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            }
+            
+         });
+	}
+	//else
+		//frm.submit();
 }
 </script>
 
@@ -512,7 +531,7 @@ function pay() {
 						<td class="col col-9 text-left"
 							style="padding-top: 0; padding-bottom: 0;">결제수단</td>
 						<td class="col col-3 text-right"
-							style="padding-top: 0;" class="pb-2">신용카드</td>
+							style="padding-top: 0;" class="pb-2"></td>
 					</tr>
 				</tbody>
 			</table>

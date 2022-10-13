@@ -43,11 +43,8 @@ public class ReviewList extends AbstractController {
 			
 			Map<String, Object> paraMap = new HashMap<>();
 			
-			paraMap.put("loginuser", loginuser);
+			paraMap.put("userid", loginuser.getUserid());
 			String userid = loginuser.getUserid();
-			
-			//List<ReviewVO> reviewList = pdao.ProductReviewList(loginuser.getUserid()); 
-			
 			
 			// 현재 페이지 번호
 			String currentShowPageNo = request.getParameter("currentShowPageNo");
@@ -76,7 +73,7 @@ public class ReviewList extends AbstractController {
 			}
 			
 			List<ReviewVO> reviewList = pdao.selectPagingReview(paraMap);
-			System.out.println(reviewList);
+			
 			request.setAttribute("reviewList", reviewList);
 			
 			String pageBar = "";

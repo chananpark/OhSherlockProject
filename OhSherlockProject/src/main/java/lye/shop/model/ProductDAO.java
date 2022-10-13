@@ -702,7 +702,6 @@ public class ProductDAO implements InterProductDAO {
 			close();
 		}
 		
-		System.out.println("확인용 totalPage:" + totalPage);
 		return totalPage;
 	}// end of public int getTotalPage(String cnum) throws SQLException {}-------------------
 
@@ -710,7 +709,7 @@ public class ProductDAO implements InterProductDAO {
 	// 페이징 처리를 한 모든 상품리뷰 목록 보여주기
 	public List<ReviewVO> selectPagingReview(Map<String, Object> paraMap) throws SQLException {
 		
-		List<ReviewVO> reviewList = new ArrayList<>();  // ArrayList 객체생성
+		List<ReviewVO> reviewList = new ArrayList<>();
 		
 		try {
 			conn = ds.getConnection();  // 커넥션풀 방식 연결
@@ -738,7 +737,6 @@ public class ProductDAO implements InterProductDAO {
 			int currentShowPageNo = Integer.parseInt((String)paraMap.get("currentShowPageNo"));  // 조회하고자 하는 페이지 번호
 			int sizePerPage = 10; // 한페이지당 보여줄 행의 개수
 
-			
 			pstmt = conn.prepareStatement(sql);  // 우편배달부
 			pstmt.setString(1, (String) paraMap.get("userid"));
 			pstmt.setInt(2, (currentShowPageNo*sizePerPage) - (sizePerPage - 1) ); // 공식(몇 페이지부터)
@@ -793,6 +791,97 @@ public class ProductDAO implements InterProductDAO {
 		
 		return reviewList;
 	}// end of public List<ReviewVO> selectPagingReview(Map<String, Object> paraMap) throws SQLException {}-------------------
+
+
+	// 상품리뷰 테이블에서 특정리뷰 1개 행을 리뷰목록에서 비우기
+	@Override
+	public int reviewLike(String rnum) throws SQLException {
+		
+		int n = 0;
+		
+		try {
+			 conn = ds.getConnection();  // 커넥션풀 방식
+			 
+			 String sql = " delete from tbl_review " +
+					      " where rnum = ? ";
+					   
+			 pstmt = conn.prepareStatement(sql);
+			 pstmt.setString(1, rnum);
+			 			 
+			 n = pstmt.executeUpdate();
+			 
+		} finally {
+			close();
+		}
+		
+		return n;
+	}// end of public int reviewLike(String odrcode) throws SQLException {}-------------------
+
+
+	// 해당제품을 사용자가 실제 구매했는지 여부를 알아오는 것임. 구매했다라면 true, 구매하지 않았으면 false
+	@Override
+	public boolean isOrder(Map<String, String> paraMap) throws SQLException {
+		
+		boolean isOrder = false;
+		
+		try {
+			conn = ds.getConnection(); // 커넥션풀 방식
+
+			String sql = " select D.odrseqnum "+
+						 " from tbl_orderdetail D join tbl_order O "+
+						 " on D.fk_odrcode = O.odrcode "+
+						 " where  D.fk_pnum = ? and O.fk_userid = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("fk_pnum"));
+			pstmt.setString(2, paraMap.get("fk_userid"));
+			
+			rs = pstmt.executeQuery();
+			
+			rs.next();
+			
+			isOrder = rs.next();
+			
+		} finally {
+			close();
+		}
+		
+		return isOrder;
+		
+	}// end of public boolean isOrder(Map<String, String> paraMap) throws SQLException {}-------------------
+
+
+	// tbl_review 테이블에 상품리뷰 insert 하기
+	@Override
+	public int productReview(ReviewVO rvo) throws SQLException {
+
+		int result = 0;
+	      
+	      try {
+	         conn = ds.getConnection();
+	         
+	         String sql = " insert into tbl_review(rnum, fk_odnum, fk_pnum, fk_userid, score, rsubject, rcontent, rimage, fk_odrcode, writeDate) "+
+	        		 	  " values(seq_review_rnum.nextval, ?, ?, ?, ?, ?, ?, ?, ?, default) ";
+	         
+	         pstmt = conn.prepareStatement(sql);
+	         
+	         pstmt.setInt(1, rvo.getOdnum());
+	         pstmt.setInt(2, rvo.getPnum());
+	         pstmt.setString(3, rvo.getUserid());
+	         pstmt.setInt(4, rvo.getScore());    
+	         pstmt.setString(5, rvo.getRsubject()); 
+	         pstmt.setString(6, rvo.getRcontent());    
+	         pstmt.setString(7, rvo.getRimage()); 
+	         pstmt.setString(8, rvo.getOdrcode()); 
+	            
+	         result = pstmt.executeUpdate();
+	         
+	      } finally {
+	         close();
+	      }
+	      
+	      return result;   
+	}// end of public void productReview(ReviewVO rvo) throws SQLException {}-------------------
 
 
 
