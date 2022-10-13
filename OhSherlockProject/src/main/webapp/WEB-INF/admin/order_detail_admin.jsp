@@ -94,6 +94,10 @@ $(()=>{
 				<td class="col-4">수령자 주소</td>
 				<td class="col-8">${ovo.recipient_address } ${ovo.recipient_detail_address } ${ovo.recipient_extra_address }</td>
 			</tr>
+			<tr>
+				<td class="col-4">배송메모</td>
+				<td class="col-8">${ovo.recipient_memo }</td>
+			</tr>
 			<tr><td style="background-color: transparent; border-style: none;"></td></tr>
 			<tr>
 				<td class="col-4">주문금액</td>

@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,8 +13,12 @@ import javax.servlet.http.HttpSession;
 
 import common.controller.AbstractController;
 import common.model.MemberVO;
+import common.model.ProductVO;
+import pca.member.controller.GoogleMail;
 import pca.shop.model.InterOrderDAO;
+import pca.shop.model.InterProductDAO;
 import pca.shop.model.OrderDAO;
+import pca.shop.model.ProductDAO;
 
 public class CompleteOrder extends AbstractController {
 	
@@ -118,9 +123,42 @@ public class CompleteOrder extends AbstractController {
 		InterOrderDAO odao = new OrderDAO();
 		int nSuccess = odao.completeOrder(paraMap);
 		
-		// 이메일 발송하기
-		
 		if(nSuccess == 1) {
+			
+			// 이메일 발송하기
+			GoogleMail mail = new GoogleMail();
+			InterProductDAO pdao = new ProductDAO();
+			List<ProductVO> jumunProductList = pdao.getJumunProductList(pnumjoin);
+			// 주문한 제품에 대해 email을 보내기시 email 내용에 넣을 주문한 제품번호들에 대한 제품정보를 얻어오는것
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("주문코드번호 : <span style='color:blue; font-weight:bold;'>"+odrcode+"</span><br><br>");
+			sb.append("<주문상품><br>");
+			
+			for(int i = 0; i < jumunProductList.size(); i++) {
+				sb.append(jumunProductList.get(i).getPname()+"&nbsp;"+oqtyArr[i]+"개&nbsp;&nbsp;");
+				sb.append("<img src='http://127.0.0.1:9090/OhSherlockProject/images/"+jumunProductList.get(i).getPimage()+"'/>");
+			}
+			
+			sb.append("<br>이용해주셔서 감사합니다.");
+			
+			String emailContents = sb.toString();
+			
+			mail.sendmail_OrderFinish(loginuser.getEmail(), loginuser.getName(), emailContents);
+			
+			// session loginuser정보 update
+			if(paymentMethod.equals("coin")) {
+				loginuser.setCoin(loginuser.getCoin() - Integer.parseInt(totalPaymentAmount)); // 코인빼기
+			}
+			// 결제시 포인트 사용하였으면
+			if(Integer.parseInt(odrusedpoint) > 0) {
+				
+				loginuser.setPoint(loginuser.getPoint() - Integer.parseInt(odrusedpoint)); // 포인트빼기
+			}else {
+				loginuser.setPoint(loginuser.getPoint() + Integer.parseInt(sumtotalPrice)/100); // 포인트더하기
+			}
+			
+			
 			String message = "주문이 완료되었습니다.";
 			String loc = request.getContextPath() + "/mypage/mypage.tea";
 
@@ -136,6 +174,7 @@ public class CompleteOrder extends AbstractController {
 			request.setAttribute("loc", loc);
 
 			super.setViewPage("/WEB-INF/msg.jsp");
+			
 		}
 		
 	}

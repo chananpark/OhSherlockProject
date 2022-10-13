@@ -243,7 +243,7 @@ public class OrderDAO implements InterOrderDAO {
 			String sql = "select odrcode, fk_userid, odrdate, recipient_name, recipient_mobile, recipient_postcode, "
 					+ "recipient_address, recipient_detail_address, recipient_extra_address, "
 					+ "odrtotalprice, odrtotalpoint, delivery_cost, odrstatus, delivery_date, "
-					+ "name, mobile, email "
+					+ "name, mobile, email, recipient_memo "
 					+ "from tbl_order join tbl_member "
 					+ "on fk_userid = userid "
 					+ "where odrcode = ?";
@@ -256,7 +256,7 @@ public class OrderDAO implements InterOrderDAO {
 				
 				ovo = new OrderVO(rs.getString(1), rs.getString(2), rs.getString(3), 
 						rs.getString(4), aes.decrypt(rs.getString(5)), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9)
-						, rs.getInt(10), rs.getInt(11), rs.getInt(12), rs.getInt(13), rs.getString(14));
+						, rs.getInt(10), rs.getInt(11), rs.getInt(12), rs.getInt(13), rs.getString(14), rs.getString(15));
 				
 				MemberVO mvo = new MemberVO();
 				mvo.setName(rs.getString(15));
