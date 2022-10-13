@@ -45,20 +45,33 @@
 <script type="text/javascript">
 
 	$(document).ready(function (e) {
-
-		// 제목 클릭 시 상품 상세 열어주는 함수(수정필요)
-		$(".viewhidden").click(function () {
-            status = $(".hidden").css("display"); 
-            if (status == "none") {
-                $(".hidden").css("display", "");
-            } else {
-                $(".hidden").css("display", "none");
-            }
-        });
+		
+			// 각 행을 클릭했을 때 해당하는 행의 회원 상세 조회 보여주기
+	      // 모든 tr을 잡아와서 그 중 name 이 userid 인 것의 text만 가져오는 이벤트
+	      $("tbody > tr").click(function(e){
+	         
+    	  	const $target = $(event.target);
+	  		const rnum = $target.parent().find("td[name='rnum']").text(); 
+	          
+	  		openModal(rnum);
+	      }); // end of $("tbody > tr").click(function()
 	
 	});
-	
 
+	 
+	// 모달창 띄우는 함수
+	function openModal(rnum) {
+		
+		console.log(rnum);
+		
+		$("#iframe_inquiryDetail").prop("src", "<%= request.getContextPath() %>/shop/reviewDetail.tea?rnum="+rnum)
+		// 외부클릭막기
+        $('#inquiryDetailModal').modal({backdrop: 'static', keyboard: false});
+		// 모달창 띄우기
+        $('#inquiryDetailModal').modal('show');
+    }
+	
+	
 </script>
 
 <div id="review_page">
@@ -73,10 +86,11 @@
 			</tr>
 		</thead> 
 		
+		
 		<tbody>
 			<c:if test="${not empty reviewList}">
 				<c:forEach var="review" items="${requestScope.reviewList}"> 
-					<tr class="reviewInfo">
+					<tr class="reviewInfo"  >
 						<td name="rnum">${review.rnum}</td>
 						<td name="rsubject">${review.rsubject}</td>
 						<td name="fk_userid">${review.userid}</td>
@@ -87,13 +101,13 @@
 			</c:if>
 			<c:if test="${empty reviewList}">
 				<tr>
-					<td class="pt-5" colspan="4">
+					<td class="pt-4" colspan="6" >      
 						작성된 리뷰가 없습니다.
 					</td>
 				</tr>
 				
 			</c:if>
-
+		
 		</tbody>
 		
 		
@@ -110,7 +124,32 @@
 	
 </div>
 
+<%-- *** 리뷰 상세화면 모달창 *** --%>
+	<div class="modal fade" id="inquiryDetailModal">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
 
+				<div class="modal-header">
+					<h4 class="modal-title">리뷰 자세히보기</h4>
+					<button type="button" class="close inquiryDetailModalClose"
+						data-dismiss="modal">&times;</button>
+				</div>
+
+				<!-- Modal body -->
+	      	<div class="modal-body">
+	        	<div id="reviewWrite">
+             	 	 <%@ include file="modal_review_look.jsp"%> 
+	        	</div>
+	      	</div>
+
+				<div class="modal-footer">
+					<button type="button" onClick="self.close()" class="btn inquiryDetailClose" style="background-color: #1E7F15; color:white"
+						data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
 
 
 <%-- *** 리뷰작성 모달창 *** --%>
