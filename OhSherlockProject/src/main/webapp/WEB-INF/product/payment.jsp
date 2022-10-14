@@ -101,7 +101,7 @@
 		});
 		
 		// 할인금액 넣어주기
-		const saleAmount = '${saleAmount}'.toLocaleString('en');
+		let saleAmount = '${saleAmount}'.toLocaleString('en');
 		$("#saleAmount").val(saleAmount);
 		
 		// 주문자와 같음 체크시
