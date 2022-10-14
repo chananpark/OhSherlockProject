@@ -404,3 +404,12 @@ select pnum, pname, pimage, imgfileno, imgfilename
 from tbl_product P join tbl_product_imagefile I
 on P.pnum = I.fk_pnum
 where pnum = 14
+
+select *
+from tbl_review
+
+
+delete from tbl_member
+    where userid = 'asdas231'; 
+    
+    commit;

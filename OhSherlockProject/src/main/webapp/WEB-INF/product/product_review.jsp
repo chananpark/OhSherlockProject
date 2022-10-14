@@ -28,7 +28,7 @@
       color: white;
    }
    
-   #review_page a:link, .footer a:visited {
+   #review_page a:link {
       color: white;
    }
    
