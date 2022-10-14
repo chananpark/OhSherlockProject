@@ -58,6 +58,16 @@ button.order {
 	font-weight: bold;
 }
 
+input.like {
+   background-color: transparent; 
+     border-style: none;
+}
+
+input.cart { <%-- 여기 --%> 
+   background-color: transparent; 
+     border-style: none;
+}
+
 </style>
 
 <script>
@@ -76,8 +86,38 @@ $(()=>{
 	
 });
 
+//Function Declaration
+// 찜하기버튼 클릭시
+	function goLike(pnum) {
+     
+    const frm = document.searchFrm;
+    
+    $("#hidden_pnum").val(pnum);
+    
+    frm.method = "POST";
+    frm.action = "<%= request.getContextPath()%>/shop/likeAdd.tea";
+    frm.submit();
+    
+	}// end of function goLike(pnum)------------------------------
+
+	
+// 장바구니 담기
+function clickCart(pnum) { <%-- 여기 --%> 
+	
+	const frm = document.searchFrm;
+	
+	$("#hidden_pnum").val(pnum);
+	
+	frm.method = "POST"; 
+	frm.action = "<%=request.getContextPath()%>/cart/cartAdd.tea";
+	frm.submit();
+	
+} // end of function goCart()
+
+
 </script>
 
+<form name="searchFrm">
 <div class="container">
 
 	<div>
@@ -207,13 +247,14 @@ $(()=>{
 									</c:choose>
 
 
-									<a class="card-text mr-2"><i
-										class="far fa-heart text-secondary fa-lg heart"></i></a> <a
-										class="card-text text-secondary mr-5">찜하기</a> <a
-										class="card-text mr-2"><i
-										class="fas fa-shopping-basket text-secondary fa-lg "></i></a> <a
-										class="card-text text-secondary">담기</a>
-
+									<a class="card-text mr-2"><i class="far fa-heart text-secondary fa-lg heart" onclick="goLike(${pvo.pnum});"></i></a>
+                           		<input class="card-text text-secondary mr-5 like" type="button" onclick="goLike(${pvo.pnum});" value="찜하기" style="padding-left: 0; margin-left: 0;" />
+                                       
+                                <%-- 여기 --%>                      
+                           		<a class="card-text mr-2"><i class="fas fa-shopping-basket text-secondary fa-lg " onClick="clickCart(${pvo.pnum});"></i></a>
+                           		<input class="card-text text-secondary cart" type="button" onClick="clickCart(${pvo.pnum});" value="담기" style="padding-left: 0; margin-left: 0;"/>
+                           		<input type="hidden" name="pnum" id="hidden_pnum" value="${pvo.pnum}" /> <%-- 제품번호--%>
+                           		
 								</div>
 							</div>
 						</c:forEach>
@@ -239,4 +280,5 @@ $(()=>{
 
 	
 </div>
+</form>
 <%@ include file="../footer.jsp"%>
