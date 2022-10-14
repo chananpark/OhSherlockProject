@@ -310,9 +310,10 @@ public class OrderDAO implements InterOrderDAO {
 		try {
 			conn = ds.getConnection();
 			
-			String sql = " select odrcode, fk_userid, odrdate, recipient_name, recipient_mobile, recipient_postcode, recipient_address, recipient_detail_address, recipient_extra_address, odrtotalprice, delivery_cost, odrstatus, nvl(recipient_memo, '(배송메모 없음)') recipient_memo "+
-						 " from tbl_order "+
-						 " where odrcode = ? ";
+			String sql = " select odrcode, fk_userid, odrdate, recipient_name, recipient_mobile, recipient_postcode, recipient_address, recipient_detail_address, recipient_extra_address, odrtotalprice, delivery_cost, odrstatus, nvl(recipient_memo, '(배송메모 없음)') recipient_memo, refund, cancel "+
+						 " from tbl_order join tbl_order_detail "
+						 + " on odrcode = fk_odrcode "
+						 + " where odrcode = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1,odrcode);
@@ -336,6 +337,10 @@ public class OrderDAO implements InterOrderDAO {
 				ovo.setOdrstatus(rs.getInt("odrstatus"));
 				ovo.setRecipient_memo(rs.getString("recipient_memo"));
 				
+				OrderDetailVO odvo = new OrderDetailVO();
+				odvo.setRefund(rs.getInt("refund"));
+				odvo.setCancel(rs.getInt("cancel"));
+				ovo.setOdvo(odvo);
 			}
 			
 		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
@@ -346,6 +351,102 @@ public class OrderDAO implements InterOrderDAO {
 
 		return ovo;
 	}// end of public OrderVO getOrderDetail(String odrcode) throws SQLException 
+
+	
+	// 주문을 반품하는 메소드
+	@Override
+	public int refundUpdate(Map<String, String> paraMap) throws SQLException {
+		
+		int result = 0;
+		int rs = 1;
+		
+		String odnumjoin = paraMap.get("odnumjoin");
+		String[] odnumArr = odnumjoin.split(",");
+		
+		try {
+			conn = ds.getConnection();
+			
+			for(int i=0; i<odnumArr.length; i++) {
+				String sql = " update tbl_order_detail set refund = -1 "
+						   + " 					   , refund_reason = ? "
+						   + " where odnum = ? "; 
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, paraMap.get("refund_reason"));
+				pstmt.setString(2, odnumArr[i]);
+	            
+				result = pstmt.executeUpdate();
+				
+				rs = result * rs;
+			}
+			
+		} finally {
+			close();
+		}
+		return rs;
+	}// end of public int refundUpdate(Map<String, String> paraMap) throws SQLException
+
+	
+	
+	// 주문을 취소하는 메소드
+	@Override
+	public int cancelUpdate(Map<String, String> paraMap) throws SQLException {
+		
+		int rs = 0;
+		int n1=0, n2=0;
+		
+		String odnumjoin = paraMap.get("odnumjoin");
+		String[] odnumArr = odnumjoin.split(",");
+		
+		try {
+			conn = ds.getConnection();
+			
+			conn.setAutoCommit(false); // 수동커밋
+			for(int i=0; i<odnumArr.length; i++) {
+				
+				String sql = " update tbl_order_detail set cancel = 1 "
+						   + " 					   , cancel_reason = ? "
+						   + " where odnum = ? "; 
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, paraMap.get("cancel_reason"));
+				pstmt.setString(2, odnumArr[i]);
+	            
+				n1 = pstmt.executeUpdate();
+				// System.out.println("~~~ 확인용 n1 : " + n1);
+				
+				if(n1 == 1) {
+					sql = " update tbl_order set odrstatus = 3 "
+					    + " where odnum = ? ";
+				
+					
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, odnumArr[i]);
+					
+					n2 = pstmt.executeUpdate();
+				}
+				
+				rs = n1 * n2;
+				
+			}
+			
+			if(rs > 0) {
+			   conn.commit();
+			   conn.setAutoCommit(true); // 자동커밋으로 전환
+			}
+		} catch(SQLException e) {
+			
+			conn.rollback();
+			conn.setAutoCommit(true); // 자동커밋으로 전환 
+			rs = 0;
+				
+		} finally {
+			close();
+		}
+		return rs;
+	}// end of public int cancelUpdate(Map<String, String> paraMap) throws SQLException 
 
 	
 

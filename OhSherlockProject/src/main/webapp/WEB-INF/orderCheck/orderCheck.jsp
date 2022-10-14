@@ -248,11 +248,24 @@
 						<td class="align-middle" style="text-align: center;">${ovo.odrdate}<br>[${ovo.odrcode}]</td>
 						<td><img src="<%=request.getContextPath() %>/images/${ovo.odvo.pvo.pimage}" width=100 height=100 />${ovo.odvo.pvo.pname}</td>
 						<td class="align-middle">${ovo.odvo.oqty}</td>
-						<td class="align-middle">${ovo.odvo.oprice}</td>
+						<td class="align-middle"><fmt:formatNumber value="${ovo.odvo.oprice}" pattern="#,###"/>원</td>
 						<td class="align-middle">
-							<c:if test="${ovo.odrstatus eq '1'}">상품준비중</c:if>
-							<c:if test="${ovo.odrstatus eq '2'}">배송중</c:if>
-							<c:if test="${ovo.odrstatus eq '3'}">배송완료</c:if>
+							<c:if test="${ovo.odrstatus eq '1' }">
+								<c:if test="${ovo.odvo.cancel eq '1'}">주문취소</c:if>
+								<c:if test="${ovo.odvo.cancel ne '1'}">상품준비중</c:if>
+							</c:if>
+							
+							<c:if test="${ovo.odrstatus eq '2'}">
+							
+							배송중
+							
+							</c:if>
+							
+							<c:if test="${ovo.odrstatus eq '3'}">
+								<c:if test="${ovo.odvo.refund eq '0'}">배송완료</c:if>
+								<c:if test="${ovo.odvo.refund eq '1'}">환불완료</c:if>
+								<c:if test="${ovo.odvo.refund eq '-1'}">환불요청처리중</c:if>
+							</c:if>
 							<input name="odrcode" type="hidden" value="${ovo.odrcode}" />
 						</td>
 					</tr>

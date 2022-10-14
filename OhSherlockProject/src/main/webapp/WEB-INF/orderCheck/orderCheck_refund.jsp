@@ -63,22 +63,7 @@
  $(document).ready(function() {
 	 
 	 $("#sumPrice").html('0원');
-	 $("h4").html('0원');
 	 
-		// 스피너
-		$("input.spinner").spinner({
-     	spin: function(event, ui) {
-	            if(ui.value > event.value) {
-	            	$(this).spinner("value", event.value);
-	               	return false;
-	            }
-	            else if(ui.value < 0) {
-	            	$(this).spinner("value", 0);
-	               	return false;
-	            }
-      	}
-   	});// end of $(".spinner").spinner({});-----------------
-
 		
 		// 우편번호 클릭했을때
 		  $('button#addressBtn').click(function () {
@@ -158,24 +143,12 @@
 			   
 			});
 			
-			// 스피너를 변경했을때
-			$("input.spinner").bind("spinstop", function(e) {
-				
-			  const $target = $(e.target);
-				
-		    const oqty = $target.parents().find("input[name='hidden_oqty']").val(); 
-		    const oprice = $target.parents().find("input[name='oprice']").val(); 
-				// console.log($target.val())
-				// 주문량보다 초과선택할경우
-				
-				if($target.val() > oqty ){
-					alert("주문하신 상품수량을 초과했습니다.");
-					$(this).spinner("value", oqty);
-				}
-				
-				
-			}); 
 		
+			
+			
+			
+			
+			
 	});// end of $(document).ready()-----------------------
 
 	// 장바구니 전체 선택하기
@@ -210,9 +183,9 @@
 		
 		$("#sumPrice").html(totalSalePriceSum.toLocaleString('en')+"원");
 		
-		totalSalePriceSum = totalSalePriceSum + ${ovo.delivery_cost};
+		totalSalePriceSum = Number(totalSalePriceSum) + Number($("#delivery_cost").val());
 		
-		$("h4").html(totalSalePriceSum.toLocaleString('en')+"원");
+		$("#refundMoney").html(totalSalePriceSum.toLocaleString('en')+"원");
 		
  	} // end of function clickCheckBox(this)
 	
@@ -263,29 +236,32 @@
 	       	return; // 종료 
 	    } 
 	   	
-	   	else {
+	   	const hidden_select = $("#select").val();
+		
+			if(hidden_select == "") {
+				alert("반품사유를 선택해주세요.");
+				return;
+			}
+			
+			$("#hidden_select").val(hidden_select);
+	   	
+	   	
 	         const allCnt = $("input:checkbox[name=odnum]").length; // 모든 체크박스의 개수
 	         
 	         const odnumArr = new Array(); // 제품번호 // DB에 넣기 위해서 받아오는데, 상품이 여러개 일 수 있으니 배열로 받아온다
-	         const oqtyArr = new Array();
-	         
-	         const pnameArr = new Array();
-	         const opriceArr = new Array();
 	    
 	         for(var i=0; i<allCnt; i++) {
-	             if( $("input:checkbox[name=pnum]").eq(i).is(":checked") ) { // .eq(i) 첫번째 체크박스가 체크되어져 있다면 꺼내온다.
+	             if( $("input:checkbox[name=odnum]").eq(i).is(":checked") ) { // .eq(i) 첫번째 체크박스가 체크되어져 있다면 꺼내온다.
 	            	 odnumArr.push( $("input:checkbox[name=odnum]").eq(i).val() ); // 체크박스의 value 값 ${cartvo.pnum} 
-	            	 oqty.push( $("input.oqty").eq(i).val() ); 
-	            	 pname.push( $("span.pname").eq(i).val() ); 
-	            	 oprice.push( $("td.oprice").eq(i).val() ); 
 	            	}
 	         }// end of for---------------------------
-	            
-	         const pnamejoin = pnameArr.join();
-	         const opricejoin = opriceArr.join();
+					 
+	         const odnumjoin = odnumArr.join();
+	         
+	         $("input#odnumjoin").val(odnumjoin);   
 	
-	         var bool = confirm("상품 "+pnamejoin+" 환불신청을 하시겠습니까?");
-	           
+	         var bool = confirm("선택하신 상품을 환불신청 하시겠습니까?");
+	         
 	         if(bool) {
 	        	// 최종적으로 폼을 보내어 준다.
 		   		  const frm = document.refundFrm;
@@ -293,7 +269,7 @@
 		   		  frm.method = 'post';
 		   		  frm.submit();
 	         }
-	   	}
+	   	
 
 	}// end of function goRefund()
 	
@@ -333,16 +309,14 @@
 								<td><input type="checkbox" class="chkboxodnum" id="odnum${status.index}" name="odnum" value="${ovo.odvo.odnum}" onclick="clickCheckBox(this.form)"></td>
 								<td class="align-middle" style="text-align: center;">${ovo.odrdate}<br>[${ovo.odrcode}]</td>
 								<td><img src="<%=request.getContextPath() %>/images/${ovo.odvo.pvo.pimage}" width=100 height=100><span class="pname">${ovo.odvo.pvo.pname}</span></td>
-								<td><input class="spinner oqty" style="width:50px" name="oqty" value="${ovo.odvo.oqty}" required/></td>
-								<td class="oprice" class="align-middle">${ovo.odvo.oprice}</td>
+								<td>${ovo.odvo.oqty}</td>
+								<td class="oprice" class="align-middle"><fmt:formatNumber value="${ovo.odvo.oprice}" pattern="#,###"/>원</td>
 							</tr>
-							<input type="hidden" name="oprice" value="${ovo.odvo.oprice}"/>
-							<input type="hidden" name="hidden_oqty" value="${ovo.odvo.oqty}"/>
+							
 							<%-- 히든태그 목록 --%>
+							<input type="hidden" name="oprice" value="${ovo.odvo.oprice}"/>
+							<input type="hidden" name="oqty" value="${ovo.odvo.oqty}"/>
 							<input type="hidden" id="odnumjoin" name="odnumjoin" value="" />
-							<input type="hidden" id="pnamejoin" name="pnamejoin" value="" />
-							<input type="hidden" id="oqtyjoin" name="oqtyjoin" value="" />
-							<input type="hidden" id="opricejoin" name="opricejoin" value="" />
 						</c:forEach>
 					</tbody>
 				</table>
@@ -362,7 +336,7 @@
 		          <tr>
 				         <th>사유<span class="star">*</span></th>
 				         <td>
-				          <select name="refund_reason" class="form-select form-select-sm" aria-label=".form-select-sm example">
+				          <select name="select" id="select" class="form-select form-select-sm" aria-label=".form-select-sm example">
 									  <option value="" selected>&nbsp;사유를 선택해주세요</option>
 									  <option value="고객단순변심">&nbsp;고객단순변심</option>
 									  <option value="상품불만족">&nbsp;상품불만족</option>
@@ -370,6 +344,7 @@
 									  <option value="상품파손">&nbsp;상품파손</option>
 									  <option value="오배송">&nbsp;오배송</option>
 				          </select>
+				          <input type="hidden" name="hidden_select" id="hidden_select" value="" />
 			  		 		 </td>
 		          </tr>
 		        </tbody>
@@ -422,15 +397,18 @@
 	          <tbody>
 	            <tr>
 	              <td class="col col-9 text-left" style="padding-top: 20px; padding-bottom: 0.7px;">총 상품금액</td>
-	              <td class="col col-3 text-right" style="padding-top: 20px; padding-bottom: 0.7px;" ><span id="sumPrice"></span></td>
+	              <td class="col col-3 text-right" style="padding-top: 20px; padding-bottom: 0.7px;" ><span id="sumPrice">0원</span></td>
 	            </tr>
 	            <tr>
 	              <td class="col col-9 text-left">배송비</td>
-	              <td class="col col-3 text-right" style="padding-bottom: 20px;"><fmt:formatNumber value="${ovo.delivery_cost}" pattern="#,###"/>원</td>
+	              <td class="col col-3 text-right" style="padding-bottom: 20px;">
+	              <fmt:formatNumber value="${ovo.delivery_cost}" pattern="#,###"/>원
+	              <input type="hidden" name="delivery_cost" id="delivery_cost" value="${ovo.delivery_cost}" />
+	              </td>
 	            </tr>
 	            <tr style="border-top: 1px solid #d9d9d9;">
 	              <td class="col col-9" style="color:#1E7F15; font-weight:bolder; padding-bottom: 15px;"><h4>총 환불예정금액</h4></td>
-	              <td class="col col-3 text-right " style="color:#1E7F15; font-weight:bolder; padding-bottom: 15px;"><h4></h4></td>  
+	              <td class="col col-3 text-right " style="color:#1E7F15; font-weight:bolder; padding-bottom: 15px;"><h4 id="refundMoney">0원</h4></td>  
 	            </tr>
 	          </tbody>
 	        </table>

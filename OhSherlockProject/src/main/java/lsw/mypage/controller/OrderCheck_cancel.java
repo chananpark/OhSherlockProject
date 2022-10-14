@@ -19,7 +19,15 @@ public class OrderCheck_cancel extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
+		// 자기 목록만 조회가능하게 해야함
+		InterOrderDAO odao = new OrderDAO();
+		Map<String, String> paraMap = new HashMap<>();
+		
+		
 		boolean isLogin = super.checkLogin(request);
+		
+		HttpSession session = request.getSession();
+		MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
 
 		if(!isLogin) { // 로그인을 하지 않은 상태라면
 			
@@ -32,16 +40,9 @@ public class OrderCheck_cancel extends AbstractController {
 			return;
 		}
 		else {
-			
-			String method = request.getContextPath();
+			String method = request.getMethod();
 			
 			if(!"POST".equalsIgnoreCase(method)) { 
-				HttpSession session = request.getSession();
-				MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
-				
-				// 자기 목록만 조회가능하게 해야함
-				InterOrderDAO odao = new OrderDAO();
-				Map<String, String> paraMap = new HashMap<>();
 				
 				String odrcode = request.getParameter("odrcode");
 				// System.out.println(odrcode);
@@ -66,6 +67,18 @@ public class OrderCheck_cancel extends AbstractController {
 			}
 			else { // post 방식이라면
 				
+				String odnumjoin = request.getParameter("odnumjoin");
+				String cancel_reason = request.getParameter("hidden_select");
+				// System.out.println("~~~~~~~~ 확인용 odnumjoin : " + odnumjoin);
+				
+				paraMap.put("odnumjoin", odnumjoin);				
+				paraMap.put("cancel_reason", cancel_reason);	
+				
+				int n = odao.cancelUpdate(paraMap);
+				
+				super.setRedirect(false);
+				super.setViewPage("orderCheck.tea");
+					
 				
 			}
 		}

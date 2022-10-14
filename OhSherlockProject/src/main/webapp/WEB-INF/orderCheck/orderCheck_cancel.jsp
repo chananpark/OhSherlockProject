@@ -52,25 +52,6 @@
 
  $(document).ready(function() {
 
-	 
-	 $("#sumPrice").html('0원');
-	 $("h4").html('0원');
-	 
-		// 스피너
-		$("input.spinner").spinner({
-  	spin: function(event, ui) {
-	           if(ui.value > event.value) {
-	           	$(this).spinner("value", event.value);
-	              	return false;
-	           }
-	           else if(ui.value < 0) {
-	           	$(this).spinner("value", 0);
-	              	return false;
-	           }
-   	}
-	});// end of $(".spinner").spinner({});-----------------
-	
-	
 		// 제품번호의 모든 체크박스가 체크가 되었다가 그 중 하나만 이라도 체크를 해제하면 전체선택 체크박스에도 체크를 해제하도록 한다.
 		$(".chkboxodnum").click(function(){
 			   
@@ -89,29 +70,6 @@
 			   }
 			});
 	
-		// 스피너를 변경했을때
-		$("input.spinner").bind("spinstop", function(e) {
-			
-		  const $target = $(e.target);
-			
-	    const oqty = $target.parents().find("input[name='hidden_oqty']").val(); 
-	    const oprice = $target.parents().find("input[name='oprice']").val(); 
-	    const name = $target.attr('name');
-	    
-	    
-			 console.log(name)
-			 console.log(oqty)
-			 console.log(oprice)
-			 console.log($target.val())
-			// 주문량보다 초과선택할경우
-			
-			if($target.val() > oqty ){
-				alert("주문하신 상품수량을 초과했습니다.");
-				$(this).spinner("value", oqty);
-			}
-			
-			
-		}); 
 	
  });// end of $(document).ready()-----------------------
 	
@@ -126,7 +84,6 @@
 	
 	function clickCheckBox(frm) {
 
-		
   	var totalSalePriceSum = 0;
   		
 		var count = frm.odnum.length;
@@ -148,9 +105,9 @@
 		
 		$("#sumPrice").html(totalSalePriceSum.toLocaleString('en')+"원");
 		
-		totalSalePriceSum = totalSalePriceSum + ${ovo.delivery_cost};
+		totalSalePriceSum = Number(totalSalePriceSum) + Number($("#delivery_cost").val());
 		
-		$("h4").html(totalSalePriceSum.toLocaleString('en')+"원");
+		$("h4#refundMoney").html(totalSalePriceSum.toLocaleString('en')+"원");
 		
  	} // end of function clickCheckBox(this)
 
@@ -161,34 +118,46 @@
 	}
 	  
 	function goCancel() {
-	   	
-	         const allCnt = $("input:checkbox[name=odnum]").length; // 모든 체크박스의 개수
+		
+		
+						///// == 체크박스의 체크된 갯수(checked 속성이용) == /////
+			    	const checkCnt = $("input:checkbox[name='odnum']:checked").length;
+			    
+				   	if(checkCnt < 1) {
+				       	alert("취소하실 제품을 선택하세요.");
+				       	return; // 종료 
+				    } 			
+				   	
+				   	const hidden_select = $("#select").val();
+					
+					if(hidden_select == "") {
+						alert("취소사유를 선택해주세요.");
+						return;
+					}
+					
+					$("#hidden_select").val(hidden_select);
+					
+	         const allCnt = $("input:checkbox[name='odnum']").length; // 모든 체크박스의 개수
 	         
 	         const odnumArr = new Array(); // 제품번호 // DB에 넣기 위해서 받아오는데, 상품이 여러개 일 수 있으니 배열로 받아온다
-	         const oqtyArr = new Array();
-	         
-	         const pnameArr = new Array();
-	         const opriceArr = new Array();
 	    
 	         for(var i=0; i<allCnt; i++) {
-	             if( $("input:checkbox[name=pnum]").eq(i).is(":checked") ) { // .eq(i) 첫번째 체크박스가 체크되어져 있다면 꺼내온다.
-	            	 odnumArr.push( $("input:checkbox[name=odnum]").eq(i).val() ); // 체크박스의 value 값 ${cartvo.pnum} 
-	            	 oqty.push( $("input.oqty").eq(i).val() ); 
-	            	 pname.push( $("span.pname").eq(i).val() ); 
-	            	 oprice.push( $("td.oprice").eq(i).val() ); 
+	             if( $("input:checkbox[name='odnum']").eq(i).is(":checked") ) { // .eq(i) 첫번째 체크박스가 체크되어져 있다면 꺼내온다.
+	            	 odnumArr.push( $("input:checkbox[name='odnum']").eq(i).val() ); // 체크박스의 value 값 ${cartvo.pnum} 
 	            	}
 	         }// end of for---------------------------
-	            
-	         const pnamejoin = pnameArr.join();
-	         const opricejoin = opriceArr.join();
-	
-	         var bool = confirm("상품 "+pnamejoin+" 환불신청을 하시겠습니까?");
-	           
+	         
+	         const odnumjoin = odnumArr.join();
+	         
+	         $("input#odnumjoin").val(odnumjoin);
+	         // alert(odnumArr);
+	         var bool = confirm("선택하신 상품을 주문취소 하시겠습니까?");
+	          
 	         if(bool) {
 	        	// 최종적으로 폼을 보내어 준다.
-		   		  const frm = document.refundFrm;
+		   		  const frm = document.cancelFrm;
 		   		  frm.action = '<%=ctxPath%>/mypage/orderCheck_cancel.tea';
-		   		  frm.method = 'post';
+		   		  frm.method = 'POST';
 		   		  frm.submit();
 	         }
 	   	
@@ -196,7 +165,7 @@
  	
  	
 </script> 
-<form>
+<form name="cancelFrm">
 <div class="container">
   <div class="col-md-12">
   
@@ -231,11 +200,12 @@
 						<td><input type="checkbox" class="chkboxodnum" id="odnum${status.index}" name="odnum" value="${ovo.odvo.odnum}" onclick="clickCheckBox(this.form)"></td>
 						<td class="align-middle" style="text-align: center;">${ovo.odrdate}<br>[${ovo.odrcode}]</td>
 						<td><img src="<%=request.getContextPath() %>/images/${ovo.odvo.pvo.pimage}" width=100 height=100>${ovo.odvo.pvo.pname}</td>
-						<td><input class="spinner oqty" style="width:50px" name="oqty${status.index}" value="${ovo.odvo.oqty}" required/></td>
+						<td>${ovo.odvo.oqty}</td>
 						<td class="align-middle"><fmt:formatNumber value="${ovo.odvo.oprice}" pattern="#,###"/>원</td>
 					</tr>
 					<input type="hidden" name="oprice" value="${ovo.odvo.oprice}"/>
-					<input type="hidden" name="hidden_oqty" value="${ovo.odvo.oqty}"/>
+					<input type="hidden" name="oqty" value="${ovo.odvo.oqty}"/>
+					<input type="hidden" id="odnumjoin" name="odnumjoin" value="" />
 				</c:forEach>
 			</tbody>
 		</table>
@@ -257,12 +227,13 @@
           <tr>
              <th>사유</th>
              <td><span class="star">*&nbsp;</span>
-               <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+               <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="select" id="select">
 								  <option value="" selected>&nbsp;사유를 선택해주세요</option>
-								  <option >&nbsp;고객단순변심</option>
-								  <option >&nbsp;주문착오</option>
-								  <option>&nbsp;배송지연</option>
+								  <option value="고객단순변심">&nbsp;고객단순변심</option>
+								  <option value="주문착오">&nbsp;주문착오</option>
+								  <option value="배송지연">&nbsp;배송지연</option>
                </select>
+               <input type="hidden" name="hidden_select" id="hidden_select" value="" />
 	  		 		</td>
           </tr>
         </tbody>
@@ -276,15 +247,18 @@
           <tbody>
             <tr>
               <td class="col col-9 text-left" style="padding-top: 20px; padding-bottom: 0.7px;">총 상품금액</td>
-              <td class="col col-3 text-right" style="padding-top: 20px; padding-bottom: 0.7px;"><span id="sumPrice"></span></td>
+              <td class="col col-3 text-right" style="padding-top: 20px; padding-bottom: 0.7px;"><span id="sumPrice">0원</span></td>
             </tr>
             <tr>
               <td class="col col-9 text-left">배송비</td>
-              <td class="col col-3 text-right" style="padding-bottom: 20px;"><fmt:formatNumber value="${ovo.delivery_cost}" pattern="#,###"/>원</td>
+              <td class="col col-3 text-right" style="padding-bottom: 20px;">
+              	<fmt:formatNumber value="${ovo.delivery_cost}" pattern="#,###"/>원
+            		<input type="hidden" name="delivery_cost" id="delivery_cost" value="${ovo.delivery_cost}" />
+             	</td>
             </tr>
             <tr style="border-top: 1px solid #d9d9d9;">
               <td class="col col-9" style="color:#1E7F15; font-weight:bolder; padding-bottom: 15px;"><h4>총 환불예정금액</h4></td>
-              <td class="col col-3 text-right" style="color:#1E7F15; font-weight:bolder; padding-bottom: 15px;"><h4 id="sumPrice"></h4></td>  
+              <td class="col col-3 text-right" style="color:#1E7F15; font-weight:bolder; padding-bottom: 15px;"><h4 id="refundMoney">0원</h4></td>  
             </tr>
           </tbody>
         </table>
@@ -315,7 +289,7 @@
     	
     <div class="text-center" id="detail" style="display: block; margin-top: 40px;"> <!-- 주문상세 id -->
 	  <input type="button" class="btn-light" value="이전" onclick="goback()"  />
-	  <input type="button" class="btn-secondary" value="취소신청" />
+	  <input type="button" class="btn-secondary" value="취소신청" onclick="goCancel()"/>
     </div>
     
   </div>

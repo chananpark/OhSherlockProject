@@ -23,6 +23,7 @@ public class OrderCheck_refund extends AbstractController {
 		Map<String, String> paraMap = new HashMap<>();
 		
 		boolean isLogin = super.checkLogin(request);
+		
 
 		if(!isLogin) { // 로그인을 하지 않은 상태라면
 			
@@ -34,10 +35,10 @@ public class OrderCheck_refund extends AbstractController {
 			
 			return;
 		}
-		else {
+		else {// 로그인 한 상태 
 			
 			// 자기 목록만 조회가능하게 해야함
-			String method = request.getContextPath();
+			String method = request.getMethod();
 			
 			if(!"POST".equalsIgnoreCase(method)) { 
 				HttpSession session = request.getSession();
@@ -67,15 +68,16 @@ public class OrderCheck_refund extends AbstractController {
 			else { // post 방식이라면
 				
 				String odnumjoin = request.getParameter("odnumjoin");
-				String pnamejoin = request.getParameter("pnamejoin");
-				String oqtyjoin = request.getParameter("oqtyjoin");
-				String opricejoin = request.getParameter("opricejoin");
-				System.out.println("~~~~~~~~ 확인용 odnumjoin : " + odnumjoin);
-				System.out.println("~~~~~~~~ 확인용 pnamejoin : " + pnamejoin);
-				System.out.println("~~~~~~~~ 확인용 oqtyjoin : " + oqtyjoin);
-				System.out.println("~~~~~~~~ 확인용 opricejoin : " + opricejoin);
-				// int n = odao.refundUpdate(paraMap);
+				String refund_reason = request.getParameter("hidden_select");
+				// System.out.println("~~~~~~~~ 확인용 odnumjoin : " + odnumjoin);
+			    // System.out.println("~~~~~~~~ 확인용 refund_reason : " + refund_reason);
+				paraMap.put("odnumjoin", odnumjoin);				
+				paraMap.put("refund_reason", refund_reason);
+						
+				int n = odao.refundUpdate(paraMap);
 				
+				super.setRedirect(false);
+				super.setViewPage("orderCheck.tea");
 			}
 		
 		}

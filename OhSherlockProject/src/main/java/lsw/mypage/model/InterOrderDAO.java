@@ -23,5 +23,12 @@ public interface InterOrderDAO {
 	// 주문상세정보에서 배송지 출력하는 메소드
 	OrderVO getOrderDetail(String odrcode)throws SQLException;
 
+	// 주문을 반품하는 메소드
+	int refundUpdate(Map<String, String> paraMap)throws SQLException;
+
+	// 주문을 취소하는 메소드
+	int cancelUpdate(Map<String, String> paraMap)throws SQLException;
+
+
 
 }
