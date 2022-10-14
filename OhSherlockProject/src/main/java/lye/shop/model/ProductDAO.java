@@ -855,7 +855,7 @@ public class ProductDAO implements InterProductDAO {
 	@Override
 	public int addProductReview(ReviewVO rvo) throws SQLException {
 		
-		//System.out.println(rvo.toString());
+		System.out.println(rvo.toString());
 		int n = 0;
 	      
 	       try {

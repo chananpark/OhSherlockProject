@@ -166,18 +166,19 @@
          var sumtotalPrice = Number(oqty) * Number(saleprice); // 총구매금액
          var sumtotalPoint = Number(oqty) * Number(point); // 
          
-         if( sumtotalPrice < 30000 ) {
-            sumtotalPrice += 2500;
-         }
-         
          $("#oqtyjoin").val(oqty);
          $("#totalPricejoin").val(sumtotalPrice); // 상품구매금액
          $("#sumtotalPrice").val(sumtotalPrice);
          $("#sumtotalOriginalPrice").val(sumtotalOriginalPrice); // 총구매정가
          $("#sumtotalPoint").val(sumtotalPoint);
          
+         let str_sumtotalPrice = sumtotalPrice;
          
-         const str_sumtotalPrice = sumtotalPrice.toLocaleString('en');
+			if(str_sumtotalPrice < 30000) {
+				str_sumtotalPrice += 2500;
+			}
+         
+         str_sumtotalPrice = str_sumtotalPrice.toLocaleString('en');
          
          var bool = confirm("총주문액 : "+str_sumtotalPrice+"원 결제하시겠습니까?");
            
@@ -237,8 +238,8 @@
          <p class="h2" style="font-weight:bold;">${pvo.pname}</p>
          <p>${pvo.psummary}</p>
          <p class="h5 row mt-5" >
-            <span class="col-9" style="text-align: left;" >상품 가격</span>
-            <span class="col-3" style="font-weight:bold; text-align: center;"><fmt:formatNumber value="${pvo.price}" pattern="###,###"/>원</span>
+            <span class="col-9" style="text-align: left;" >판매 금액</span>
+            <span class="col-3" style="font-weight:bold; text-align: center;"><fmt:formatNumber value="${pvo.saleprice}" pattern="###,###"/>원</span>
          </p>
          
             <p class="h5 row" >
@@ -251,7 +252,7 @@
          <table class="table table-active table-borderless bg-light">
                 <tbody>
                   <tr>
-                       <td class="col col-9 text-left">상품금액</td>
+                       <td class="col col-9 text-left">정가</td>
                        <td class="col col-3 text-right"><fmt:formatNumber value="${pvo.price}" pattern="###,###"/>원</td>
                   </tr>
                   <tr>
