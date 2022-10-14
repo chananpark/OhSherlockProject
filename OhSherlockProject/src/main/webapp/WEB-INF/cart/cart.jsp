@@ -351,11 +351,13 @@
             	sumtotalPoint += Number(totalPointArr[i]);
             }
 
-			if(sumtotalPrice < 30000) {
-				sumtotalPrice += 2500;
+            let str_sumtotalPrice = sumtotalPrice;
+            
+			if(str_sumtotalPrice < 30000) {
+				str_sumtotalPrice += 2500;
 			}
             
-            const str_sumtotalPrice = sumtotalPrice.toLocaleString('en'); // 자바스크립트에서 숫자 3자리마다 콤마 찍어주기  
+            str_sumtotalPrice = str_sumtotalPrice.toLocaleString('en'); // 자바스크립트에서 숫자 3자리마다 콤마 찍어주기  
            	
             
            	var bool = confirm("총주문액 : "+str_sumtotalPrice+"원 결제하시겠습니까?");

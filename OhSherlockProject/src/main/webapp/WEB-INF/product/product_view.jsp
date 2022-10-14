@@ -166,18 +166,19 @@
          var sumtotalPrice = Number(oqty) * Number(saleprice); // 총구매금액
          var sumtotalPoint = Number(oqty) * Number(point); // 
          
-         if( sumtotalPrice < 30000 ) {
-            sumtotalPrice += 2500;
-         }
-         
          $("#oqtyjoin").val(oqty);
          $("#totalPricejoin").val(sumtotalPrice); // 상품구매금액
          $("#sumtotalPrice").val(sumtotalPrice);
          $("#sumtotalOriginalPrice").val(sumtotalOriginalPrice); // 총구매정가
          $("#sumtotalPoint").val(sumtotalPoint);
          
+         let str_sumtotalPrice = sumtotalPrice;
          
-         const str_sumtotalPrice = sumtotalPrice.toLocaleString('en');
+			if(str_sumtotalPrice < 30000) {
+				str_sumtotalPrice += 2500;
+			}
+         
+         str_sumtotalPrice = str_sumtotalPrice.toLocaleString('en');
          
          var bool = confirm("총주문액 : "+str_sumtotalPrice+"원 결제하시겠습니까?");
            
