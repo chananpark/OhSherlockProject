@@ -203,7 +203,7 @@ a:visited  {
 	<div>
 	   <span style="font-weight: bold; font-size: 15pt;">최근 주문정보</span>
 	   <span>(최근 1개월)</span>
-	   <span style="float: right;">더보기&nbsp;></span>
+	   <span style="float: right;"><a  href="<%= request.getContextPath() %>/mypage/orderCheck.tea?userid=${(sessionScope.loginuser).userid}">더보기&nbsp;></a></span>
 	</div>
 
 	<div class="orderIf">
