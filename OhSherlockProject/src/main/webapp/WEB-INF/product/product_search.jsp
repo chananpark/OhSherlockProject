@@ -74,6 +74,19 @@ input.cart { <%-- 여기 --%>
 
 $(()=>{
 	
+	// 찜하기(아이콘) 클릭시 색깔 변경
+	$('i.heart').click(function() {
+        $(this).removeClass("text-secondary");
+        $(this).addClass("text-danger");
+    });
+	// 찜하기 클릭시 색깔 변경
+	$('input.like').click(function(e) {
+		const $target = $(e.target); // 이벤트가 발생되어진 곳
+		$target.parent().find("i.heart").removeClass("text-secondary");
+		$target.parent().find("i.heart").addClass("text-danger");
+    });
+	
+	
 	cnum = "${cnum}";
 	order = "${order}";
 	

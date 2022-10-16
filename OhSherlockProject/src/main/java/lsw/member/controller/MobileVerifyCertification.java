@@ -40,7 +40,7 @@ public class MobileVerifyCertification extends AbstractController {
 			
 			// 랜덤하게 생성한 인증코드(certificationCode) 를 비밀번호 찾기를 하고자 하는 사용자의 이메일로 전송시켜준다.
 			SmsSend sms = new SmsSend();
-	
+			
 			sms.sendSms(mobile, certificationCode);
 	
 			// System.out.println("문자 전송 결과 확인용 => " +  result);

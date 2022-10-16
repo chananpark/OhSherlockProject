@@ -101,8 +101,8 @@
 		});
 		
 		// 할인금액 넣어주기
-		let saleAmount = '${saleAmount}'.toLocaleString('en');
-		$("#saleAmount").val(saleAmount);
+		let s_saleAmount = '${saleAmount}'.toLocaleString('en');
+		$("#saleAmount").val(s_saleAmount);
 		
 		// 주문자와 같음 체크시
 		$("#samePerson").change((e) => {
@@ -267,7 +267,7 @@
 function changePoint() {
 	
 	const usedPoint = Number($("#odrusedpoint").val());
-	$("#td_point").text(usedPoint + " 원");
+	$("#td_point").text(usedPoint.toLocaleString('en') + " 원");
 	
 	$("#span_totalPaymentAmount").text((Number(${sumtotalPrice})+Number(${delivery_cost})-usedPoint).toLocaleString('en'));
 	
@@ -445,7 +445,7 @@ function frmSubmit() {
 		</div>
 		<hr>
 		
-		<h5><a class="collapsed card-link" data-toggle="collapse" href="#saleNpoint">할인/포인트</a></h5>
+		<h5><a class="collapsed card-link" data-toggle="collapse" href="#saleNpoint">할인/적립</a></h5>
 		<div id="saleNpoint" class="collapse show mt-4">
 			<table class="table table-active table-borderless">
 				<tbody>
@@ -457,7 +457,7 @@ function frmSubmit() {
 						<td><input class="rounded" type="button" value="할인 적용" disabled/></td>
 					</tr>
 					<tr>
-						<td class="mt-2">포인트 | 보유포인트 ${loginuser.point}점</td>
+						<td class="mt-2">적립금 | 보유적립금 <fmt:formatNumber value="${loginuser.point}" pattern="###,###" />점</td>
 					</tr>
 					<tr class="saleNpointInfo">
 						<td><input name="odrusedpoint" id="odrusedpoint" type="number" max="${loginuser.point}" value="0" class="text-right"/></td>

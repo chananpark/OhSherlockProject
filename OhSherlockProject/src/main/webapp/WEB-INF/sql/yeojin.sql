@@ -413,3 +413,22 @@ delete from tbl_member
     where userid = 'asdas231'; 
     
     commit;
+    
+    
+select *
+from tbl_login_history
+where fk_userid='imbori100'
+where logindate between '2022/10/14' and '2022/10/15'
+
+
+insert into tbl_login_history(fk_userid, logindate, clientip)
+VALUES ('imbori100', '2021/09/23', '127.0.0.1');
+
+commit;
+
+select *
+from tbl_member
+where userid='Jonathan2'
+
+
+commit;

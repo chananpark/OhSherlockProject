@@ -1200,9 +1200,10 @@ $(function(){
 	<section id="pca">
 	<hr style="padding-top: 90px; border-style:none">
 		<div class="mt-4 pca">
-			<h4>박찬안</h4>
+			<h4 style="font-weight: bold;">👑박찬안👑</h4>
 			<br>
 			<br>
+			<h4>
 			이번 프로젝트를 통해서 MVC 패턴에 대한 이해도를 높일 수 있었다.<br>
 			수업으로만 들었을 때는 헷갈리는 점이 많았지만 직접 만들어보며 체화할 수 있는 좋은 기회가 되었다.<br>
 			무엇보다 너무 좋은 팀원들을 만나 행운이었다고 생각한다.<br>
@@ -1214,26 +1215,54 @@ $(function(){
 	<hr>
 	<section id="lye">
 	<hr style="padding-top: 90px; border-style:none">
-		<h4>이예은</h4>
+		<h4 style="font-weight: bold;">이예은</h4>
+		<h4>
+		<br>
+		<br>
+		약 4주동안 팀원들과 웹사이트를 구현하면서 힘들면서도 보람있고 즐거운 시간이었습니다.<br>
+		수업시간에 배운 부분을 직접 적용하고 추가적인 기능을 구현하면서 많은 것을 배울 수 있었고,<br>
+		팀원들 간에 서로 응원하고 도와주면서 한층 더 돈독해졌던 것 같습니다:)<br>
+		시행착오도 여러번 있었지만 좋은 팀원들 덕분에 빠르게 해결해 나갈 수 있었고, 마지막까지 힘내서 열심히 할 수 있었습니다! 다들 고생 많았어 우리 오셜록2조!♥
+		</h4>
 	</section>
 	<hr>
 	<section id="syj">
 	<hr style="padding-top: 90px; border-style:none">
-		<h4>손여진</h4>
+		<h4 style="font-weight: bold;">손여진</h4>
+		<br>
+		<br>
+		<h4>
+		수업 때 배웠던 개념들을 직접 적용시켜 보며 응용해 볼 수 있어서 좋은 기회였다. <br>
+		서로 모르는 거를 물어보고 알아가며 더 많이 배울 수 있어서 좋았다.<br>
+		좋은 팀원들과 함께해서 즐겁게 프로젝트를 진행하였다.<br>
+		시간이 조금 더 있었다면 좋았겠지만, 모두가 최선을 다해서 임했기 때문에 후회는 없다.  2조 최고 °˖✧◝(⁰▿⁰)◜✧˖°
+		</h4>
 	</section> 
 	<hr>
 	<section id="lsw">
 	<hr style="padding-top: 90px; border-style:none">
-		<h4>임선우</h4> 
+		<h4 style="font-weight: bold;">임선우</h4>
+		<br>
+		<br>
+		<h4>
+		깃을 처음 배우고 한번 잘못하면 팀 전체코드가 날라간다는 말에 무서워 초반에는 병합하는걸 미루다가<br>
+		팀원들과 소통을 하면서 깃에 대한 두려움을 극복했습니다. MVC를 시작하면서 정리가 안되어 복잡했는데, <br>
+		프로젝트를 하면서 정리가 많이 되었습니다. 진행하면서 예상하지 못한 변수들이 많아서 힘들었지만, <br>
+		팀원들과 해결해 나가 너무 좋았던 경험이었습니다. 2조 오셜록짱! 
+		</h4>
 	</section>
 	<hr>
 	<section id="kcy">   
 	<hr style="padding-top: 90px; border-style:none">  
-		<h4>강채영</h4> 
- 			<h4 style="position: absolute; bottom: 300px; left: 400px;">마무리하며 소감을 요약해서 말하자면 좋은 사람들을 만나고 그 사람들을 통해 즐겁게  </h4>
-		<img src="../images/미모티콘.png" width="450" height="450" style="z-index: 1; right: 30px;">
-<!-- 		<img src="../images/말풍선2.png" style="position: relative; right: 80px; bottom: 50px;">   -->
-<!-- 		style="transform: rotate(20deg); -->
+		<h4 style="font-weight: bold;">강채영</h4> 
+		<br>
+		<br>
+		<h4>
+		마무리하며 소감을 요약해서 말하자면 좋은 사람들을 만나고 그 사람들을 통해 즐겁게 배워갈 수 있는 시간이었습니다!<br>
+	    많이 부족했을 저를 옆에서 이끌어주고 응원해 준 팀장님과 팀원분들께 이 자리를 빌려 다시 한번 고맙다는 말을 전합니다.<br>
+	    실제 수업을 들으면서 머릿속으로만 이해하던 부분들을 직접 생각하고, 만들어가며 손으로 익힐 수 있어 좋았습니다~! <br>
+	    이번 프로젝트 모든 분들 수고 많으셨고 행복 가득한 주말 보내세요🍵
+		</h4>
 		
 	</section>
 </div>
