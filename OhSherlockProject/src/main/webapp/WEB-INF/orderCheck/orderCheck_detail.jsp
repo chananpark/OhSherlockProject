@@ -90,23 +90,26 @@
 						<td class="align-middle">${ovo.odvo.oqty}</td>
 						<td class="align-middle"><fmt:formatNumber value="${ovo.odvo.oprice}" pattern="#,###"/>원</td>
 						<td class="align-middle">
-							<c:if test="${ovo.odrstatus eq '1' }">
-								<c:if test="${ovo.odvo.cancel eq '1'}">주문취소</c:if>
-								<c:if test="${ovo.odvo.cancel ne '1'}">상품준비중</c:if>
-							</c:if>
-							
-							<c:if test="${ovo.odrstatus eq '2'}">
-							
-							배송중
-							
-							</c:if>
-							
-							<c:if test="${ovo.odrstatus eq '3'}">
-								<c:if test="${ovo.odvo.refund eq '0'}">배송완료</c:if>
-								<c:if test="${ovo.odvo.refund eq '1'}">환불완료</c:if>
-								<c:if test="${ovo.odvo.refund eq '-1'}">환불요청처리중</c:if>
-							</c:if>
-							
+						<c:choose>
+						<c:when test="${ovo.odrstatus == '1' }">
+							<label for="deliver${status.index}">상품준비중</label>
+						</c:when>
+						<c:when test="${ovo.odrstatus == '2' }">
+							<label for="complete${status.index}">배송중</label>
+						</c:when>
+						<c:when test="${ovo.odrstatus == '-1' }">
+							<label for="refund${status.index}">환불처리중</label>
+						</c:when>
+						<c:when test="${ovo.odvo.refund == 1}">
+							<span class="text-danger">환불완료</span>
+						</c:when>
+						<c:when test="${ovo.odvo.cancel == 1}">
+							<span class="text-info">주문취소</span>
+						</c:when>
+						<c:otherwise>
+							<span>배송완료</span>
+						</c:otherwise>
+						</c:choose>
 						  <input name="odrcode" type="hidden" value="${ovo.odrcode}" />
 					  </td>
 						<c:set var="prodTotalPrice" value="${prodTotalPrice+ovo.odvo.oprice}"/>
@@ -126,18 +129,17 @@
         </table>
     </div>
     
-    <div class="text-center" id="detail" style="display: block;"> <!-- 주문상세 id -->
-	    <c:if test="${ovo.odvo.refund eq 0 && ovo.odrstatus ne 2 && ovo.odrstatus ne 3}">
-	  	 <input type="button" class="btn-secondary btnCancel" onclick="goCancel();" value="주문취소" style="width: 80px;"/>
-		 	</c:if>
+    <c:if test="${requestScope.orderList.size() > 0}">
+    	<div class="text-center" id="detail" style="display: block;"> <!-- 주문상세 id -->
+	    	<c:if test="${ovo.odvo.refund eq 0 && ovo.odrstatus eq 1 }">
+	  	 		<input type="button" class="btn-secondary btnCancel" onclick="goCancel();" value="주문취소" style="width: 80px;"/>
+	 			</c:if>
 		 	
-		 
-		  <c:if test="${ovo.odrstatus eq 3 }">
+		  <c:if test="${ovo.odrstatus eq 3 && ovo.odvo.refund eq 0}">
 	 	   <input type="button" class="btn-secondary btnRefund" onclick="goRefund();" value="환불신청" style="width: 80px;"/>
 	 	  </c:if>
-	 	  
     </div>
-    
+   </c:if>
 	
 	<br>
     <hr>

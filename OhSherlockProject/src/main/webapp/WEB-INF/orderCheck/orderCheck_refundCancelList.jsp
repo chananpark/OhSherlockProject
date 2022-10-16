@@ -194,7 +194,7 @@
     <div class="col-md-15">
       <h2 style="font-weight: bold;">주문조회</h2><br>
       <hr style="background-color: black; height: 1.2px;"><br>
-      <h5 style="font-weight: bold;">최근 주문내역</h5>
+      <h5 style="font-weight: bold;">취소/반품 내역</h5>
     </div>
   
     

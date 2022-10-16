@@ -449,5 +449,81 @@ public class OrderDAO implements InterOrderDAO {
 	}// end of public int cancelUpdate(Map<String, String> paraMap) throws SQLException 
 
 	
+	// 취소 반품 리스트 
+	@Override
+	public List<OrderVO> selectMyRCOrder(Map<String, String> paraMap) throws SQLException {
+		List<OrderVO> orderList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = "select odnum, fk_pnum, oqty, oprice, fk_userid, odrdate, pname, pimage, odrcode, odrstatus "+
+						" from "+
+						" ( "+
+						" select rownum as rno, odnum, fk_pnum, oqty, oprice, fk_userid, odrdate, pname, pimage, odrcode, odrstatus "+
+						" from "+
+						" ( "+
+						" select odnum, fk_pnum, oqty, oprice, fk_userid, odrdate, pname, pimage, odrcode, odrstatus "+
+						" from  "+
+						" ( "+
+						" select fk_userid, odrdate, odnum, fk_pnum, oqty, oprice, odrcode, odrstatus "+
+						" from tbl_order join tbl_order_detail "+
+						" on odrcode = fk_odrcode   "+
+						" where 1=1 and fk_userid = ? and "
+						+ "odrstatus =  "
+						+ "odrdate between ? and to_date(? ||' 23:59:59', 'yyyy-mm-dd hh24:mi:ss') "+
+						  
+						" ) v "+
+						" join tbl_product  "+
+						" on pnum = fk_pnum "+
+						" order by odrdate desc) C "+
+						" ) T "+
+						" where rno between ? and ? ";
+			
+			// 조회하고자 하는 페이지 번호
+			int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo"));
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, paraMap.get("loginuser"));
+			pstmt.setString(2,paraMap.get("startDate"));
+			pstmt.setString(3,paraMap.get("endDate"));
+			pstmt.setInt(4, (currentShowPageNo * 5) - (5 - 1));
+			pstmt.setInt(5, (currentShowPageNo * 5));
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				OrderVO ovo = new OrderVO();
+				ovo.setFk_userid(rs.getString("fk_userid"));
+				ovo.setOdrdate(rs.getString("odrdate").substring(0, 10));
+				ovo.setOdrcode(rs.getString("odrcode"));
+				ovo.setOdrstatus(rs.getInt("odrstatus"));
+				
+				OrderDetailVO odvo = new OrderDetailVO();
+				odvo.setOdnum(rs.getInt("odnum"));
+				odvo.setFk_pnum(rs.getInt("fk_pnum"));
+				odvo.setOqty(rs.getInt("oqty"));
+				odvo.setOprice(rs.getInt("oprice"));
+				
+				ProductVO pvo = new ProductVO();
+				pvo.setPname(rs.getString("pname"));
+				pvo.setPimage(rs.getString("pimage"));
+				odvo.setPvo(pvo);
+				
+				ovo.setOdvo(odvo);
+				
+				orderList.add(ovo);
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return orderList;
+	}
+
+	
 
 }

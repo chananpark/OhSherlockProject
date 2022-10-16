@@ -29,6 +29,10 @@ public interface InterOrderDAO {
 	// 주문을 취소하는 메소드
 	int cancelUpdate(Map<String, String> paraMap)throws SQLException;
 
+	// 취소 반품 리스트 
+	List<OrderVO> selectMyRCOrder(Map<String, String> paraMap)throws SQLException;
+
+
 
 
 }

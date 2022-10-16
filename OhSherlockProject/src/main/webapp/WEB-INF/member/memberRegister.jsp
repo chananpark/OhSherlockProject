@@ -704,12 +704,12 @@
 	    return; // 종료
 	  } 
 	
-/* 	  // "이메일중복확인" 을 클릭했는지 여부 알아오기
+ 	  // "이메일중복확인" 을 클릭했는지 여부 알아오기
 	  if (!b_flag_emailDuplicate_click ||!b_flag_emailVerifyCode_click ) {
 	    // "이메일중복확인" 을 클릭 안 했을 경우
 	    alert('이메일 인증확인을 클릭하셔야 합니다.');
 	    return; // 종료
-	  } */
+	  } 
 	
 	  const checkbox_length = $("input:checkbox[id='agree']:checked").length;
 	

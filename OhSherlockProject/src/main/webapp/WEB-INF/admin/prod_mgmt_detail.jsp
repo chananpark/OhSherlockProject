@@ -34,6 +34,13 @@
 		// 변수 goBackURL 에 공백 " " 을 모두 "&" 로 변경하도록 한다.
 		goBackURL = goBackURL.replace(/ /gi, "&"); 
 		
+		$("a.pname").click(function (e) {
+			
+			const $target = $(e.target);
+			
+			$target.parent().parent().find("")
+		});
+		
 	}); // end of $(document).ready
 	
 	const pnum = ${requestScope.product_select_one.pnum};
@@ -102,7 +109,7 @@
 				<tbody>
 					<tr>
 						<td class="col-4">상품번호</td>
-						<td class="col-8">${requestScope.product_select_one.pnum}</td>
+						<td class="col-8" class="pnum">${requestScope.product_select_one.pnum}</td>
 					</tr>
 					<tr>
 						<td class="col-4">카테고리</td>
@@ -114,7 +121,7 @@
 					</tr>
 					<tr>
 						<td class="col-4">상품명</td>
-						<td class="col-8">${requestScope.product_select_one.pname}</td>
+						<td class="col-8"><a class="pname">${requestScope.product_select_one.pname}</a></td>
 					</tr>
 					<tr>
 						<td class="col-4">썸네일</td>

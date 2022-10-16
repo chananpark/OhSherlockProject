@@ -6,7 +6,7 @@
 		  <p class="title" id="shopping" style="font-weight: bold;">나의 쇼핑</p>  
 		  <div class="nav flex-column" id="nav01">
 		      <div><a class="nav-link" href="<%= request.getContextPath() %>/mypage/orderCheck.tea?userid=${(sessionScope.loginuser).userid}">주문조회</a></div>
-		      <div><a class="nav-link" href="#">취소/반품/교환 내역</a></div>
+		      <div><a class="nav-link" href="<%= request.getContextPath() %>/mypage/orderCheck_refundCancelList.tea?userid=${(sessionScope.loginuser).userid}">취소/반품 내역</a></div>
 		      <div><a class="nav-link" href="<%= request.getContextPath() %>/cart/cart.tea">장바구니</a></div>
 		      <div><a class="nav-link" href="<%= request.getContextPath() %>/shop/likeList.tea?userid=${(sessionScope.loginuser).userid}">찜목록</a></div>
 		  </div>

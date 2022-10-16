@@ -260,3 +260,8 @@ select ODRCODE, FK_USERID, to_char(ODRDATE,'yyyy-mm-dd hh24:mi:ss') as ODRDATE, 
 from tbl_order
 where FK_USERID = 'pca719'
 order by ODRDATE desc;
+
+commit
+
+delete from TBL_LOGIN_HISTORY
+where fk_userid = 'limsw1202' 

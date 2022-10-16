@@ -289,9 +289,9 @@ public class OrderDAO implements InterOrderDAO {
 			conn = ds.getConnection();
 
 			String sql = "select odnum, fk_odrcode, fk_pnum, oqty, oprice, opoint, refund, cancel, refund_reason, cancel_reason, pname\n"+
-					"from tbl_order_detail join tbl_product\n"+
-					"on fk_pnum = pnum\n"+
-					"where fk_odrcode = ?";
+						"from tbl_order_detail join tbl_product\n"+
+						"on fk_pnum = pnum\n"+
+						"where fk_odrcode = ?";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, odrcode);
