@@ -129,14 +129,14 @@ public class ProductDAO implements InterProductDAO {
 	        String sql = "SELECT cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
 	        		"    pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,\n"+
 	        		"    reviewCnt , -- 리뷰수\n"+
-	        		"    orederCnt -- 판매수\n"+
+	        		"    orderCnt -- 판매수\n"+
 	        		"FROM\n"+
 	        		"    (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
-	        		"            pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt\n"+
+	        		"            pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orderCnt\n"+
 	        		"    FROM\n"+
 	        		"        (SELECT c.cname, s.sname, pnum, pname, pimage, PRDMANUAL_SYSTEMFILENAME, PRDMANUAL_ORGINFILENAME,\n"+
 	        		"                pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate,\n"+
-	        		"                (select distinct count(FK_ODRCODE) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
+	        		"                (select sum(oqty) from tbl_order_detail where fk_pnum = pnum) as orderCnt,\n"+
 	        		"                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt\n"+
 	        		"        FROM\n"+
 	        		"            (SELECT\n"+
@@ -224,7 +224,7 @@ public class ProductDAO implements InterProductDAO {
 				pvo.setPoint(rs.getInt("point")); // 포인트 점수
 				pvo.setPinputdate(rs.getString("pinputdate")); // 제품 입고 일자
 				pvo.setReviewCnt(rs.getInt("reviewCnt"));
-				pvo.setOrederCnt(rs.getInt("orederCnt"));
+				pvo.setOrderCnt(rs.getInt("orderCnt"));
 				
 	            productList.add(pvo);
 	        }

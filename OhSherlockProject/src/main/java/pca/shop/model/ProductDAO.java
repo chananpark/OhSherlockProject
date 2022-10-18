@@ -171,23 +171,23 @@ public class ProductDAO implements InterProductDAO {
 		    try {
 		        conn = ds.getConnection();
 
-		        String sql = "SELECT cname, sname, pnum, pname, pimage, \n"+
-		        		"    pqty, price, saleprice, psummary, point, reviewCnt, orederCnt\n"+
-		        		"FROM\n"+
-		        		"    (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, \n"+
-		        		"            pqty, price, saleprice, psummary, point, reviewCnt, orederCnt\n"+
-		        		"    FROM\n"+
-		        		"        (SELECT c.cname, s.sname, pnum, pname, pimage, \n"+
+		        String sql = "select cname, sname, pnum, pname, pimage, \n"+
+		        		"    pqty, price, saleprice, psummary, point, reviewcnt, oredercnt\n"+
+		        		"from\n"+
+		        		"    (select rownum as rno, cname, sname, pnum, pname, pimage, \n"+
+		        		"            pqty, price, saleprice, psummary, point, reviewcnt, oredercnt\n"+
+		        		"    from\n"+
+		        		"        (select c.cname, s.sname, pnum, pname, pimage, \n"+
 		        		"                pqty, price, saleprice, psummary, point,\n"+
-		        		"                orederCnt,reviewCnt\n"+
-		        		"        FROM\n"+
-		        		"            (SELECT\n"+
+		        		"                oredercnt,reviewcnt\n"+
+		        		"        from\n"+
+		        		"            (select\n"+
 		        		"                pnum, pname, pimage, \n"+
 		        		"                pqty, price, saleprice, psummary, point,\n"+
 		        		"                fk_cnum, fk_snum,\n"+
-		        		"                (select distinct count(fk_odrcode) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
-		        		"                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt\n"+
-		        		"            FROM tbl_product\n";
+		        		"                (select sum(oqty) from tbl_order_detail where fk_pnum = pnum) as ordercnt,\n"+
+		        		"                (select count(rnum) from tbl_review where fk_pnum = pnum) as reviewcnt\n"+
+		        		"            from tbl_product\n";
 		        
 			    // 특정 카테고리 조회시
 		        if (!"".equals(paraMap.get("cnum"))) {
@@ -264,7 +264,7 @@ public class ProductDAO implements InterProductDAO {
 		            pvo.setPsummary(rs.getString("psummary"));
 		            pvo.setPoint(rs.getInt("point"));
 		            pvo.setReviewCnt(rs.getInt("reviewCnt"));
-		            pvo.setOrederCnt(rs.getInt("orederCnt"));
+		            pvo.setOrderCnt(rs.getInt("orderCnt"));
 
 		            productList.add(pvo);
 		        }
@@ -377,23 +377,23 @@ public class ProductDAO implements InterProductDAO {
 		    try {
 		        conn = ds.getConnection();
 
-		        String sql = "SELECT cname, sname, pnum, pname, pimage, \n"+
-		        		"    pqty, price, saleprice, reviewCnt, orederCnt\n"+
-		        		"FROM\n"+
-		        		"    (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, \n"+
-		        		"            pqty, price, saleprice, reviewCnt, orederCnt\n"+
-		        		"    FROM\n"+
-		        		"        (SELECT c.cname, s.sname, pnum, pname, pimage, \n"+
-		        		"                pqty, price, saleprice, reviewCnt, orederCnt\n"+
-		        		"        FROM\n"+
-		        		"            (SELECT\n"+
+		        String sql = "select cname, sname, pnum, pname, pimage, \n"+
+		        		"    pqty, price, saleprice, reviewcnt, oredercnt\n"+
+		        		"from\n"+
+		        		"    (select rownum as rno, cname, sname, pnum, pname, pimage, \n"+
+		        		"            pqty, price, saleprice, reviewcnt, oredercnt\n"+
+		        		"    from\n"+
+		        		"        (select c.cname, s.sname, pnum, pname, pimage, \n"+
+		        		"                pqty, price, saleprice, reviewcnt, oredercnt\n"+
+		        		"        from\n"+
+		        		"            (select\n"+
 		        		"                pnum, pname, pimage, \n"+
 		        		"                pqty, price, saleprice, \n"+
 		        		"                fk_cnum, fk_snum,\n"+
-		        		"                (select distinct count(fk_odrcode) from tbl_order_detail where FK_PNUM=pnum) as orederCnt,\n"+
-		        		"                (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt\n"+
-		        		"            FROM tbl_product\n"+
-		        		"			 WHERE pname like '%' || ? || '%' ";
+		        		"                (select sum(oqty) from tbl_order_detail where fk_pnum = pnum) as ordercnt,\n"+
+		        		"                (select count(rnum) from tbl_review where fk_pnum=pnum) as reviewcnt\n"+
+		        		"            from tbl_product\n"+
+		        		"			 where pname like '%' || ? || '%' ";
 		        
 			    // 특정 카테고리 조회시
 		        if (!"".equals(cnum) && Character.isDigit(cnum.charAt(0))) {
@@ -455,7 +455,7 @@ public class ProductDAO implements InterProductDAO {
 		            pvo.setSpvo(spvo);
 
 		            pvo.setReviewCnt(rs.getInt("reviewCnt"));
-		            pvo.setOrederCnt(rs.getInt("orederCnt"));
+		            pvo.setOrderCnt(rs.getInt("orderCnt"));
 
 		            productList.add(pvo);
 		        }

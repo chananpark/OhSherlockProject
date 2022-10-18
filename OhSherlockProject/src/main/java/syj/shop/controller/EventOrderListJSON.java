@@ -46,7 +46,7 @@ public class EventOrderListJSON extends AbstractController {
 			orderSQL = " reviewCnt desc ";
 		} else if("order_sell".equalsIgnoreCase(selectid)) {
 			// 주문순
-			orderSQL = " orederCnt desc ";
+			orderSQL = " orderCnt desc ";
 		} 
 		
 		if(currentShowPageNo == null) {
@@ -90,7 +90,7 @@ public class EventOrderListJSON extends AbstractController {
 				jsonObj.put("point", pvo.getPoint());  
 				jsonObj.put("pinputdate", pvo.getPinputdate());  
 				jsonObj.put("reviewCnt", pvo.getReviewCnt());  
-				jsonObj.put("orederCnt", pvo.getOrederCnt());  
+				jsonObj.put("orderCnt", pvo.getOrderCnt());  
 
 				jsonArr.put(jsonObj); // [{}, {}, {}] 하니씩 불러온 애들을 배열에 넣어주어야 한다. ==> jsonArr
 	            

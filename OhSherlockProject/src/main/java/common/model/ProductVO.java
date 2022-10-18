@@ -33,7 +33,7 @@ public class ProductVO {
 	// 목록 정렬시 활용
 	
 	private int reviewCnt; // 리뷰 개수
-	private int orederCnt; // 주문수
+	private int orderCnt; // 주문수
 	
 	public int getReviewCnt() {
 		return reviewCnt;
@@ -43,12 +43,12 @@ public class ProductVO {
 		this.reviewCnt = reviewCnt;
 	}
 
-	public int getOrederCnt() {
-		return orederCnt;
+	public int getOrderCnt() {
+		return orderCnt;
 	}
 
-	public void setOrederCnt(int orederCnt) {
-		this.orederCnt = orederCnt;
+	public void setOrderCnt(int orderCnt) {
+		this.orderCnt = orderCnt;
 	}
 
 	public void setTotalPrice(int totalPrice) {
@@ -261,7 +261,7 @@ public class ProductVO {
 					+ pcontent + ", psummary=" + psummary + ", point=" + point + ", pinputdate=" + pinputdate
 					+ ", fk_cnum=" + fk_cnum + ", categvo=" + categvo + ", spvo=" + spvo + ", totalPrice=" + totalPrice 
 					+ ", totalOriginPrice=" + totalOriginPrice 
-					+ ", totalPoint=" + totalPoint + ", reviewCnt=" + reviewCnt + ", orederCnt=" + orederCnt + "]";
+					+ ", totalPoint=" + totalPoint + ", reviewCnt=" + reviewCnt + ", orderCnt=" + orderCnt + "]";
 		}
 
 	

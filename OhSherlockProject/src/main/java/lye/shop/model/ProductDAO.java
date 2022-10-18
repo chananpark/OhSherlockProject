@@ -165,20 +165,20 @@ public class ProductDAO implements InterProductDAO {
 	        conn = ds.getConnection();
 
 	        String sql = " SELECT cname, sname, pnum, pname, pimage, "+
-		        		 "     pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt "+
+		        		 "     pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orderCnt "+
 		        		 " FROM "+
 		        		 "     (SELECT ROWNUM AS rno, cname, sname, pnum, pname, pimage, "+
-		        		 "             pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orederCnt "+
+		        		 "             pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, reviewCnt, orderCnt "+
 		        		 "     FROM "+
 		        		 "         (SELECT c.cname, s.sname, pnum, pname, pimage, "+
 		        		 "                 pqty, price, saleprice, pcontent, PSUMMARY, point, pinputdate, "+
-		        		 "                 orederCnt,reviewCnt "+
+		        		 "                 orderCnt,reviewCnt "+
 		        		 "          FROM "+
 		        		 "             (SELECT "+
 		        		 "                 pnum, pname, pimage, "+
 		        		 "                 pqty, price, saleprice, pcontent, PSUMMARY, point, "+
 		        		 "                 to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum, "+
-		        		 "                 (select distinct count(fk_odrcode) from tbl_order_detail where FK_PNUM=pnum) as orederCnt, "+
+		        		 "                 (select sum(oqty) from tbl_order_detail where fk_pnum = pnum) as orderCnt, "+
 		        		 "                 (select count(RNUM) from tbl_review where FK_PNUM=pnum) as reviewCnt "+
 		        		 "              FROM tbl_product\n";
 	        
@@ -259,7 +259,7 @@ public class ProductDAO implements InterProductDAO {
 	            pvo.setPoint(rs.getInt("point"));
 	            pvo.setPinputdate(rs.getString("pinputdate"));
 	            pvo.setReviewCnt(rs.getInt("reviewCnt"));
-	            pvo.setOrederCnt(rs.getInt("orederCnt"));
+	            pvo.setOrderCnt(rs.getInt("orderCnt"));
 
 	            productList.add(pvo);
 	        }
