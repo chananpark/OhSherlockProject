@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import common.controller.AbstractController;
-import common.model.MemberVO;
 import lye.member.model.*;
 
 public class MemberWithdrawal extends AbstractController {

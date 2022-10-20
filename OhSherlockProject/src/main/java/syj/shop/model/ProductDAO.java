@@ -393,7 +393,7 @@ public class ProductDAO implements InterProductDAO {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 찜목록 테이블에서 장바구니 담기 성공시 특정제품 1개행을 찜목록에서 비우기(예은)
 	@Override
-	public int delLike(String likeno) throws SQLException {
+	public int delLiketoCart(String likeno) throws SQLException {
 		
 		int n = 0;
 		

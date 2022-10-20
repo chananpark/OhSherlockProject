@@ -36,8 +36,8 @@ public class ReviewDel extends AbstractController {
 			
 			InterProductDAO pdao = new ProductDAO();  // ProductDAO 객체생성
 			
-			// 찜목록 테이블에서 특정제품만 삭제하기
-			int n = pdao.reviewLike(rnum);  // 성공적으로 pdao 에서 넘겨받았다면 n=1 이 나온다.
+			// 상품리뷰 테이블에서 특정리뷰 1개 행을 리뷰목록에서 비우기
+			int n = pdao.reviewDel(rnum);  // 성공적으로 pdao 에서 넘겨받았다면 n=1 이 나온다.
 			
 			JSONObject jsobj = new JSONObject();  // {} => JSONObject 객체생성
 			jsobj.put("n", n); // {n:1}  => jsobj 에 n 값 저장하기(1 또는 0)
