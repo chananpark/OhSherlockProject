@@ -58,7 +58,7 @@ public interface InterProductDAO {
 	List<ReviewVO> selectPagingReview(Map<String, Object> paraMap) throws SQLException;
 
 	// 상품리뷰 테이블에서 특정리뷰 1개 행을 리뷰목록에서 비우기
-	int reviewLike(String rnum) throws SQLException;
+	int reviewDel(String rnum) throws SQLException;
 
 	// 해당제품을 사용자가 실제 구매했는지 여부를 알아오는 것임. 구매했다라면 true, 구매하지 않았으면 false
 	// boolean isOrder(Map<String, String> paraMap) throws SQLException;

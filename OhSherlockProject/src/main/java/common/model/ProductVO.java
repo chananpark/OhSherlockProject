@@ -241,28 +241,28 @@ public class ProductVO {
 		totalOriginPrice = price * oqty; // 판매당시의 제품원가 * 주문량
 		}
 		
-		public int getTotalPrice() {
-			return totalPrice;
-		}
-		
-		public int getTotalPoint() {
-			return totalPoint;
-		}
-		
-		public int getotalOrignPrice() {
-			return totalOriginPrice;
-		}
+	public int getTotalPrice() {
+		return totalPrice;
+	}
 	
-		@Override
-		public String toString() {
-			return "ProductVO [pnum=" + pnum + ", pname=" + pname + ", pimage=" + pimage + ", prdmanual_systemfilename="
-					+ prdmanual_systemfilename + ", prdmanual_orginfilename=" + prdmanual_orginfilename + ", pqty="
-					+ pqty + ", price=" + price + ", saleprice=" + saleprice + ", fk_snum=" + fk_snum + ", pcontent="
-					+ pcontent + ", psummary=" + psummary + ", point=" + point + ", pinputdate=" + pinputdate
-					+ ", fk_cnum=" + fk_cnum + ", categvo=" + categvo + ", spvo=" + spvo + ", totalPrice=" + totalPrice 
-					+ ", totalOriginPrice=" + totalOriginPrice 
-					+ ", totalPoint=" + totalPoint + ", reviewCnt=" + reviewCnt + ", orderCnt=" + orderCnt + "]";
-		}
+	public int getTotalPoint() {
+		return totalPoint;
+	}
+	
+	public int getotalOrignPrice() {
+		return totalOriginPrice;
+	}
+
+	@Override
+	public String toString() {
+		return "ProductVO [pnum=" + pnum + ", pname=" + pname + ", pimage=" + pimage + ", prdmanual_systemfilename="
+				+ prdmanual_systemfilename + ", prdmanual_orginfilename=" + prdmanual_orginfilename + ", pqty="
+				+ pqty + ", price=" + price + ", saleprice=" + saleprice + ", fk_snum=" + fk_snum + ", pcontent="
+				+ pcontent + ", psummary=" + psummary + ", point=" + point + ", pinputdate=" + pinputdate
+				+ ", fk_cnum=" + fk_cnum + ", categvo=" + categvo + ", spvo=" + spvo + ", totalPrice=" + totalPrice 
+				+ ", totalOriginPrice=" + totalOriginPrice 
+				+ ", totalPoint=" + totalPoint + ", reviewCnt=" + reviewCnt + ", orderCnt=" + orderCnt + "]";
+	}
 
 	
 	

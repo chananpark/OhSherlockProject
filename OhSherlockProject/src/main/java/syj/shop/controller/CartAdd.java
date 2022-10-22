@@ -65,7 +65,7 @@ public class CartAdd extends AbstractController {
 					if(likeno != null) {
 						
 						// 찜목록 테이블에서 장바구니 담기 성공시 특정제품 1개행을 찜목록에서 비우기(예은)
-						n = pdao.delLike(likeno);  // 성공시 n==1
+						n = pdao.delLiketoCart(likeno);  // 성공시 n==1
 						
 						request.setAttribute("message", "장바구니에 상품을 담았습니다. 장바구니로 이동하시겠습니까?");
 						request.setAttribute("loc", request.getContextPath() + "/cart/cart.tea");

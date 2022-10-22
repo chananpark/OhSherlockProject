@@ -795,7 +795,7 @@ public class ProductDAO implements InterProductDAO {
 
 	// 상품리뷰 테이블에서 특정리뷰 1개 행을 리뷰목록에서 비우기
 	@Override
-	public int reviewLike(String rnum) throws SQLException {
+	public int reviewDel(String rnum) throws SQLException {
 		
 		int n = 0;
 		
