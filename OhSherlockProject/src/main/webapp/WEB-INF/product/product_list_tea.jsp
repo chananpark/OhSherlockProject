@@ -375,7 +375,7 @@ function clickCart(pnum) {
 					<span class="text-dark">|</span>
 					<button type="button" class="order" id="reviewCnt desc">리뷰많은순</button>
 					<span class="text-dark">|</span>
-					<button type="button" class="order" id="orederCnt desc">판매순</button>
+					<button type="button" class="order" id="orderCnt desc">판매순</button>
 				</span>
 	    	    <%-- 본문 내부 상단 바 끝 --%>
 			

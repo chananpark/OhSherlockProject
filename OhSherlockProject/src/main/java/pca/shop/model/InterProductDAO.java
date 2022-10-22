@@ -19,7 +19,7 @@ public interface InterProductDAO {
 	int getTotalPage(Map<String, String> paraMap) throws SQLException;
 	
 	// 페이징 방식 카테고리별 기프트세트 상품 목록 가져오기 메소드
-	public List<ProductVO> selectSetGoodsByCategory(Map<String, String> paraMap) throws SQLException;
+	List<ProductVO> selectSetGoodsByCategory(Map<String, String> paraMap) throws SQLException;
 
 	// 검색 결과 총 페이지 수 가져오기
 	int getSearchedTotalPage(Map<String, String> paraMap) throws SQLException;

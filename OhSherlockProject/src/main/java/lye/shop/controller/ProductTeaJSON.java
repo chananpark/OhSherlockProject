@@ -64,7 +64,7 @@ public class ProductTeaJSON extends AbstractController {
 				jsonObj.put("point", pvo.getPoint());
 				jsonObj.put("pinputdate", pvo.getPinputdate());
 				jsonObj.put("reviewCnt", pvo.getReviewCnt());
-				jsonObj.put("orederCnt", pvo.getOrderCnt());
+				jsonObj.put("orderCnt", pvo.getOrderCnt());
 				jsonArr.put(jsonObj);
 			}
 		}

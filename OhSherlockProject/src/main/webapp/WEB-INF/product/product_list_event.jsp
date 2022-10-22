@@ -239,7 +239,7 @@ input.cart { <%-- 여기 --%>
 					<span class="text-dark" >&nbsp;|&nbsp;</span>
 					<a id="reviewCnt desc" class="order"  href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=${currentShowPageNo}&snum=${snum}&cnum=${cnum}&order=reviewCnt desc">리뷰많은순</a>
 					<span class="text-dark">&nbsp;|&nbsp;</span>
-					<a id="orederCnt desc" class="order" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=${currentShowPageNo}&snum=${snum}&cnum=${cnum}&order=orederCnt desc">판매순</a>
+					<a id="orderCnt desc" class="order" href="<%= ctxPath %>/shop/eventOrderList.tea?currentShowPageNo=${currentShowPageNo}&snum=${snum}&cnum=${cnum}&order=orderCnt desc">판매순</a>
 				</span>
 	    	    <%-- 본문 내부 상단 바 끝 --%>
 		

@@ -172,14 +172,14 @@ public class ProductDAO implements InterProductDAO {
 		        conn = ds.getConnection();
 
 		        String sql = "select cname, sname, pnum, pname, pimage, \n"+
-		        		"    pqty, price, saleprice, psummary, point, reviewcnt, oredercnt\n"+
+		        		"    pqty, price, saleprice, psummary, point, reviewcnt, ordercnt\n"+
 		        		"from\n"+
 		        		"    (select rownum as rno, cname, sname, pnum, pname, pimage, \n"+
-		        		"            pqty, price, saleprice, psummary, point, reviewcnt, oredercnt\n"+
+		        		"            pqty, price, saleprice, psummary, point, reviewcnt, ordercnt\n"+
 		        		"    from\n"+
 		        		"        (select c.cname, s.sname, pnum, pname, pimage, \n"+
 		        		"                pqty, price, saleprice, psummary, point,\n"+
-		        		"                oredercnt,reviewcnt\n"+
+		        		"                ordercnt,reviewcnt\n"+
 		        		"        from\n"+
 		        		"            (select\n"+
 		        		"                pnum, pname, pimage, \n"+
@@ -378,13 +378,13 @@ public class ProductDAO implements InterProductDAO {
 		        conn = ds.getConnection();
 
 		        String sql = "select cname, sname, pnum, pname, pimage, \n"+
-		        		"    pqty, price, saleprice, reviewcnt, oredercnt\n"+
+		        		"    pqty, price, saleprice, reviewcnt, ordercnt\n"+
 		        		"from\n"+
 		        		"    (select rownum as rno, cname, sname, pnum, pname, pimage, \n"+
-		        		"            pqty, price, saleprice, reviewcnt, oredercnt\n"+
+		        		"            pqty, price, saleprice, reviewcnt, ordercnt\n"+
 		        		"    from\n"+
 		        		"        (select c.cname, s.sname, pnum, pname, pimage, \n"+
-		        		"                pqty, price, saleprice, reviewcnt, oredercnt\n"+
+		        		"                pqty, price, saleprice, reviewcnt, ordercnt\n"+
 		        		"        from\n"+
 		        		"            (select\n"+
 		        		"                pnum, pname, pimage, \n"+

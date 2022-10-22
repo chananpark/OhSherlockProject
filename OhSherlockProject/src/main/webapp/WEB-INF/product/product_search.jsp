@@ -195,8 +195,8 @@ function clickCart(pnum) { <%-- 여기 --%>
 					onclick="location.href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=${cnum}&order=reviewCnt desc'">
 					리뷰많은순</button>
 					<span class="text-dark">|</span>
-					<button type="button" class="order" id="orederCnt desc"
-					onclick="location.href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=${cnum}&order=orederCnt desc'">
+					<button type="button" class="order" id="orderCnt desc"
+					onclick="location.href='<%=ctxPath%>/shop/productSearch.tea?searchWord=${searchWord}&currentShowPageNo=${currentShowPageNo}&cnum=${cnum}&order=orderCnt desc'">
 					판매순</button>
 				</div>
 				<%-- 본문 내부 상단 바 끝 --%>

@@ -59,19 +59,19 @@ public class MemberDAO implements InterMemberDAO {
 		try {
 			conn = ds.getConnection();
 
-			String sql = "select userid, name, email, mobile, postcode, address, detail_address, extra_address, gender,       \n"+
+			String sql = "select userid, name, email, mobile, postcode, address, detail_address, extra_address, gender, "+
 					"birthyyyy, birthmm, birthdd, coin, point, registerday,        \n"+
-					"passwd_change_gap, nvl(last_login_gap, months_between(sysdate, registerday)) as last_login_gap, last_login_date\n"+
-					"from\n"+
-					"(select userid, name, email, mobile, postcode, address, detail_address, extra_address, gender     \n"+
-					", substr(birthday,1,4) AS birthyyyy, substr(birthday,6,2) AS birthmm, substr(birthday,9) AS birthdd     \n"+
-					", coin, point, to_char(registerday, 'yyyy-mm-dd') AS registerday     \n"+
-					", trunc( months_between(sysdate, last_passwd_date) ) AS passwd_change_gap\n"+
-					"from tbl_member\n"+
-					"where status = 1 and userid = ? and passwd = ?) M\n"+
-					"cross join\n"+
-					"(select max(logindate) as last_login_date, trunc(months_between(sysdate, max(logindate))) as last_login_gap\n"+
-					"from tbl_login_history\n"+
+					"passwd_change_gap, nvl(last_login_gap, months_between(sysdate, registerday)) as last_login_gap, last_login_date "+
+					"from "+
+					"(select userid, name, email, mobile, postcode, address, detail_address, extra_address, gender "+
+					", substr(birthday,1,4) AS birthyyyy, substr(birthday,6,2) AS birthmm, substr(birthday,9) AS birthdd "+
+					", coin, point, to_char(registerday, 'yyyy-mm-dd') AS registerday "+
+					", trunc( months_between(sysdate, last_passwd_date) ) AS passwd_change_gap "+
+					"from tbl_member "+
+					"where status = 1 and userid = ? and passwd = ?) M "+
+					"cross join "+
+					"(select max(logindate) as last_login_date, trunc(months_between(sysdate, max(logindate))) as last_login_gap "+
+					"from tbl_login_history "+
 					"where fk_userid = ?) H";
 
 			pstmt = conn.prepareStatement(sql);
