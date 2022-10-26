@@ -85,4 +85,4 @@ Servlet/JSP를 사용하여 개발한 차(tea) 상품을 판매하는 쇼핑몰 
     <img src='https://user-images.githubusercontent.com/106459550/197941363-604c4ff0-d084-4521-a2eb-f0e1d2636766.jpg'>
   </li>
 </ul>
-[](https://github.com/Chanan-Park/OhSherlockProject/files/9869731/2.pdf)
+[프레젠테이션](https://github.com/Chanan-Park/OhSherlockProject/files/9869731/2.pdf)
